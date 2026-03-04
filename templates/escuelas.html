@@ -263,9 +263,9 @@ document.getElementById("q").addEventListener("keydown", function(e) {
 // según el campo "escuela" del registro
 // =============================================
 function getModalidad(escuela) {
-  if (!escuela) return "🌙 Modalidad: Diurno";
+  if (!escuela) return "☀️ Modalidad: Diurno";
   const texto = escuela.toLowerCase();
-  if (texto.includes("online"))     return "💻 Modalidad: Online";
+  if (texto.includes("online")) return "💻 Modalidad: Online";
   if (texto.includes("técnico") || texto.includes("tecnico")) return "🔧 Modalidad: Técnico";
   if (texto.includes("vespertino")) return "🌙 Modalidad: Vespertino";
   return "☀️ Modalidad: Diurno";
@@ -363,5 +363,3 @@ function cerrarAyuda() {
 
 </body>
 </html>
-
-
