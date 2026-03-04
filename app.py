@@ -6,9 +6,8 @@ app = Flask(__name__)
 # =========================
 # CONFIGURACIÓN SUPABASE
 # =========================
-SUPABASE_URL = "https://wkbltctqqsuxqhlbnoeg.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndrYmx0Y3RxcXN1eHFobGJub2VnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwMDI1NzYsImV4cCI6MjA4NDU3ODU3Nn0.QLl8XI79jOC_31RjtTMCwrKAXNg-Y1Bt_x2JQL9rnEM"
-
+SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co"
+SUPABASE_KEY = "sb_publishable_3Shj63dB3uBAL_TVvqfBRw_3RyTRZ1U"
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # =========================
@@ -135,6 +134,7 @@ def api_contactos_administrativos():
 # =========================
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
 
 
 
