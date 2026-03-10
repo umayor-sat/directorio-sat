@@ -54,7 +54,7 @@ def api_escuelas():
     return jsonify(result.data or [])
 
 # =========================
-# ACADÉMICOS (FUNCIONAL)
+# ACADÉMICOS
 # =========================
 @app.route("/academicos")
 def academicos():
@@ -65,25 +65,31 @@ def api_academicos():
     q = request.args.get("q", "").strip().lower()
     if len(q) < 2:
         return jsonify([])
-    query = (
-        supabase
-        .table("otros_contactos_academicos")
-        .select("""
-            nombre,
-            cargo,
-            departamento,
-            correo_director,
-            secretaria_nombre,
-            secretaria_correo,
-            anexo_director,
-            anexo_secretaria,
-            consultar_antes_de_entregar_contactos,
-            sede
-        """)
-        .ilike("departamento_busqueda", f"%{q}%")
-    )
-    result = query.execute()
-    return jsonify(result.data or [])
+
+    try:
+        query = (
+            supabase
+            .table("otros_contactos_academicos")
+            .select("""
+                nombre,
+                cargo,
+                departamento,
+                departamento_busqueda,
+                sede,
+                correo director,
+                anexo director,
+                secretaria_nombre,
+                secretaria_correo,
+                secretaria_anexo,
+                consultar_antes_de_entregar_contactos,
+                observaciones
+            """)
+            .ilike("departamento_busqueda", f"%{q}%")
+        )
+        result = query.execute()
+        return jsonify(result.data or [])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # =========================
 # CONTACTOS ADMINISTRATIVOS
@@ -97,9 +103,6 @@ def api_contactos_administrativos():
     q = request.args.get("q", "").strip()
     if len(q) < 2:
         return jsonify([])
-
-    # ilike SIN wildcards = coincidencia exacta, insensible a mayúsculas
-    # "ore" matchea "Ore", "ORE", "oRE" — pero NO "proveedores"
     query = (
         supabase
         .table("contactos_administrativos")
@@ -126,11 +129,3 @@ import os
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
-
-
-
-
-
-
-
-
