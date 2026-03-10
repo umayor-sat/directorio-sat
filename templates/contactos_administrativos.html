@@ -44,7 +44,6 @@ body {
 .search-bar {
   display: flex;
   gap: 10px;
-  margin-bottom: 5px;
   align-items: center;
 }
 
@@ -62,16 +61,12 @@ body {
   border-radius: 6px;
   cursor: pointer;
   text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .btn-primary { background: #005baa; color: #fff; }
 .btn-secondary { background: #999; color: #fff; }
 .btn-home { background: #005baa; color: #fff; }
 
-/* ÍCONO INFO */
 .info-help {
   background: #e9eef4;
   color: #005baa;
@@ -83,7 +78,7 @@ body {
   cursor: pointer;
 }
 
-/* SUGERENCIAS NIVEL 1 */
+/* SUGERENCIAS */
 .suggestions {
   position: absolute;
   top: 100%;
@@ -111,84 +106,73 @@ body {
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 15px;
+  margin-top: 20px;
 }
 
 th, td {
   border: 1px solid #ddd;
   padding: 10px;
-  vertical-align: top;
   font-size: 14px;
 }
 
 th {
   background: #005baa;
   color: white;
-  text-align: left;
 }
 
 /* TOOLTIP */
-.tooltip-container { position: relative; display: inline-block; }
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
 
 .tooltip-box {
   visibility: hidden;
   opacity: 0;
-  width: 280px;
-  background-color: #ffffff;
+  width: 260px;
+  background: #fff;
   color: #000;
   border: 1px solid #ccc;
   border-radius: 6px;
   padding: 8px 10px;
   position: absolute;
   z-index: 10;
-  top: 125%;
+  top: 120%;
   left: 50%;
   transform: translateX(-50%);
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   font-size: 13px;
 }
 
-.tooltip-container:hover .tooltip-box {
+.tooltip:hover .tooltip-box {
   visibility: visible;
   opacity: 1;
 }
 
-/* MODALES */
+/* MODAL */
 .modal {
   display: none;
   position: fixed;
-  z-index: 200;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.45);
+  z-index: 100;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
 }
 
 .modal-content {
   background: #fff;
-  margin: 10% auto;
+  margin: 8% auto;
   padding: 25px;
   width: 520px;
-  border-radius: 10px;
+  border-radius: 8px;
 }
 
-.modal-content h3 {
-  margin-top: 0;
-  color: #005baa;
-}
+.modal h3 { margin-top: 0; }
 
-.modal-close {
-  text-align: right;
-}
-
-.modal-close button {
-  background: #999;
-  color: #fff;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
+.close {
+  float: right;
   cursor: pointer;
+  font-size: 20px;
 }
 
 /* FOOTER */
@@ -204,9 +188,7 @@ th {
 <body>
 
 <div class="header">
-  <a href="https://www.umayor.cl" target="_blank">
-    <img src="{{ url_for('static', filename='img/logoum.jpg') }}">
-  </a>
+  <img src="{{ url_for('static', filename='img/logoum.jpg') }}">
   <h1>Contactos Administrativos</h1>
 </div>
 
@@ -220,7 +202,6 @@ th {
       <button class="info-help" onclick="abrirAyuda()">ℹ️</button>
       <a href="/" class="btn-home">Volver</a>
     </div>
-
     <div id="suggestions" class="suggestions"></div>
   </div>
 
@@ -232,51 +213,59 @@ th {
   Desarrollado por <strong>Eduardo Ferrada</strong> · Universidad Mayor · 2026
 </div>
 
-<!-- MODAL INFO -->
-<div id="modalInfo" class="modal">
-  <div class="modal-content">
-    <h3>Información adicional</h3>
-    <div id="modalTexto"></div>
-    <div class="modal-close">
-      <button onclick="cerrarModal()">Cerrar</button>
-    </div>
-  </div>
-</div>
-
 <!-- MODAL AYUDA -->
 <div id="modalAyuda" class="modal">
   <div class="modal-content">
-    <h3>¿Cómo buscar un contacto?</h3>
+    <span class="close" onclick="cerrarAyuda()">×</span>
+    <h3>¿Cómo buscar contactos administrativos?</h3>
     <p>
-      La búsqueda funciona principalmente por <strong>área</strong>.<br><br>
-      Usa palabras simples (becas, partes, financiera).<br>
-      Prueba distintas combinaciones si no aparece a la primera.
+      • Busca principalmente por <strong>área</strong> (ej: becas, registro, financiera).<br><br>
+      • Puedes usar siglas como <strong>ORE</strong>, <strong>DAE</strong>, <strong>RRII</strong>.<br><br>
+      • Puedes usar palabras comunes como <em>plata</em>, <em>oficio</em>,
+      <em>tribunal</em>, <em>honorarios</em>.<br><br>
+      • El sistema sugiere áreas mientras escribes y no distingue mayúsculas de minúsculas.
     </p>
-    <div class="modal-close">
-      <button onclick="cerrarAyuda()">Cerrar</button>
-    </div>
+  </div>
+</div>
+
+<!-- MODAL DETALLES -->
+<div id="modalDetalle" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="cerrarDetalle()">×</span>
+    <h3>Información adicional</h3>
+    <p id="modalTexto"></p>
   </div>
 </div>
 
 <script>
-// ===== SUGERENCIAS CON SINÓNIMOS =====
+// =========================
+// SUGERENCIAS
+// =========================
 const sugerenciasBase = [
-  { label: "Becas y Créditos", value: "becas", aliases: ["byc","creditos"] },
-  { label: "Admisión", value: "admision", aliases: ["admin"] },
-  { label: "Matrícula", value: "matricula", aliases: ["matri"] },
-  { label: "Registro Estudiantil", value: "registro", aliases: ["ore","oficina"] },
-  { label: "Oficina de Partes", value: "partes", aliases: [] },
-  { label: "Gestión Financiera", value: "financiera", aliases: ["gf","plata","dinero"] },
-  { label: "Remuneraciones", value: "remuneraciones", aliases: ["honorarios"] },
-  { label: "Abogados", value: "abogados", aliases: ["tribunal","oficio","demanda"] },
-  { label: "Biblioteca", value: "biblioteca", aliases: ["libros"] }
+  { label: "Becas y Créditos",                          value: "becas",          aliases: ["byc","creditos"] },
+  { label: "Admisión",                                   value: "admision",       aliases: ["admin"] },
+  { label: "Matrícula",                                  value: "matricula",      aliases: ["matri"] },
+  { label: "Registro Estudiantil (ORE)",                 value: "ore",            aliases: ["registro","oficina registro"] },
+  { label: "Oficina de Partes",                          value: "partes",         aliases: [] },
+  { label: "Gestión Financiera",                         value: "financiera",     aliases: ["plata","dinero","gf"] },
+  { label: "Pago a Proveedores",                         value: "proveedores",    aliases: ["facturacion","pago facturas"] },
+  { label: "Departamento de Personal",                   value: "personal",       aliases: [] },
+  { label: "Remuneraciones",                             value: "remuneraciones", aliases: ["honorarios"] },
+  { label: "Dirección de Asuntos Estudiantiles (DAE)",   value: "dae",            aliases: [] },
+  { label: "Dirección de Comunicación Estratégica",      value: "comunicacion",   aliases: ["dce","difusion"] },
+  { label: "Relaciones Internacionales",                 value: "relaciones",     aliases: ["rrii"] },
+  { label: "Clínicas",                                   value: "clinicas",       aliases: ["dental","fono","veterinaria","psico"] },
+  { label: "Guardias",                                   value: "guardias",       aliases: ["guard"] },
+  { label: "Abogados",                                   value: "abogados",       aliases: ["oficio","tribunal","demanda","legal"] },
+  { label: "Impresiones",                                value: "impresiones",    aliases: ["impresoras"] },
+  { label: "Biblioteca",                                 value: "biblioteca",     aliases: ["libros"] }
 ];
 
 const input = document.getElementById("q");
 const suggestionsBox = document.getElementById("suggestions");
 
 input.addEventListener("input", () => {
-  const val = input.value.toLowerCase();
+  const val = input.value.toLowerCase().trim();
   suggestionsBox.innerHTML = "";
 
   if (val.length < 2) {
@@ -286,8 +275,8 @@ input.addEventListener("input", () => {
 
   const matches = sugerenciasBase.filter(s =>
     s.label.toLowerCase().includes(val) ||
-    s.value.includes(val) ||
-    (s.aliases || []).some(a => a.includes(val))
+    s.value.toLowerCase().includes(val) ||
+    (s.aliases || []).some(a => a.toLowerCase().includes(val))
   );
 
   if (!matches.length) {
@@ -300,9 +289,10 @@ input.addEventListener("input", () => {
     div.className = "suggestion-item";
     div.textContent = s.label;
     div.onclick = () => {
-      input.value = s.value;
+      // Muestra el label legible en el input, pero busca con el value correcto
+      input.value = s.label;
       suggestionsBox.style.display = "none";
-      buscar();
+      buscarConTermino(s.value);  // ← KEY: manda "ore" al backend, no "registro"
     };
     suggestionsBox.appendChild(div);
   });
@@ -314,18 +304,56 @@ input.addEventListener("keydown", e => {
   if (e.key === "Enter") buscar();
 });
 
-// ===== BÚSQUEDA =====
+// Cierra sugerencias al hacer clic fuera
+document.addEventListener("click", e => {
+  if (!e.target.closest(".search-wrapper")) {
+    suggestionsBox.style.display = "none";
+  }
+});
+
+// =========================
+// MODALES
+// =========================
+function abrirAyuda() {
+  document.getElementById("modalAyuda").style.display = "block";
+}
+function cerrarAyuda() {
+  document.getElementById("modalAyuda").style.display = "none";
+}
+
+function abrirDetalle(texto) {
+  document.getElementById("modalTexto").innerText = texto || "Sin información adicional.";
+  document.getElementById("modalDetalle").style.display = "block";
+}
+function cerrarDetalle() {
+  document.getElementById("modalDetalle").style.display = "none";
+}
+
+// =========================
+// BÚSQUEDA
+// =========================
+
+// Busca con lo que está escrito en el input (botón Buscar / Enter)
 function buscar() {
-  const q = input.value;
+  buscarConTermino(input.value.trim());
+}
+
+// Busca con un término específico (usado por las sugerencias)
+function buscarConTermino(termino) {
   suggestionsBox.style.display = "none";
 
-  fetch(`/api/contactos-administrativos?q=${encodeURIComponent(q)}`)
+  if (!termino || termino.length < 2) {
+    document.getElementById("resultados").innerHTML = "<p>Escribe al menos 2 caracteres para buscar.</p>";
+    return;
+  }
+
+  fetch(`/api/contactos-administrativos?q=${encodeURIComponent(termino)}`)
     .then(r => r.json())
     .then(data => {
       const res = document.getElementById("resultados");
 
       if (!data.length) {
-        res.innerHTML = "<p>No se encontraron resultados.</p>";
+        res.innerHTML = "<p>No se encontraron resultados para <strong>" + termino + "</strong>.</p>";
         return;
       }
 
@@ -348,26 +376,27 @@ function buscar() {
           <td>${r.area || ""}</td>
           <td>${r.campus || ""}</td>
           <td>
-            <span class="tooltip-container">
+            <span class="tooltip">
               <a href="mailto:${r.correo}">${r.correo || ""}</a>
               <span class="tooltip-box">
-                ${r.anexo ? "📞 <strong>Anexo:</strong> " + r.anexo + "<br>" : ""}
-                ${r.asistente_secretaria ? "👤 <strong>Asistente:</strong> " + r.asistente_secretaria : ""}
+                ${r.anexo ? "📞 Anexo: " + r.anexo + "<br>" : ""}
+                ${r.restricciones ? "⚠️ " + r.restricciones : ""}
               </span>
             </span>
           </td>
           <td>
-            ${(r.observaciones || r.restricciones) ? `
-            <button
-              data-observaciones="${(r.observaciones || "").replace(/"/g, '&quot;')}"
-              data-restricciones="${(r.restricciones || "").replace(/"/g, '&quot;')}"
-              onclick="abrirModalDesdeBoton(this)">ℹ️</button>` : ""}
+            <button onclick="abrirDetalle('${(r.observaciones || '').replace(/'/g, "\\'").replace(/\n/g, " ")}')">
+              Ver detalles
+            </button>
           </td>
         </tr>`;
       });
 
       html += "</table>";
       res.innerHTML = html;
+    })
+    .catch(() => {
+      document.getElementById("resultados").innerHTML = "<p>Error al conectar con el servidor.</p>";
     });
 }
 
@@ -375,30 +404,6 @@ function limpiar() {
   input.value = "";
   document.getElementById("resultados").innerHTML = "";
   suggestionsBox.style.display = "none";
-}
-
-// ===== MODALES =====
-function abrirModalDesdeBoton(btn) {
-  let texto = "";
-  if (btn.dataset.observaciones)
-    texto += "<strong>Observaciones:</strong><br>" + btn.dataset.observaciones + "<br><br>";
-  if (btn.dataset.restricciones)
-    texto += "<strong>Restricciones:</strong><br>" + btn.dataset.restricciones;
-
-  document.getElementById("modalTexto").innerHTML = texto;
-  document.getElementById("modalInfo").style.display = "block";
-}
-
-function cerrarModal() {
-  document.getElementById("modalInfo").style.display = "none";
-}
-
-function abrirAyuda() {
-  document.getElementById("modalAyuda").style.display = "block";
-}
-
-function cerrarAyuda() {
-  document.getElementById("modalAyuda").style.display = "none";
 }
 </script>
 
