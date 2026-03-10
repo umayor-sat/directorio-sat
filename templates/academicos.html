@@ -11,7 +11,7 @@
       margin: 0;
     }
 
-    /* ================= HEADER ================= */
+    /* HEADER */
     .header {
       background: #f2b705;
       padding: 20px 30px;
@@ -20,9 +20,7 @@
       gap: 25px;
     }
 
-    .header img {
-      height: 90px;
-    }
+    .header img { height: 90px; }
 
     .header h1 {
       margin: 0;
@@ -30,7 +28,7 @@
       color: #002f6c;
     }
 
-    /* ================= CONTENEDOR ================= */
+    /* CONTENEDOR */
     .container {
       max-width: 1200px;
       margin: 30px auto;
@@ -40,11 +38,15 @@
       box-shadow: 0 0 20px rgba(0,0,0,0.1);
     }
 
-    /* ================= BUSCADOR ================= */
+    /* BUSCADOR */
+    .search-wrapper {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
     .search-bar {
       display: flex;
       gap: 10px;
-      margin-bottom: 20px;
       align-items: center;
     }
 
@@ -67,22 +69,46 @@
       justify-content: center;
     }
 
-    .btn-primary {
-      background: #005baa;
-      color: #fff;
+    .btn-primary  { background: #005baa; color: #fff; }
+    .btn-secondary{ background: #999;    color: #fff; }
+    .btn-home     { background: #005baa; color: #fff; }
+
+    .info-help {
+      background: #e9eef4;
+      color: #005baa;
+      border-radius: 50%;
+      width: 34px;
+      height: 34px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
     }
 
-    .btn-secondary {
-      background: #999;
-      color: #fff;
+    /* SUGERENCIAS */
+    .suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-shadow: 0 6px 14px rgba(0,0,0,.12);
+      z-index: 50;
+      display: none;
+      max-height: 260px;
+      overflow-y: auto;
     }
 
-    .btn-home {
-      background: #005baa;
-      color: #fff;
+    .suggestion-item {
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 14px;
     }
 
-    /* ================= TABLA ================= */
+    .suggestion-item:hover { background: #f0f4f8; }
+
+    /* TABLA */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -102,7 +128,94 @@
       text-align: left;
     }
 
-    /* ================= FOOTER ================= */
+    /* CORREO CON BOTÓN COPIAR */
+    .correo-cell {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: nowrap;
+    }
+
+    .btn-copy {
+      background: none;
+      border: 1px solid #005baa;
+      border-radius: 4px;
+      color: #005baa;
+      font-size: 11px;
+      padding: 2px 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .btn-copy:hover  { background: #005baa; color: #fff; }
+    .btn-copy.copiado{ background: #28a745; color: #fff; border-color: #28a745; }
+
+    /* TOOLTIP */
+    .tooltip-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .tooltip-box {
+      visibility: hidden;
+      opacity: 0;
+      width: 270px;
+      background: #fff;
+      color: #000;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 8px 10px;
+      position: absolute;
+      z-index: 10;
+      top: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      font-size: 13px;
+    }
+
+    .tooltip-container:hover .tooltip-box {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 200;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.45);
+    }
+
+    .modal-content {
+      background: #fff;
+      margin: 10% auto;
+      padding: 25px;
+      width: 520px;
+      border-radius: 10px;
+    }
+
+    .modal-content h3 {
+      margin-top: 0;
+      color: #005baa;
+    }
+
+    .modal-close { text-align: right; }
+
+    .modal-close button {
+      background: #999;
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* FOOTER */
     .footer {
       margin-top: 40px;
       text-align: center;
@@ -114,99 +227,267 @@
 
 <body>
 
-<!-- ================= HEADER ================= -->
+<!-- HEADER -->
 <div class="header">
   <a href="https://www.umayor.cl" target="_blank">
-    <img src="{{ url_for('static', filename='img/logoum.jpg') }}">
+    <img src="{{ url_for('static', filename='img/logoum.jpg') }}" alt="Universidad Mayor">
   </a>
   <h1>Contactos Académicos</h1>
 </div>
 
-<!-- ================= CONTENIDO ================= -->
 <div class="container">
 
   <!-- BUSCADOR -->
-  <div class="search-bar">
-    <input
-      type="text"
-      id="q"
-      placeholder="Buscar por escuela, carrera o nombre académico"
-    >
-
-    <button class="btn-primary" onclick="buscar()">Buscar</button>
-    <button class="btn-secondary" onclick="limpiar()">Limpiar</button>
-    <a href="/" class="btn-home">Volver</a>
+  <div class="search-wrapper">
+    <div class="search-bar">
+      <input type="text" id="q" placeholder="Buscar por departamento, cargo o nombre…">
+      <button class="btn-primary"   onclick="buscar()">Buscar</button>
+      <button class="btn-secondary" onclick="limpiar()">Limpiar</button>
+      <button class="info-help"     onclick="abrirAyuda()">ℹ️</button>
+      <a href="/" class="btn-home">Volver</a>
+    </div>
+    <div id="suggestions" class="suggestions"></div>
   </div>
 
-  <!-- RESULTADOS -->
   <div id="resultados"></div>
 
 </div>
 
-<!-- ================= FOOTER ================= -->
 <div class="footer">
   Desarrollado por <strong>Eduardo Ferrada</strong> · Universidad Mayor · 2026
 </div>
 
-<!-- ================= JAVASCRIPT ================= -->
-<script>
-  const input = document.getElementById("q");
+<!-- MODAL AYUDA -->
+<div id="modalAyuda" class="modal">
+  <div class="modal-content">
+    <h3>¿Cómo usar el buscador?</h3>
+    <p>
+      Busca por <strong>departamento</strong>, <strong>cargo</strong> o <strong>nombre</strong>.<br><br>
+      • El sistema sugiere opciones mientras escribes.<br>
+      • Pasa el mouse sobre los correos para ver anexos y restricciones.<br>
+      • Usa <strong>📋 Copiar</strong> para copiar el correo con un clic.<br>
+      • Revisa siempre las restricciones antes de entregar un contacto.
+    </p>
+    <div class="modal-close">
+      <button onclick="cerrarAyuda()">Cerrar</button>
+    </div>
+  </div>
+</div>
 
-  input.addEventListener("keydown", e => {
-    if (e.key === "Enter") buscar();
+<script>
+// =========================
+// SUGERENCIAS
+// values = departamento_busqueda exacto del CSV/Supabase
+// =========================
+const sugerenciasBase = [
+  { label: "Admisión",                                   value: "admision",                                    aliases: ["admision"] },
+  { label: "Asuntos Estudiantiles",                      value: "asuntosestudiantiles",                        aliases: ["dae","estudiantil"] },
+  { label: "Alumni",                                     value: "alumni",                                      aliases: ["ex alumnos"] },
+  { label: "Abastecimiento",                             value: "abastecimiento",                              aliases: ["compras"] },
+  { label: "Centro de Biología Integrativa (CIB)",       value: "centrodebiologiaintegrativa(cib)",            aliases: ["cib","biologia"] },
+  { label: "Centro de Biomedicina",                      value: "centrodebiomedicina",                         aliases: ["biomedicina"] },
+  { label: "Centro de Estudios Clínicos",                value: "centrodeestudiosclinicos",                    aliases: ["estudios clinicos"] },
+  { label: "Centro de Investigación en Ciberseguridad",  value: "centrodeinvestigaciondeciberseguridad",       aliases: ["ciberseguridad"] },
+  { label: "Centro de Simulación Clínica",               value: "centrodesimulacionclinica",                   aliases: ["simulacion"] },
+  { label: "Centro de Nanotecnología Aplicada",          value: "centrodenanotecnologiaaplicada",              aliases: ["nanotecnologia"] },
+  { label: "Centro de Oncología de Precisión",           value: "centrodeoncologiadeprecision",                aliases: ["oncologia"] },
+  { label: "Centro Gema / Genómica / Medio Ambiente",    value: "centrogema,genomica,ecologiaymedioambiente",  aliases: ["gema","genomica","medio ambiente"] },
+  { label: "Centro HEMERA (Observación de la Tierra)",   value: "centroobservaciondelatierrahemera",           aliases: ["hemera"] },
+  { label: "Círculo Mayor",                              value: "circulomayor",                                aliases: ["circulo"] },
+  { label: "Clínica Jurídica",                           value: "clinicajuridica",                             aliases: ["juridica","legal"] },
+  { label: "Clínica Odontológica",                       value: "clinicaodontologica",                         aliases: ["odontologia","dental"] },
+  { label: "Difusión",                                   value: "difusion",                                    aliases: ["difusion","comunicacion"] },
+  { label: "Dirección Académica Facultad de Medicina",   value: "direccionacademicadelafacultaddemedicinaycienciasdelasalud", aliases: ["medicina","facultad medicina"] },
+  { label: "Dirección Administración Financiera",        value: "direccionadministracionfinanciera",           aliases: ["finanzas","administracion"] },
+  { label: "Dirección de Desarrollo",                    value: "direcciondedesarrollo",                       aliases: ["desarrollo"] },
+  { label: "Dirección de Relaciones Internacionales",    value: "directoraderelacionesinternacionales",        aliases: ["rrii","relaciones internacionales"] },
+  { label: "Dirección General de Pregrado",              value: "directorageneraldepregrado",                  aliases: ["pregrado"] },
+  { label: "Dirección General de Investigación",         value: "direcciongeneraldeinvestigacionycreacionartistica", aliases: ["investigacion"] },
+  { label: "Dirección General de Aseguramiento de Calidad", value: "direcciongeneraldeaseguramientodecalidad", aliases: ["calidad","acreditacion"] },
+  { label: "Dirección de Educación Virtual",             value: "directoradeeducacionvirtual",                 aliases: ["virtual","online","emayor"] },
+  { label: "Dirección de Salud Mental",                  value: "directoradesaludmental",                      aliases: ["salud mental","psicologia"] },
+  { label: "Dirección General Campos Clínicos",          value: "directorageneralcamposclinicos",              aliases: ["campos clinicos"] },
+  { label: "Director Académico Regional",                value: "directoracademicoregional",                   aliases: ["regional","academico regional"] },
+  { label: "Educación Continua",                         value: "educacioncontinua",                           aliases: ["continua","capacitacion"] },
+  { label: "Marketing",                                  value: "marketing",                                   aliases: ["marketing","publicidad"] },
+  { label: "Núcleo de Anatomía Humana",                  value: "nucleodeanatomiahumana",                      aliases: ["anatomia"] },
+  { label: "Núcleo de Ciencias Biológicas",              value: "nucleocienciasbiologicas",                    aliases: ["ciencias biologicas","biologia"] },
+  { label: "Núcleo de Ciencias Sociales y Artes",        value: "nucleodecienciassocialesyartes",              aliases: ["cs sociales","artes"] },
+  { label: "Núcleo de Emprendimiento y Gestión",         value: "nucleodeemprendimientoygestion",              aliases: ["emprendimiento","gestion"] },
+  { label: "Núcleo de Formación General",                value: "nucleodeformaciongeneral",                    aliases: ["formacion general"] },
+  { label: "Núcleo de Inglés",                           value: "nucleoingles",                                aliases: ["ingles","idiomas"] },
+  { label: "Núcleo de Matemáticas / Física / Estadística", value: "nucleomatematicas,fisicayesatdistica",      aliases: ["matematicas","fisica","estadistica"] },
+  { label: "Núcleo de Química y Bioquímica",             value: "nucleodequimicaybioquimica",                  aliases: ["quimica","bioquimica"] },
+  { label: "Núcleo de Salud Pública",                    value: "nucleodesaludpublica",                        aliases: ["salud publica"] },
+  { label: "Planificación y Análisis Institucional",     value: "planificacionyanalisisinstitucional",         aliases: ["planificacion","analisis"] },
+  { label: "Recursos Humanos",                           value: "recursoshumanos",                             aliases: ["rrhh","personal"] },
+  { label: "Servicios e Infraestructura",                value: "servicioseinfractuctura",                     aliases: ["servicios","infraestructura","operaciones"] },
+  { label: "Tecnologías de Información",                 value: "tecnologiasinformacion",                      aliases: ["ti","tecnologia","soporte"] },
+  { label: "Unidad de Género, Diversidad e Inclusión",   value: "unidaddegenero,diversidadeinclusion",         aliases: ["genero","diversidad","inclusion"] },
+  { label: "Vicerrectoría Académica",                    value: "vicerrectoriaacamica",                        aliases: ["vicerrectoria","academico"] },
+  { label: "Vicerrectoría de Investigación",             value: "vicerrectoriadeinvestigacion",                aliases: ["investigacion","vicerrectoria"] },
+  { label: "Vinculación con el Medio",                   value: "vinculacionconelmedio",                       aliases: ["vinculacion","medio"] },
+];
+
+const input          = document.getElementById("q");
+const suggestionsBox = document.getElementById("suggestions");
+let terminoPendiente = null;
+
+input.addEventListener("input", () => {
+  terminoPendiente = null;
+  const val = input.value.toLowerCase().trim();
+  suggestionsBox.innerHTML = "";
+
+  if (val.length < 2) { suggestionsBox.style.display = "none"; return; }
+
+  const matches = sugerenciasBase.filter(s =>
+    s.label.toLowerCase().includes(val) ||
+    s.value.toLowerCase().includes(val) ||
+    (s.aliases || []).some(a => a.toLowerCase().includes(val))
+  );
+
+  if (!matches.length) { suggestionsBox.style.display = "none"; return; }
+
+  matches.forEach(s => {
+    const div = document.createElement("div");
+    div.className = "suggestion-item";
+    div.textContent = s.label;
+    div.onclick = () => {
+      input.value = s.label;
+      terminoPendiente = s.value;
+      suggestionsBox.style.display = "none";
+      ejecutarBusqueda(s.value);
+    };
+    suggestionsBox.appendChild(div);
   });
 
-  function buscar() {
-    const q = input.value;
+  suggestionsBox.style.display = "block";
+});
 
-    fetch(`/api/academicos?q=${encodeURIComponent(q)}`)
-      .then(r => r.json())
-      .then(data => {
-        const res = document.getElementById("resultados");
+input.addEventListener("keydown", e => { if (e.key === "Enter") buscar(); });
 
-        if (!data.length) {
-          res.innerHTML = "<p>No se encontraron resultados.</p>";
-          return;
-        }
+document.addEventListener("click", e => {
+  if (!e.target.closest(".search-wrapper")) suggestionsBox.style.display = "none";
+});
 
-        let html = `
-          <table>
-            <tr>
-              <th>Nombre</th>
-              <th>Cargo</th>
-              <th>Escuela</th>
-              <th>Campus</th>
-              <th>Correo</th>
-            </tr>
-        `;
+// =========================
+// COPIAR AL PORTAPAPELES
+// =========================
+function copiarCorreo(correo, btn) {
+  if (!correo || correo === "-") return;
+  navigator.clipboard.writeText(correo).then(() => {
+    btn.textContent = "✓ Copiado";
+    btn.classList.add("copiado");
+    setTimeout(() => {
+      btn.textContent = "📋 Copiar";
+      btn.classList.remove("copiado");
+    }, 2000);
+  });
+}
 
-        data.forEach(r => {
-          html += `
-            <tr>
-              <td>${r.nombre || ""}</td>
-              <td>${r.cargo || ""}</td>
-              <td>${r.escuela || ""}</td>
-              <td>${r.campus || ""}</td>
-              <td>
-                <a href="mailto:${r.correo}">
-                  ${r.correo || ""}
-                </a>
-              </td>
-            </tr>
-          `;
-        });
+// =========================
+// MODALES
+// =========================
+function abrirAyuda() { document.getElementById("modalAyuda").style.display = "block"; }
+function cerrarAyuda() { document.getElementById("modalAyuda").style.display = "none"; }
 
-        html += "</table>";
-        res.innerHTML = html;
+// =========================
+// BÚSQUEDA
+// =========================
+function buscar() {
+  const termino = terminoPendiente || input.value.trim();
+  terminoPendiente = null;
+  ejecutarBusqueda(termino);
+}
+
+function ejecutarBusqueda(q) {
+  suggestionsBox.style.display = "none";
+
+  if (!q || q.length < 2) {
+    document.getElementById("resultados").innerHTML = "<p>Escribe al menos 2 caracteres para buscar.</p>";
+    return;
+  }
+
+  fetch(`/api/academicos?q=${encodeURIComponent(q)}`)
+    .then(r => r.json())
+    .then(data => {
+      const res = document.getElementById("resultados");
+
+      if (!data.length) {
+        res.innerHTML = `<p>No se encontraron resultados para <strong>${q}</strong>.</p>`;
+        return;
+      }
+
+      let html = `
+        <table>
+          <tr>
+            <th>Nombre</th>
+            <th>Cargo</th>
+            <th>Departamento</th>
+            <th>Sede</th>
+            <th>Correo Director</th>
+            <th>Secretaria</th>
+            <th>Correo Secretaria</th>
+          </tr>`;
+
+      data.forEach(r => {
+        // Correo director
+        const correoDir = r.correo_director || "";
+        const correoDirHtml = correoDir && correoDir !== "-"
+          ? `<div class="correo-cell">
+               <span class="tooltip-container">
+                 <a href="mailto:${correoDir}">${correoDir}</a>
+                 <span class="tooltip-box">
+                   ${r.anexo_director ? "📞 <strong>Anexo:</strong> " + r.anexo_director + "<br>" : ""}
+                   ${r.consultar_antes_de_entregar_contactos ? "⚠️ <strong>Restricción:</strong> " + r.consultar_antes_de_entregar_contactos : ""}
+                 </span>
+               </span>
+               <button class="btn-copy" onclick="copiarCorreo('${correoDir}', this)">📋 Copiar</button>
+             </div>`
+          : correoDir;
+
+        // Correo secretaria
+        const correoSec = r.secretaria_correo || "";
+        const correoSecHtml = correoSec && correoSec !== "-"
+          ? `<div class="correo-cell">
+               <span class="tooltip-container">
+                 <a href="mailto:${correoSec}">${correoSec}</a>
+                 <span class="tooltip-box">
+                   ${r.anexo_secretaria ? "📞 <strong>Anexo:</strong> " + r.anexo_secretaria + "<br>" : ""}
+                   ${r.consultar_antes_de_entregar_contactos ? "⚠️ <strong>Restricción:</strong> " + r.consultar_antes_de_entregar_contactos : ""}
+                 </span>
+               </span>
+               <button class="btn-copy" onclick="copiarCorreo('${correoSec}', this)">📋 Copiar</button>
+             </div>`
+          : correoSec;
+
+        html += `
+          <tr>
+            <td>${r.nombre || ""}</td>
+            <td>${r.cargo || ""}</td>
+            <td>${r.departamento || ""}</td>
+            <td>${r.sede || ""}</td>
+            <td>${correoDirHtml}</td>
+            <td>${r.secretaria_nombre || ""}</td>
+            <td>${correoSecHtml}</td>
+          </tr>`;
       });
-  }
 
-  function limpiar() {
-    input.value = "";
-    document.getElementById("resultados").innerHTML = "";
-  }
+      html += "</table>";
+      res.innerHTML = html;
+    })
+    .catch(() => {
+      document.getElementById("resultados").innerHTML = "<p>Error al conectar con el servidor.</p>";
+    });
+}
+
+function limpiar() {
+  input.value = "";
+  terminoPendiente = null;
+  document.getElementById("resultados").innerHTML = "";
+  suggestionsBox.style.display = "none";
+}
 </script>
 
 </body>
 </html>
-
