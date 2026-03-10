@@ -431,14 +431,15 @@ function ejecutarBusqueda(q) {
           </tr>`;
 
       data.forEach(r => {
-        // Correo director
-        const correoDir = r.correo_director || "";
+        // Correo director (columna con espacio en Supabase: "correo director")
+        const correoDir = r["correo director"] || "";
+        const anexoDir  = r["anexo director"]  || "";
         const correoDirHtml = correoDir && correoDir !== "-"
           ? `<div class="correo-cell">
                <span class="tooltip-container">
                  <a href="mailto:${correoDir}">${correoDir}</a>
                  <span class="tooltip-box">
-                   ${r.anexo_director ? "📞 <strong>Anexo:</strong> " + r.anexo_director + "<br>" : ""}
+                   ${anexoDir ? "📞 <strong>Anexo:</strong> " + anexoDir + "<br>" : ""}
                    ${r.consultar_antes_de_entregar_contactos ? "⚠️ <strong>Restricción:</strong> " + r.consultar_antes_de_entregar_contactos : ""}
                  </span>
                </span>
@@ -448,12 +449,13 @@ function ejecutarBusqueda(q) {
 
         // Correo secretaria
         const correoSec = r.secretaria_correo || "";
+        const anexoSec  = r.secretaria_anexo  || "";
         const correoSecHtml = correoSec && correoSec !== "-"
           ? `<div class="correo-cell">
                <span class="tooltip-container">
                  <a href="mailto:${correoSec}">${correoSec}</a>
                  <span class="tooltip-box">
-                   ${r.anexo_secretaria ? "📞 <strong>Anexo:</strong> " + r.anexo_secretaria + "<br>" : ""}
+                   ${anexoSec ? "📞 <strong>Anexo:</strong> " + anexoSec + "<br>" : ""}
                    ${r.consultar_antes_de_entregar_contactos ? "⚠️ <strong>Restricción:</strong> " + r.consultar_antes_de_entregar_contactos : ""}
                  </span>
                </span>
