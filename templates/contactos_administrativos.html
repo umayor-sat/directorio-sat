@@ -11,7 +11,6 @@ body {
   margin: 0;
 }
 
-/* HEADER */
 .header {
   background: #f2b705;
   padding: 20px 30px;
@@ -28,7 +27,6 @@ body {
   color: #002f6c;
 }
 
-/* CONTENEDOR */
 .container {
   max-width: 1200px;
   margin: 30px auto;
@@ -38,7 +36,6 @@ body {
   box-shadow: 0 0 20px rgba(0,0,0,0.1);
 }
 
-/* BUSCADOR */
 .search-wrapper { position: relative; }
 
 .search-bar {
@@ -78,7 +75,6 @@ body {
   cursor: pointer;
 }
 
-/* SUGERENCIAS */
 .suggestions {
   position: absolute;
   top: 100%;
@@ -98,11 +94,8 @@ body {
   font-size: 14px;
 }
 
-.suggestion-item:hover {
-  background: #f0f4f8;
-}
+.suggestion-item:hover { background: #f0f4f8; }
 
-/* TABLA */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -120,11 +113,7 @@ th {
   color: white;
 }
 
-/* TOOLTIP */
-.tooltip {
-  position: relative;
-  display: inline-block;
-}
+.tooltip { position: relative; display: inline-block; }
 
 .tooltip-box {
   visibility: hidden;
@@ -144,12 +133,8 @@ th {
   font-size: 13px;
 }
 
-.tooltip:hover .tooltip-box {
-  visibility: visible;
-  opacity: 1;
-}
+.tooltip:hover .tooltip-box { visibility: visible; opacity: 1; }
 
-/* MODAL */
 .modal {
   display: none;
   position: fixed;
@@ -169,13 +154,8 @@ th {
 
 .modal h3 { margin-top: 0; }
 
-.close {
-  float: right;
-  cursor: pointer;
-  font-size: 20px;
-}
+.close { float: right; cursor: pointer; font-size: 20px; }
 
-/* FOOTER */
 .footer {
   margin-top: 40px;
   text-align: center;
@@ -196,7 +176,7 @@ th {
 
   <div class="search-wrapper">
     <div class="search-bar">
-      <input type="text" id="q" placeholder="Buscar por área (ej: becas, partes, financiera…)">
+      <input type="text" id="q" placeholder="Buscar por área (ej: becas, ore, financiera…)">
       <button class="btn-primary" onclick="buscar()">Buscar</button>
       <button class="btn-secondary" onclick="limpiar()">Limpiar</button>
       <button class="info-help" onclick="abrirAyuda()">ℹ️</button>
@@ -219,11 +199,10 @@ th {
     <span class="close" onclick="cerrarAyuda()">×</span>
     <h3>¿Cómo buscar contactos administrativos?</h3>
     <p>
-      • Busca principalmente por <strong>área</strong> (ej: becas, registro, financiera).<br><br>
-      • Puedes usar siglas como <strong>ORE</strong>, <strong>DAE</strong>, <strong>RRII</strong>.<br><br>
-      • Puedes usar palabras comunes como <em>plata</em>, <em>oficio</em>,
-      <em>tribunal</em>, <em>honorarios</em>.<br><br>
-      • El sistema sugiere áreas mientras escribes y no distingue mayúsculas de minúsculas.
+      • Busca por <strong>área</strong> o <strong>sigla</strong> (ej: becas, ore, dae, rrii).<br><br>
+      • No importan las mayúsculas: <em>ORE</em>, <em>ore</em> y <em>Ore</em> dan el mismo resultado.<br><br>
+      • Puedes usar palabras como <em>plata</em>, <em>oficio</em>, <em>honorarios</em>.<br><br>
+      • El sistema sugiere áreas mientras escribes.
     </p>
   </div>
 </div>
@@ -242,29 +221,34 @@ th {
 // SUGERENCIAS
 // =========================
 const sugerenciasBase = [
-  { label: "Becas y Créditos",                          value: "becas",          aliases: ["byc","creditos"] },
-  { label: "Admisión",                                   value: "admision",       aliases: ["admin"] },
-  { label: "Matrícula",                                  value: "matricula",      aliases: ["matri"] },
-  { label: "Registro Estudiantil (ORE)",                 value: "ore",            aliases: ["registro","oficina registro"] },
-  { label: "Oficina de Partes",                          value: "partes",         aliases: [] },
-  { label: "Gestión Financiera",                         value: "financiera",     aliases: ["plata","dinero","gf"] },
-  { label: "Pago a Proveedores",                         value: "proveedores",    aliases: ["facturacion","pago facturas"] },
-  { label: "Departamento de Personal",                   value: "personal",       aliases: [] },
-  { label: "Remuneraciones",                             value: "remuneraciones", aliases: ["honorarios"] },
-  { label: "Dirección de Asuntos Estudiantiles (DAE)",   value: "dae",            aliases: [] },
-  { label: "Dirección de Comunicación Estratégica",      value: "comunicacion",   aliases: ["dce","difusion"] },
-  { label: "Relaciones Internacionales",                 value: "relaciones",     aliases: ["rrii"] },
-  { label: "Clínicas",                                   value: "clinicas",       aliases: ["dental","fono","veterinaria","psico"] },
-  { label: "Guardias",                                   value: "guardias",       aliases: ["guard"] },
-  { label: "Abogados",                                   value: "abogados",       aliases: ["oficio","tribunal","demanda","legal"] },
-  { label: "Impresiones",                                value: "impresiones",    aliases: ["impresoras"] },
-  { label: "Biblioteca",                                 value: "biblioteca",     aliases: ["libros"] }
+  { label: "Becas y Créditos",                         value: "becas",          aliases: ["byc","creditos"] },
+  { label: "Admisión",                                  value: "admision",       aliases: ["admin"] },
+  { label: "Matrícula",                                 value: "matricula",      aliases: ["matri"] },
+  { label: "Registro Estudiantil (ORE)",                value: "ore",            aliases: ["registro","oficina registro"] },
+  { label: "Oficina de Partes",                         value: "partes",         aliases: [] },
+  { label: "Gestión Financiera",                        value: "financiera",     aliases: ["plata","dinero","gf"] },
+  { label: "Pago a Proveedores",                        value: "proveedores",    aliases: ["facturacion","pago facturas"] },
+  { label: "Departamento de Personal",                  value: "personal",       aliases: [] },
+  { label: "Remuneraciones",                            value: "remuneraciones", aliases: ["honorarios"] },
+  { label: "Dirección de Asuntos Estudiantiles (DAE)",  value: "dae",            aliases: [] },
+  { label: "Dirección de Comunicación Estratégica",     value: "comunicacion",   aliases: ["dce","difusion"] },
+  { label: "Relaciones Internacionales",                value: "relaciones",     aliases: ["rrii"] },
+  { label: "Clínicas",                                  value: "clinicas",       aliases: ["dental","fono","veterinaria","psico"] },
+  { label: "Guardias",                                  value: "guardias",       aliases: ["guard"] },
+  { label: "Abogados",                                  value: "abogados",       aliases: ["oficio","tribunal","demanda","legal"] },
+  { label: "Impresiones",                               value: "impresiones",    aliases: ["impresoras"] },
+  { label: "Biblioteca",                                value: "biblioteca",     aliases: ["libros"] }
 ];
 
 const input = document.getElementById("q");
 const suggestionsBox = document.getElementById("suggestions");
 
+// Guarda el término real a enviar al backend cuando el usuario elige una sugerencia
+let terminoPendiente = null;
+
 input.addEventListener("input", () => {
+  terminoPendiente = null; // el usuario escribe manualmente → resetea
+
   const val = input.value.toLowerCase().trim();
   suggestionsBox.innerHTML = "";
 
@@ -289,10 +273,10 @@ input.addEventListener("input", () => {
     div.className = "suggestion-item";
     div.textContent = s.label;
     div.onclick = () => {
-      // Muestra el label legible en el input, pero busca con el value correcto
-      input.value = s.label;
+      input.value = s.label;       // muestra el label legible en el input
+      terminoPendiente = s.value;  // guarda "ore", "dae", etc.
       suggestionsBox.style.display = "none";
-      buscarConTermino(s.value);  // ← KEY: manda "ore" al backend, no "registro"
+      ejecutarBusqueda(s.value);   // busca de inmediato con el value correcto
     };
     suggestionsBox.appendChild(div);
   });
@@ -304,7 +288,6 @@ input.addEventListener("keydown", e => {
   if (e.key === "Enter") buscar();
 });
 
-// Cierra sugerencias al hacer clic fuera
 document.addEventListener("click", e => {
   if (!e.target.closest(".search-wrapper")) {
     suggestionsBox.style.display = "none";
@@ -314,32 +297,29 @@ document.addEventListener("click", e => {
 // =========================
 // MODALES
 // =========================
-function abrirAyuda() {
-  document.getElementById("modalAyuda").style.display = "block";
-}
-function cerrarAyuda() {
-  document.getElementById("modalAyuda").style.display = "none";
-}
+function abrirAyuda() { document.getElementById("modalAyuda").style.display = "block"; }
+function cerrarAyuda() { document.getElementById("modalAyuda").style.display = "none"; }
 
 function abrirDetalle(texto) {
   document.getElementById("modalTexto").innerText = texto || "Sin información adicional.";
   document.getElementById("modalDetalle").style.display = "block";
 }
-function cerrarDetalle() {
-  document.getElementById("modalDetalle").style.display = "none";
-}
+function cerrarDetalle() { document.getElementById("modalDetalle").style.display = "none"; }
 
 // =========================
 // BÚSQUEDA
 // =========================
 
-// Busca con lo que está escrito en el input (botón Buscar / Enter)
+// Botón Buscar / Enter:
+// Si el usuario eligió sugerencia → usa terminoPendiente ("ore")
+// Si el usuario escribió a mano → usa input.value tal cual
 function buscar() {
-  buscarConTermino(input.value.trim());
+  const termino = terminoPendiente || input.value.trim();
+  terminoPendiente = null;
+  ejecutarBusqueda(termino);
 }
 
-// Busca con un término específico (usado por las sugerencias)
-function buscarConTermino(termino) {
+function ejecutarBusqueda(termino) {
   suggestionsBox.style.display = "none";
 
   if (!termino || termino.length < 2) {
@@ -353,7 +333,7 @@ function buscarConTermino(termino) {
       const res = document.getElementById("resultados");
 
       if (!data.length) {
-        res.innerHTML = "<p>No se encontraron resultados para <strong>" + termino + "</strong>.</p>";
+        res.innerHTML = `<p>No se encontraron resultados para <strong>${termino}</strong>.</p>`;
         return;
       }
 
@@ -402,6 +382,7 @@ function buscarConTermino(termino) {
 
 function limpiar() {
   input.value = "";
+  terminoPendiente = null;
   document.getElementById("resultados").innerHTML = "";
   suggestionsBox.style.display = "none";
 }
