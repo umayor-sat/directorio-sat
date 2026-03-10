@@ -135,6 +135,30 @@ th {
 
 .tooltip:hover .tooltip-box { visibility: visible; opacity: 1; }
 
+/* CORREO CON BOTÓN COPIAR */
+.correo-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+
+.btn-copy {
+  background: none;
+  border: 1px solid #005baa;
+  border-radius: 4px;
+  color: #005baa;
+  font-size: 11px;
+  padding: 2px 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-copy:hover { background: #005baa; color: #fff; }
+.btn-copy.copiado { background: #28a745; color: #fff; border-color: #28a745; }
+
 .modal {
   display: none;
   position: fixed;
@@ -314,6 +338,21 @@ document.addEventListener("click", e => {
 });
 
 // =========================
+// COPIAR AL PORTAPAPELES
+// =========================
+function copiarCorreo(correo, btn) {
+  if (!correo || correo === "-") return;
+  navigator.clipboard.writeText(correo).then(() => {
+    btn.textContent = "✓ Copiado";
+    btn.classList.add("copiado");
+    setTimeout(() => {
+      btn.textContent = "📋 Copiar";
+      btn.classList.remove("copiado");
+    }, 2000);
+  });
+}
+
+// =========================
 // MODALES
 // =========================
 function abrirAyuda() { document.getElementById("modalAyuda").style.display = "block"; }
@@ -371,13 +410,18 @@ function ejecutarBusqueda(termino) {
           <td>${r.area || ""}</td>
           <td>${r.campus || ""}</td>
           <td>
-            <span class="tooltip">
-              <a href="mailto:${r.correo}">${r.correo || ""}</a>
-              <span class="tooltip-box">
-                ${r.anexo ? "📞 Anexo: " + r.anexo + "<br>" : ""}
-                ${r.restricciones ? "⚠️ " + r.restricciones : ""}
+            <div class="correo-cell">
+              <span class="tooltip">
+                <a href="mailto:${r.correo}">${r.correo || ""}</a>
+                <span class="tooltip-box">
+                  ${r.anexo ? "📞 Anexo: " + r.anexo + "<br>" : ""}
+                  ${r.restricciones ? "⚠️ " + r.restricciones : ""}
+                </span>
               </span>
-            </span>
+              ${r.correo && r.correo !== "-"
+                ? `<button class="btn-copy" onclick="copiarCorreo('${r.correo}', this)">📋 Copiar</button>`
+                : ""}
+            </div>
           </td>
           <td>
             <button onclick="abrirDetalle('${(r.observaciones || '').replace(/'/g, "\\'").replace(/\n/g, " ")}')">
@@ -405,4 +449,3 @@ function limpiar() {
 
 </body>
 </html>
-
