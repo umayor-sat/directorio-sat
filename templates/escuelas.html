@@ -5,18 +5,13 @@
 <title>Directorio de Escuelas – Universidad Mayor</title>
 
 <style>
-/* =========================
-   ESTILOS GENERALES
-========================= */
 body {
   font-family: Calibri, Arial, sans-serif;
   background: #f3f6f9;
   margin: 0;
 }
 
-/* =========================
-   HEADER
-========================= */
+/* HEADER */
 .header {
   background: #f2b705;
   padding: 20px 30px;
@@ -33,9 +28,7 @@ body {
   color: #002f6c;
 }
 
-/* =========================
-   CONTENEDOR
-========================= */
+/* CONTENEDOR */
 .container {
   max-width: 1200px;
   margin: 30px auto;
@@ -45,13 +38,15 @@ body {
   box-shadow: 0 0 20px rgba(0,0,0,0.1);
 }
 
-/* =========================
-   BUSCADOR
-========================= */
+/* BUSCADOR */
+.search-wrapper {
+  position: relative;
+  margin-bottom: 20px;
+}
+
 .search-bar {
   display: flex;
   gap: 10px;
-  margin-bottom: 20px;
   align-items: center;
 }
 
@@ -61,6 +56,8 @@ body {
   font-size: 16px;
   flex: 1;
 }
+
+.search-bar select { flex: 0 0 180px; }
 
 .search-bar button,
 .search-bar a {
@@ -75,11 +72,10 @@ body {
   justify-content: center;
 }
 
-.btn-primary { background: #005baa; color: #fff; }
-.btn-secondary { background: #999; color: #fff; }
-.btn-home { background: #005baa; color: #fff; }
+.btn-primary  { background: #005baa; color: #fff; }
+.btn-secondary{ background: #999;    color: #fff; }
+.btn-home     { background: #005baa; color: #fff; }
 
-/* ÍCONO INFO */
 .info-help {
   background: #e9eef4;
   color: #005baa;
@@ -91,9 +87,31 @@ body {
   cursor: pointer;
 }
 
-/* =========================
-   TABLA
-========================= */
+/* SUGERENCIAS */
+.suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 6px 14px rgba(0,0,0,.12);
+  z-index: 50;
+  display: none;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.suggestion-item {
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.suggestion-item:hover { background: #f0f4f8; }
+
+/* TABLA */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -113,9 +131,31 @@ th {
   text-align: left;
 }
 
-/* =========================
-   TOOLTIP
-========================= */
+/* CORREO CON BOTÓN COPIAR */
+.correo-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+
+.btn-copy {
+  background: none;
+  border: 1px solid #005baa;
+  border-radius: 4px;
+  color: #005baa;
+  font-size: 11px;
+  padding: 2px 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-copy:hover { background: #005baa; color: #fff; }
+.btn-copy.copiado { background: #28a745; color: #fff; border-color: #28a745; }
+
+/* TOOLTIP */
 .tooltip-container {
   position: relative;
   display: inline-block;
@@ -144,17 +184,13 @@ th {
   opacity: 1;
 }
 
-/* =========================
-   MODAL AYUDA
-========================= */
+/* MODAL */
 .modal {
   display: none;
   position: fixed;
   z-index: 200;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
   background: rgba(0,0,0,0.45);
 }
 
@@ -171,9 +207,7 @@ th {
   color: #005baa;
 }
 
-.modal-close {
-  text-align: right;
-}
+.modal-close { text-align: right; }
 
 .modal-close button {
   background: #999;
@@ -184,9 +218,7 @@ th {
   cursor: pointer;
 }
 
-/* =========================
-   FOOTER
-========================= */
+/* FOOTER */
 .footer {
   margin-top: 40px;
   text-align: center;
@@ -209,19 +241,22 @@ th {
 <div class="container">
 
   <!-- BUSCADOR -->
-  <div class="search-bar">
-    <input type="text" id="q" placeholder="Buscar escuela, nombre o cargo…">
+  <div class="search-wrapper">
+    <div class="search-bar">
+      <input type="text" id="q" placeholder="Buscar escuela, nombre o cargo…">
 
-    <select id="sede">
-      <option value="">Todas las sedes</option>
-      <option value="santiago">Santiago</option>
-      <option value="temuco">Temuco</option>
-    </select>
+      <select id="sede">
+        <option value="">Todas las sedes</option>
+        <option value="santiago">Santiago</option>
+        <option value="temuco">Temuco</option>
+      </select>
 
-    <button class="btn-primary" onclick="buscar()">Buscar</button>
-    <button class="btn-secondary" onclick="limpiar()">Limpiar</button>
-    <button class="info-help" onclick="abrirAyuda()">ℹ️</button>
-    <a href="/" class="btn-home">Volver</a>
+      <button class="btn-primary" onclick="buscar()">Buscar</button>
+      <button class="btn-secondary" onclick="limpiar()">Limpiar</button>
+      <button class="info-help" onclick="abrirAyuda()">ℹ️</button>
+      <a href="/" class="btn-home">Volver</a>
+    </div>
+    <div id="suggestions" class="suggestions"></div>
   </div>
 
   <div id="resultados"></div>
@@ -241,8 +276,10 @@ th {
     </p>
     <ul>
       <li>Escribe una palabra clave y presiona <strong>Buscar</strong> o la tecla <strong>Enter</strong>.</li>
+      <li>El sistema <strong>sugiere escuelas</strong> mientras escribes.</li>
       <li>Puedes filtrar por <strong>sede</strong> si lo necesitas.</li>
-      <li>Al pasar el mouse sobre los correos, verás <strong>anexos y restricciones</strong> cuando existan.</li>
+      <li>Al pasar el mouse sobre los correos, verás <strong>anexos y restricciones</strong>.</li>
+      <li>Usa el botón <strong>📋 Copiar</strong> para copiar el correo al portapapeles con un clic.</li>
     </ul>
     <div class="modal-close">
       <button onclick="cerrarAyuda()">Cerrar</button>
@@ -251,30 +288,139 @@ th {
 </div>
 
 <script>
-// Buscar con ENTER
-document.getElementById("q").addEventListener("keydown", function(e) {
-  if (e.key === "Enter") {
-    buscar();
-  }
+// =========================
+// SUGERENCIAS
+// values = escuela_busqueda exacto del CSV/Supabase
+// =========================
+const sugerenciasBase = [
+  { label: "Medicina",                        value: "medicina",                    aliases: ["med"] },
+  { label: "Odontología",                     value: "odontologia",                 aliases: ["dental","dent"] },
+  { label: "Enfermería",                      value: "enfermeria",                  aliases: ["enfer"] },
+  { label: "Kinesiología",                    value: "kinesiologia",                aliases: ["kine"] },
+  { label: "Fonoaudiología",                  value: "fonoaudiologia",              aliases: ["fono"] },
+  { label: "Nutrición y Dietética",           value: "nutricion y dietetica",       aliases: ["nutricion","dietetica"] },
+  { label: "Obstetricia y Puericultura",      value: "obstetricia y puericultura",  aliases: ["obstetricia","matrona"] },
+  { label: "Tecnología Médica",               value: "tecnologia medica",           aliases: ["tecmed","tecnologia medica"] },
+  { label: "Terapia Ocupacional",             value: "terapia ocupacional",         aliases: ["to","terapia"] },
+  { label: "Psicología",                      value: "psicologia",                  aliases: ["psico"] },
+  { label: "Psicopedagogía",                  value: "psicopedagogia",              aliases: ["psicopeda"] },
+  { label: "Derecho",                         value: "derecho",                     aliases: ["leyes","abogado"] },
+  { label: "Ingeniería Civil Industrial",     value: "ingenieria civil industrial", aliases: ["ici","civil industrial"] },
+  { label: "Ingeniería Comercial",            value: "ingenieria comercial",        aliases: ["icom","comercial"] },
+  { label: "Ingeniería en Computación e Informática", value: "ingenieria en computacion e informatica", aliases: ["informatica","computacion"] },
+  { label: "Ingeniería en Construcción",      value: "ingenieria en construccion",  aliases: ["construccion"] },
+  { label: "Ingeniería Industrial",           value: "ingenieria industrial",       aliases: ["industrial"] },
+  { label: "Ingeniería Forestal",             value: "ingenieria forestal",         aliases: ["forestal"] },
+  { label: "Ingeniería en Minas",             value: "ingenieria en minas",         aliases: ["minas"] },
+  { label: "Ingeniería en Medio Ambiente",    value: "ingenieria en medio ambiente y sustentabilidad", aliases: ["medio ambiente","sustentabilidad"] },
+  { label: "Ingeniería en Logística / Prevención / Ciberseguridad", value: "ingenieria en logistica prevencion ciberseguridad", aliases: ["logistica","prevencion","ciberseguridad"] },
+  { label: "Ingeniería en Inteligencia Artificial", value: "ingeniero en inteligencia artificial", aliases: ["ia","inteligencia artificial"] },
+  { label: "Ingeniería en Ciencia de Datos",  value: "ingeniero en ciencia de datos", aliases: ["data science","datos"] },
+  { label: "Biotecnología",                   value: "biotecnologia",               aliases: ["bio"] },
+  { label: "Geología",                        value: "geologia",                    aliases: ["geo"] },
+  { label: "Agronomía",                       value: "agronomia",                   aliases: ["agro"] },
+  { label: "Medicina Veterinaria",            value: "medicina veterinaria",        aliases: ["veterinaria","vet"] },
+  { label: "Arquitectura",                    value: "arquitectura",                aliases: ["arq"] },
+  { label: "Diseño",                          value: "diseno",                      aliases: ["diseño"] },
+  { label: "Animación Digital",               value: "animacion digital",           aliases: ["animacion"] },
+  { label: "Cine",                            value: "cine",                        aliases: [] },
+  { label: "Periodismo",                      value: "periodismo",                  aliases: ["perio"] },
+  { label: "Sociología",                      value: "sociologia",                  aliases: ["socio"] },
+  { label: "Administración Pública",          value: "administracion publica",      aliases: ["admpublica","administracion publica"] },
+  { label: "Pedagogía en Inglés",             value: "pedagogia en ingles",         aliases: ["ingles","pedagogia ingles"] },
+  { label: "Pedagogía en Educación Física",   value: "pedagogia en educacion fisica", aliases: ["educacion fisica","ef"] },
+  { label: "Pedagogía en Educación Parvularia", value: "pedagogia en educacion parvularia", aliases: ["parvularia"] },
+  { label: "Pedagogía en Educación Diferencial", value: "pedagogia en educacion diferencial", aliases: ["diferencial"] },
+  { label: "Pedagogía en Artes Musicales",    value: "pedagogia en artes musicales", aliases: ["musica","artes musicales"] },
+  { label: "Conservatorio de Música",         value: "conservatorio de musica",     aliases: ["conservatorio"] },
+  { label: "Teatro",                          value: "teatro",                      aliases: [] },
+  { label: "Turismo Sustentable",             value: "turismo sustentable",         aliases: ["turismo"] },
+  { label: "Auditoría / Contador Público",    value: "auditoria contador publico y auditor", aliases: ["auditoria","contador"] },
+  { label: "Salud Pública",                   value: "salud publica",               aliases: ["salud publica"] },
+  { label: "Rector / Vicerrectores",          value: "rector",                      aliases: ["rector","vicerrector","autoridades"] },
+  { label: "Escuela de Negocios",             value: "escuela de negocios",         aliases: ["negocios"] },
+  { label: "Escuela de Ingeniería",           value: "escuela de ingenieria",       aliases: ["ingenieria"] },
+];
+
+const input       = document.getElementById("q");
+const suggestionsBox = document.getElementById("suggestions");
+let terminoPendiente = null;
+
+input.addEventListener("input", () => {
+  terminoPendiente = null;
+  const val = input.value.toLowerCase().trim();
+  suggestionsBox.innerHTML = "";
+
+  if (val.length < 2) { suggestionsBox.style.display = "none"; return; }
+
+  const matches = sugerenciasBase.filter(s =>
+    s.label.toLowerCase().includes(val) ||
+    s.value.toLowerCase().includes(val) ||
+    (s.aliases || []).some(a => a.toLowerCase().includes(val))
+  );
+
+  if (!matches.length) { suggestionsBox.style.display = "none"; return; }
+
+  matches.forEach(s => {
+    const div = document.createElement("div");
+    div.className = "suggestion-item";
+    div.textContent = s.label;
+    div.onclick = () => {
+      input.value = s.label;
+      terminoPendiente = s.value;
+      suggestionsBox.style.display = "none";
+      ejecutarBusqueda(s.value);
+    };
+    suggestionsBox.appendChild(div);
+  });
+
+  suggestionsBox.style.display = "block";
 });
 
-window.onload = abrirAyuda;
+input.addEventListener("keydown", e => { if (e.key === "Enter") buscar(); });
 
-// =============================================
-// NUEVA FUNCIÓN: determina la modalidad
-// según el campo "escuela" del registro
-// =============================================
+document.addEventListener("click", e => {
+  if (!e.target.closest(".search-wrapper")) suggestionsBox.style.display = "none";
+});
+
+// =========================
+// COPIAR AL PORTAPAPELES
+// =========================
+function copiarCorreo(correo, btn) {
+  if (!correo || correo === "-") return;
+  navigator.clipboard.writeText(correo).then(() => {
+    btn.textContent = "✓ Copiado";
+    btn.classList.add("copiado");
+    setTimeout(() => {
+      btn.textContent = "📋 Copiar";
+      btn.classList.remove("copiado");
+    }, 2000);
+  });
+}
+
+// =========================
+// MODALIDAD
+// =========================
 function getModalidad(escuela) {
   if (!escuela) return "☀️ Modalidad: Diurno";
   const texto = escuela.toLowerCase();
-  if (texto.includes("online")) return "💻 Modalidad: Online";
+  if (texto.includes("online"))    return "💻 Modalidad: Online";
   if (texto.includes("técnico") || texto.includes("tecnico")) return "🔧 Modalidad: Técnico";
   if (texto.includes("vespertino")) return "🌙 Modalidad: Vespertino";
   return "☀️ Modalidad: Diurno";
 }
 
+// =========================
+// BÚSQUEDA
+// =========================
 function buscar() {
-  const q = document.getElementById("q").value;
+  const termino = terminoPendiente || input.value.trim();
+  terminoPendiente = null;
+  ejecutarBusqueda(termino);
+}
+
+function ejecutarBusqueda(q) {
+  suggestionsBox.style.display = "none";
   const sede = document.getElementById("sede").value;
 
   fetch(`/api/escuelas?q=${encodeURIComponent(q)}&sede=${encodeURIComponent(sede)}`)
@@ -300,9 +446,38 @@ function buscar() {
           <th>Correo Secretaría</th>
         </tr>`;
 
-      data.forEach(r => {
-        // ── LÍNEA NUEVA: calcula la modalidad para el tooltip de Sede ──
+      data.forEach((r, i) => {
         const modalidad = getModalidad(r.escuela_busqueda);
+
+        // Correo director
+        const correoDir = r.correo_director || "";
+        const correoDirHtml = correoDir && correoDir !== "-"
+          ? `<div class="correo-cell">
+               <span class="tooltip-container">
+                 <a href="mailto:${correoDir}">${correoDir}</a>
+                 <span class="tooltip-box">
+                   ${r.anexo_director ? "📞 <strong>Anexo:</strong> " + r.anexo_director + "<br>" : ""}
+                   ${r.consultar_antes_de_entregar_contactos ? "⚠️ <strong>Restricción:</strong> " + r.consultar_antes_de_entregar_contactos : ""}
+                 </span>
+               </span>
+               <button class="btn-copy" onclick="copiarCorreo('${correoDir}', this)">📋 Copiar</button>
+             </div>`
+          : "";
+
+        // Correo secretaria
+        const correoSec = r.correo_secretaria || "";
+        const correoSecHtml = correoSec && correoSec !== "-"
+          ? `<div class="correo-cell">
+               <span class="tooltip-container">
+                 <a href="mailto:${correoSec}">${correoSec}</a>
+                 <span class="tooltip-box">
+                   ${r.anexo_secretaria ? "📞 <strong>Anexo:</strong> " + r.anexo_secretaria + "<br>" : ""}
+                   ${r.consultar_antes_de_entregar_contactos ? "⚠️ <strong>Restricción:</strong> " + r.consultar_antes_de_entregar_contactos : ""}
+                 </span>
+               </span>
+               <button class="btn-copy" onclick="copiarCorreo('${correoSec}', this)">📋 Copiar</button>
+             </div>`
+          : "";
 
         html += `
         <tr>
@@ -318,50 +493,34 @@ function buscar() {
           </td>
 
           <td>${r.campus || ""}</td>
-
-          <td>
-            <span class="tooltip-container">
-              <a href="mailto:${r.correo_director}">${r.correo_director || ""}</a>
-              <span class="tooltip-box">
-                ${r.anexo_director ? "📞 <strong>Anexo:</strong> " + r.anexo_director + "<br>" : ""}
-                ${r.consultar_antes_de_entregar_contactos ? "⚠️ <strong>Restricción:</strong> " + r.consultar_antes_de_entregar_contactos : ""}
-              </span>
-            </span>
-          </td>
-
+          <td>${correoDirHtml}</td>
           <td>${r.secretaria || ""}</td>
-
-          <td>
-            <span class="tooltip-container">
-              <a href="mailto:${r.correo_secretaria}">${r.correo_secretaria || ""}</a>
-              <span class="tooltip-box">
-                ${r.anexo_secretaria ? "📞 <strong>Anexo:</strong> " + r.anexo_secretaria + "<br>" : ""}
-                ${r.consultar_antes_de_entregar_contactos ? "⚠️ <strong>Restricción:</strong> " + r.consultar_antes_de_entregar_contactos : ""}
-              </span>
-            </span>
-          </td>
+          <td>${correoSecHtml}</td>
         </tr>`;
       });
 
       html += "</table>";
       res.innerHTML = html;
+    })
+    .catch(() => {
+      document.getElementById("resultados").innerHTML = "<p>Error al conectar con el servidor.</p>";
     });
 }
 
 function limpiar() {
-  document.getElementById("q").value = "";
+  input.value = "";
+  terminoPendiente = null;
   document.getElementById("sede").value = "";
   document.getElementById("resultados").innerHTML = "";
+  suggestionsBox.style.display = "none";
 }
 
-function abrirAyuda() {
-  document.getElementById("modalAyuda").style.display = "block";
-}
+function abrirAyuda() { document.getElementById("modalAyuda").style.display = "block"; }
+function cerrarAyuda() { document.getElementById("modalAyuda").style.display = "none"; }
 
-function cerrarAyuda() {
-  document.getElementById("modalAyuda").style.display = "none";
-}
+window.onload = abrirAyuda;
 </script>
 
 </body>
 </html>
+
