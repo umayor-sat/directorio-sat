@@ -201,7 +201,7 @@ th {
     <p>
       • Busca por <strong>área</strong> o <strong>sigla</strong> (ej: becas, ore, dae, rrii).<br><br>
       • No importan las mayúsculas: <em>ORE</em>, <em>ore</em> y <em>Ore</em> dan el mismo resultado.<br><br>
-      • Puedes usar palabras como <em>plata</em>, <em>oficio</em>, <em>honorarios</em>.<br><br>
+      • Puedes usar palabras como <em>financiera</em>, <em>matrícula</em>, <em>guardias</em>.<br><br>
       • El sistema sugiere áreas mientras escribes.
     </p>
   </div>
@@ -219,35 +219,54 @@ th {
 <script>
 // =========================
 // SUGERENCIAS
+// Los "value" coinciden EXACTAMENTE con area_busqueda en Supabase
 // =========================
 const sugerenciasBase = [
-  { label: "Becas y Créditos",                         value: "becas",          aliases: ["byc","creditos"] },
-  { label: "Admisión",                                  value: "admision",       aliases: ["admin"] },
-  { label: "Matrícula",                                 value: "matricula",      aliases: ["matri"] },
-  { label: "Registro Estudiantil (ORE)",                value: "ore",            aliases: ["registro","oficina registro"] },
-  { label: "Oficina de Partes",                         value: "partes",         aliases: [] },
-  { label: "Gestión Financiera",                        value: "financiera",     aliases: ["plata","dinero","gf"] },
-  { label: "Pago a Proveedores",                        value: "proveedores",    aliases: ["facturacion","pago facturas"] },
-  { label: "Departamento de Personal",                  value: "personal",       aliases: [] },
-  { label: "Remuneraciones",                            value: "remuneraciones", aliases: ["honorarios"] },
-  { label: "Dirección de Asuntos Estudiantiles (DAE)",  value: "dae",            aliases: [] },
-  { label: "Dirección de Comunicación Estratégica",     value: "comunicacion",   aliases: ["dce","difusion"] },
-  { label: "Relaciones Internacionales",                value: "relaciones",     aliases: ["rrii"] },
-  { label: "Clínicas",                                  value: "clinicas",       aliases: ["dental","fono","veterinaria","psico"] },
-  { label: "Guardias",                                  value: "guardias",       aliases: ["guard"] },
-  { label: "Abogados",                                  value: "abogados",       aliases: ["oficio","tribunal","demanda","legal"] },
-  { label: "Impresiones",                               value: "impresiones",    aliases: ["impresoras"] },
-  { label: "Biblioteca",                                value: "biblioteca",     aliases: ["libros"] }
+  { label: "Becas y Créditos",                          value: "Becasycreditos",                              aliases: ["byc","creditos","becas"] },
+  { label: "Admisión",                                   value: "ADMISION",                                    aliases: ["admision","admin"] },
+  { label: "Matrícula",                                  value: "Matricula",                                   aliases: ["matricula","matri"] },
+  { label: "Registro Estudiantil (ORE)",                 value: "Ore",                                         aliases: ["ore","registro"] },
+  { label: "Oficina de Partes",                          value: "oficinadepartes",                             aliases: ["partes"] },
+  { label: "Gestión Financiera",                         value: "GestionFinanciera",                           aliases: ["financiera","plata","dinero","gf","cobranza"] },
+  { label: "Pago a Proveedores",                         value: "pagoproveedores",                             aliases: ["proveedores","facturacion"] },
+  { label: "Departamento de Personal",                   value: "Departamentodepersonal",                      aliases: ["personal","rrhh"] },
+  { label: "Remuneraciones",                             value: "DepartamentoRemuneracionesLiquidacionesPagos", aliases: ["remuneraciones","honorarios","sueldo","liquidacion"] },
+  { label: "DAE / Dirección General Estudiantil",        value: "DGEexDAEdirecciongeneralestudiantil",          aliases: ["dae","dge","estudiantil"] },
+  { label: "Comunicación Estratégica (DCE)",             value: "DCEDireccióndeComunicaciónEstratégica",        aliases: ["dce","comunicacion","difusion"] },
+  { label: "Difusión",                                   value: "Difusion",                                    aliases: ["difusion"] },
+  { label: "Relaciones Internacionales (RRII)",          value: "RelacionesinternacionaleRRII",                 aliases: ["rrii","relaciones","internacional"] },
+  { label: "Clínicas",                                   value: "Clinicas",                                    aliases: ["clinica","dental","fono","veterinaria","psico"] },
+  { label: "Guardias",                                   value: "Guardias",                                    aliases: ["guardia","seguridad"] },
+  { label: "Abogados",                                   value: "Abogados",                                    aliases: ["abogado","oficio","tribunal","demanda","legal"] },
+  { label: "Impresiones / TI",                           value: "Impresiones",                                 aliases: ["impresion","impresora","ti"] },
+  { label: "Biblioteca",                                 value: "biblioteca",                                  aliases: ["libros","biblioteca"] },
+  { label: "Coordinación Docente",                       value: "coordinaciondocente",                         aliases: ["docente","coordinacion"] },
+  { label: "Casino",                                     value: "casino",                                      aliases: ["comida","almuerzo"] },
+  { label: "Operaciones",                                value: "operaciones",                                  aliases: ["operacion","infraestructura"] },
+  { label: "Seguros",                                    value: "Seguros",                                     aliases: ["seguro","accidente"] },
+  { label: "Marketing",                                  value: "Marketing",                                   aliases: ["marketing","publicidad"] },
+  { label: "Emayor (E-learning)",                        value: "Emayor",                                      aliases: ["emayor","elearning","online","plataforma"] },
+  { label: "Instituto de Idiomas (LINC)",                value: "Institutodeidiomaslinc",                      aliases: ["linc","idiomas","ingles"] },
+  { label: "Bienestar / Beneficios",                     value: "DepartamentodeBeneficiosyCalidaddeVidaBienestar", aliases: ["bienestar","beneficios","calidad de vida"] },
+  { label: "Acompañamiento Estudiantil",                 value: "UnidadComercialdeAcompañamientoEstudiantil",  aliases: ["acompañamiento","asesor"] },
+  { label: "Área de Selección (Interno)",                value: "AreaSeleccionInterno",                        aliases: ["seleccion","reclutamiento"] },
+  { label: "Prevención de Riesgos",                      value: "prevencionderiesgos",                         aliases: ["prevencion","riesgos","accidentes"] },
+  { label: "Soporte Computación / Laboratorios",         value: "Soportecomputacionlaboratorios",              aliases: ["soporte","computacion","lab"] },
+  { label: "Mi Portal / Vida Académica",                 value: "Miportalvidaacademica",                       aliases: ["portal","vida academica","notas","horarios"] },
+  { label: "Datos Universidad",                          value: "DatosUniversidad",                            aliases: ["datos","direccion","universidad"] },
+  { label: "D-SCHOOL",                                   value: "D-SCHOOL",                                    aliases: ["dschool","innovacion"] },
+  { label: "Vicom",                                      value: "Vicom",                                       aliases: ["vicom","vinculacion"] },
+  { label: "FEUM (Federación de Estudiantes)",           value: "FEUMFederacióndeEstudiantesdelaUniversidadMayor", aliases: ["feum","federacion","estudiantes"] },
 ];
 
 const input = document.getElementById("q");
 const suggestionsBox = document.getElementById("suggestions");
 
-// Guarda el término real a enviar al backend cuando el usuario elige una sugerencia
+// Guarda el value exacto cuando el usuario elige sugerencia
 let terminoPendiente = null;
 
 input.addEventListener("input", () => {
-  terminoPendiente = null; // el usuario escribe manualmente → resetea
+  terminoPendiente = null;
 
   const val = input.value.toLowerCase().trim();
   suggestionsBox.innerHTML = "";
@@ -273,10 +292,10 @@ input.addEventListener("input", () => {
     div.className = "suggestion-item";
     div.textContent = s.label;
     div.onclick = () => {
-      input.value = s.label;       // muestra el label legible en el input
-      terminoPendiente = s.value;  // guarda "ore", "dae", etc.
+      input.value = s.label;
+      terminoPendiente = s.value;  // ej: "Becasycreditos", "Ore", etc.
       suggestionsBox.style.display = "none";
-      ejecutarBusqueda(s.value);   // busca de inmediato con el value correcto
+      ejecutarBusqueda(s.value);
     };
     suggestionsBox.appendChild(div);
   });
@@ -309,10 +328,6 @@ function cerrarDetalle() { document.getElementById("modalDetalle").style.display
 // =========================
 // BÚSQUEDA
 // =========================
-
-// Botón Buscar / Enter:
-// Si el usuario eligió sugerencia → usa terminoPendiente ("ore")
-// Si el usuario escribió a mano → usa input.value tal cual
 function buscar() {
   const termino = terminoPendiente || input.value.trim();
   terminoPendiente = null;
@@ -390,3 +405,4 @@ function limpiar() {
 
 </body>
 </html>
+
