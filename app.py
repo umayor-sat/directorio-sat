@@ -67,23 +67,11 @@ def api_academicos():
         return jsonify([])
 
     try:
+        # select("*") evita problemas con columnas que tienen espacios
         query = (
             supabase
             .table("otros_contactos_academicos")
-            .select("""
-                nombre,
-                cargo,
-                departamento,
-                departamento_busqueda,
-                sede,
-                correo director,
-                anexo director,
-                secretaria_nombre,
-                secretaria_correo,
-                secretaria_anexo,
-                consultar_antes_de_entregar_contactos,
-                observaciones
-            """)
+            .select("*")
             .ilike("departamento_busqueda", f"%{q}%")
         )
         result = query.execute()
