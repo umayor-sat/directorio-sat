@@ -74,6 +74,25 @@ th { background: #005baa; color: white; text-align: left; }
 .btn-admin-flotante:hover { background: #144d2f; }
 
 .footer { margin-top: 40px; text-align: center; font-size: 13px; color: #666; }
+/* BOTÓN REPORTE */
+.btn-reporte-flotante {
+  position: fixed; bottom: 24px; left: 24px;
+  background: #cc0000; color: white; border: none;
+  width: 52px; height: 52px; border-radius: 50%; font-size: 1.3rem;
+  cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  z-index: 300; display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
+}
+.btn-reporte-flotante:hover { background: #aa0000; }
+.btn-reporte-flotante::after {
+  content: "Reportar error";
+  position: absolute; left: 62px;
+  background: #333; color: #fff;
+  padding: 4px 8px; border-radius: 4px;
+  font-size: 12px; white-space: nowrap;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.btn-reporte-flotante:hover::after { opacity: 1; }
 </style>
 </head>
 <body>
@@ -107,6 +126,9 @@ th { background: #005baa; color: white; text-align: left; }
 <div class="footer">Desarrollado por <strong>Eduardo Ferrada</strong> · Universidad Mayor · 2026</div>
 
 <button class="btn-admin-flotante" onclick="abrirLogin()" title="Administración">✏️</button>
+
+<!-- BOTÓN REPORTE -->
+<a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de error – Directorio SAT&body=Página donde ocurrió el error:%0A%0ADescripción del problema:%0A%0A(Agrega aquí cualquier detalle adicional)" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
 
 <!-- MODAL AYUDA -->
 <div id="modalAyuda" class="modal">
@@ -532,5 +554,6 @@ async function eliminarRegistro(id, btn) {
   }
 }
 </script>
+
 </body>
 </html>
