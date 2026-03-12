@@ -1,233 +1,82 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Contactos Académicos – Universidad Mayor</title>
+<meta charset="UTF-8">
+<title>Contactos Académicos – Universidad Mayor</title>
+<style>
+body { font-family: Calibri, Arial, sans-serif; background: #f3f6f9; margin: 0; }
+.header { background: #f2b705; padding: 20px 30px; display: flex; align-items: center; gap: 25px; }
+.header img { height: 90px; }
+.header h1 { margin: 0; font-size: 28px; color: #002f6c; }
 
-  <style>
-    body {
-      font-family: Calibri, Arial, sans-serif;
-      background: #f3f6f9;
-      margin: 0;
-    }
+.container { max-width: 1200px; margin: 30px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
 
-    /* HEADER */
-    .header {
-      background: #f2b705;
-      padding: 20px 30px;
-      display: flex;
-      align-items: center;
-      gap: 25px;
-    }
+.search-wrapper { position: relative; margin-bottom: 20px; }
+.search-bar { display: flex; gap: 10px; align-items: center; }
+.search-bar input { padding: 12px; font-size: 16px; flex: 1; }
+.search-bar button, .search-bar a { padding: 12px 18px; font-size: 15px; border: none; border-radius: 6px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+.btn-primary  { background: #005baa; color: #fff; }
+.btn-secondary{ background: #999; color: #fff; }
+.btn-home     { background: #005baa; color: #fff; }
+.info-help { background: #e9eef4; color: #005baa; border-radius: 50%; width: 34px; height: 34px; font-weight: bold; border: none; cursor: pointer; }
 
-    .header img { height: 90px; }
+.suggestions { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 1px solid #ccc; border-radius: 6px; box-shadow: 0 6px 14px rgba(0,0,0,.12); z-index: 50; display: none; max-height: 260px; overflow-y: auto; }
+.suggestion-item { padding: 10px 14px; cursor: pointer; font-size: 14px; }
+.suggestion-item:hover { background: #f0f4f8; }
 
-    .header h1 {
-      margin: 0;
-      font-size: 28px;
-      color: #002f6c;
-    }
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+th, td { border: 1px solid #ddd; padding: 10px; font-size: 14px; vertical-align: top; }
+th { background: #005baa; color: white; text-align: left; }
 
-    /* CONTENEDOR */
-    .container {
-      max-width: 1200px;
-      margin: 30px auto;
-      background: #ffffff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    }
+.correo-cell { display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; }
+.btn-copy { background: none; border: 1px solid #005baa; border-radius: 4px; color: #005baa; font-size: 11px; padding: 2px 6px; cursor: pointer; white-space: nowrap; flex-shrink: 0; transition: background 0.2s, color 0.2s; }
+.btn-copy:hover { background: #005baa; color: #fff; }
+.btn-copy.copiado { background: #28a745; color: #fff; border-color: #28a745; }
 
-    /* BUSCADOR */
-    .search-wrapper {
-      position: relative;
-      margin-bottom: 20px;
-    }
+.tooltip-container { position: relative; display: inline-block; }
+.tooltip-box { visibility: hidden; opacity: 0; width: 270px; background: #fff; color: #000; border: 1px solid #ccc; border-radius: 6px; padding: 8px 10px; position: absolute; z-index: 10; top: 125%; left: 50%; transform: translateX(-50%); box-shadow: 0 4px 10px rgba(0,0,0,0.15); font-size: 13px; }
+.tooltip-container:hover .tooltip-box { visibility: visible; opacity: 1; }
 
-    .search-bar {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
+.btn-accion { background: none; border-radius: 4px; font-size: 11px; padding: 2px 6px; cursor: pointer; white-space: nowrap; margin: 2px; }
+.btn-editar  { border: 1px solid #005baa; color: #005baa; }
+.btn-editar:hover  { background: #005baa; color: #fff; }
+.btn-eliminar { border: 1px solid #cc0000; color: #cc0000; }
+.btn-eliminar:hover { background: #cc0000; color: #fff; }
 
-    .search-bar input {
-      padding: 12px;
-      font-size: 16px;
-      flex: 1;
-    }
+.banner-admin { background: #fff3cd; border: 1px solid #f0a500; border-radius: 8px; padding: 10px 18px; margin-bottom: 16px; font-size: 0.9rem; color: #856404; display: none; align-items: center; justify-content: space-between; }
+.banner-admin.visible { display: flex; }
+.banner-admin button { background: none; border: 1px solid #856404; border-radius: 6px; padding: 4px 10px; cursor: pointer; color: #856404; font-size: 0.85rem; }
 
-    .search-bar button,
-    .search-bar a {
-      padding: 12px 18px;
-      font-size: 15px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
+.modal { display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.45); }
+.modal-content { background: #fff; margin: 4% auto; padding: 25px; width: 580px; max-width: 95%; border-radius: 10px; max-height: 88vh; overflow-y: auto; }
+.modal-content h3 { margin-top: 0; color: #005baa; }
+.modal-close { text-align: right; margin-top: 12px; }
+.modal-close button { background: #999; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; }
 
-    .btn-primary  { background: #005baa; color: #fff; }
-    .btn-secondary{ background: #999;    color: #fff; }
-    .btn-home     { background: #005baa; color: #fff; }
+.form-group { margin-bottom: 12px; }
+.form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: #555; margin-bottom: 4px; text-transform: uppercase; }
+.form-group input, .form-group select { width: 100%; padding: 8px 11px; border: 1.5px solid #ddd; border-radius: 6px; font-size: 0.92rem; box-sizing: border-box; }
+.form-group input:focus, .form-group select:focus { outline: none; border-color: #005baa; }
+.form-hint { font-size: 0.76rem; color: #888; margin-top: 2px; }
+.form-row { display: flex; gap: 10px; }
+.form-row .form-group { flex: 1; }
 
-    .info-help {
-      background: #e9eef4;
-      color: #005baa;
-      border-radius: 50%;
-      width: 34px;
-      height: 34px;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
-    }
+.instruccion-flujo { background: #f8f9fa; border-left: 3px solid #f0a500; border-radius: 4px; padding: 8px 12px; margin-bottom: 14px; font-size: 0.8rem; color: #666; line-height: 1.5; }
 
-    /* SUGERENCIAS */
-    .suggestions {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      box-shadow: 0 6px 14px rgba(0,0,0,.12);
-      z-index: 50;
-      display: none;
-      max-height: 260px;
-      overflow-y: auto;
-    }
+.btn-guardar { background: #1a5c38; color: white; border: none; padding: 10px 24px; border-radius: 8px; font-size: 0.95rem; font-weight: 700; cursor: pointer; width: 100%; margin-top: 8px; }
+.btn-guardar:hover { background: #144d2f; }
 
-    .suggestion-item {
-      padding: 10px 14px;
-      cursor: pointer;
-      font-size: 14px;
-    }
+.msg-ok { color: #2e7d32; font-size: 0.88rem; margin-top: 8px; text-align: center; font-weight: 600; display: none; }
+.msg-err { color: #c62828; font-size: 0.88rem; margin-top: 8px; text-align: center; display: none; }
 
-    .suggestion-item:hover { background: #f0f4f8; }
+.btn-admin-flotante { position: fixed; bottom: 24px; right: 24px; background: #1a5c38; color: white; border: none; width: 52px; height: 52px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); z-index: 300; display: flex; align-items: center; justify-content: center; }
+.btn-admin-flotante:hover { background: #144d2f; }
 
-    /* TABLA */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      font-size: 14px;
-      vertical-align: top;
-    }
-
-    th {
-      background: #005baa;
-      color: white;
-      text-align: left;
-    }
-
-    /* CORREO CON BOTÓN COPIAR */
-    .correo-cell {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: nowrap;
-    }
-
-    .btn-copy {
-      background: none;
-      border: 1px solid #005baa;
-      border-radius: 4px;
-      color: #005baa;
-      font-size: 11px;
-      padding: 2px 6px;
-      cursor: pointer;
-      white-space: nowrap;
-      flex-shrink: 0;
-      transition: background 0.2s, color 0.2s;
-    }
-
-    .btn-copy:hover  { background: #005baa; color: #fff; }
-    .btn-copy.copiado{ background: #28a745; color: #fff; border-color: #28a745; }
-
-    /* TOOLTIP */
-    .tooltip-container {
-      position: relative;
-      display: inline-block;
-    }
-
-    .tooltip-box {
-      visibility: hidden;
-      opacity: 0;
-      width: 270px;
-      background: #fff;
-      color: #000;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      padding: 8px 10px;
-      position: absolute;
-      z-index: 10;
-      top: 125%;
-      left: 50%;
-      transform: translateX(-50%);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      font-size: 13px;
-    }
-
-    .tooltip-container:hover .tooltip-box {
-      visibility: visible;
-      opacity: 1;
-    }
-
-    /* MODAL */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 200;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.45);
-    }
-
-    .modal-content {
-      background: #fff;
-      margin: 10% auto;
-      padding: 25px;
-      width: 520px;
-      border-radius: 10px;
-    }
-
-    .modal-content h3 {
-      margin-top: 0;
-      color: #005baa;
-    }
-
-    .modal-close { text-align: right; }
-
-    .modal-close button {
-      background: #999;
-      color: #fff;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    /* FOOTER */
-    .footer {
-      margin-top: 40px;
-      text-align: center;
-      font-size: 13px;
-      color: #666;
-    }
-  </style>
+.footer { margin-top: 40px; text-align: center; font-size: 13px; color: #666; }
+</style>
 </head>
-
 <body>
 
-<!-- HEADER -->
 <div class="header">
   <a href="https://www.umayor.cl" target="_blank">
     <img src="{{ url_for('static', filename='img/logoum.jpg') }}" alt="Universidad Mayor">
@@ -237,25 +86,28 @@
 
 <div class="container">
 
-  <!-- BUSCADOR -->
+  <div class="banner-admin" id="bannerAdmin">
+    ✏️ <strong>Modo administración activo</strong> — puedes agregar, editar y eliminar registros.
+    <button onclick="salirAdmin()">Salir</button>
+  </div>
+
   <div class="search-wrapper">
     <div class="search-bar">
       <input type="text" id="q" placeholder="Buscar por departamento, cargo o nombre…">
-      <button class="btn-primary"   onclick="buscar()">Buscar</button>
+      <button class="btn-primary" onclick="buscar()">Buscar</button>
       <button class="btn-secondary" onclick="limpiar()">Limpiar</button>
-      <button class="info-help"     onclick="abrirAyuda()">ℹ️</button>
+      <button class="info-help" onclick="abrirAyuda()">ℹ️</button>
       <a href="/" class="btn-home">Volver</a>
     </div>
     <div id="suggestions" class="suggestions"></div>
   </div>
 
   <div id="resultados"></div>
-
 </div>
 
-<div class="footer">
-  Desarrollado por <strong>Eduardo Ferrada</strong> · Universidad Mayor · 2026
-</div>
+<div class="footer">Desarrollado por <strong>Eduardo Ferrada</strong> · Universidad Mayor · 2026</div>
+
+<button class="btn-admin-flotante" onclick="abrirLogin()" title="Administración">✏️</button>
 
 <!-- MODAL AYUDA -->
 <div id="modalAyuda" class="modal">
@@ -268,17 +120,128 @@
       • Usa <strong>📋 Copiar</strong> para copiar el correo con un clic.<br>
       • Revisa siempre las restricciones antes de entregar un contacto.
     </p>
-    <div class="modal-close">
-      <button onclick="cerrarAyuda()">Cerrar</button>
+    <div class="modal-close"><button onclick="cerrarAyuda()">Cerrar</button></div>
+  </div>
+</div>
+
+<!-- MODAL LOGIN -->
+<div class="modal" id="modalLogin">
+  <div class="modal-content" style="width:360px; text-align:center;">
+    <h3>🔐 Acceso Administración</h3>
+    <div class="form-group" style="margin-top:16px; text-align:left;">
+      <label>Contraseña</label>
+      <input type="password" id="inputPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter') verificarPassword()"/>
     </div>
+    <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:14px;">
+      <button class="btn-secondary" onclick="cerrarLogin()">Cancelar</button>
+      <button class="btn-primary" onclick="verificarPassword()">Ingresar</button>
+    </div>
+    <div class="msg-err" id="errorLogin">Contraseña incorrecta</div>
+  </div>
+</div>
+
+<!-- MODAL AGREGAR / EDITAR -->
+<div class="modal" id="modalAgregar">
+  <div class="modal-content">
+    <h3 id="tituloFormulario">➕ Agregar registro</h3>
+
+    <div class="instruccion-flujo">
+      💡 <strong>Para agregar:</strong> completa los campos y guarda.<br>
+      ✏️ <strong>Para editar:</strong> cierra este formulario, busca el registro y haz clic en ✏️ Editar.<br>
+      🗑️ <strong>Para eliminar:</strong> cierra este formulario, busca el registro y haz clic en 🗑️ Eliminar.
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nombre *</label>
+        <input type="text" id="f_nombre" placeholder="Nombre completo"/>
+      </div>
+      <div class="form-group">
+        <label>Cargo *</label>
+        <input type="text" id="f_cargo" placeholder="Ej: Director/a"/>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Departamento</label>
+        <input type="text" id="f_departamento" placeholder="Nombre visible"/>
+      </div>
+      <div class="form-group">
+        <label>Departamento búsqueda *</label>
+        <input type="text" id="f_departamento_busqueda" placeholder="Sin tildes, sin espacios"/>
+        <div class="form-hint">Ej: nucleoingles — determina qué buscador lo encuentra</div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nombre búsqueda</label>
+        <input type="text" id="f_nombre_busqueda" placeholder="Nombre sin tildes"/>
+      </div>
+      <div class="form-group">
+        <label>Sede</label>
+        <select id="f_sede">
+          <option value="santiago">Santiago</option>
+          <option value="temuco">Temuco</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Correo Director</label>
+        <input type="email" id="f_correo_director" placeholder="correo@umayor.cl"/>
+      </div>
+      <div class="form-group">
+        <label>Anexo Director</label>
+        <input type="text" id="f_anexo_director" placeholder="Ej: 1234"/>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nombre Secretaria</label>
+        <input type="text" id="f_secretaria_nombre" placeholder="Nombre secretaria"/>
+      </div>
+      <div class="form-group">
+        <label>Correo Secretaria</label>
+        <input type="email" id="f_secretaria_correo" placeholder="correo@umayor.cl"/>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Anexo Secretaria</label>
+        <input type="text" id="f_secretaria_anexo" placeholder="Ej: 5678"/>
+      </div>
+      <div class="form-group">
+        <label>Restricción entrega</label>
+        <input type="text" id="f_consultar" placeholder="Dejar vacío si no aplica"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Observaciones</label>
+      <input type="text" id="f_observaciones" placeholder="Opcional"/>
+    </div>
+
+    <button class="btn-guardar" onclick="guardarAcademico()">Guardar registro</button>
+    <div class="msg-ok" id="msgOkAgregar">✅ Registro guardado correctamente</div>
+    <div class="msg-err" id="msgErrAgregar"></div>
+    <div class="modal-close"><button onclick="cerrarAgregar()">Cerrar</button></div>
   </div>
 </div>
 
 <script>
-// =========================
-// SUGERENCIAS
-// values = departamento_busqueda exacto del CSV/Supabase
-// =========================
+const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_3Shj63dB3uBAL_TVvqfBRw_3RyTRZ1U";
+const PASSWORD_ADMIN = "SAT@UM2026";
+
+let modoAdmin = false;
+let ultimaBusqueda = "";
+let editandoId = null;
+
 const sugerenciasBase = [
   { label: "Admisión",                                   value: "admision",                                    aliases: ["admision"] },
   { label: "Asuntos Estudiantiles",                      value: "asuntosestudiantiles",                        aliases: ["dae","estudiantil"] },
@@ -329,7 +292,7 @@ const sugerenciasBase = [
   { label: "Vinculación con el Medio",                   value: "vinculacionconelmedio",                       aliases: ["vinculacion","medio"] },
 ];
 
-const input          = document.getElementById("q");
+const input = document.getElementById("q");
 const suggestionsBox = document.getElementById("suggestions");
 let terminoPendiente = null;
 
@@ -337,17 +300,13 @@ input.addEventListener("input", () => {
   terminoPendiente = null;
   const val = input.value.toLowerCase().trim();
   suggestionsBox.innerHTML = "";
-
   if (val.length < 2) { suggestionsBox.style.display = "none"; return; }
-
   const matches = sugerenciasBase.filter(s =>
     s.label.toLowerCase().includes(val) ||
     s.value.toLowerCase().includes(val) ||
     (s.aliases || []).some(a => a.toLowerCase().includes(val))
   );
-
   if (!matches.length) { suggestionsBox.style.display = "none"; return; }
-
   matches.forEach(s => {
     const div = document.createElement("div");
     div.className = "suggestion-item";
@@ -360,40 +319,23 @@ input.addEventListener("input", () => {
     };
     suggestionsBox.appendChild(div);
   });
-
   suggestionsBox.style.display = "block";
 });
 
 input.addEventListener("keydown", e => { if (e.key === "Enter") buscar(); });
-
 document.addEventListener("click", e => {
   if (!e.target.closest(".search-wrapper")) suggestionsBox.style.display = "none";
 });
 
-// =========================
-// COPIAR AL PORTAPAPELES
-// =========================
 function copiarCorreo(correo, btn) {
   if (!correo || correo === "-") return;
   navigator.clipboard.writeText(correo).then(() => {
     btn.textContent = "✓ Copiado";
     btn.classList.add("copiado");
-    setTimeout(() => {
-      btn.textContent = "📋 Copiar";
-      btn.classList.remove("copiado");
-    }, 2000);
+    setTimeout(() => { btn.textContent = "📋 Copiar"; btn.classList.remove("copiado"); }, 2000);
   });
 }
 
-// =========================
-// MODALES
-// =========================
-function abrirAyuda() { document.getElementById("modalAyuda").style.display = "block"; }
-function cerrarAyuda() { document.getElementById("modalAyuda").style.display = "none"; }
-
-// =========================
-// BÚSQUEDA
-// =========================
 function buscar() {
   const termino = terminoPendiente || input.value.trim();
   terminoPendiente = null;
@@ -401,8 +343,8 @@ function buscar() {
 }
 
 function ejecutarBusqueda(q) {
+  ultimaBusqueda = q;
   suggestionsBox.style.display = "none";
-
   if (!q || q.length < 2) {
     document.getElementById("resultados").innerHTML = "<p>Escribe al menos 2 caracteres para buscar.</p>";
     return;
@@ -412,67 +354,61 @@ function ejecutarBusqueda(q) {
     .then(r => r.json())
     .then(data => {
       const res = document.getElementById("resultados");
-
       if (!data.length) {
         res.innerHTML = `<p>No se encontraron resultados para <strong>${q}</strong>.</p>`;
         return;
       }
 
-      let html = `
-        <table>
-          <tr>
-            <th>Nombre</th>
-            <th>Cargo</th>
-            <th>Departamento</th>
-            <th>Sede</th>
-            <th>Correo Director</th>
-            <th>Secretaria</th>
-            <th>Correo Secretaria</th>
-          </tr>`;
+      let html = `<table><tr>
+        <th>Nombre</th><th>Cargo</th><th>Departamento</th><th>Sede</th>
+        <th>Correo Director</th><th>Secretaria</th><th>Correo Secretaria</th>
+        ${modoAdmin ? "<th>Acciones</th>" : ""}
+      </tr>`;
 
       data.forEach(r => {
-        // Correo director (columna con espacio en Supabase: "correo director")
-        const correoDir = r["correo director"] || "";
+        const correoDir = r["correo_director"] || "";
         const anexoDir  = r["anexo director"]  || "";
+        const correoSec = r.secretaria_correo  || "";
+        const anexoSec  = r.secretaria_anexo   || "";
+
         const correoDirHtml = correoDir && correoDir !== "-"
           ? `<div class="correo-cell">
-               <span class="tooltip-container">
-                 <a href="mailto:${correoDir}">${correoDir}</a>
+               <span class="tooltip-container"><a href="mailto:${correoDir}">${correoDir}</a>
                  <span class="tooltip-box">
                    ${anexoDir ? "📞 <strong>Anexo:</strong> " + anexoDir + "<br>" : ""}
                    ${r.consultar_antes_de_entregar_contactos ? "⚠️ <strong>Restricción:</strong> " + r.consultar_antes_de_entregar_contactos : ""}
                  </span>
                </span>
                <button class="btn-copy" onclick="copiarCorreo('${correoDir}', this)">📋 Copiar</button>
-             </div>`
-          : correoDir;
+             </div>` : correoDir;
 
-        // Correo secretaria
-        const correoSec = r.secretaria_correo || "";
-        const anexoSec  = r.secretaria_anexo  || "";
         const correoSecHtml = correoSec && correoSec !== "-"
           ? `<div class="correo-cell">
-               <span class="tooltip-container">
-                 <a href="mailto:${correoSec}">${correoSec}</a>
+               <span class="tooltip-container"><a href="mailto:${correoSec}">${correoSec}</a>
                  <span class="tooltip-box">
                    ${anexoSec ? "📞 <strong>Anexo:</strong> " + anexoSec + "<br>" : ""}
                    ${r.consultar_antes_de_entregar_contactos ? "⚠️ <strong>Restricción:</strong> " + r.consultar_antes_de_entregar_contactos : ""}
                  </span>
                </span>
                <button class="btn-copy" onclick="copiarCorreo('${correoSec}', this)">📋 Copiar</button>
-             </div>`
-          : correoSec;
+             </div>` : correoSec;
 
-        html += `
-          <tr>
-            <td>${r.nombre || ""}</td>
-            <td>${r.cargo || ""}</td>
-            <td>${r.departamento || ""}</td>
-            <td>${r.sede || ""}</td>
-            <td>${correoDirHtml}</td>
-            <td>${r.secretaria_nombre || ""}</td>
-            <td>${correoSecHtml}</td>
-          </tr>`;
+        const botonesAdmin = modoAdmin
+          ? `<td>
+               <button class="btn-accion btn-editar" onclick='editarRegistro(${JSON.stringify(r)})'>✏️ Editar</button>
+               <button class="btn-accion btn-eliminar" onclick="eliminarRegistro(${r.id}, this)">🗑️ Eliminar</button>
+             </td>` : "";
+
+        html += `<tr>
+          <td>${r.nombre || ""}</td>
+          <td>${r.cargo || ""}</td>
+          <td>${r.departamento || ""}</td>
+          <td>${r.sede || ""}</td>
+          <td>${correoDirHtml}</td>
+          <td>${r.secretaria_nombre || ""}</td>
+          <td>${correoSecHtml}</td>
+          ${botonesAdmin}
+        </tr>`;
       });
 
       html += "</table>";
@@ -489,7 +425,145 @@ function limpiar() {
   document.getElementById("resultados").innerHTML = "";
   suggestionsBox.style.display = "none";
 }
-</script>
 
+// LOGIN
+function abrirLogin() {
+  if (modoAdmin) { abrirAgregar(); return; }
+  document.getElementById("modalLogin").style.display = "block";
+  document.getElementById("inputPassword").value = "";
+  document.getElementById("errorLogin").style.display = "none";
+  setTimeout(() => document.getElementById("inputPassword").focus(), 100);
+}
+function cerrarLogin() { document.getElementById("modalLogin").style.display = "none"; }
+function verificarPassword() {
+  if (document.getElementById("inputPassword").value === PASSWORD_ADMIN) {
+    cerrarLogin(); activarModoAdmin();
+  } else {
+    document.getElementById("errorLogin").style.display = "block";
+  }
+}
+function activarModoAdmin() {
+  modoAdmin = true;
+  document.getElementById("bannerAdmin").classList.add("visible");
+  if (ultimaBusqueda) ejecutarBusqueda(ultimaBusqueda);
+  abrirAgregar();
+}
+function salirAdmin() {
+  modoAdmin = false;
+  document.getElementById("bannerAdmin").classList.remove("visible");
+  if (ultimaBusqueda) ejecutarBusqueda(ultimaBusqueda);
+}
+
+// AGREGAR / EDITAR
+function abrirAgregar() {
+  editandoId = null;
+  document.getElementById("tituloFormulario").textContent = "➕ Agregar registro";
+  document.getElementById("modalAgregar").style.display = "block";
+  document.getElementById("msgOkAgregar").style.display = "none";
+  document.getElementById("msgErrAgregar").style.display = "none";
+  ["f_nombre","f_cargo","f_departamento","f_departamento_busqueda","f_nombre_busqueda",
+   "f_correo_director","f_anexo_director","f_secretaria_nombre","f_secretaria_correo",
+   "f_secretaria_anexo","f_consultar","f_observaciones"]
+    .forEach(id => document.getElementById(id).value = "");
+  document.getElementById("f_sede").value = "santiago";
+}
+
+function editarRegistro(r) {
+  editandoId = r.id;
+  document.getElementById("tituloFormulario").textContent = "✏️ Editar registro";
+  document.getElementById("modalAgregar").style.display = "block";
+  document.getElementById("msgOkAgregar").style.display = "none";
+  document.getElementById("msgErrAgregar").style.display = "none";
+  document.getElementById("f_nombre").value                = r.nombre || "";
+  document.getElementById("f_cargo").value                 = r.cargo || "";
+  document.getElementById("f_departamento").value          = r.departamento || "";
+  document.getElementById("f_departamento_busqueda").value = r.departamento_busqueda || "";
+  document.getElementById("f_nombre_busqueda").value       = r.nombre_busqueda || "";
+  document.getElementById("f_sede").value                  = r.sede || "santiago";
+  document.getElementById("f_correo_director").value       = r["correo_director"] || "";
+  document.getElementById("f_anexo_director").value        = r["anexo director"] || "";
+  document.getElementById("f_secretaria_nombre").value     = r.secretaria_nombre || "";
+  document.getElementById("f_secretaria_correo").value     = r.secretaria_correo || "";
+  document.getElementById("f_secretaria_anexo").value      = r.secretaria_anexo || "";
+  document.getElementById("f_consultar").value             = r.consultar_antes_de_entregar_contactos || "";
+  document.getElementById("f_observaciones").value         = r.observaciones || "";
+}
+
+function cerrarAgregar() { document.getElementById("modalAgregar").style.display = "none"; }
+
+async function guardarAcademico() {
+  const nombre = document.getElementById("f_nombre").value.trim();
+  const cargo  = document.getElementById("f_cargo").value.trim();
+  const dep_b  = document.getElementById("f_departamento_busqueda").value.trim();
+
+  if (!nombre || !cargo || !dep_b) {
+    document.getElementById("msgErrAgregar").textContent = "❌ Nombre, Cargo y Departamento búsqueda son obligatorios.";
+    document.getElementById("msgErrAgregar").style.display = "block";
+    return;
+  }
+
+  const payload = {
+    nombre,
+    cargo,
+    departamento:           document.getElementById("f_departamento").value.trim(),
+    departamento_busqueda:  dep_b,
+    nombre_busqueda:        document.getElementById("f_nombre_busqueda").value.trim(),
+    sede:                   document.getElementById("f_sede").value,
+    correo_director:        document.getElementById("f_correo_director").value.trim(),
+    "anexo director":       document.getElementById("f_anexo_director").value.trim(),
+    secretaria_nombre:      document.getElementById("f_secretaria_nombre").value.trim(),
+    secretaria_correo:      document.getElementById("f_secretaria_correo").value.trim(),
+    secretaria_anexo:       document.getElementById("f_secretaria_anexo").value.trim(),
+    consultar_antes_de_entregar_contactos: document.getElementById("f_consultar").value.trim(),
+    observaciones:          document.getElementById("f_observaciones").value.trim()
+  };
+
+  let url    = `${SUPABASE_URL}/rest/v1/otros_contactos_academicos`;
+  let method = "POST";
+  if (editandoId) {
+    url    = `${SUPABASE_URL}/rest/v1/otros_contactos_academicos?id=eq.${editandoId}`;
+    method = "PATCH";
+  }
+
+  const res = await fetch(url, {
+    method,
+    headers: {
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      "Content-Type": "application/json",
+      "Prefer": "return=minimal"
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (res.ok) {
+    document.getElementById("msgOkAgregar").style.display = "block";
+    document.getElementById("msgErrAgregar").style.display = "none";
+    setTimeout(() => { if (ultimaBusqueda) ejecutarBusqueda(ultimaBusqueda); cerrarAgregar(); }, 1200);
+  } else {
+    const err = await res.text();
+    document.getElementById("msgErrAgregar").textContent = "❌ Error: " + err;
+    document.getElementById("msgErrAgregar").style.display = "block";
+  }
+}
+
+// ELIMINAR
+async function eliminarRegistro(id, btn) {
+  if (!confirm("¿Estás seguro de eliminar este registro? Esta acción no se puede deshacer.")) return;
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/otros_contactos_academicos?id=eq.${id}`, {
+    method: "DELETE",
+    headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
+  });
+  if (res.ok) {
+    btn.closest("tr").remove();
+  } else {
+    alert("Error al eliminar el registro.");
+  }
+}
+
+// AYUDA
+function abrirAyuda() { document.getElementById("modalAyuda").style.display = "block"; }
+function cerrarAyuda() { document.getElementById("modalAyuda").style.display = "none"; }
+</script>
 </body>
 </html>
