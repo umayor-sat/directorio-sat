@@ -18,7 +18,7 @@ def home():
     return render_template("home.html")
 
 # =========================
-# ESCUELAS (NO SE TOCA)
+# ESCUELAS
 # =========================
 @app.route("/escuelas")
 def escuelas():
@@ -33,19 +33,7 @@ def api_escuelas():
     query = (
         supabase
         .table("directorio_escuelas_umayor")
-        .select("""
-            nombre,
-            cargo,
-            correo_director,
-            secretaria,
-            correo_secretaria,
-            escuela_busqueda,
-            sede,
-            campus,
-            anexo_director,
-            anexo_secretaria,
-            consultar_antes_de_entregar_contactos
-        """)
+        .select("*")
         .or_(f"nombre.ilike.%{q}%,cargo.ilike.%{q}%,escuela_busqueda.ilike.%{q}%")
     )
     if sede:
@@ -65,9 +53,7 @@ def api_academicos():
     q = request.args.get("q", "").strip().lower()
     if len(q) < 2:
         return jsonify([])
-
     try:
-        # select("*") evita problemas con columnas que tienen espacios
         query = (
             supabase
             .table("otros_contactos_academicos")
@@ -94,17 +80,7 @@ def api_contactos_administrativos():
     query = (
         supabase
         .table("contactos_administrativos")
-        .select("""
-            nombre,
-            cargo_rol,
-            area,
-            area_busqueda,
-            campus,
-            correo,
-            anexo,
-            observaciones,
-            restricciones
-        """)
+        .select("*")
         .ilike("area_busqueda", q)
     )
     result = query.execute()
@@ -124,5 +100,3 @@ import os
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
-
-
