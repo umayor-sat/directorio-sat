@@ -3,55 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <title>Directorio de Escuelas – Universidad Mayor</title>
-
 <style>
-body {
-  font-family: Calibri, Arial, sans-serif;
-  background: #f3f6f9;
-  margin: 0;
-}
-.header {
-  background: #f2b705;
-  padding: 20px 30px;
-  display: flex;
-  align-items: center;
-  gap: 25px;
-}
+body { font-family: Calibri, Arial, sans-serif; background: #f3f6f9; margin: 0; }
+.header { background: #f2b705; padding: 20px 30px; display: flex; align-items: center; gap: 25px; }
 .header img { height: 90px; }
 .header h1 { margin: 0; font-size: 28px; color: #002f6c; }
 
-.container {
-  max-width: 1200px;
-  margin: 30px auto;
-  background: #ffffff;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.1);
-}
+.container { max-width: 1200px; margin: 30px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
 
 .search-wrapper { position: relative; margin-bottom: 20px; }
 .search-bar { display: flex; gap: 10px; align-items: center; }
 .search-bar input, .search-bar select { padding: 12px; font-size: 16px; flex: 1; }
 .search-bar select { flex: 0 0 180px; }
-.search-bar button, .search-bar a {
-  padding: 12px 18px; font-size: 15px; border: none; border-radius: 6px;
-  cursor: pointer; text-decoration: none; display: inline-flex;
-  align-items: center; justify-content: center;
-}
+.search-bar button, .search-bar a { padding: 12px 18px; font-size: 15px; border: none; border-radius: 6px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
 .btn-primary  { background: #005baa; color: #fff; }
 .btn-secondary{ background: #999; color: #fff; }
 .btn-home     { background: #005baa; color: #fff; }
-.info-help {
-  background: #e9eef4; color: #005baa; border-radius: 50%;
-  width: 34px; height: 34px; font-weight: bold; border: none; cursor: pointer;
-}
+.info-help { background: #e9eef4; color: #005baa; border-radius: 50%; width: 34px; height: 34px; font-weight: bold; border: none; cursor: pointer; }
 
-.suggestions {
-  position: absolute; top: 100%; left: 0; right: 0;
-  background: #fff; border: 1px solid #ccc; border-radius: 6px;
-  box-shadow: 0 6px 14px rgba(0,0,0,.12); z-index: 50;
-  display: none; max-height: 260px; overflow-y: auto;
-}
+.suggestions { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 1px solid #ccc; border-radius: 6px; box-shadow: 0 6px 14px rgba(0,0,0,.12); z-index: 50; display: none; max-height: 260px; overflow-y: auto; }
 .suggestion-item { padding: 10px 14px; cursor: pointer; font-size: 14px; }
 .suggestion-item:hover { background: #f0f4f8; }
 
@@ -60,92 +30,47 @@ th, td { border: 1px solid #ddd; padding: 10px; vertical-align: top; font-size: 
 th { background: #005baa; color: white; text-align: left; }
 
 .correo-cell { display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; }
-.btn-copy {
-  background: none; border: 1px solid #005baa; border-radius: 4px;
-  color: #005baa; font-size: 11px; padding: 2px 6px; cursor: pointer;
-  white-space: nowrap; flex-shrink: 0; transition: background 0.2s, color 0.2s;
-}
+.btn-copy { background: none; border: 1px solid #005baa; border-radius: 4px; color: #005baa; font-size: 11px; padding: 2px 6px; cursor: pointer; white-space: nowrap; flex-shrink: 0; transition: background 0.2s, color 0.2s; }
 .btn-copy:hover { background: #005baa; color: #fff; }
 .btn-copy.copiado { background: #28a745; color: #fff; border-color: #28a745; }
 
 .tooltip-container { position: relative; display: inline-block; }
-.tooltip-box {
-  visibility: hidden; opacity: 0; width: 260px;
-  background-color: #ffffff; color: #000; border: 1px solid #ccc;
-  border-radius: 6px; padding: 8px 10px; position: absolute;
-  z-index: 10; top: 125%; left: 50%; transform: translateX(-50%);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15); font-size: 13px;
-}
+.tooltip-box { visibility: hidden; opacity: 0; width: 260px; background-color: #fff; color: #000; border: 1px solid #ccc; border-radius: 6px; padding: 8px 10px; position: absolute; z-index: 10; top: 125%; left: 50%; transform: translateX(-50%); box-shadow: 0 4px 10px rgba(0,0,0,0.15); font-size: 13px; }
 .tooltip-container:hover .tooltip-box { visibility: visible; opacity: 1; }
 
-.btn-eliminar {
-  background: none; border: 1px solid #cc0000; border-radius: 4px;
-  color: #cc0000; font-size: 11px; padding: 2px 6px; cursor: pointer;
-  white-space: nowrap; display: none;
-}
+.btn-accion { background: none; border-radius: 4px; font-size: 11px; padding: 2px 6px; cursor: pointer; white-space: nowrap; margin: 2px; }
+.btn-editar  { border: 1px solid #005baa; color: #005baa; }
+.btn-editar:hover  { background: #005baa; color: #fff; }
+.btn-eliminar { border: 1px solid #cc0000; color: #cc0000; }
 .btn-eliminar:hover { background: #cc0000; color: #fff; }
 
-.banner-admin {
-  background: #fff3cd; border: 1px solid #f0a500; border-radius: 8px;
-  padding: 10px 18px; margin-bottom: 16px; font-size: 0.9rem; color: #856404;
-  display: none; align-items: center; justify-content: space-between;
-}
+.banner-admin { background: #fff3cd; border: 1px solid #f0a500; border-radius: 8px; padding: 10px 18px; margin-bottom: 16px; font-size: 0.9rem; color: #856404; display: none; align-items: center; justify-content: space-between; }
 .banner-admin.visible { display: flex; }
-.banner-admin button {
-  background: none; border: 1px solid #856404; border-radius: 6px;
-  padding: 4px 10px; cursor: pointer; color: #856404; font-size: 0.85rem;
-}
+.banner-admin button { background: none; border: 1px solid #856404; border-radius: 6px; padding: 4px 10px; cursor: pointer; color: #856404; font-size: 0.85rem; }
 
-.modal {
-  display: none; position: fixed; z-index: 200;
-  left: 0; top: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.45);
-}
-.modal-content {
-  background: #fff; margin: 5% auto; padding: 25px;
-  width: 560px; max-width: 95%; border-radius: 10px;
-  max-height: 85vh; overflow-y: auto;
-}
+.modal { display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.45); }
+.modal-content { background: #fff; margin: 4% auto; padding: 25px; width: 580px; max-width: 95%; border-radius: 10px; max-height: 88vh; overflow-y: auto; }
 .modal-content h3 { margin-top: 0; color: #005baa; }
 .modal-close { text-align: right; margin-top: 12px; }
-.modal-close button {
-  background: #999; color: #fff; border: none;
-  padding: 8px 14px; border-radius: 6px; cursor: pointer;
-}
+.modal-close button { background: #999; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; }
 
 .form-group { margin-bottom: 12px; }
-.form-group label {
-  display: block; font-size: 0.8rem; font-weight: 600;
-  color: #555; margin-bottom: 4px; text-transform: uppercase;
-}
-.form-group input, .form-group select {
-  width: 100%; padding: 8px 11px; border: 1.5px solid #ddd;
-  border-radius: 6px; font-size: 0.92rem; box-sizing: border-box;
-}
-.form-group input:focus, .form-group select:focus {
-  outline: none; border-color: #005baa;
-}
+.form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: #555; margin-bottom: 4px; text-transform: uppercase; }
+.form-group input, .form-group select { width: 100%; padding: 8px 11px; border: 1.5px solid #ddd; border-radius: 6px; font-size: 0.92rem; box-sizing: border-box; }
+.form-group input:focus, .form-group select:focus { outline: none; border-color: #005baa; }
 .form-hint { font-size: 0.76rem; color: #888; margin-top: 2px; }
 .form-row { display: flex; gap: 10px; }
 .form-row .form-group { flex: 1; }
 
-.btn-guardar {
-  background: #1a5c38; color: white; border: none;
-  padding: 10px 24px; border-radius: 8px; font-size: 0.95rem;
-  font-weight: 700; cursor: pointer; width: 100%; margin-top: 8px;
-}
+.instruccion-flujo { background: #f8f9fa; border-left: 3px solid #f0a500; border-radius: 4px; padding: 8px 12px; margin-bottom: 14px; font-size: 0.8rem; color: #666; line-height: 1.5; }
+
+.btn-guardar { background: #1a5c38; color: white; border: none; padding: 10px 24px; border-radius: 8px; font-size: 0.95rem; font-weight: 700; cursor: pointer; width: 100%; margin-top: 8px; }
 .btn-guardar:hover { background: #144d2f; }
 
 .msg-ok { color: #2e7d32; font-size: 0.88rem; margin-top: 8px; text-align: center; font-weight: 600; display: none; }
 .msg-err { color: #c62828; font-size: 0.88rem; margin-top: 8px; text-align: center; display: none; }
 
-.btn-admin-flotante {
-  position: fixed; bottom: 24px; right: 24px;
-  background: #1a5c38; color: white; border: none;
-  width: 52px; height: 52px; border-radius: 50%; font-size: 1.4rem;
-  cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-  z-index: 300; display: flex; align-items: center; justify-content: center;
-}
+.btn-admin-flotante { position: fixed; bottom: 24px; right: 24px; background: #1a5c38; color: white; border: none; width: 52px; height: 52px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); z-index: 300; display: flex; align-items: center; justify-content: center; }
 .btn-admin-flotante:hover { background: #144d2f; }
 
 .footer { margin-top: 40px; text-align: center; font-size: 13px; color: #666; }
@@ -163,7 +88,7 @@ th { background: #005baa; color: white; text-align: left; }
 <div class="container">
 
   <div class="banner-admin" id="bannerAdmin">
-    ✏️ <strong>Modo administración activo</strong> — puedes agregar y eliminar registros.
+    ✏️ <strong>Modo administración activo</strong> — puedes agregar, editar y eliminar registros.
     <button onclick="salirAdmin()">Salir</button>
   </div>
 
@@ -186,11 +111,8 @@ th { background: #005baa; color: white; text-align: left; }
   <div id="resultados"></div>
 </div>
 
-<div class="footer">
-  Desarrollado por <strong>Eduardo Ferrada</strong> · Universidad Mayor · 2026
-</div>
+<div class="footer">Desarrollado por <strong>Eduardo Ferrada</strong> · Universidad Mayor · 2026</div>
 
-<!-- BOTÓN FLOTANTE -->
 <button class="btn-admin-flotante" onclick="abrirLogin()" title="Administración">✏️</button>
 
 <!-- MODAL AYUDA -->
@@ -215,8 +137,7 @@ th { background: #005baa; color: white; text-align: left; }
     <h3>🔐 Acceso Administración</h3>
     <div class="form-group" style="margin-top:16px; text-align:left;">
       <label>Contraseña</label>
-      <input type="password" id="inputPassword" placeholder="••••••••"
-             onkeydown="if(event.key==='Enter') verificarPassword()"/>
+      <input type="password" id="inputPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter') verificarPassword()"/>
     </div>
     <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:14px;">
       <button class="btn-secondary" onclick="cerrarLogin()">Cancelar</button>
@@ -226,10 +147,16 @@ th { background: #005baa; color: white; text-align: left; }
   </div>
 </div>
 
-<!-- MODAL AGREGAR -->
+<!-- MODAL AGREGAR / EDITAR -->
 <div class="modal" id="modalAgregar">
   <div class="modal-content">
-    <h3>➕ Agregar registro</h3>
+    <h3 id="tituloFormulario">➕ Agregar registro</h3>
+
+    <div class="instruccion-flujo">
+      💡 <strong>Para agregar:</strong> completa los campos y guarda.<br>
+      ✏️ <strong>Para editar:</strong> cierra este formulario, busca el registro en la tabla y haz clic en ✏️ Editar.<br>
+      🗑️ <strong>Para eliminar:</strong> cierra este formulario, busca el registro y haz clic en 🗑️ Eliminar.
+    </div>
 
     <div class="form-row">
       <div class="form-group">
@@ -347,7 +274,6 @@ th { background: #005baa; color: white; text-align: left; }
     <button class="btn-guardar" onclick="guardarEscuela()">Guardar registro</button>
     <div class="msg-ok" id="msgOkAgregar">✅ Registro guardado correctamente</div>
     <div class="msg-err" id="msgErrAgregar"></div>
-
     <div class="modal-close"><button onclick="cerrarAgregar()">Cerrar</button></div>
   </div>
 </div>
@@ -359,6 +285,7 @@ const PASSWORD_ADMIN = "SAT@UM2026";
 
 let modoAdmin = false;
 let ultimaBusqueda = "";
+let editandoId = null;
 
 const sugerenciasBase = [
   { label: "Medicina",                        value: "medicina",                    aliases: ["med"] },
@@ -381,9 +308,9 @@ const sugerenciasBase = [
   { label: "Ingeniería Forestal",             value: "ingenieria forestal",         aliases: ["forestal"] },
   { label: "Ingeniería en Minas",             value: "ingenieria en minas",         aliases: ["minas"] },
   { label: "Ingeniería en Medio Ambiente",    value: "ingenieria en medio ambiente y sustentabilidad", aliases: ["medio ambiente"] },
-  { label: "Ingeniería en Logística / Prevención / Ciberseguridad", value: "ingenieria en logistica prevencion ciberseguridad", aliases: ["logistica","prevencion","ciberseguridad"] },
+  { label: "Ingeniería en Logística/Prevención/Ciberseguridad", value: "ingenieria en logistica prevencion ciberseguridad", aliases: ["logistica","prevencion","ciberseguridad"] },
   { label: "Ingeniería en Inteligencia Artificial", value: "ingeniero en inteligencia artificial", aliases: ["ia"] },
-  { label: "Ingeniería en Ciencia de Datos",  value: "ingeniero en ciencia de datos", aliases: ["data science","datos"] },
+  { label: "Ingeniería en Ciencia de Datos",  value: "ingeniero en ciencia de datos", aliases: ["datos"] },
   { label: "Biotecnología",                   value: "biotecnologia",               aliases: ["bio"] },
   { label: "Geología",                        value: "geologia",                    aliases: ["geo"] },
   { label: "Agronomía",                       value: "agronomia",                   aliases: ["agro"] },
@@ -410,7 +337,7 @@ const sugerenciasBase = [
   { label: "Escuela de Ingeniería",           value: "escuela de ingenieria",       aliases: [] },
 ];
 
-const input          = document.getElementById("q");
+const input = document.getElementById("q");
 const suggestionsBox = document.getElementById("suggestions");
 let terminoPendiente = null;
 
@@ -486,13 +413,13 @@ function ejecutarBusqueda(q) {
       let html = `<table><tr>
         <th>Nombre</th><th>Cargo</th><th>Escuela</th><th>Sede</th><th>Campus</th>
         <th>Correo Director</th><th>Secretaría</th><th>Correo Secretaría</th>
-        ${modoAdmin ? "<th>Acción</th>" : ""}
+        ${modoAdmin ? "<th>Acciones</th>" : ""}
       </tr>`;
 
       data.forEach(r => {
-        const modalidad  = getModalidad(r.escuela_busqueda);
-        const correoDir  = r.correo_director   || "";
-        const correoSec  = r.correo_secretaria || "";
+        const modalidad = getModalidad(r.escuela_busqueda);
+        const correoDir = r.correo_director   || "";
+        const correoSec = r.correo_secretaria || "";
 
         const correoDirHtml = correoDir && correoDir !== "-"
           ? `<div class="correo-cell">
@@ -516,6 +443,12 @@ function ejecutarBusqueda(q) {
                <button class="btn-copy" onclick="copiarCorreo('${correoSec}', this)">📋 Copiar</button>
              </div>` : "";
 
+        const botonesAdmin = modoAdmin
+          ? `<td>
+               <button class="btn-accion btn-editar" onclick='editarRegistro(${JSON.stringify(r)})'>✏️ Editar</button>
+               <button class="btn-accion btn-eliminar" onclick="eliminarRegistro(${r.id}, this)">🗑️ Eliminar</button>
+             </td>` : "";
+
         html += `<tr>
           <td>${r.nombre || ""}</td>
           <td>${r.cargo || ""}</td>
@@ -525,7 +458,7 @@ function ejecutarBusqueda(q) {
           <td>${correoDirHtml}</td>
           <td>${r.secretaria || ""}</td>
           <td>${correoSecHtml}</td>
-          ${modoAdmin ? `<td><button class="btn-eliminar" style="display:inline-block" onclick="eliminarRegistro(${r.id}, this)">🗑️ Eliminar</button></td>` : ""}
+          ${botonesAdmin}
         </tr>`;
       });
 
@@ -545,7 +478,7 @@ function limpiar() {
   suggestionsBox.style.display = "none";
 }
 
-// ADMIN — LOGIN
+// LOGIN
 function abrirLogin() {
   if (modoAdmin) { abrirAgregar(); return; }
   document.getElementById("modalLogin").style.display = "block";
@@ -574,8 +507,10 @@ function salirAdmin() {
   if (ultimaBusqueda) ejecutarBusqueda(ultimaBusqueda);
 }
 
-// ADMIN — AGREGAR
+// AGREGAR / EDITAR
 function abrirAgregar() {
+  editandoId = null;
+  document.getElementById("tituloFormulario").textContent = "➕ Agregar registro";
   document.getElementById("modalAgregar").style.display = "block";
   document.getElementById("msgOkAgregar").style.display = "none";
   document.getElementById("msgErrAgregar").style.display = "none";
@@ -585,6 +520,26 @@ function abrirAgregar() {
   document.getElementById("f_escuela_busqueda").value = "";
   document.getElementById("f_sede").value = "Santiago";
 }
+
+function editarRegistro(r) {
+  editandoId = r.id;
+  document.getElementById("tituloFormulario").textContent = "✏️ Editar registro";
+  document.getElementById("modalAgregar").style.display = "block";
+  document.getElementById("msgOkAgregar").style.display = "none";
+  document.getElementById("msgErrAgregar").style.display = "none";
+  document.getElementById("f_nombre").value              = r.nombre || "";
+  document.getElementById("f_cargo").value               = r.cargo || "";
+  document.getElementById("f_escuela_busqueda").value    = r.escuela_busqueda || "";
+  document.getElementById("f_sede").value                = r.sede || "Santiago";
+  document.getElementById("f_campus").value              = r.campus || "";
+  document.getElementById("f_correo_director").value     = r.correo_director || "";
+  document.getElementById("f_anexo_director").value      = r.anexo_director || "";
+  document.getElementById("f_secretaria").value          = r.secretaria || "";
+  document.getElementById("f_correo_secretaria").value   = r.correo_secretaria || "";
+  document.getElementById("f_anexo_secretaria").value    = r.anexo_secretaria || "";
+  document.getElementById("f_consultar").value           = r.consultar_antes_de_entregar_contactos || "";
+}
+
 function cerrarAgregar() { document.getElementById("modalAgregar").style.display = "none"; }
 
 async function guardarEscuela() {
@@ -610,8 +565,15 @@ async function guardarEscuela() {
     consultar_antes_de_entregar_contactos: document.getElementById("f_consultar").value.trim()
   };
 
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/directorio_escuelas_umayor`, {
-    method: "POST",
+  let url    = `${SUPABASE_URL}/rest/v1/directorio_escuelas_umayor`;
+  let method = "POST";
+  if (editandoId) {
+    url    = `${SUPABASE_URL}/rest/v1/directorio_escuelas_umayor?id=eq.${editandoId}`;
+    method = "PATCH";
+  }
+
+  const res = await fetch(url, {
+    method,
     headers: {
       "apikey": SUPABASE_KEY,
       "Authorization": `Bearer ${SUPABASE_KEY}`,
@@ -632,7 +594,7 @@ async function guardarEscuela() {
   }
 }
 
-// ADMIN — ELIMINAR
+// ELIMINAR
 async function eliminarRegistro(id, btn) {
   if (!confirm("¿Estás seguro de eliminar este registro? Esta acción no se puede deshacer.")) return;
   const res = await fetch(`${SUPABASE_URL}/rest/v1/directorio_escuelas_umayor?id=eq.${id}`, {
@@ -653,3 +615,4 @@ window.onload = abrirAyuda;
 </script>
 </body>
 </html>
+
