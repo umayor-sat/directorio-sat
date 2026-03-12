@@ -240,6 +240,25 @@
       color: #888;
       margin-bottom: 16px;
     }
+    /* BOTÓN REPORTE */
+    .btn-reporte-flotante {
+      position: fixed; bottom: 24px; left: 24px;
+      background: #cc0000; color: white;
+      width: 52px; height: 52px; border-radius: 50%; font-size: 1.3rem;
+      cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+      z-index: 300; display: flex; align-items: center; justify-content: center;
+      text-decoration: none;
+    }
+    .btn-reporte-flotante:hover { background: #aa0000; }
+    .btn-reporte-flotante::after {
+      content: "Reportar error";
+      position: absolute; left: 62px;
+      background: #333; color: #fff;
+      padding: 4px 8px; border-radius: 4px;
+      font-size: 12px; white-space: nowrap;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .btn-reporte-flotante:hover::after { opacity: 1; }
   </style>
 </head>
 <body>
@@ -262,8 +281,6 @@
       <label>Año</label>
       <select id="filtroAnio" onchange="aplicarFiltros()">
         <option value="">Todos</option>
-        <option value="2028">2028</option>
-        <option value="2027">2027</option>
         <option value="2026">2026</option>
         <option value="2025">2025</option>
         <option value="2024">2024</option>
@@ -302,6 +319,9 @@
 <!-- BOTÓN JEFATURA -->
 <button class="btn-jefatura" onclick="abrirLogin()" title="Acceso jefatura">✏️</button>
 
+<!-- BOTÓN REPORTE -->
+<a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de error – Directorio SAT&body=Página donde ocurrió el error:%0A%0ADescripción del problema:%0A%0A(Agrega aquí cualquier detalle adicional)" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
+
 <!-- OVERLAY LOGIN -->
 <div class="overlay" id="overlayLogin">
   <div class="modal modal-login">
@@ -333,11 +353,9 @@
     <div class="form-group">
       <label>Publicado por</label>
       <select id="inputPublicadoPor">
-        <option value="Maria Jesus Serrano">Maria Jesus Serrano</option>
-        <option value="Johanna Escalona">Johanna Escalona</option>
-        <option value="Bárbara Fernandez">Bárbara Fernandez</option>
-        <option value="Eduardo Ferrada">Eduardo Ferrada
-        </option>
+        <option value="Johanna">Johanna</option>
+        <option value="Bárbara">Bárbara</option>
+        <option value="Eduardo">Eduardo</option>
       </select>
     </div>
     <div class="modal-btns">
@@ -518,6 +536,6 @@
   // Arrancar
   cargarComunicados();
 </script>
+
 </body>
 </html>
-
