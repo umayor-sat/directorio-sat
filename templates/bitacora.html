@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bitácora SAT – Universidad Mayor</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6f8;
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    .header {
+      background: #f0a500;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 80px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-left { display: flex; align-items: center; gap: 16px; }
+    .header img { height: 60px; background: white; padding: 4px 8px; border-radius: 4px; }
+    .header h1 { font-size: 1.4rem; font-weight: 700; color: #1a3a2a; }
+    .btn-volver {
+      background: #1a5c38;
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-volver:hover { background: #144d2f; }
+
+    /* CONTENEDOR */
+    .container {
+      max-width: 900px;
+      margin: 32px auto;
+      padding: 0 16px;
+    }
+
+    /* FILTROS */
+    .filtros {
+      background: white;
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      display: flex;
+      gap: 16px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+    .filtro-group { display: flex; flex-direction: column; gap: 6px; }
+    .filtro-group label { font-size: 0.82rem; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.5px; }
+    .filtro-group select, .filtro-group input[type="text"] {
+      padding: 8px 12px;
+      border: 1.5px solid #ddd;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      color: #333;
+      background: white;
+    }
+    .filtro-group select:focus, .filtro-group input:focus {
+      outline: none;
+      border-color: #f0a500;
+    }
+    .btn-limpiar {
+      background: #eee;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: #555;
+      align-self: flex-end;
+    }
+    .btn-limpiar:hover { background: #ddd; }
+
+    /* BADGE PUBLICADO POR */
+    .badge-publicado {
+      font-size: 0.75rem;
+      background: #e8f5e9;
+      color: #2e7d32;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .badge-publicado.historico {
+      background: #f3f3f3;
+      color: #999;
+    }
+
+    /* COMUNICADOS */
+    .comunicados { display: flex; flex-direction: column; gap: 14px; }
+
+    .comunicado {
+      background: white;
+      border-radius: 10px;
+      padding: 18px 22px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border-left: 5px solid #f0a500;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    .comunicado-fecha {
+      min-width: 90px;
+      text-align: center;
+      background: #fff8e1;
+      border-radius: 8px;
+      padding: 8px 4px;
+    }
+    .fecha-dia { font-size: 1.6rem; font-weight: 800; color: #1a3a2a; line-height: 1; }
+    .fecha-mes { font-size: 0.75rem; font-weight: 600; color: #888; text-transform: uppercase; }
+    .fecha-anio { font-size: 0.75rem; color: #aaa; }
+
+    .comunicado-body { flex: 1; }
+    .comunicado-texto {
+      font-size: 0.95rem;
+      color: #333;
+      line-height: 1.55;
+      margin-bottom: 8px;
+      white-space: pre-wrap;
+    }
+    .comunicado-meta { display: flex; align-items: center; gap: 8px; }
+
+    .sin-resultados {
+      text-align: center;
+      padding: 48px;
+      color: #999;
+      font-size: 1rem;
+      background: white;
+      border-radius: 10px;
+    }
+
+    /* MODAL JEFATURA */
+    .btn-jefatura {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1a5c38;
+      color: white;
+      border: none;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      font-size: 1.4rem;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-jefatura:hover { background: #144d2f; }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+    }
+    .overlay.active { display: flex; }
+
+    .modal {
+      background: white;
+      border-radius: 12px;
+      padding: 32px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    .modal h2 { font-size: 1.1rem; color: #1a3a2a; margin-bottom: 20px; }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 0.82rem; font-weight: 600; color: #555; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: #333;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      outline: none;
+      border-color: #f0a500;
+    }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+
+    .modal-btns { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+    .btn-cancelar {
+      background: #eee;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: #555;
+    }
+    .btn-publicar {
+      background: #f0a500;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #1a3a2a;
+    }
+    .btn-publicar:hover { background: #d4920a; }
+
+    .msg-ok { color: #2e7d32; font-size: 0.9rem; margin-top: 10px; text-align: center; font-weight: 600; display: none; }
+    .msg-err { color: #c62828; font-size: 0.9rem; margin-top: 10px; text-align: center; display: none; }
+
+    /* LOGIN */
+    .modal-login h2 { text-align: center; }
+    .modal-login .form-group input { text-align: center; letter-spacing: 4px; font-size: 1.1rem; }
+
+    .contador {
+      font-size: 0.82rem;
+      color: #888;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <img src="{{ url_for('static', filename='logo_umayor.png') }}" alt="Universidad Mayor"/>
+    <h1>Bitácora SAT</h1>
+  </div>
+  <a href="/" class="btn-volver">← Volver</a>
+</div>
+
+<!-- CONTENEDOR PRINCIPAL -->
+<div class="container">
+
+  <!-- FILTROS -->
+  <div class="filtros">
+    <div class="filtro-group">
+      <label>Año</label>
+      <select id="filtroAnio" onchange="aplicarFiltros()">
+        <option value="">Todos</option>
+        <option value="2025">2025</option>
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+      </select>
+    </div>
+    <div class="filtro-group">
+      <label>Mes</label>
+      <select id="filtroMes" onchange="aplicarFiltros()">
+        <option value="">Todos</option>
+        <option value="01">Enero</option>
+        <option value="02">Febrero</option>
+        <option value="03">Marzo</option>
+        <option value="04">Abril</option>
+        <option value="05">Mayo</option>
+        <option value="06">Junio</option>
+        <option value="07">Julio</option>
+        <option value="08">Agosto</option>
+        <option value="09">Septiembre</option>
+        <option value="10">Octubre</option>
+        <option value="11">Noviembre</option>
+        <option value="12">Diciembre</option>
+      </select>
+    </div>
+    <div class="filtro-group">
+      <label>Buscar texto</label>
+      <input type="text" id="filtroBuscar" placeholder="Palabra clave..." oninput="aplicarFiltros()"/>
+    </div>
+    <button class="btn-limpiar" onclick="limpiarFiltros()">Limpiar</button>
+  </div>
+
+  <div class="contador" id="contador"></div>
+  <div class="comunicados" id="listaComunicados"></div>
+</div>
+
+<!-- BOTÓN JEFATURA -->
+<button class="btn-jefatura" onclick="abrirLogin()" title="Acceso jefatura">✏️</button>
+
+<!-- OVERLAY LOGIN -->
+<div class="overlay" id="overlayLogin">
+  <div class="modal modal-login">
+    <h2>🔐 Acceso Jefatura</h2>
+    <div class="form-group" style="margin-top:20px;">
+      <label>Contraseña</label>
+      <input type="password" id="inputPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter') verificarPassword()"/>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancelar" onclick="cerrarLogin()">Cancelar</button>
+      <button class="btn-publicar" onclick="verificarPassword()">Ingresar</button>
+    </div>
+    <div class="msg-err" id="errorLogin">Contraseña incorrecta</div>
+  </div>
+</div>
+
+<!-- OVERLAY FORMULARIO -->
+<div class="overlay" id="overlayFormulario">
+  <div class="modal">
+    <h2>📋 Publicar comunicado</h2>
+    <div class="form-group">
+      <label>Fecha</label>
+      <input type="date" id="inputFecha"/>
+    </div>
+    <div class="form-group">
+      <label>Comunicado</label>
+      <textarea id="inputEvento" placeholder="Escribe el comunicado aquí..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Publicado por</label>
+      <select id="inputPublicadoPor">
+        <option value="Johanna">Johanna</option>
+        <option value="Bárbara">Bárbara</option>
+      </select>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancelar" onclick="cerrarFormulario()">Cancelar</button>
+      <button class="btn-publicar" onclick="publicarComunicado()">Publicar</button>
+    </div>
+    <div class="msg-ok" id="msgOk">✅ Comunicado publicado correctamente</div>
+    <div class="msg-err" id="msgErr">❌ Error al publicar. Intenta nuevamente.</div>
+  </div>
+</div>
+
+<script>
+  const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_3Shj63dB3uBAL_TVvqfBRw_3RyTRZ1U";
+  const PASSWORD_JEFATURA = "SAT@UM2026";
+
+  const MESES = ["","Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+
+  let todosLosComunicados = [];
+
+  // Cargar comunicados al iniciar
+  async function cargarComunicados() {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/Bitacora?select=*&order=fecha.desc`, {
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`
+      }
+    });
+    todosLosComunicados = await res.json();
+    aplicarFiltros();
+  }
+
+  function aplicarFiltros() {
+    const anio = document.getElementById("filtroAnio").value;
+    const mes = document.getElementById("filtroMes").value;
+    const texto = document.getElementById("filtroBuscar").value.toLowerCase();
+
+    let filtrados = todosLosComunicados.filter(c => {
+      const fecha = c.fecha || "";
+      const partes = fecha.split("-");
+      const anioC = partes[0] || "";
+      const mesC = partes[1] || "";
+      const eventoC = (c.evento || "").toLowerCase();
+
+      if (anio && anioC !== anio) return false;
+      if (mes && mesC !== mes) return false;
+      if (texto && !eventoC.includes(texto)) return false;
+      return true;
+    });
+
+    renderComunicados(filtrados);
+  }
+
+  function renderComunicados(lista) {
+    const contenedor = document.getElementById("listaComunicados");
+    const contador = document.getElementById("contador");
+
+    contador.textContent = `${lista.length} comunicado${lista.length !== 1 ? "s" : ""} encontrado${lista.length !== 1 ? "s" : ""}`;
+
+    if (lista.length === 0) {
+      contenedor.innerHTML = `<div class="sin-resultados">No se encontraron comunicados para los filtros seleccionados.</div>`;
+      return;
+    }
+
+    contenedor.innerHTML = lista.map(c => {
+      const fecha = c.fecha || "";
+      const partes = fecha.split("-");
+      const anio = partes[0] || "";
+      const mesNum = parseInt(partes[1]) || 0;
+      const dia = partes[2] || "";
+      const mes = MESES[mesNum] || "";
+      const pub = c.publicado_por || "";
+      const esHistorico = pub === "Registro histórico";
+
+      return `
+        <div class="comunicado">
+          <div class="comunicado-fecha">
+            <div class="fecha-dia">${dia}</div>
+            <div class="fecha-mes">${mes}</div>
+            <div class="fecha-anio">${anio}</div>
+          </div>
+          <div class="comunicado-body">
+            <div class="comunicado-texto">${c.evento || ""}</div>
+            <div class="comunicado-meta">
+              <span class="badge-publicado ${esHistorico ? 'historico' : ''}">${pub}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function limpiarFiltros() {
+    document.getElementById("filtroAnio").value = "";
+    document.getElementById("filtroMes").value = "";
+    document.getElementById("filtroBuscar").value = "";
+    aplicarFiltros();
+  }
+
+  // LOGIN
+  function abrirLogin() {
+    document.getElementById("overlayLogin").classList.add("active");
+    document.getElementById("inputPassword").value = "";
+    document.getElementById("errorLogin").style.display = "none";
+    setTimeout(() => document.getElementById("inputPassword").focus(), 100);
+  }
+
+  function cerrarLogin() {
+    document.getElementById("overlayLogin").classList.remove("active");
+  }
+
+  function verificarPassword() {
+    const val = document.getElementById("inputPassword").value;
+    if (val === PASSWORD_JEFATURA) {
+      cerrarLogin();
+      abrirFormulario();
+    } else {
+      document.getElementById("errorLogin").style.display = "block";
+    }
+  }
+
+  // FORMULARIO
+  function abrirFormulario() {
+    document.getElementById("overlayFormulario").classList.add("active");
+    document.getElementById("msgOk").style.display = "none";
+    document.getElementById("msgErr").style.display = "none";
+    // Fecha de hoy por defecto
+    const hoy = new Date().toISOString().split("T")[0];
+    document.getElementById("inputFecha").value = hoy;
+    document.getElementById("inputEvento").value = "";
+  }
+
+  function cerrarFormulario() {
+    document.getElementById("overlayFormulario").classList.remove("active");
+  }
+
+  async function publicarComunicado() {
+    const fecha = document.getElementById("inputFecha").value;
+    const evento = document.getElementById("inputEvento").value.trim();
+    const publicado_por = document.getElementById("inputPublicadoPor").value;
+
+    if (!fecha || !evento) {
+      document.getElementById("msgErr").textContent = "❌ Completa todos los campos.";
+      document.getElementById("msgErr").style.display = "block";
+      return;
+    }
+
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/Bitacora`, {
+      method: "POST",
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify({ fecha, evento, publicado_por })
+    });
+
+    if (res.ok) {
+      document.getElementById("msgOk").style.display = "block";
+      document.getElementById("msgErr").style.display = "none";
+      await cargarComunicados();
+      setTimeout(() => cerrarFormulario(), 1500);
+    } else {
+      document.getElementById("msgErr").textContent = "❌ Error al publicar. Intenta nuevamente.";
+      document.getElementById("msgErr").style.display = "block";
+    }
+  }
+
+  // Cerrar overlay al hacer click fuera
+  document.getElementById("overlayLogin").addEventListener("click", function(e) {
+    if (e.target === this) cerrarLogin();
+  });
+  document.getElementById("overlayFormulario").addEventListener("click", function(e) {
+    if (e.target === this) cerrarFormulario();
+  });
+
+  // Arrancar
+  cargarComunicados();
+</script>
+</body>
+</html>
