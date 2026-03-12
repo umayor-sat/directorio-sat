@@ -111,9 +111,18 @@ def api_contactos_administrativos():
     return jsonify(result.data or [])
 
 # =========================
+# BITÁCORA
+# =========================
+@app.route("/bitacora")
+def bitacora():
+    return render_template("bitacora.html")
+
+# =========================
 # EJECUCIÓN
 # =========================
 import os
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+
+
