@@ -613,6 +613,82 @@ function abrirAyuda() { document.getElementById("modalAyuda").style.display = "b
 function cerrarAyuda() { document.getElementById("modalAyuda").style.display = "none"; }
 window.onload = abrirAyuda;
 </script>
+
+<!-- BOTÓN REPORTE DE ERRORES -->
+<button class="btn-reporte-flotante" onclick="abrirReporte()" title="Reportar error">🐛</button>
+
+<div class="modal" id="modalReporte" style="z-index:400;">
+  <div class="modal-content" style="width:420px; text-align:left;">
+    <h3 style="color:#cc0000;">🐛 Reportar un error</h3>
+    <form id="formReporte">
+      <div style="margin-bottom:10px;">
+        <label style="display:block;font-size:0.8rem;font-weight:600;color:#555;margin-bottom:4px;text-transform:uppercase;">Tu nombre</label>
+        <input type="text" name="nombre" placeholder="Ej: Ana González" required style="width:100%;padding:8px 11px;border:1.5px solid #ddd;border-radius:6px;font-size:0.92rem;box-sizing:border-box;"/>
+      </div>
+      <div style="margin-bottom:10px;">
+        <label style="display:block;font-size:0.8rem;font-weight:600;color:#555;margin-bottom:4px;text-transform:uppercase;">¿En qué página ocurrió?</label>
+        <select name="pagina" required style="width:100%;padding:8px 11px;border:1.5px solid #ddd;border-radius:6px;font-size:0.92rem;box-sizing:border-box;">
+          <option value="">— Selecciona —</option>
+          <option>Inicio (Home)</option>
+          <option>Directorio de Escuelas</option>
+          <option>Contactos Académicos</option>
+          <option>Contactos Administrativos</option>
+          <option>Bitácora SAT</option>
+        </select>
+      </div>
+      <div style="margin-bottom:10px;">
+        <label style="display:block;font-size:0.8rem;font-weight:600;color:#555;margin-bottom:4px;text-transform:uppercase;">Descripción del error</label>
+        <textarea name="descripcion" rows="3" placeholder="¿Qué pasó? ¿Qué esperabas que pasara?" required style="width:100%;padding:8px 11px;border:1.5px solid #ddd;border-radius:6px;font-size:0.92rem;box-sizing:border-box;font-family:inherit;"></textarea>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px;">
+        <button type="button" onclick="cerrarReporte()" style="background:#999;color:#fff;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;">Cancelar</button>
+        <button type="submit" style="background:#cc0000;color:#fff;border:none;padding:8px 18px;border-radius:6px;cursor:pointer;font-weight:700;">Enviar reporte</button>
+      </div>
+    </form>
+    <div id="msgReporteOk" style="display:none;color:#2e7d32;font-weight:600;margin-top:10px;text-align:center;">✅ Reporte enviado. ¡Gracias!</div>
+  </div>
+</div>
+
+<style>
+.btn-reporte-flotante {
+  position: fixed; bottom: 24px; left: 24px;
+  background: #cc0000; color: white; border: none;
+  width: 52px; height: 52px; border-radius: 50%; font-size: 1.3rem;
+  cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  z-index: 300; display: flex; align-items: center; justify-content: center;
+}
+.btn-reporte-flotante:hover { background: #aa0000; }
+</style>
+
+<script>
+function abrirReporte() {
+  document.getElementById("modalReporte").style.display = "block";
+  document.getElementById("msgReporteOk").style.display = "none";
+  document.getElementById("formReporte").reset();
+  document.getElementById("formReporte").style.display = "block";
+}
+function cerrarReporte() { document.getElementById("modalReporte").style.display = "none"; }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("formReporte");
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const res = await fetch("https://formspree.io/f/mqeybyyk", {
+        method: "POST",
+        body: data,
+        headers: { "Accept": "application/json" }
+      });
+      if (res.ok) {
+        document.getElementById("msgReporteOk").style.display = "block";
+        form.style.display = "none";
+        setTimeout(() => cerrarReporte(), 2500);
+      }
+    });
+  }
+});
+<\/script>
+
 </body>
 </html>
-
