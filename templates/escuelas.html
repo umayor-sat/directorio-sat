@@ -10,8 +10,6 @@ body {
   background: #f3f6f9;
   margin: 0;
 }
-
-/* HEADER */
 .header {
   background: #f2b705;
   padding: 20px 30px;
@@ -19,16 +17,9 @@ body {
   align-items: center;
   gap: 25px;
 }
-
 .header img { height: 90px; }
+.header h1 { margin: 0; font-size: 28px; color: #002f6c; }
 
-.header h1 {
-  margin: 0;
-  font-size: 28px;
-  color: #002f6c;
-}
-
-/* CONTENEDOR */
 .container {
   max-width: 1200px;
   margin: 30px auto;
@@ -38,199 +29,130 @@ body {
   box-shadow: 0 0 20px rgba(0,0,0,0.1);
 }
 
-/* BUSCADOR */
-.search-wrapper {
-  position: relative;
-  margin-bottom: 20px;
-}
-
-.search-bar {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.search-bar input,
-.search-bar select {
-  padding: 12px;
-  font-size: 16px;
-  flex: 1;
-}
-
+.search-wrapper { position: relative; margin-bottom: 20px; }
+.search-bar { display: flex; gap: 10px; align-items: center; }
+.search-bar input, .search-bar select { padding: 12px; font-size: 16px; flex: 1; }
 .search-bar select { flex: 0 0 180px; }
-
-.search-bar button,
-.search-bar a {
-  padding: 12px 18px;
-  font-size: 15px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.search-bar button, .search-bar a {
+  padding: 12px 18px; font-size: 15px; border: none; border-radius: 6px;
+  cursor: pointer; text-decoration: none; display: inline-flex;
+  align-items: center; justify-content: center;
 }
-
 .btn-primary  { background: #005baa; color: #fff; }
-.btn-secondary{ background: #999;    color: #fff; }
+.btn-secondary{ background: #999; color: #fff; }
 .btn-home     { background: #005baa; color: #fff; }
-
 .info-help {
-  background: #e9eef4;
-  color: #005baa;
-  border-radius: 50%;
-  width: 34px;
-  height: 34px;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
+  background: #e9eef4; color: #005baa; border-radius: 50%;
+  width: 34px; height: 34px; font-weight: bold; border: none; cursor: pointer;
 }
 
-/* SUGERENCIAS */
 .suggestions {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: #fff;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  box-shadow: 0 6px 14px rgba(0,0,0,.12);
-  z-index: 50;
-  display: none;
-  max-height: 260px;
-  overflow-y: auto;
+  position: absolute; top: 100%; left: 0; right: 0;
+  background: #fff; border: 1px solid #ccc; border-radius: 6px;
+  box-shadow: 0 6px 14px rgba(0,0,0,.12); z-index: 50;
+  display: none; max-height: 260px; overflow-y: auto;
 }
-
-.suggestion-item {
-  padding: 10px 14px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
+.suggestion-item { padding: 10px 14px; cursor: pointer; font-size: 14px; }
 .suggestion-item:hover { background: #f0f4f8; }
 
-/* TABLA */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-}
+table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+th, td { border: 1px solid #ddd; padding: 10px; vertical-align: top; font-size: 14px; }
+th { background: #005baa; color: white; text-align: left; }
 
-th, td {
-  border: 1px solid #ddd;
-  padding: 10px;
-  vertical-align: top;
-  font-size: 14px;
-}
-
-th {
-  background: #005baa;
-  color: white;
-  text-align: left;
-}
-
-/* CORREO CON BOTÓN COPIAR */
-.correo-cell {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: nowrap;
-}
-
+.correo-cell { display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; }
 .btn-copy {
-  background: none;
-  border: 1px solid #005baa;
-  border-radius: 4px;
-  color: #005baa;
-  font-size: 11px;
-  padding: 2px 6px;
-  cursor: pointer;
-  white-space: nowrap;
-  flex-shrink: 0;
-  transition: background 0.2s, color 0.2s;
+  background: none; border: 1px solid #005baa; border-radius: 4px;
+  color: #005baa; font-size: 11px; padding: 2px 6px; cursor: pointer;
+  white-space: nowrap; flex-shrink: 0; transition: background 0.2s, color 0.2s;
 }
-
 .btn-copy:hover { background: #005baa; color: #fff; }
 .btn-copy.copiado { background: #28a745; color: #fff; border-color: #28a745; }
 
-/* TOOLTIP */
-.tooltip-container {
-  position: relative;
-  display: inline-block;
-}
-
+.tooltip-container { position: relative; display: inline-block; }
 .tooltip-box {
-  visibility: hidden;
-  opacity: 0;
-  width: 260px;
-  background-color: #ffffff;
-  color: #000;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 8px 10px;
-  position: absolute;
-  z-index: 10;
-  top: 125%;
-  left: 50%;
-  transform: translateX(-50%);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  font-size: 13px;
+  visibility: hidden; opacity: 0; width: 260px;
+  background-color: #ffffff; color: #000; border: 1px solid #ccc;
+  border-radius: 6px; padding: 8px 10px; position: absolute;
+  z-index: 10; top: 125%; left: 50%; transform: translateX(-50%);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15); font-size: 13px;
+}
+.tooltip-container:hover .tooltip-box { visibility: visible; opacity: 1; }
+
+.btn-eliminar {
+  background: none; border: 1px solid #cc0000; border-radius: 4px;
+  color: #cc0000; font-size: 11px; padding: 2px 6px; cursor: pointer;
+  white-space: nowrap; display: none;
+}
+.btn-eliminar:hover { background: #cc0000; color: #fff; }
+
+.banner-admin {
+  background: #fff3cd; border: 1px solid #f0a500; border-radius: 8px;
+  padding: 10px 18px; margin-bottom: 16px; font-size: 0.9rem; color: #856404;
+  display: none; align-items: center; justify-content: space-between;
+}
+.banner-admin.visible { display: flex; }
+.banner-admin button {
+  background: none; border: 1px solid #856404; border-radius: 6px;
+  padding: 4px 10px; cursor: pointer; color: #856404; font-size: 0.85rem;
 }
 
-.tooltip-container:hover .tooltip-box {
-  visibility: visible;
-  opacity: 1;
-}
-
-/* MODAL */
 .modal {
-  display: none;
-  position: fixed;
-  z-index: 200;
-  left: 0; top: 0;
-  width: 100%; height: 100%;
+  display: none; position: fixed; z-index: 200;
+  left: 0; top: 0; width: 100%; height: 100%;
   background: rgba(0,0,0,0.45);
 }
-
 .modal-content {
-  background: #fff;
-  margin: 10% auto;
-  padding: 25px;
-  width: 520px;
-  border-radius: 10px;
+  background: #fff; margin: 5% auto; padding: 25px;
+  width: 560px; max-width: 95%; border-radius: 10px;
+  max-height: 85vh; overflow-y: auto;
 }
-
-.modal-content h3 {
-  margin-top: 0;
-  color: #005baa;
-}
-
-.modal-close { text-align: right; }
-
+.modal-content h3 { margin-top: 0; color: #005baa; }
+.modal-close { text-align: right; margin-top: 12px; }
 .modal-close button {
-  background: #999;
-  color: #fff;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
+  background: #999; color: #fff; border: none;
+  padding: 8px 14px; border-radius: 6px; cursor: pointer;
 }
 
-/* FOOTER */
-.footer {
-  margin-top: 40px;
-  text-align: center;
-  font-size: 13px;
-  color: #666;
+.form-group { margin-bottom: 12px; }
+.form-group label {
+  display: block; font-size: 0.8rem; font-weight: 600;
+  color: #555; margin-bottom: 4px; text-transform: uppercase;
 }
+.form-group input, .form-group select {
+  width: 100%; padding: 8px 11px; border: 1.5px solid #ddd;
+  border-radius: 6px; font-size: 0.92rem; box-sizing: border-box;
+}
+.form-group input:focus, .form-group select:focus {
+  outline: none; border-color: #005baa;
+}
+.form-hint { font-size: 0.76rem; color: #888; margin-top: 2px; }
+.form-row { display: flex; gap: 10px; }
+.form-row .form-group { flex: 1; }
+
+.btn-guardar {
+  background: #1a5c38; color: white; border: none;
+  padding: 10px 24px; border-radius: 8px; font-size: 0.95rem;
+  font-weight: 700; cursor: pointer; width: 100%; margin-top: 8px;
+}
+.btn-guardar:hover { background: #144d2f; }
+
+.msg-ok { color: #2e7d32; font-size: 0.88rem; margin-top: 8px; text-align: center; font-weight: 600; display: none; }
+.msg-err { color: #c62828; font-size: 0.88rem; margin-top: 8px; text-align: center; display: none; }
+
+.btn-admin-flotante {
+  position: fixed; bottom: 24px; right: 24px;
+  background: #1a5c38; color: white; border: none;
+  width: 52px; height: 52px; border-radius: 50%; font-size: 1.4rem;
+  cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  z-index: 300; display: flex; align-items: center; justify-content: center;
+}
+.btn-admin-flotante:hover { background: #144d2f; }
+
+.footer { margin-top: 40px; text-align: center; font-size: 13px; color: #666; }
 </style>
 </head>
-
 <body>
 
-<!-- HEADER -->
 <div class="header">
   <a href="https://www.umayor.cl" target="_blank">
     <img src="{{ url_for('static', filename='img/logoum.jpg') }}" alt="Universidad Mayor">
@@ -240,17 +162,19 @@ th {
 
 <div class="container">
 
-  <!-- BUSCADOR -->
+  <div class="banner-admin" id="bannerAdmin">
+    ✏️ <strong>Modo administración activo</strong> — puedes agregar y eliminar registros.
+    <button onclick="salirAdmin()">Salir</button>
+  </div>
+
   <div class="search-wrapper">
     <div class="search-bar">
       <input type="text" id="q" placeholder="Buscar escuela, nombre o cargo…">
-
       <select id="sede">
         <option value="">Todas las sedes</option>
         <option value="santiago">Santiago</option>
         <option value="temuco">Temuco</option>
       </select>
-
       <button class="btn-primary" onclick="buscar()">Buscar</button>
       <button class="btn-secondary" onclick="limpiar()">Limpiar</button>
       <button class="info-help" onclick="abrirAyuda()">ℹ️</button>
@@ -260,38 +184,182 @@ th {
   </div>
 
   <div id="resultados"></div>
-
 </div>
 
 <div class="footer">
   Desarrollado por <strong>Eduardo Ferrada</strong> · Universidad Mayor · 2026
 </div>
 
+<!-- BOTÓN FLOTANTE -->
+<button class="btn-admin-flotante" onclick="abrirLogin()" title="Administración">✏️</button>
+
 <!-- MODAL AYUDA -->
 <div id="modalAyuda" class="modal">
   <div class="modal-content">
     <h3>¿Cómo usar el buscador?</h3>
-    <p>
-      Puedes buscar por <strong>nombre de la escuela</strong>, <strong>cargo</strong> o <strong>nombre de la persona</strong>.
-    </p>
+    <p>Puedes buscar por <strong>nombre de la escuela</strong>, <strong>cargo</strong> o <strong>nombre de la persona</strong>.</p>
     <ul>
-      <li>Escribe una palabra clave y presiona <strong>Buscar</strong> o la tecla <strong>Enter</strong>.</li>
+      <li>Escribe una palabra clave y presiona <strong>Buscar</strong> o <strong>Enter</strong>.</li>
       <li>El sistema <strong>sugiere escuelas</strong> mientras escribes.</li>
-      <li>Puedes filtrar por <strong>sede</strong> si lo necesitas.</li>
+      <li>Puedes filtrar por <strong>sede</strong>.</li>
       <li>Al pasar el mouse sobre los correos, verás <strong>anexos y restricciones</strong>.</li>
-      <li>Usa el botón <strong>📋 Copiar</strong> para copiar el correo al portapapeles con un clic.</li>
+      <li>Usa el botón <strong>📋 Copiar</strong> para copiar el correo.</li>
     </ul>
-    <div class="modal-close">
-      <button onclick="cerrarAyuda()">Cerrar</button>
+    <div class="modal-close"><button onclick="cerrarAyuda()">Cerrar</button></div>
+  </div>
+</div>
+
+<!-- MODAL LOGIN -->
+<div class="modal" id="modalLogin">
+  <div class="modal-content" style="width:360px; text-align:center;">
+    <h3>🔐 Acceso Administración</h3>
+    <div class="form-group" style="margin-top:16px; text-align:left;">
+      <label>Contraseña</label>
+      <input type="password" id="inputPassword" placeholder="••••••••"
+             onkeydown="if(event.key==='Enter') verificarPassword()"/>
     </div>
+    <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:14px;">
+      <button class="btn-secondary" onclick="cerrarLogin()">Cancelar</button>
+      <button class="btn-primary" onclick="verificarPassword()">Ingresar</button>
+    </div>
+    <div class="msg-err" id="errorLogin">Contraseña incorrecta</div>
+  </div>
+</div>
+
+<!-- MODAL AGREGAR -->
+<div class="modal" id="modalAgregar">
+  <div class="modal-content">
+    <h3>➕ Agregar registro</h3>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nombre *</label>
+        <input type="text" id="f_nombre" placeholder="Nombre completo"/>
+      </div>
+      <div class="form-group">
+        <label>Cargo *</label>
+        <input type="text" id="f_cargo" placeholder="Ej: Director/a Docente"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Escuela *</label>
+      <select id="f_escuela_busqueda">
+        <option value="">— Selecciona —</option>
+        <option value="medicina">Medicina</option>
+        <option value="odontologia">Odontología</option>
+        <option value="enfermeria">Enfermería</option>
+        <option value="kinesiologia">Kinesiología</option>
+        <option value="fonoaudiologia">Fonoaudiología</option>
+        <option value="nutricion y dietetica">Nutrición y Dietética</option>
+        <option value="obstetricia y puericultura">Obstetricia y Puericultura</option>
+        <option value="tecnologia medica">Tecnología Médica</option>
+        <option value="terapia ocupacional">Terapia Ocupacional</option>
+        <option value="psicologia">Psicología</option>
+        <option value="psicopedagogia">Psicopedagogía</option>
+        <option value="derecho">Derecho</option>
+        <option value="ingenieria civil industrial">Ingeniería Civil Industrial</option>
+        <option value="ingenieria comercial">Ingeniería Comercial</option>
+        <option value="ingenieria en computacion e informatica">Ingeniería en Computación e Informática</option>
+        <option value="ingenieria en construccion">Ingeniería en Construcción</option>
+        <option value="ingenieria industrial">Ingeniería Industrial</option>
+        <option value="ingenieria forestal">Ingeniería Forestal</option>
+        <option value="ingenieria en minas">Ingeniería en Minas</option>
+        <option value="ingenieria en medio ambiente y sustentabilidad">Ingeniería en Medio Ambiente</option>
+        <option value="ingenieria en logistica prevencion ciberseguridad">Ingeniería Logística/Prevención/Ciberseguridad</option>
+        <option value="ingeniero en inteligencia artificial">Ingeniería en Inteligencia Artificial</option>
+        <option value="ingeniero en ciencia de datos">Ingeniería en Ciencia de Datos</option>
+        <option value="biotecnologia">Biotecnología</option>
+        <option value="geologia">Geología</option>
+        <option value="agronomia">Agronomía</option>
+        <option value="medicina veterinaria">Medicina Veterinaria</option>
+        <option value="arquitectura">Arquitectura</option>
+        <option value="diseno">Diseño</option>
+        <option value="animacion digital">Animación Digital</option>
+        <option value="cine">Cine</option>
+        <option value="periodismo">Periodismo</option>
+        <option value="sociologia">Sociología</option>
+        <option value="administracion publica">Administración Pública</option>
+        <option value="pedagogia en ingles">Pedagogía en Inglés</option>
+        <option value="pedagogia en educacion fisica">Pedagogía en Educación Física</option>
+        <option value="pedagogia en educacion parvularia">Pedagogía en Educación Parvularia</option>
+        <option value="pedagogia en educacion diferencial">Pedagogía en Educación Diferencial</option>
+        <option value="pedagogia en artes musicales">Pedagogía en Artes Musicales</option>
+        <option value="conservatorio de musica">Conservatorio de Música</option>
+        <option value="teatro">Teatro</option>
+        <option value="turismo sustentable">Turismo Sustentable</option>
+        <option value="auditoria contador publico y auditor">Auditoría / Contador Público</option>
+        <option value="salud publica">Salud Pública</option>
+        <option value="rector">Rector / Vicerrectores</option>
+        <option value="escuela de negocios">Escuela de Negocios</option>
+        <option value="escuela de ingenieria">Escuela de Ingeniería</option>
+      </select>
+      <div class="form-hint">Este valor determina qué buscador encontrará el registro</div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Sede</label>
+        <select id="f_sede">
+          <option value="Santiago">Santiago</option>
+          <option value="Temuco">Temuco</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Campus</label>
+        <input type="text" id="f_campus" placeholder="Ej: Providencia"/>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Correo Director</label>
+        <input type="email" id="f_correo_director" placeholder="correo@umayor.cl"/>
+      </div>
+      <div class="form-group">
+        <label>Anexo Director</label>
+        <input type="text" id="f_anexo_director" placeholder="Ej: 1234"/>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Secretaria</label>
+        <input type="text" id="f_secretaria" placeholder="Nombre secretaria"/>
+      </div>
+      <div class="form-group">
+        <label>Correo Secretaria</label>
+        <input type="email" id="f_correo_secretaria" placeholder="correo@umayor.cl"/>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Anexo Secretaria</label>
+        <input type="text" id="f_anexo_secretaria" placeholder="Ej: 5678"/>
+      </div>
+      <div class="form-group">
+        <label>Restricción entrega</label>
+        <input type="text" id="f_consultar" placeholder="Dejar vacío si no aplica"/>
+      </div>
+    </div>
+
+    <button class="btn-guardar" onclick="guardarEscuela()">Guardar registro</button>
+    <div class="msg-ok" id="msgOkAgregar">✅ Registro guardado correctamente</div>
+    <div class="msg-err" id="msgErrAgregar"></div>
+
+    <div class="modal-close"><button onclick="cerrarAgregar()">Cerrar</button></div>
   </div>
 </div>
 
 <script>
-// =========================
-// SUGERENCIAS
-// values = escuela_busqueda exacto del CSV/Supabase
-// =========================
+const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_3Shj63dB3uBAL_TVvqfBRw_3RyTRZ1U";
+const PASSWORD_ADMIN = "SAT@UM2026";
+
+let modoAdmin = false;
+let ultimaBusqueda = "";
+
 const sugerenciasBase = [
   { label: "Medicina",                        value: "medicina",                    aliases: ["med"] },
   { label: "Odontología",                     value: "odontologia",                 aliases: ["dental","dent"] },
@@ -300,21 +368,21 @@ const sugerenciasBase = [
   { label: "Fonoaudiología",                  value: "fonoaudiologia",              aliases: ["fono"] },
   { label: "Nutrición y Dietética",           value: "nutricion y dietetica",       aliases: ["nutricion","dietetica"] },
   { label: "Obstetricia y Puericultura",      value: "obstetricia y puericultura",  aliases: ["obstetricia","matrona"] },
-  { label: "Tecnología Médica",               value: "tecnologia medica",           aliases: ["tecmed","tecnologia medica"] },
+  { label: "Tecnología Médica",               value: "tecnologia medica",           aliases: ["tecmed"] },
   { label: "Terapia Ocupacional",             value: "terapia ocupacional",         aliases: ["to","terapia"] },
   { label: "Psicología",                      value: "psicologia",                  aliases: ["psico"] },
   { label: "Psicopedagogía",                  value: "psicopedagogia",              aliases: ["psicopeda"] },
   { label: "Derecho",                         value: "derecho",                     aliases: ["leyes","abogado"] },
-  { label: "Ingeniería Civil Industrial",     value: "ingenieria civil industrial", aliases: ["ici","civil industrial"] },
+  { label: "Ingeniería Civil Industrial",     value: "ingenieria civil industrial", aliases: ["ici"] },
   { label: "Ingeniería Comercial",            value: "ingenieria comercial",        aliases: ["icom","comercial"] },
   { label: "Ingeniería en Computación e Informática", value: "ingenieria en computacion e informatica", aliases: ["informatica","computacion"] },
   { label: "Ingeniería en Construcción",      value: "ingenieria en construccion",  aliases: ["construccion"] },
   { label: "Ingeniería Industrial",           value: "ingenieria industrial",       aliases: ["industrial"] },
   { label: "Ingeniería Forestal",             value: "ingenieria forestal",         aliases: ["forestal"] },
   { label: "Ingeniería en Minas",             value: "ingenieria en minas",         aliases: ["minas"] },
-  { label: "Ingeniería en Medio Ambiente",    value: "ingenieria en medio ambiente y sustentabilidad", aliases: ["medio ambiente","sustentabilidad"] },
+  { label: "Ingeniería en Medio Ambiente",    value: "ingenieria en medio ambiente y sustentabilidad", aliases: ["medio ambiente"] },
   { label: "Ingeniería en Logística / Prevención / Ciberseguridad", value: "ingenieria en logistica prevencion ciberseguridad", aliases: ["logistica","prevencion","ciberseguridad"] },
-  { label: "Ingeniería en Inteligencia Artificial", value: "ingeniero en inteligencia artificial", aliases: ["ia","inteligencia artificial"] },
+  { label: "Ingeniería en Inteligencia Artificial", value: "ingeniero en inteligencia artificial", aliases: ["ia"] },
   { label: "Ingeniería en Ciencia de Datos",  value: "ingeniero en ciencia de datos", aliases: ["data science","datos"] },
   { label: "Biotecnología",                   value: "biotecnologia",               aliases: ["bio"] },
   { label: "Geología",                        value: "geologia",                    aliases: ["geo"] },
@@ -326,23 +394,23 @@ const sugerenciasBase = [
   { label: "Cine",                            value: "cine",                        aliases: [] },
   { label: "Periodismo",                      value: "periodismo",                  aliases: ["perio"] },
   { label: "Sociología",                      value: "sociologia",                  aliases: ["socio"] },
-  { label: "Administración Pública",          value: "administracion publica",      aliases: ["admpublica","administracion publica"] },
-  { label: "Pedagogía en Inglés",             value: "pedagogia en ingles",         aliases: ["ingles","pedagogia ingles"] },
-  { label: "Pedagogía en Educación Física",   value: "pedagogia en educacion fisica", aliases: ["educacion fisica","ef"] },
+  { label: "Administración Pública",          value: "administracion publica",      aliases: [] },
+  { label: "Pedagogía en Inglés",             value: "pedagogia en ingles",         aliases: ["ingles"] },
+  { label: "Pedagogía en Educación Física",   value: "pedagogia en educacion fisica", aliases: ["ef"] },
   { label: "Pedagogía en Educación Parvularia", value: "pedagogia en educacion parvularia", aliases: ["parvularia"] },
   { label: "Pedagogía en Educación Diferencial", value: "pedagogia en educacion diferencial", aliases: ["diferencial"] },
-  { label: "Pedagogía en Artes Musicales",    value: "pedagogia en artes musicales", aliases: ["musica","artes musicales"] },
+  { label: "Pedagogía en Artes Musicales",    value: "pedagogia en artes musicales", aliases: ["musica"] },
   { label: "Conservatorio de Música",         value: "conservatorio de musica",     aliases: ["conservatorio"] },
   { label: "Teatro",                          value: "teatro",                      aliases: [] },
   { label: "Turismo Sustentable",             value: "turismo sustentable",         aliases: ["turismo"] },
   { label: "Auditoría / Contador Público",    value: "auditoria contador publico y auditor", aliases: ["auditoria","contador"] },
-  { label: "Salud Pública",                   value: "salud publica",               aliases: ["salud publica"] },
-  { label: "Rector / Vicerrectores",          value: "rector",                      aliases: ["rector","vicerrector","autoridades"] },
+  { label: "Salud Pública",                   value: "salud publica",               aliases: [] },
+  { label: "Rector / Vicerrectores",          value: "rector",                      aliases: ["rector","vicerrector"] },
   { label: "Escuela de Negocios",             value: "escuela de negocios",         aliases: ["negocios"] },
-  { label: "Escuela de Ingeniería",           value: "escuela de ingenieria",       aliases: ["ingenieria"] },
+  { label: "Escuela de Ingeniería",           value: "escuela de ingenieria",       aliases: [] },
 ];
 
-const input       = document.getElementById("q");
+const input          = document.getElementById("q");
 const suggestionsBox = document.getElementById("suggestions");
 let terminoPendiente = null;
 
@@ -350,17 +418,13 @@ input.addEventListener("input", () => {
   terminoPendiente = null;
   const val = input.value.toLowerCase().trim();
   suggestionsBox.innerHTML = "";
-
   if (val.length < 2) { suggestionsBox.style.display = "none"; return; }
-
   const matches = sugerenciasBase.filter(s =>
     s.label.toLowerCase().includes(val) ||
     s.value.toLowerCase().includes(val) ||
     (s.aliases || []).some(a => a.toLowerCase().includes(val))
   );
-
   if (!matches.length) { suggestionsBox.style.display = "none"; return; }
-
   matches.forEach(s => {
     const div = document.createElement("div");
     div.className = "suggestion-item";
@@ -373,46 +437,32 @@ input.addEventListener("input", () => {
     };
     suggestionsBox.appendChild(div);
   });
-
   suggestionsBox.style.display = "block";
 });
 
 input.addEventListener("keydown", e => { if (e.key === "Enter") buscar(); });
-
 document.addEventListener("click", e => {
   if (!e.target.closest(".search-wrapper")) suggestionsBox.style.display = "none";
 });
 
-// =========================
-// COPIAR AL PORTAPAPELES
-// =========================
 function copiarCorreo(correo, btn) {
   if (!correo || correo === "-") return;
   navigator.clipboard.writeText(correo).then(() => {
     btn.textContent = "✓ Copiado";
     btn.classList.add("copiado");
-    setTimeout(() => {
-      btn.textContent = "📋 Copiar";
-      btn.classList.remove("copiado");
-    }, 2000);
+    setTimeout(() => { btn.textContent = "📋 Copiar"; btn.classList.remove("copiado"); }, 2000);
   });
 }
 
-// =========================
-// MODALIDAD
-// =========================
 function getModalidad(escuela) {
   if (!escuela) return "☀️ Modalidad: Diurno";
-  const texto = escuela.toLowerCase();
-  if (texto.includes("online"))    return "💻 Modalidad: Online";
-  if (texto.includes("técnico") || texto.includes("tecnico")) return "🔧 Modalidad: Técnico";
-  if (texto.includes("vespertino")) return "🌙 Modalidad: Vespertino";
+  const t = escuela.toLowerCase();
+  if (t.includes("online"))     return "💻 Modalidad: Online";
+  if (t.includes("técnico") || t.includes("tecnico")) return "🔧 Modalidad: Técnico";
+  if (t.includes("vespertino")) return "🌙 Modalidad: Vespertino";
   return "☀️ Modalidad: Diurno";
 }
 
-// =========================
-// BÚSQUEDA
-// =========================
 function buscar() {
   const termino = terminoPendiente || input.value.trim();
   terminoPendiente = null;
@@ -420,6 +470,7 @@ function buscar() {
 }
 
 function ejecutarBusqueda(q) {
+  ultimaBusqueda = q;
   suggestionsBox.style.display = "none";
   const sede = document.getElementById("sede").value;
 
@@ -427,75 +478,54 @@ function ejecutarBusqueda(q) {
     .then(r => r.json())
     .then(data => {
       const res = document.getElementById("resultados");
-
       if (!data.length) {
-        res.innerHTML = "<p>No se encontraron resultados.</p>";
+        res.innerHTML = `<p>No se encontraron resultados para <strong>${q}</strong>.</p>`;
         return;
       }
 
-      let html = `
-      <table>
-        <tr>
-          <th>Nombre</th>
-          <th>Cargo</th>
-          <th>Escuela</th>
-          <th>Sede</th>
-          <th>Campus</th>
-          <th>Correo Director</th>
-          <th>Secretaría</th>
-          <th>Correo Secretaría</th>
-        </tr>`;
+      let html = `<table><tr>
+        <th>Nombre</th><th>Cargo</th><th>Escuela</th><th>Sede</th><th>Campus</th>
+        <th>Correo Director</th><th>Secretaría</th><th>Correo Secretaría</th>
+        ${modoAdmin ? "<th>Acción</th>" : ""}
+      </tr>`;
 
-      data.forEach((r, i) => {
-        const modalidad = getModalidad(r.escuela_busqueda);
+      data.forEach(r => {
+        const modalidad  = getModalidad(r.escuela_busqueda);
+        const correoDir  = r.correo_director   || "";
+        const correoSec  = r.correo_secretaria || "";
 
-        // Correo director
-        const correoDir = r.correo_director || "";
         const correoDirHtml = correoDir && correoDir !== "-"
           ? `<div class="correo-cell">
-               <span class="tooltip-container">
-                 <a href="mailto:${correoDir}">${correoDir}</a>
+               <span class="tooltip-container"><a href="mailto:${correoDir}">${correoDir}</a>
                  <span class="tooltip-box">
                    ${r.anexo_director ? "📞 <strong>Anexo:</strong> " + r.anexo_director + "<br>" : ""}
                    ${r.consultar_antes_de_entregar_contactos ? "⚠️ <strong>Restricción:</strong> " + r.consultar_antes_de_entregar_contactos : ""}
                  </span>
                </span>
                <button class="btn-copy" onclick="copiarCorreo('${correoDir}', this)">📋 Copiar</button>
-             </div>`
-          : "";
+             </div>` : "";
 
-        // Correo secretaria
-        const correoSec = r.correo_secretaria || "";
         const correoSecHtml = correoSec && correoSec !== "-"
           ? `<div class="correo-cell">
-               <span class="tooltip-container">
-                 <a href="mailto:${correoSec}">${correoSec}</a>
+               <span class="tooltip-container"><a href="mailto:${correoSec}">${correoSec}</a>
                  <span class="tooltip-box">
                    ${r.anexo_secretaria ? "📞 <strong>Anexo:</strong> " + r.anexo_secretaria + "<br>" : ""}
                    ${r.consultar_antes_de_entregar_contactos ? "⚠️ <strong>Restricción:</strong> " + r.consultar_antes_de_entregar_contactos : ""}
                  </span>
                </span>
                <button class="btn-copy" onclick="copiarCorreo('${correoSec}', this)">📋 Copiar</button>
-             </div>`
-          : "";
+             </div>` : "";
 
-        html += `
-        <tr>
+        html += `<tr>
           <td>${r.nombre || ""}</td>
           <td>${r.cargo || ""}</td>
           <td>${r.escuela_busqueda || ""}</td>
-
-          <td>
-            <span class="tooltip-container">
-              ${r.sede || ""}
-              <span class="tooltip-box">${modalidad}</span>
-            </span>
-          </td>
-
+          <td><span class="tooltip-container">${r.sede || ""}<span class="tooltip-box">${modalidad}</span></span></td>
           <td>${r.campus || ""}</td>
           <td>${correoDirHtml}</td>
           <td>${r.secretaria || ""}</td>
           <td>${correoSecHtml}</td>
+          ${modoAdmin ? `<td><button class="btn-eliminar" style="display:inline-block" onclick="eliminarRegistro(${r.id}, this)">🗑️ Eliminar</button></td>` : ""}
         </tr>`;
       });
 
@@ -515,12 +545,111 @@ function limpiar() {
   suggestionsBox.style.display = "none";
 }
 
+// ADMIN — LOGIN
+function abrirLogin() {
+  if (modoAdmin) { abrirAgregar(); return; }
+  document.getElementById("modalLogin").style.display = "block";
+  document.getElementById("inputPassword").value = "";
+  document.getElementById("errorLogin").style.display = "none";
+  setTimeout(() => document.getElementById("inputPassword").focus(), 100);
+}
+function cerrarLogin() { document.getElementById("modalLogin").style.display = "none"; }
+function verificarPassword() {
+  if (document.getElementById("inputPassword").value === PASSWORD_ADMIN) {
+    cerrarLogin();
+    activarModoAdmin();
+  } else {
+    document.getElementById("errorLogin").style.display = "block";
+  }
+}
+function activarModoAdmin() {
+  modoAdmin = true;
+  document.getElementById("bannerAdmin").classList.add("visible");
+  if (ultimaBusqueda) ejecutarBusqueda(ultimaBusqueda);
+  abrirAgregar();
+}
+function salirAdmin() {
+  modoAdmin = false;
+  document.getElementById("bannerAdmin").classList.remove("visible");
+  if (ultimaBusqueda) ejecutarBusqueda(ultimaBusqueda);
+}
+
+// ADMIN — AGREGAR
+function abrirAgregar() {
+  document.getElementById("modalAgregar").style.display = "block";
+  document.getElementById("msgOkAgregar").style.display = "none";
+  document.getElementById("msgErrAgregar").style.display = "none";
+  ["f_nombre","f_cargo","f_correo_director","f_anexo_director",
+   "f_secretaria","f_correo_secretaria","f_anexo_secretaria","f_consultar","f_campus"]
+    .forEach(id => document.getElementById(id).value = "");
+  document.getElementById("f_escuela_busqueda").value = "";
+  document.getElementById("f_sede").value = "Santiago";
+}
+function cerrarAgregar() { document.getElementById("modalAgregar").style.display = "none"; }
+
+async function guardarEscuela() {
+  const escuela_busqueda = document.getElementById("f_escuela_busqueda").value;
+  const nombre = document.getElementById("f_nombre").value.trim();
+  const cargo  = document.getElementById("f_cargo").value.trim();
+
+  if (!nombre || !cargo || !escuela_busqueda) {
+    document.getElementById("msgErrAgregar").textContent = "❌ Nombre, Cargo y Escuela son obligatorios.";
+    document.getElementById("msgErrAgregar").style.display = "block";
+    return;
+  }
+
+  const payload = {
+    nombre, cargo, escuela_busqueda,
+    sede:     document.getElementById("f_sede").value,
+    campus:   document.getElementById("f_campus").value.trim(),
+    correo_director:   document.getElementById("f_correo_director").value.trim(),
+    anexo_director:    document.getElementById("f_anexo_director").value.trim(),
+    secretaria:        document.getElementById("f_secretaria").value.trim(),
+    correo_secretaria: document.getElementById("f_correo_secretaria").value.trim(),
+    anexo_secretaria:  document.getElementById("f_anexo_secretaria").value.trim(),
+    consultar_antes_de_entregar_contactos: document.getElementById("f_consultar").value.trim()
+  };
+
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/directorio_escuelas_umayor`, {
+    method: "POST",
+    headers: {
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      "Content-Type": "application/json",
+      "Prefer": "return=minimal"
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (res.ok) {
+    document.getElementById("msgOkAgregar").style.display = "block";
+    document.getElementById("msgErrAgregar").style.display = "none";
+    setTimeout(() => { if (ultimaBusqueda) ejecutarBusqueda(ultimaBusqueda); cerrarAgregar(); }, 1200);
+  } else {
+    const err = await res.text();
+    document.getElementById("msgErrAgregar").textContent = "❌ Error: " + err;
+    document.getElementById("msgErrAgregar").style.display = "block";
+  }
+}
+
+// ADMIN — ELIMINAR
+async function eliminarRegistro(id, btn) {
+  if (!confirm("¿Estás seguro de eliminar este registro? Esta acción no se puede deshacer.")) return;
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/directorio_escuelas_umayor?id=eq.${id}`, {
+    method: "DELETE",
+    headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
+  });
+  if (res.ok) {
+    btn.closest("tr").remove();
+  } else {
+    alert("Error al eliminar el registro.");
+  }
+}
+
+// AYUDA
 function abrirAyuda() { document.getElementById("modalAyuda").style.display = "block"; }
 function cerrarAyuda() { document.getElementById("modalAyuda").style.display = "none"; }
-
 window.onload = abrirAyuda;
 </script>
-
 </body>
 </html>
-
