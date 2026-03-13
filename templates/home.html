@@ -219,20 +219,25 @@
         </p>
 
         <p>
-            La información aquí contenida es <strong>confidencial</strong>, se actualiza directamente
-            desde las áreas responsables y <strong>no debe ser compartida ni utilizada fuera del ámbito institucional</strong>.
+            La información aquí contenida es <strong>confidencial</strong>, se mantiene en actualización
+            continua con el aporte del equipo SAT, y <strong>no debe ser compartida ni utilizada fuera del ámbito institucional</strong>.
         </p>
 
         <ul>
-            <li>Utiliza siempre el directorio en línea.</li>
-            <li>Evita guardar o distribuir copias externas.</li>
-            <li>Ante dudas, verifica la información directamente en esta plataforma.</li>
+            <li>Utiliza siempre el directorio en línea como fuente oficial.</li>
+            <li>Evita guardar o distribuir copias externas de la información.</li>
+            <li>Ante dudas, verifica directamente en esta plataforma.</li>
+            <li>Si detectas información desactualizada o un error, repórtalo usando el botón 🐛 disponible en cada sección.</li>
         </ul>
 
         <p>
             <strong>Importante:</strong><br>
             En el primer acceso del día, la plataforma puede tardar algunos segundos en cargar.
             Si la pantalla demora en responder, espera brevemente y refresca el navegador.
+        </p>
+
+        <p style="font-size:14px; color:#666; margin-top:16px; font-style:italic;">
+            El uso de esta plataforma implica aceptar las políticas de manejo de información institucional de la Universidad Mayor.
         </p>
 
         <div class="modal-aviso-actions">
@@ -246,14 +251,13 @@
     <div class="links-hover">
         <span>🔗 Links de uso frecuente ▾</span>
         <ul>
-            <li><a href="https://mayorcl.sharepoint.com/sites/IntranetServiciodeAtencin" target="_blank">Intranet SAT</a></li>
-            <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Registro-Estudiantes" target="_blank">Registro estudiantil "ORE"</a></li>
+            <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Registro-Estudiantes" target="_blank">ORE</a></li>
             <li><a href="https://sso.umayor.cl/authentication/SignIn?SID=13&app_url=certificadosalumnos.umayor.cl" target="_blank">Portal de Certificados</a></li>
             <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Gratuidad-Becas-y-ayudas-estudiantiles" target="_blank">Becas y Créditos</a></li>
             <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Gestion-Financiera" target="_blank">Gestión Financiera</a></li>
             <li><a href="https://www.umayor.cl/um/oferta-academica" target="_blank">Oferta Académica</a></li>
             <li><a href="https://www.admisionmayor.cl/preguntas-frecuentes" target="_blank">Preguntas Frecuentes Admisión</a></li>
-           
+            <li><a href="https://mayorcl.sharepoint.com/sites/IntranetServiciodeAtencin" target="_blank">Intranet SAT</a></li>
         </ul>
     </div>
 </div>
@@ -273,7 +277,7 @@
     <h2>Uso exclusivo SAT</h2>
 
     <p class="descripcion">
-        Plataforma interna para consulta de contactos, bitácora y recursos del equipo SAT.
+        Plataforma interna para consulta rápida de contactos institucionales.
     </p>
 
     <div class="buttons">
@@ -303,5 +307,83 @@
     }
 </script>
 
+
+<!-- BOTÓN REPORTE DE ERRORES -->
+<button class="btn-reporte-flotante" onclick="abrirReporte()" title="Reportar error">🐛</button>
+
+<div class="modal" id="modalReporte" style="z-index:400;">
+  <div class="modal-content" style="width:420px; text-align:left;">
+    <h3 style="color:#cc0000;">🐛 Reportar un error</h3>
+    <form id="formReporte">
+      <div style="margin-bottom:10px;">
+        <label style="display:block;font-size:0.8rem;font-weight:600;color:#555;margin-bottom:4px;text-transform:uppercase;">Tu nombre</label>
+        <input type="text" name="nombre" placeholder="Ej: Ana González" required style="width:100%;padding:8px 11px;border:1.5px solid #ddd;border-radius:6px;font-size:0.92rem;box-sizing:border-box;"/>
+      </div>
+      <div style="margin-bottom:10px;">
+        <label style="display:block;font-size:0.8rem;font-weight:600;color:#555;margin-bottom:4px;text-transform:uppercase;">¿En qué página ocurrió?</label>
+        <select name="pagina" required style="width:100%;padding:8px 11px;border:1.5px solid #ddd;border-radius:6px;font-size:0.92rem;box-sizing:border-box;">
+          <option value="">— Selecciona —</option>
+          <option>Inicio (Home)</option>
+          <option>Directorio de Escuelas</option>
+          <option>Contactos Académicos</option>
+          <option>Contactos Administrativos</option>
+          <option>Bitácora SAT</option>
+        </select>
+      </div>
+      <div style="margin-bottom:10px;">
+        <label style="display:block;font-size:0.8rem;font-weight:600;color:#555;margin-bottom:4px;text-transform:uppercase;">Descripción del error</label>
+        <textarea name="descripcion" rows="3" placeholder="¿Qué pasó? ¿Qué esperabas que pasara?" required style="width:100%;padding:8px 11px;border:1.5px solid #ddd;border-radius:6px;font-size:0.92rem;box-sizing:border-box;font-family:inherit;"></textarea>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px;">
+        <button type="button" onclick="cerrarReporte()" style="background:#999;color:#fff;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;">Cancelar</button>
+        <button type="submit" style="background:#cc0000;color:#fff;border:none;padding:8px 18px;border-radius:6px;cursor:pointer;font-weight:700;">Enviar reporte</button>
+      </div>
+    </form>
+    <div id="msgReporteOk" style="display:none;color:#2e7d32;font-weight:600;margin-top:10px;text-align:center;">✅ Reporte enviado. ¡Gracias!</div>
+  </div>
+</div>
+
+<style>
+.btn-reporte-flotante {
+  position: fixed; bottom: 24px; left: 24px;
+  background: #cc0000; color: white; border: none;
+  width: 52px; height: 52px; border-radius: 50%; font-size: 1.3rem;
+  cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  z-index: 300; display: flex; align-items: center; justify-content: center;
+}
+.btn-reporte-flotante:hover { background: #aa0000; }
+</style>
+
+<script>
+function abrirReporte() {
+  document.getElementById("modalReporte").style.display = "block";
+  document.getElementById("msgReporteOk").style.display = "none";
+  document.getElementById("formReporte").reset();
+  document.getElementById("formReporte").style.display = "block";
+}
+function cerrarReporte() { document.getElementById("modalReporte").style.display = "none"; }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("formReporte");
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const res = await fetch("https://formspree.io/f/mqeybyyk", {
+        method: "POST",
+        body: data,
+        headers: { "Accept": "application/json" }
+      });
+      if (res.ok) {
+        document.getElementById("msgReporteOk").style.display = "block";
+        form.style.display = "none";
+        setTimeout(() => cerrarReporte(), 2500);
+      }
+    });
+  }
+});
+<\/script>
+
 </body>
 </html>
+
