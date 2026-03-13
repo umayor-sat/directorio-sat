@@ -19,7 +19,6 @@
             color:#222;
         }
 
-        /* ===== Franja amarilla superior ===== */
         .top-bar{
             background:var(--um-amarillo);
             padding:10px 30px;
@@ -56,13 +55,9 @@
             z-index:10;
         }
 
-        .links-hover:hover ul{
-            display:block;
-        }
+        .links-hover:hover ul{ display:block; }
 
-        .links-hover ul li{
-            padding:8px 16px;
-        }
+        .links-hover ul li{ padding:8px 16px; }
 
         .links-hover ul li a{
             text-decoration:none;
@@ -70,11 +65,8 @@
             display:block;
         }
 
-        .links-hover ul li a:hover{
-            background:#f0f0f0;
-        }
+        .links-hover ul li a:hover{ background:#f0f0f0; }
 
-        /* ===== Contenedor principal ===== */
         .container{
             max-width:1100px;
             margin:0 auto;
@@ -82,10 +74,7 @@
             text-align:center;
         }
 
-        /* ===== Logo ===== */
-        .logo{
-            margin-top:10px;
-        }
+        .logo{ margin-top:10px; }
 
         .logo img{
             max-width:300px;
@@ -93,7 +82,6 @@
             height:auto;
         }
 
-        /* ===== Línea amarilla ===== */
         .divider{
             width:70%;
             height:4px;
@@ -101,11 +89,7 @@
             margin:30px auto;
         }
 
-        /* ===== Títulos ===== */
-        h1{
-            font-size:32px;
-            margin:10px 0 6px;
-        }
+        h1{ font-size:32px; margin:10px 0 6px; }
 
         h2{
             font-size:18px;
@@ -119,7 +103,6 @@
             margin-bottom:30px;
         }
 
-        /* ===== Botones PRINCIPALES (grandes) ===== */
         .buttons-primary{
             display:flex;
             justify-content:center;
@@ -145,7 +128,6 @@
 
         .btn-primary-item:hover{ opacity:.9; }
 
-        /* ===== Botones SECUNDARIOS (más discretos) ===== */
         .buttons-secondary{
             display:flex;
             justify-content:center;
@@ -168,11 +150,8 @@
             border:1.5px solid #c5d4e8;
         }
 
-        .btn-secondary-item:hover{
-            background:#d5e2f0;
-        }
+        .btn-secondary-item:hover{ background:#d5e2f0; }
 
-        /* Bitácora mantiene su verde pero tamaño secundario */
         .btn-bitacora{
             background:#1a5c38;
             color:#fff;
@@ -180,7 +159,6 @@
         }
         .btn-bitacora:hover{ background:#144d2f; }
 
-        /* ===== Footer ===== */
         footer{
             text-align:center;
             font-size:13px;
@@ -188,9 +166,6 @@
             margin:40px 0 20px;
         }
 
-        /* =================================================
-           POP-UP AVISO
-           ================================================= */
         .modal-aviso{
             display:none;
             position:fixed;
@@ -219,9 +194,7 @@
             font-size:24px;
         }
 
-        .modal-aviso-content ul{
-            margin-left:20px;
-        }
+        .modal-aviso-content ul{ margin-left:20px; }
 
         .modal-aviso-actions{
             text-align:center;
@@ -239,7 +212,6 @@
             cursor:pointer;
         }
 
-        /* ===== Botón reporte ===== */
         .btn-reporte-flotante {
             position: fixed; bottom: 24px; left: 24px;
             background: #cc0000; color: white; border: none;
@@ -259,7 +231,6 @@
         }
         .btn-reporte-flotante:hover::after { opacity: 1; }
 
-        /* ===== Separador sección secundaria ===== */
         .label-secundario {
             font-size: 12px;
             color: #aaa;
@@ -272,38 +243,32 @@
 
 <body>
 
-<!-- ================= POP-UP AVISO ================= -->
+<!-- POP-UP AVISO -->
 <div id="modalAviso" class="modal-aviso">
     <div class="modal-aviso-content">
         <h3>Aviso de uso y confidencialidad</h3>
-
         <p>
             Esta plataforma es de <strong>uso interno exclusivo del Servicio de Atención (SAT)</strong>
             de la Universidad Mayor.
         </p>
-
         <p>
             La información aquí contenida es <strong>confidencial</strong>, se mantiene en actualización
             continua con el aporte del equipo SAT, y <strong>no debe ser compartida ni utilizada fuera del ámbito institucional</strong>.
         </p>
-
         <ul>
             <li>Utiliza siempre el directorio en línea como fuente oficial.</li>
             <li>Evita guardar o distribuir copias externas de la información.</li>
             <li>Ante dudas, verifica directamente en esta plataforma.</li>
             <li>Si detectas información desactualizada o un error, repórtalo usando el botón 🐛 disponible en cada sección.</li>
         </ul>
-
         <p>
             <strong>Importante:</strong><br>
             En el primer acceso del día, la plataforma puede tardar algunos segundos en cargar.
             Si la pantalla demora en responder, espera brevemente y refresca el navegador.
         </p>
-
         <p style="font-size:14px; color:#666; margin-top:16px; font-style:italic;">
             El uso de esta plataforma implica aceptar las políticas de manejo de información institucional de la Universidad Mayor.
         </p>
-
         <div class="modal-aviso-actions">
             <button onclick="cerrarAviso()">Entendido</button>
         </div>
