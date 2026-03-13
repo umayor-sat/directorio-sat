@@ -59,13 +59,13 @@ th { background: #005baa; color: white; text-align: left; }
 .btn-admin-flotante { position: fixed; bottom: 24px; right: 24px; background: #1a5c38; color: white; border: none; width: 52px; height: 52px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); z-index: 300; display: flex; align-items: center; justify-content: center; }
 .btn-admin-flotante:hover { background: #144d2f; }
 .footer { margin-top: 40px; text-align: center; font-size: 13px; color: #666; }
-/* BOTÓN REPORTE */
 .btn-reporte-flotante {
   position: fixed; bottom: 24px; left: 24px;
   background: #cc0000; color: white; border: none;
   width: 52px; height: 52px; border-radius: 50%; font-size: 1.3rem;
   cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
   z-index: 300; display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
 }
 .btn-reporte-flotante:hover { background: #aa0000; }
 .btn-reporte-flotante::after {
@@ -215,6 +215,26 @@ th { background: #005baa; color: white; text-align: left; }
         <option value="rector">Rector / Vicerrectores</option>
         <option value="escuela de negocios">Escuela de Negocios</option>
         <option value="escuela de ingenieria">Escuela de Ingeniería</option>
+        <optgroup label="── TEC Mayor ──">
+          <option value="tec mayor">TEC Mayor – Autoridades / General</option>
+          <option value="tecnico gestion de personas">Técnico en Gestión de Personas</option>
+          <option value="tecnico administracion publica">Técnico en Administración Pública</option>
+          <option value="tecnico administracion de empresas">Técnico en Administración de Empresas</option>
+          <option value="tecnico contabilidad general">Técnico en Contabilidad General</option>
+          <option value="tecnico finanzas">Técnico en Finanzas</option>
+          <option value="tecnico marketing gestion comercial">Técnico en Marketing y Gestión Comercial</option>
+          <option value="tecnico logistica">Técnico en Logística</option>
+          <option value="tecnico prevencion de riesgos">Técnico en Prevención de Riesgos</option>
+          <option value="tecnico ciberseguridad">Técnico en Ciberseguridad</option>
+          <option value="tecnico tecnologias de la informacion">Técnico en Tecnologías de la Información</option>
+          <option value="tecnico telecomunicaciones conectividad redes">Técnico en Telecomunicaciones, Conectividad y Redes</option>
+          <option value="tecnico programacion computacional">Técnico en Programación Computacional</option>
+          <option value="tecnico mineria remota inteligente">Técnico en Minería Remota Inteligente</option>
+          <option value="tecnico enfermeria blended">Técnico en Enfermería (Blended)</option>
+          <option value="tecnico odontologia blended">Técnico en Odontología (Blended)</option>
+          <option value="tecnico quimica y farmacia blended">Técnico en Química y Farmacia (Blended)</option>
+          <option value="tecnico radiologia radiodiagnostico blended">Técnico en Radiología y Radiodiagnóstico (Blended)</option>
+        </optgroup>
       </select>
       <div class="form-hint">Este valor determina qué buscador encontrará el registro</div>
     </div>
@@ -240,8 +260,6 @@ th { background: #005baa; color: white; text-align: left; }
     <div class="modal-close"><button onclick="cerrarAgregar()">Cerrar</button></div>
   </div>
 </div>
-
-
 
 <script>
 const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
@@ -299,6 +317,24 @@ const sugerenciasBase = [
   { label: "Rector / Vicerrectores", value: "rector", aliases: ["rector","vicerrector"] },
   { label: "Escuela de Negocios", value: "escuela de negocios", aliases: ["negocios"] },
   { label: "Escuela de Ingeniería", value: "escuela de ingenieria", aliases: [] },
+  { label: "TEC Mayor – Autoridades", value: "tec mayor", aliases: ["tec","téc","tec mayor","tecmayor"] },
+  { label: "Técnico en Gestión de Personas", value: "tecnico gestion de personas", aliases: ["tec","téc","tecni","técnico","gestion personas"] },
+  { label: "Técnico en Administración Pública", value: "tecnico administracion publica", aliases: ["tec","téc","tecni","técnico","adm publica"] },
+  { label: "Técnico en Administración de Empresas", value: "tecnico administracion de empresas", aliases: ["tec","téc","tecni","técnico","adm empresas"] },
+  { label: "Técnico en Contabilidad General", value: "tecnico contabilidad general", aliases: ["tec","téc","tecni","técnico","contabilidad"] },
+  { label: "Técnico en Finanzas", value: "tecnico finanzas", aliases: ["tec","téc","tecni","técnico","finanzas"] },
+  { label: "Técnico en Marketing y Gestión Comercial", value: "tecnico marketing gestion comercial", aliases: ["tec","téc","tecni","técnico","marketing"] },
+  { label: "Técnico en Logística", value: "tecnico logistica", aliases: ["tec","téc","tecni","técnico","logistica tec"] },
+  { label: "Técnico en Prevención de Riesgos", value: "tecnico prevencion de riesgos", aliases: ["tec","téc","tecni","técnico","prevencion tec"] },
+  { label: "Técnico en Ciberseguridad", value: "tecnico ciberseguridad", aliases: ["tec","téc","tecni","técnico","ciber tec"] },
+  { label: "Técnico en Tecnologías de la Información", value: "tecnico tecnologias de la informacion", aliases: ["tec","téc","tecni","técnico","ti tec"] },
+  { label: "Técnico en Telecomunicaciones, Conectividad y Redes", value: "tecnico telecomunicaciones conectividad redes", aliases: ["tec","téc","tecni","técnico","redes","telecomunicaciones tec"] },
+  { label: "Técnico en Programación Computacional", value: "tecnico programacion computacional", aliases: ["tec","téc","tecni","técnico","programacion tec"] },
+  { label: "Técnico en Minería Remota Inteligente", value: "tecnico mineria remota inteligente", aliases: ["tec","téc","tecni","técnico","mineria tec"] },
+  { label: "Técnico en Enfermería (Blended)", value: "tecnico enfermeria blended", aliases: ["tec","téc","tecni","técnico","blended","enfermeria tec"] },
+  { label: "Técnico en Odontología (Blended)", value: "tecnico odontologia blended", aliases: ["tec","téc","tecni","técnico","blended","odontologia tec"] },
+  { label: "Técnico en Química y Farmacia (Blended)", value: "tecnico quimica y farmacia blended", aliases: ["tec","téc","tecni","técnico","blended","quimica tec"] },
+  { label: "Técnico en Radiología y Radiodiagnóstico (Blended)", value: "tecnico radiologia radiodiagnostico blended", aliases: ["tec","téc","tecni","técnico","blended","radiologia tec"] },
 ];
 
 const input = document.getElementById("q");
@@ -338,7 +374,8 @@ function getModalidad(escuela) {
   if (!escuela) return "☀️ Modalidad: Diurno";
   const t = escuela.toLowerCase();
   if (t.includes("online")) return "💻 Modalidad: Online";
-  if (t.includes("técnico") || t.includes("tecnico")) return "🔧 Modalidad: Técnico";
+  if (t.includes("blended")) return "🔀 Modalidad: Blended";
+  if (t.includes("técnico") || t.includes("tecnico") || t.includes("tec mayor")) return "🔧 Modalidad: Técnico";
   if (t.includes("vespertino")) return "🌙 Modalidad: Vespertino";
   return "☀️ Modalidad: Diurno";
 }
@@ -424,8 +461,6 @@ async function eliminarRegistro(id, btn) {
 }
 function abrirAyuda() { document.getElementById("modalAyuda").style.display = "block"; }
 function cerrarAyuda() { document.getElementById("modalAyuda").style.display = "none"; }
-
-// REPORTE: usa mailto, no requiere JS
 
 window.onload = abrirAyuda;
 </script>
