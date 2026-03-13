@@ -8,9 +8,7 @@ body { font-family: Calibri, Arial, sans-serif; background: #f3f6f9; margin: 0; 
 .header { background: #f2b705; padding: 20px 30px; display: flex; align-items: center; gap: 25px; }
 .header img { height: 90px; }
 .header h1 { margin: 0; font-size: 28px; color: #002f6c; }
-
 .container { max-width: 1200px; margin: 30px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
-
 .search-wrapper { position: relative; }
 .search-bar { display: flex; gap: 10px; align-items: center; }
 .search-bar input { padding: 12px; font-size: 16px; flex: 1; }
@@ -19,41 +17,33 @@ body { font-family: Calibri, Arial, sans-serif; background: #f3f6f9; margin: 0; 
 .btn-secondary { background: #999; color: #fff; }
 .btn-home { background: #005baa; color: #fff; }
 .info-help { background: #e9eef4; color: #005baa; border-radius: 50%; width: 34px; height: 34px; font-weight: bold; border: none; cursor: pointer; }
-
 .suggestions { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 1px solid #ccc; border-radius: 6px; box-shadow: 0 6px 14px rgba(0,0,0,.12); z-index: 50; display: none; }
 .suggestion-item { padding: 10px 14px; cursor: pointer; font-size: 14px; }
 .suggestion-item:hover { background: #f0f4f8; }
-
 table { width: 100%; border-collapse: collapse; margin-top: 20px; }
 th, td { border: 1px solid #ddd; padding: 10px; font-size: 14px; vertical-align: top; }
 th { background: #005baa; color: white; text-align: left; }
-
 .tooltip { position: relative; display: inline-block; }
 .tooltip-box { visibility: hidden; opacity: 0; width: 260px; background: #fff; color: #000; border: 1px solid #ccc; border-radius: 6px; padding: 8px 10px; position: absolute; z-index: 10; top: 120%; left: 50%; transform: translateX(-50%); box-shadow: 0 4px 10px rgba(0,0,0,0.15); font-size: 13px; }
 .tooltip:hover .tooltip-box { visibility: visible; opacity: 1; }
-
 .correo-cell { display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; }
 .btn-copy { background: none; border: 1px solid #005baa; border-radius: 4px; color: #005baa; font-size: 11px; padding: 2px 6px; cursor: pointer; white-space: nowrap; flex-shrink: 0; transition: background 0.2s, color 0.2s; }
 .btn-copy:hover { background: #005baa; color: #fff; }
 .btn-copy.copiado { background: #28a745; color: #fff; border-color: #28a745; }
-
 .btn-accion { background: none; border-radius: 4px; font-size: 11px; padding: 2px 6px; cursor: pointer; white-space: nowrap; margin: 2px; }
 .btn-editar  { border: 1px solid #005baa; color: #005baa; }
 .btn-editar:hover  { background: #005baa; color: #fff; }
 .btn-eliminar { border: 1px solid #cc0000; color: #cc0000; }
 .btn-eliminar:hover { background: #cc0000; color: #fff; }
-
 .banner-admin { background: #fff3cd; border: 1px solid #f0a500; border-radius: 8px; padding: 10px 18px; margin-bottom: 16px; font-size: 0.9rem; color: #856404; display: none; align-items: center; justify-content: space-between; }
 .banner-admin.visible { display: flex; }
 .banner-admin button { background: none; border: 1px solid #856404; border-radius: 6px; padding: 4px 10px; cursor: pointer; color: #856404; font-size: 0.85rem; }
-
 .modal { display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.45); }
 .modal-content { background: #fff; margin: 4% auto; padding: 25px; width: 580px; max-width: 95%; border-radius: 10px; max-height: 88vh; overflow-y: auto; }
 .modal-content h3 { margin-top: 0; color: #005baa; }
 .modal-close { text-align: right; margin-top: 12px; }
 .modal-close button { background: #999; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; }
 .close { float: right; cursor: pointer; font-size: 20px; }
-
 .form-group { margin-bottom: 12px; }
 .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: #555; margin-bottom: 4px; text-transform: uppercase; }
 .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px 11px; border: 1.5px solid #ddd; border-radius: 6px; font-size: 0.92rem; box-sizing: border-box; font-family: inherit; }
@@ -61,20 +51,14 @@ th { background: #005baa; color: white; text-align: left; }
 .form-hint { font-size: 0.76rem; color: #888; margin-top: 2px; }
 .form-row { display: flex; gap: 10px; }
 .form-row .form-group { flex: 1; }
-
 .instruccion-flujo { background: #f8f9fa; border-left: 3px solid #f0a500; border-radius: 4px; padding: 8px 12px; margin-bottom: 14px; font-size: 0.8rem; color: #666; line-height: 1.5; }
-
 .btn-guardar { background: #1a5c38; color: white; border: none; padding: 10px 24px; border-radius: 8px; font-size: 0.95rem; font-weight: 700; cursor: pointer; width: 100%; margin-top: 8px; }
 .btn-guardar:hover { background: #144d2f; }
-
 .msg-ok { color: #2e7d32; font-size: 0.88rem; margin-top: 8px; text-align: center; font-weight: 600; display: none; }
 .msg-err { color: #c62828; font-size: 0.88rem; margin-top: 8px; text-align: center; display: none; }
-
 .btn-admin-flotante { position: fixed; bottom: 24px; right: 24px; background: #1a5c38; color: white; border: none; width: 52px; height: 52px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); z-index: 300; display: flex; align-items: center; justify-content: center; }
 .btn-admin-flotante:hover { background: #144d2f; }
-
 .footer { margin-top: 40px; text-align: center; font-size: 13px; color: #666; }
-/* BOTÓN REPORTE */
 .btn-reporte-flotante {
   position: fixed; bottom: 24px; left: 24px;
   background: #cc0000; color: white; border: none;
@@ -103,12 +87,10 @@ th { background: #005baa; color: white; text-align: left; }
 </div>
 
 <div class="container">
-
   <div class="banner-admin" id="bannerAdmin">
     ✏️ <strong>Modo administración activo</strong> — puedes agregar, editar y eliminar registros.
     <button onclick="salirAdmin()">Salir</button>
   </div>
-
   <div class="search-wrapper">
     <div class="search-bar">
       <input type="text" id="q" placeholder="Buscar por área (ej: becas, ore, financiera…)">
@@ -119,7 +101,6 @@ th { background: #005baa; color: white; text-align: left; }
     </div>
     <div id="suggestions" class="suggestions"></div>
   </div>
-
   <div id="resultados"></div>
 </div>
 
@@ -175,73 +156,34 @@ th { background: #005baa; color: white; text-align: left; }
 <div class="modal" id="modalAgregar">
   <div class="modal-content">
     <h3 id="tituloFormulario">➕ Agregar registro</h3>
-
     <div class="instruccion-flujo">
       💡 <strong>Para agregar:</strong> completa los campos y guarda.<br>
       ✏️ <strong>Para editar:</strong> cierra este formulario, busca el registro y haz clic en ✏️ Editar.<br>
       🗑️ <strong>Para eliminar:</strong> cierra este formulario, busca el registro y haz clic en 🗑️ Eliminar.
     </div>
-
     <div class="form-row">
-      <div class="form-group">
-        <label>Nombre *</label>
-        <input type="text" id="f_nombre" placeholder="Nombre completo"/>
-      </div>
-      <div class="form-group">
-        <label>Cargo / Rol *</label>
-        <input type="text" id="f_cargo_rol" placeholder="Ej: Ejecutivo/a"/>
-      </div>
+      <div class="form-group"><label>Nombre *</label><input type="text" id="f_nombre" placeholder="Nombre completo"/></div>
+      <div class="form-group"><label>Cargo / Rol *</label><input type="text" id="f_cargo_rol" placeholder="Ej: Ejecutivo/a"/></div>
     </div>
-
     <div class="form-row">
-      <div class="form-group">
-        <label>Área</label>
-        <input type="text" id="f_area" placeholder="Nombre visible del área"/>
-      </div>
+      <div class="form-group"><label>Área</label><input type="text" id="f_area" placeholder="Nombre visible del área"/></div>
       <div class="form-group">
         <label>Área búsqueda *</label>
         <input type="text" id="f_area_busqueda" placeholder="Ej: Becasycreditos"/>
         <div class="form-hint">Debe coincidir exactamente con el valor en Supabase</div>
       </div>
     </div>
-
     <div class="form-row">
-      <div class="form-group">
-        <label>Campus</label>
-        <input type="text" id="f_campus" placeholder="Ej: Providencia"/>
-      </div>
-      <div class="form-group">
-        <label>Anexo</label>
-        <input type="text" id="f_anexo" placeholder="Ej: 1234"/>
-      </div>
+      <div class="form-group"><label>Campus</label><input type="text" id="f_campus" placeholder="Ej: Providencia"/></div>
+      <div class="form-group"><label>Anexo</label><input type="text" id="f_anexo" placeholder="Ej: 1234"/></div>
     </div>
-
-    <div class="form-group">
-      <label>Correo</label>
-      <input type="email" id="f_correo" placeholder="correo@umayor.cl"/>
-    </div>
-
+    <div class="form-group"><label>Correo</label><input type="email" id="f_correo" placeholder="correo@umayor.cl"/></div>
     <div class="form-row">
-      <div class="form-group">
-        <label>Asistente / Secretaria</label>
-        <input type="text" id="f_asistente_secretaria" placeholder="Nombre"/>
-      </div>
-      <div class="form-group">
-        <label>Correo Asistente</label>
-        <input type="email" id="f_correo_asistente" placeholder="correo@umayor.cl"/>
-      </div>
+      <div class="form-group"><label>Asistente / Secretaria</label><input type="text" id="f_asistente_secretaria" placeholder="Nombre"/></div>
+      <div class="form-group"><label>Correo Asistente</label><input type="email" id="f_correo_asistente" placeholder="correo@umayor.cl"/></div>
     </div>
-
-    <div class="form-group">
-      <label>Restricciones</label>
-      <input type="text" id="f_restricciones" placeholder="Dejar vacío si no aplica"/>
-    </div>
-
-    <div class="form-group">
-      <label>Observaciones</label>
-      <textarea id="f_observaciones" rows="2" placeholder="Opcional"></textarea>
-    </div>
-
+    <div class="form-group"><label>Restricciones</label><input type="text" id="f_restricciones" placeholder="Dejar vacío si no aplica"/></div>
+    <div class="form-group"><label>Observaciones</label><textarea id="f_observaciones" rows="2" placeholder="Opcional"></textarea></div>
     <button class="btn-guardar" onclick="guardarAdministrativo()">Guardar registro</button>
     <div class="msg-ok" id="msgOkAgregar">✅ Registro guardado correctamente</div>
     <div class="msg-err" id="msgErrAgregar"></div>
@@ -280,6 +222,7 @@ const sugerenciasBase = [
   { label: "Coordinación Docente",                       value: "coordinaciondocente",                         aliases: ["docente","coordinacion"] },
   { label: "Casino",                                     value: "casino",                                      aliases: ["comida","almuerzo"] },
   { label: "Operaciones",                                value: "operaciones",                                  aliases: ["operacion","infraestructura"] },
+  { label: "Campus Seguro",                              value: "CampusSeguro",                                aliases: ["campus seguro","seguro campus","cseguro"] },
   { label: "Seguros",                                    value: "Seguros",                                     aliases: ["seguro","accidente"] },
   { label: "Marketing",                                  value: "Marketing",                                   aliases: ["marketing","publicidad"] },
   { label: "Emayor (E-learning)",                        value: "Emayor",                                      aliases: ["emayor","elearning","online","plataforma"] },
@@ -361,7 +304,6 @@ function ejecutarBusqueda(termino) {
     document.getElementById("resultados").innerHTML = "<p>Escribe al menos 2 caracteres para buscar.</p>";
     return;
   }
-
   fetch(`/api/contactos-administrativos?q=${encodeURIComponent(termino)}`)
     .then(r => r.json())
     .then(data => {
@@ -370,19 +312,16 @@ function ejecutarBusqueda(termino) {
         res.innerHTML = `<p>No se encontraron resultados para <strong>${termino}</strong>.</p>`;
         return;
       }
-
       let html = `<table><tr>
         <th>Nombre</th><th>Cargo / Rol</th><th>Área</th><th>Campus</th><th>Correo</th><th>Info</th>
         ${modoAdmin ? "<th>Acciones</th>" : ""}
       </tr>`;
-
       data.forEach(r => {
         const botonesAdmin = modoAdmin
           ? `<td>
                <button class="btn-accion btn-editar" onclick='editarRegistro(${JSON.stringify(r)})'>✏️ Editar</button>
                <button class="btn-accion btn-eliminar" onclick="eliminarRegistro(${r.id}, this)">🗑️ Eliminar</button>
              </td>` : "";
-
         html += `<tr>
           <td>${r.nombre || ""}</td>
           <td>${r.cargo_rol || ""}</td>
@@ -410,7 +349,6 @@ function ejecutarBusqueda(termino) {
           ${botonesAdmin}
         </tr>`;
       });
-
       html += "</table>";
       res.innerHTML = html;
     })
@@ -426,7 +364,6 @@ function limpiar() {
   suggestionsBox.style.display = "none";
 }
 
-// LOGIN
 function abrirLogin() {
   if (modoAdmin) { abrirAgregar(); return; }
   document.getElementById("modalLogin").style.display = "block";
@@ -454,7 +391,6 @@ function salirAdmin() {
   if (ultimaBusqueda) ejecutarBusqueda(ultimaBusqueda);
 }
 
-// AGREGAR / EDITAR
 function abrirAgregar() {
   editandoId = null;
   document.getElementById("tituloFormulario").textContent = "➕ Agregar registro";
@@ -489,16 +425,14 @@ function editarRegistro(r) {
 function cerrarAgregar() { document.getElementById("modalAgregar").style.display = "none"; }
 
 async function guardarAdministrativo() {
-  const nombre      = document.getElementById("f_nombre").value.trim();
-  const cargo_rol   = document.getElementById("f_cargo_rol").value.trim();
+  const nombre        = document.getElementById("f_nombre").value.trim();
+  const cargo_rol     = document.getElementById("f_cargo_rol").value.trim();
   const area_busqueda = document.getElementById("f_area_busqueda").value.trim();
-
   if (!nombre || !cargo_rol || !area_busqueda) {
     document.getElementById("msgErrAgregar").textContent = "❌ Nombre, Cargo y Área búsqueda son obligatorios.";
     document.getElementById("msgErrAgregar").style.display = "block";
     return;
   }
-
   const payload = {
     nombre, cargo_rol, area_busqueda,
     area:                 document.getElementById("f_area").value.trim(),
@@ -510,14 +444,12 @@ async function guardarAdministrativo() {
     restricciones:        document.getElementById("f_restricciones").value.trim(),
     observaciones:        document.getElementById("f_observaciones").value.trim()
   };
-
   let url    = `${SUPABASE_URL}/rest/v1/contactos_administrativos`;
   let method = "POST";
   if (editandoId) {
     url    = `${SUPABASE_URL}/rest/v1/contactos_administrativos?id=eq.${editandoId}`;
     method = "PATCH";
   }
-
   const res = await fetch(url, {
     method,
     headers: {
@@ -528,7 +460,6 @@ async function guardarAdministrativo() {
     },
     body: JSON.stringify(payload)
   });
-
   if (res.ok) {
     document.getElementById("msgOkAgregar").style.display = "block";
     document.getElementById("msgErrAgregar").style.display = "none";
@@ -540,7 +471,6 @@ async function guardarAdministrativo() {
   }
 }
 
-// ELIMINAR
 async function eliminarRegistro(id, btn) {
   if (!confirm("¿Estás seguro de eliminar este registro? Esta acción no se puede deshacer.")) return;
   const res = await fetch(`${SUPABASE_URL}/rest/v1/contactos_administrativos?id=eq.${id}`, {
