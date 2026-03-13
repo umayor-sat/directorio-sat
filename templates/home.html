@@ -119,31 +119,66 @@
             margin-bottom:30px;
         }
 
-        /* ===== Botones ===== */
-        .buttons{
+        /* ===== Botones PRINCIPALES (grandes) ===== */
+        .buttons-primary{
             display:flex;
             justify-content:center;
             gap:20px;
             flex-wrap:wrap;
-            margin-bottom:25px;
+            margin-bottom:16px;
         }
 
-        .btn{
+        .btn-primary-item{
             background:var(--um-azul);
             color:#fff;
-            padding:14px 26px;
+            padding:16px 32px;
             border-radius:6px;
             text-decoration:none;
-            font-size:16px;
-            font-weight:600;
+            font-size:17px;
+            font-weight:700;
             display:inline-flex;
             align-items:center;
             gap:8px;
+            min-width:260px;
+            justify-content:center;
         }
 
-        .btn:hover{
-            opacity:.9;
+        .btn-primary-item:hover{ opacity:.9; }
+
+        /* ===== Botones SECUNDARIOS (más discretos) ===== */
+        .buttons-secondary{
+            display:flex;
+            justify-content:center;
+            gap:14px;
+            flex-wrap:wrap;
+            margin-bottom:25px;
         }
+
+        .btn-secondary-item{
+            background:#e8eef5;
+            color:var(--um-azul);
+            padding:10px 22px;
+            border-radius:6px;
+            text-decoration:none;
+            font-size:14px;
+            font-weight:600;
+            display:inline-flex;
+            align-items:center;
+            gap:7px;
+            border:1.5px solid #c5d4e8;
+        }
+
+        .btn-secondary-item:hover{
+            background:#d5e2f0;
+        }
+
+        /* Bitácora mantiene su verde pero tamaño secundario */
+        .btn-bitacora{
+            background:#1a5c38;
+            color:#fff;
+            border-color:#1a5c38;
+        }
+        .btn-bitacora:hover{ background:#144d2f; }
 
         /* ===== Footer ===== */
         footer{
@@ -154,7 +189,7 @@
         }
 
         /* =================================================
-           POP-UP AVISO (80% – LECTURA OBLIGATORIA)
+           POP-UP AVISO
            ================================================= */
         .modal-aviso{
             display:none;
@@ -202,6 +237,35 @@
             font-weight:600;
             border-radius:8px;
             cursor:pointer;
+        }
+
+        /* ===== Botón reporte ===== */
+        .btn-reporte-flotante {
+            position: fixed; bottom: 24px; left: 24px;
+            background: #cc0000; color: white; border: none;
+            width: 52px; height: 52px; border-radius: 50%; font-size: 1.3rem;
+            cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+            z-index: 300; display: flex; align-items: center; justify-content: center;
+            text-decoration: none;
+        }
+        .btn-reporte-flotante:hover { background: #aa0000; }
+        .btn-reporte-flotante::after {
+            content: "Reportar error";
+            position: absolute; left: 62px;
+            background: #333; color: #fff;
+            padding: 4px 8px; border-radius: 4px;
+            font-size: 12px; white-space: nowrap;
+            opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .btn-reporte-flotante:hover::after { opacity: 1; }
+
+        /* ===== Separador sección secundaria ===== */
+        .label-secundario {
+            font-size: 12px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -254,7 +318,7 @@
             <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Registro-Estudiantes" target="_blank">ORE</a></li>
             <li><a href="https://sso.umayor.cl/authentication/SignIn?SID=13&app_url=certificadosalumnos.umayor.cl" target="_blank">Portal de Certificados</a></li>
             <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Gratuidad-Becas-y-ayudas-estudiantiles" target="_blank">Becas y Créditos</a></li>
-            <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Gestion-Financiera" target="_blank">Gestión Financiera</a></li>
+            <li><a href="https://www.umayor.cl/um/servicios-estudiantiales/Gestion-Financiera" target="_blank">Gestión Financiera</a></li>
             <li><a href="https://www.umayor.cl/um/oferta-academica" target="_blank">Oferta Académica</a></li>
             <li><a href="https://www.admisionmayor.cl/preguntas-frecuentes" target="_blank">Preguntas Frecuentes Admisión</a></li>
             <li><a href="https://mayorcl.sharepoint.com/sites/IntranetServiciodeAtencin" target="_blank">Intranet SAT</a></li>
@@ -280,11 +344,18 @@
         Plataforma interna para consulta de contactos, bitácora y recursos del equipo SAT.
     </p>
 
-    <div class="buttons">
-        <a href="/escuelas" class="btn">📘 Directorio de Escuelas</a>
-        <a href="/academicos" class="btn">🎓 Contactos Académicos Núcleos</a>
-        <a href="/contactos-administrativos" class="btn">🏢 Contactos Administrativos</a>
-        <a href="/bitacora" class="btn" style="background:#1a5c38;">📋 Bitácora SAT</a>
+    <!-- BOTONES PRIORITARIOS -->
+    <div class="buttons-primary">
+        <a href="/escuelas" class="btn-primary-item">📘 Directorio de Escuelas</a>
+        <a href="/contactos-administrativos" class="btn-primary-item">🏢 Contactos Administrativos</a>
+    </div>
+
+    <!-- BOTONES SECUNDARIOS -->
+    <div class="label-secundario">Recursos adicionales</div>
+    <div class="buttons-secondary">
+        <a href="/academicos" class="btn-secondary-item">🎓 Contactos Académicos Núcleos</a>
+        <a href="/temas-crm" class="btn-secondary-item">🗂️ Árbol de Temas CRM</a>
+        <a href="/bitacora" class="btn-secondary-item btn-bitacora">📋 Bitácora SAT</a>
     </div>
 
 </div>
@@ -293,6 +364,9 @@
     Desarrollado por <strong>Eduardo Ferrada</strong><br>
     Universidad Mayor · Enero 2026
 </footer>
+
+<!-- BOTÓN REPORTE -->
+<a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de error – Directorio SAT&body=Página donde ocurrió el error:%0A%0ADescripción del problema:%0A%0A(Agrega aquí cualquier detalle adicional)" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -307,24 +381,5 @@
     }
 </script>
 
-
-
-     
-
-<style>
-.btn-reporte-flotante {
-  position: fixed; bottom: 24px; left: 24px;
-  background: #cc0000; color: white; border: none;
-  width: 52px; height: 52px; border-radius: 50%; font-size: 1.3rem;
-  cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-  z-index: 300; display: flex; align-items: center; justify-content: center;
-}
-.btn-reporte-flotante:hover { background: #aa0000; }
-</style>
-
-<!-- BOTÓN REPORTE -->
-<a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de error – Directorio SAT&body=Página donde ocurrió el error:%0A%0ADescripción del problema:%0A%0A(Agrega aquí cualquier detalle adicional)" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
 </body>
 </html>
-
-
