@@ -2,87 +2,72 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Árbol de Temas CRM – Universidad Mayor</title>
+<title>Simulador Tipificación CRM – Universidad Mayor</title>
 <style>
 body { font-family: Calibri, Arial, sans-serif; background: #f3f6f9; margin: 0; }
 .header { background: #f2b705; padding: 20px 30px; display: flex; align-items: center; gap: 25px; }
 .header img { height: 90px; }
 .header h1 { margin: 0; font-size: 28px; color: #002f6c; }
-.container { max-width: 900px; margin: 40px auto; background: #fff; padding: 36px; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
-.subtitulo { color: #555; font-size: 0.95rem; margin-bottom: 28px; border-left: 4px solid #f2b705; padding-left: 12px; }
-.pasos { display: flex; flex-direction: column; gap: 22px; }
-.paso { display: flex; flex-direction: column; gap: 6px; }
-.paso label { font-size: 0.78rem; font-weight: 700; color: #005baa; text-transform: uppercase; letter-spacing: 0.5px; }
-.paso select {
-  width: 100%; padding: 12px 14px; font-size: 15px;
-  border: 2px solid #dde3ec; border-radius: 8px;
-  background: #f8fafc; color: #222;
-  appearance: none; cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23005baa' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 14px center;
-  transition: border-color 0.2s;
-}
-.paso select:focus { outline: none; border-color: #005baa; background-color: #fff; }
-.paso select:disabled { background: #f0f0f0; color: #aaa; cursor: not-allowed; border-color: #e0e0e0; }
-.flecha { text-align: center; font-size: 1.4rem; color: #ccc; margin: -8px 0; }
-.resultado {
-  margin-top: 28px; padding: 18px 22px;
-  border-radius: 10px; border: 2px solid #e0e0e0;
-  background: #f8fafc; display: none;
-}
+.container { max-width: 1200px; margin: 30px auto; padding: 0 20px 40px; }
+.btn-home { display: inline-flex; align-items: center; gap: 6px; background: #005baa; color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-size: 14px; cursor: pointer; text-decoration: none; margin-bottom: 24px; }
+.btn-home:hover { background: #004499; }
+
+.layout { display: flex; gap: 28px; align-items: flex-start; }
+
+/* COLUMNA IZQUIERDA */
+.col-desc { flex: 0 0 260px; background: #fff; border-radius: 12px; padding: 26px; box-shadow: 0 0 16px rgba(0,0,0,0.08); border-top: 5px solid #f2b705; position: sticky; top: 20px; }
+.col-desc h2 { margin: 0 0 12px; font-size: 1rem; color: #002f6c; }
+.col-desc p { font-size: 0.85rem; color: #555; line-height: 1.6; margin: 0 0 12px; }
+.col-desc .tip { background: #f0f4f8; border-left: 3px solid #005baa; padding: 8px 12px; border-radius: 4px; font-size: 0.81rem; color: #444; line-height: 1.6; }
+.col-desc .tip b { color: #002f6c; }
+
+/* COLUMNA DERECHA */
+.col-form { flex: 1; background: #fff; border-radius: 12px; padding: 32px; box-shadow: 0 0 16px rgba(0,0,0,0.08); }
+
+.campo { margin-bottom: 18px; }
+.campo label { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 700; color: #005baa; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 5px; }
+.campo label .badge { background: #e8eef5; color: #005baa; font-size: 0.65rem; padding: 1px 6px; border-radius: 10px; font-weight: 700; }
+.campo label .badge.enc { background: #005baa; color: #fff; }
+.campo select { width: 100%; padding: 11px 36px 11px 14px; font-size: 14px; border: 2px solid #dde3ec; border-radius: 8px; background: #f8fafc; color: #222; appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23005baa' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; transition: border-color 0.2s; box-sizing: border-box; }
+.campo select:focus { outline: none; border-color: #005baa; background-color: #fff; }
+.campo select:disabled { background: #f0f0f0; color: #aaa; cursor: not-allowed; border-color: #e0e0e0; }
+.campo select.encadenado { border-color: #c5d4e8; }
+.campo select.encadenado:not(:disabled) { border-color: #005baa; }
+
+.flecha { text-align: center; font-size: 1.1rem; color: #bbb; margin: -8px 0 4px; }
+.divider { border: none; border-top: 1px dashed #dde3ec; margin: 20px 0; }
+
+/* RESULTADO */
+.resultado { margin-top: 24px; padding: 20px 24px; border-radius: 10px; border: 2px solid #e0e0e0; background: #f8fafc; display: none; }
 .resultado.activo { display: block; border-color: #005baa; background: #eef4fb; }
-.resultado-label { font-size: 0.75rem; font-weight: 700; color: #005baa; text-transform: uppercase; margin-bottom: 10px; }
-.resultado-fila { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
-.resultado-tag {
-  background: #005baa; color: #fff;
-  padding: 5px 14px; border-radius: 20px;
-  font-size: 13px; font-weight: 600;
-}
-.resultado-tag.subtema { background: #1a5c38; }
-.resultado-tag.detalle { background: #856404; }
-.btn-copiar {
-  margin-top: 14px; background: #005baa; color: #fff;
-  border: none; padding: 9px 20px; border-radius: 7px;
-  font-size: 0.88rem; font-weight: 700; cursor: pointer;
-  transition: background 0.2s;
-}
+.resultado-label { font-size: 0.72rem; font-weight: 700; color: #005baa; text-transform: uppercase; margin-bottom: 14px; }
+.resultado-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+.res-item { background: #fff; border: 1px solid #d0dce8; border-radius: 8px; padding: 9px 13px; }
+.res-item .res-key { font-size: 0.67rem; color: #888; text-transform: uppercase; font-weight: 700; margin-bottom: 3px; }
+.res-item .res-val { font-size: 0.9rem; font-weight: 700; color: #002f6c; }
+.res-item.enc { background: #005baa; border-color: #005baa; }
+.res-item.enc .res-key { color: #a8c8f0; }
+.res-item.enc .res-val { color: #fff; }
+.res-item.vacio .res-val { color: #bbb; font-weight: 400; font-style: italic; }
+
+.acciones { display: flex; gap: 10px; }
+.btn-copiar { background: #005baa; color: #fff; border: none; padding: 9px 22px; border-radius: 7px; font-size: 0.88rem; font-weight: 700; cursor: pointer; }
 .btn-copiar:hover { background: #004499; }
 .btn-copiar.copiado { background: #28a745; }
-.btn-limpiar {
-  margin-top: 10px; margin-left: 8px;
-  background: none; color: #999; border: 1px solid #ccc;
-  padding: 9px 20px; border-radius: 7px;
-  font-size: 0.88rem; cursor: pointer;
-}
+.btn-limpiar { background: none; color: #999; border: 1px solid #ccc; padding: 9px 20px; border-radius: 7px; font-size: 0.88rem; cursor: pointer; }
 .btn-limpiar:hover { background: #f0f0f0; }
-.contador { font-size: 0.75rem; color: #888; margin-top: 6px; }
-.search-box {
-  width: 100%; padding: 10px 14px; font-size: 14px;
-  border: 1.5px solid #dde3ec; border-radius: 7px;
-  box-sizing: border-box; margin-bottom: 6px;
-}
-.search-box:focus { outline: none; border-color: #005baa; }
-.btn-home { display: inline-flex; align-items: center; gap: 6px; background: #005baa; color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-size: 14px; cursor: pointer; text-decoration: none; margin-bottom: 20px; }
-.btn-home:hover { background: #004499; }
+
 .footer { margin-top: 40px; text-align: center; font-size: 13px; color: #666; }
-.btn-reporte-flotante {
-  position: fixed; bottom: 24px; left: 24px;
-  background: #cc0000; color: white; border: none;
-  width: 52px; height: 52px; border-radius: 50%; font-size: 1.3rem;
-  cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-  z-index: 300; display: flex; align-items: center; justify-content: center;
-  text-decoration: none;
-}
+.btn-reporte-flotante { position: fixed; bottom: 24px; left: 24px; background: #cc0000; color: white; border: none; width: 52px; height: 52px; border-radius: 50%; font-size: 1.3rem; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); z-index: 300; display: flex; align-items: center; justify-content: center; text-decoration: none; }
 .btn-reporte-flotante:hover { background: #aa0000; }
-.btn-reporte-flotante::after {
-  content: "Reportar error";
-  position: absolute; left: 62px;
-  background: #333; color: #fff;
-  padding: 4px 8px; border-radius: 4px;
-  font-size: 12px; white-space: nowrap;
-  opacity: 0; pointer-events: none; transition: opacity 0.2s;
-}
+.btn-reporte-flotante::after { content: "Reportar error"; position: absolute; left: 62px; background: #333; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 12px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
 .btn-reporte-flotante:hover::after { opacity: 1; }
+
+@media (max-width: 820px) {
+  .layout { flex-direction: column; }
+  .col-desc { flex: none; width: 100%; position: static; box-sizing: border-box; }
+  .resultado-grid { grid-template-columns: repeat(2, 1fr); }
+}
 </style>
 </head>
 <body>
@@ -91,70 +76,196 @@ body { font-family: Calibri, Arial, sans-serif; background: #f3f6f9; margin: 0; 
   <a href="https://www.umayor.cl" target="_blank">
     <img src="{{ url_for('static', filename='img/logoum.jpg') }}" alt="Universidad Mayor">
   </a>
-  <h1>Árbol de Temas CRM</h1>
+  <h1>Simulador Tipificación CRM</h1>
 </div>
 
 <div class="container">
   <a href="/" class="btn-home">← Volver al inicio</a>
-  <p class="subtitulo">Selecciona el <strong>Tema</strong>, luego el <strong>Subtema</strong> y finalmente el <strong>Detalle</strong> para obtener la tipificación correcta.</p>
 
-  <div class="pasos">
+  <div class="layout">
 
-    <!-- PASO 1: TEMA -->
-    <div class="paso">
-      <label>① Tema</label>
-      <input type="text" class="search-box" id="searchTema" placeholder="Filtrar temas…" oninput="filtrarTemas()" />
-      <select id="selTema" onchange="cargarSubtemas()">
-        <option value="">— Selecciona un tema —</option>
-      </select>
-      <div class="contador" id="cntTema"></div>
+    <!-- IZQUIERDA: descripción -->
+    <div class="col-desc">
+      <h2>¿Qué es este simulador?</h2>
+      <p>Replica los campos del CRM para <strong>practicar tipificaciones</strong> sin afectar registros reales.</p>
+
+      <div class="tip" style="margin-bottom:12px;">
+        <b>Campos libres</b> — selecciona según el caso:<br>
+        · Tipo de caso · Origen · Sede<br><br>
+        <b>Campos encadenados</b> — van en orden:<br>
+        · Tema → Subtema → Detalle
+      </div>
+
+      <div class="tip" style="border-left-color:#cc0000; margin-bottom:12px;">
+        <b style="color:#cc0000;">⚠️ Tipo de caso — úsalo con criterio</b><br><br>
+        <b>Reclamo:</b> solo cuando la persona lo exprese explícitamente y en más de una ocasión. Si hay duda, usar <b>Queja</b>.<br><br>
+        <b>Queja:</b> cuando hay molestia evidente pero sin declaración formal de reclamo. Si percibes que podría derivar en reclamo, mantén Queja y <b>avisa a tu supervisor</b>.<br><br>
+        No interpretes el tono de voz ni un garabato como reclamo automático.
+      </div>
+
+      <div class="tip" style="border-left-color:#f0a500;">
+        <b style="color:#856404;">⚠️ Origen del caso — verifica antes de guardar</b><br><br>
+        Confirma que el origen corresponde al canal real de contacto.<br><br>
+        Cuidado con el <b>scroll accidental</b> — un cambio sin querer puede quedar guardado con error.
+      </div>
     </div>
 
-    <div class="flecha">↓</div>
+    <!-- DERECHA: formulario en orden CRM -->
+    <div class="col-form">
 
-    <!-- PASO 2: SUBTEMA -->
-    <div class="paso">
-      <label>② Subtema</label>
-      <input type="text" class="search-box" id="searchSubtema" placeholder="Filtrar subtemas…" oninput="filtrarSubtemas()" disabled />
-      <select id="selSubtema" onchange="cargarDetalles()" disabled>
-        <option value="">— Primero selecciona un tema —</option>
-      </select>
-      <div class="contador" id="cntSubtema"></div>
+      <!-- 1. TIPO DE CASO -->
+      <div class="campo">
+        <label>Tipo de caso <span class="badge">Libre</span></label>
+        <select id="selTipo" onchange="actualizarResultado()">
+          <option value="">— Selecciona —</option>
+<option value="Agradecimiento">Agradecimiento</option>
+<option value="Consulta">Consulta</option>
+<option value="Felicitaciones">Felicitaciones</option>
+<option value="Queja">Queja</option>
+<option value="Reclamo">Reclamo</option>
+<option value="Riesgo">Riesgo</option>
+<option value="Sugerencia">Sugerencia</option>
+        </select>
+      </div>
+
+      <!-- 2. ORIGEN DEL CASO -->
+      <div class="campo">
+        <label>Origen del caso <span class="badge">Libre</span></label>
+        <select id="selOrigen" onchange="actualizarResultado()">
+          <option value="">— Selecciona —</option>
+<option value="AP">AP</option>
+<option value="BOT">BOT</option>
+<option value="Campañas">Campañas</option>
+<option value="Campañas de riesgo">Campañas de riesgo</option>
+<option value="Chat en vivo">Chat en vivo</option>
+<option value="Correo">Correo</option>
+<option value="Facebook Messenger">Facebook Messenger</option>
+<option value="Llamada Telefónica">Llamada Telefónica</option>
+<option value="Presencial UM">Presencial UM</option>
+<option value="RRSSS">RRSSS</option>
+<option value="Sitio WEB">Sitio WEB</option>
+<option value="WhatsApp">WhatsApp</option>
+        </select>
+      </div>
+
+      <hr class="divider">
+
+      <!-- 3. TEMA -->
+      <div class="campo">
+        <label>Tema <span class="badge enc">Encadenado</span></label>
+        <select id="selTema" class="encadenado" onchange="cargarSubtemas()">
+          <option value="">— Selecciona un tema —</option>
+<option value="ACADÉMICO">ACADÉMICO</option>
+<option value="ACOMPAÑAMIENTO ESTUDIANTIL">ACOMPAÑAMIENTO ESTUDIANTIL</option>
+<option value="ACOMPAÑAMIENTO PSICOPEDAGÓGICO">ACOMPAÑAMIENTO PSICOPEDAGÓGICO</option>
+<option value="ACOMPAÑAMIENTO PSM">ACOMPAÑAMIENTO PSM</option>
+<option value="ACOMPAÑAMIENTO TERAPEUTA OCUPACIONAL">ACOMPAÑAMIENTO TERAPEUTA OCUPACIONAL</option>
+<option value="ACOMPAÑAMIENTO Y BIENESTAR">ACOMPAÑAMIENTO Y BIENESTAR</option>
+<option value="ACTIVIDADES Y/O EVENTOS">ACTIVIDADES Y/O EVENTOS</option>
+<option value="ADMINISTRACIÓN">ADMINISTRACIÓN</option>
+<option value="ADMISIÓN">ADMISIÓN</option>
+<option value="AGENDAMIENTO">AGENDAMIENTO</option>
+<option value="ALUMNI">ALUMNI</option>
+<option value="ASUNTOS ESTUDIANTILES">ASUNTOS ESTUDIANTILES</option>
+<option value="BECAS Y CRÉDITOS">BECAS Y CRÉDITOS</option>
+<option value="BIBLIOTECA">BIBLIOTECA</option>
+<option value="CAMPUS VIRTUAL">CAMPUS VIRTUAL</option>
+<option value="CENTROS DE INVESTIGACIÓN Y LABORATORIOS">CENTROS DE INVESTIGACIÓN Y LABORATORIOS</option>
+<option value="CLÍNICAS">CLÍNICAS</option>
+<option value="CONSULTAS SIN CATEGORÍA">CONSULTAS SIN CATEGORÍA</option>
+<option value="CONTRASEÑA MAYOR">CONTRASEÑA MAYOR</option>
+<option value="CORREO CORPORATIVO">CORREO CORPORATIVO</option>
+<option value="DATO HISTORICO">DATO HISTORICO</option>
+<option value="DIFUSIÓN">DIFUSIÓN</option>
+<option value="LABORATORIOS E IMPRESIONES">LABORATORIOS E IMPRESIONES</option>
+<option value="LLAMADA ABANDONADA">LLAMADA ABANDONADA</option>
+<option value="MATRÍCULAS">MATRÍCULAS</option>
+<option value="NORMALIZACIÓN Y COBRANZA">NORMALIZACIÓN Y COBRANZA</option>
+<option value="OFICINA REGISTROS ESTUDIANTILES">OFICINA REGISTROS ESTUDIANTILES</option>
+<option value="OFIGEN">OFIGEN</option>
+<option value="PORTAL DOCENTE">PORTAL DOCENTE</option>
+<option value="PORTAL ESTUDIANTIL">PORTAL ESTUDIANTIL</option>
+<option value="PRUEBAS SISTEMAS">PRUEBAS SISTEMAS</option>
+<option value="RECURSOS HUMANOS">RECURSOS HUMANOS</option>
+<option value="RELACIONES INTERNACIONALES">RELACIONES INTERNACIONALES</option>
+<option value="TESORERÍA (CAJA/EGRESO)">TESORERÍA (CAJA/EGRESO)</option>
+<option value="UNIVERSIDAD">UNIVERSIDAD</option>
+        </select>
+      </div>
+
+      <div class="flecha">↓</div>
+
+      <!-- 4. SUBTEMA -->
+      <div class="campo">
+        <label>Subtema <span class="badge enc">Encadenado</span></label>
+        <select id="selSubtema" class="encadenado" onchange="cargarDetalles()" disabled>
+          <option value="">— Primero selecciona un tema —</option>
+        </select>
+      </div>
+
+      <div class="flecha">↓</div>
+
+      <!-- 5. DETALLE -->
+      <div class="campo">
+        <label>Detalle <span class="badge enc">Encadenado</span></label>
+        <select id="selDetalle" class="encadenado" onchange="actualizarResultado()" disabled>
+          <option value="">— Primero selecciona un subtema —</option>
+        </select>
+      </div>
+
+      <hr class="divider">
+
+      <!-- 6. SEDE -->
+      <div class="campo">
+        <label>Sede <span class="badge">Libre</span></label>
+        <select id="selSede" onchange="actualizarResultado()">
+          <option value="">— Selecciona —</option>
+<option value="Santiago">Santiago</option>
+<option value="Temuco">Temuco</option>
+        </select>
+      </div>
+
+      <!-- RESULTADO -->
+      <div class="resultado" id="resultado">
+        <div class="resultado-label">✅ Tipificación lista</div>
+        <div class="resultado-grid">
+          <div class="res-item" id="rTipo">
+            <div class="res-key">Tipo de caso</div>
+            <div class="res-val" id="vTipo">—</div>
+          </div>
+          <div class="res-item" id="rOrigen">
+            <div class="res-key">Origen</div>
+            <div class="res-val" id="vOrigen">—</div>
+          </div>
+          <div class="res-item enc">
+            <div class="res-key">Tema</div>
+            <div class="res-val" id="vTema">—</div>
+          </div>
+          <div class="res-item enc">
+            <div class="res-key">Subtema</div>
+            <div class="res-val" id="vSubtema">—</div>
+          </div>
+          <div class="res-item enc">
+            <div class="res-key">Detalle</div>
+            <div class="res-val" id="vDetalle">—</div>
+          </div>
+          <div class="res-item" id="rSede">
+            <div class="res-key">Sede</div>
+            <div class="res-val" id="vSede">—</div>
+          </div>
+        </div>
+        <div class="acciones">
+          <button class="btn-copiar" id="btnCopiar" onclick="copiarResultado()">📋 Copiar tipificación</button>
+          <button class="btn-limpiar" onclick="limpiarTodo()">↺ Nueva tipificación</button>
+        </div>
+      </div>
+
     </div>
-
-    <div class="flecha">↓</div>
-
-    <!-- PASO 3: DETALLE -->
-    <div class="paso">
-      <label>③ Detalle</label>
-      <input type="text" class="search-box" id="searchDetalle" placeholder="Filtrar detalles…" oninput="filtrarDetalles()" disabled />
-      <select id="selDetalle" onchange="mostrarResultado()" disabled>
-        <option value="">— Primero selecciona un subtema —</option>
-      </select>
-      <div class="contador" id="cntDetalle"></div>
-    </div>
-
   </div>
-
-  <!-- RESULTADO -->
-  <div class="resultado" id="resultado">
-    <div class="resultado-label">✅ Tipificación seleccionada</div>
-    <div class="resultado-fila">
-      <span class="resultado-tag" id="resTema">—</span>
-      <span style="color:#999; align-self:center;">›</span>
-      <span class="resultado-tag subtema" id="resSubtema">—</span>
-      <span style="color:#999; align-self:center;">›</span>
-      <span class="resultado-tag detalle" id="resDetalle">—</span>
-    </div>
-    <button class="btn-copiar" id="btnCopiar" onclick="copiarResultado()">📋 Copiar tipificación</button>
-    <button class="btn-limpiar" onclick="limpiarTodo()">↺ Nueva búsqueda</button>
-  </div>
-
 </div>
 
 <div class="footer">Desarrollado por <strong>Eduardo Ferrada</strong> · Universidad Mayor · 2026</div>
 
-<!-- BOTÓN REPORTE -->
 <a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de error – Directorio SAT&body=Página donde ocurrió el error:%0A%0ADescripción del problema:%0A%0A(Agrega aquí cualquier detalle adicional)" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
 
 <script>
@@ -1064,114 +1175,66 @@ const ARBOL = {
   }
 };
 
-let temasActivos = Object.keys(ARBOL);
-let subtemasActivos = [];
-let detallesActivos = [];
-
-// ── INICIO ──
-window.onload = () => {
-  renderOpciones(document.getElementById("selTema"), temasActivos, "— Selecciona un tema —");
-  document.getElementById("cntTema").textContent = `${temasActivos.length} temas disponibles`;
-};
-
-// ── FILTROS ──
-function filtrarTemas() {
-  const q = document.getElementById("searchTema").value.toLowerCase();
-  temasActivos = Object.keys(ARBOL).filter(t => t.toLowerCase().includes(q));
-  renderOpciones(document.getElementById("selTema"), temasActivos, "— Selecciona un tema —");
-  document.getElementById("cntTema").textContent = `${temasActivos.length} temas`;
-  resetSubtema(); resetDetalle();
-}
-
-function filtrarSubtemas() {
-  const tema = document.getElementById("selTema").value;
-  if (!tema) return;
-  const q = document.getElementById("searchSubtema").value.toLowerCase();
-  subtemasActivos = Object.keys(ARBOL[tema]).filter(s => s.toLowerCase().includes(q));
-  renderOpciones(document.getElementById("selSubtema"), subtemasActivos, "— Selecciona un subtema —");
-  document.getElementById("cntSubtema").textContent = `${subtemasActivos.length} subtemas`;
-  resetDetalle();
-}
-
-function filtrarDetalles() {
-  const tema = document.getElementById("selTema").value;
-  const subtema = document.getElementById("selSubtema").value;
-  if (!tema || !subtema) return;
-  const q = document.getElementById("searchDetalle").value.toLowerCase();
-  detallesActivos = ARBOL[tema][subtema].filter(d => d.toLowerCase().includes(q));
-  renderOpciones(document.getElementById("selDetalle"), detallesActivos, "— Selecciona un detalle —");
-  document.getElementById("cntDetalle").textContent = `${detallesActivos.length} detalles`;
-  ocultarResultado();
-}
-
-// ── CARGA ENCADENADA ──
 function cargarSubtemas() {
   const tema = document.getElementById("selTema").value;
-  resetSubtema(); resetDetalle(); ocultarResultado();
-  if (!tema) return;
-  subtemasActivos = Object.keys(ARBOL[tema]);
   const selSub = document.getElementById("selSubtema");
-  const searchSub = document.getElementById("searchSubtema");
-  renderOpciones(selSub, subtemasActivos, "— Selecciona un subtema —");
+  const selDet = document.getElementById("selDetalle");
+  selSub.innerHTML = '<option value="">— Selecciona un subtema —</option>';
+  selDet.innerHTML = '<option value="">— Primero selecciona un subtema —</option>';
+  selSub.disabled = true; selDet.disabled = true;
+  if (!tema) { ocultarResultado(); return; }
+  Object.keys(ARBOL[tema]).sort().forEach(s => {
+    const o = document.createElement("option");
+    o.value = s; o.textContent = s;
+    selSub.appendChild(o);
+  });
   selSub.disabled = false;
-  searchSub.disabled = false;
-  document.getElementById("cntSubtema").textContent = `${subtemasActivos.length} subtemas`;
+  ocultarResultado();
 }
 
 function cargarDetalles() {
   const tema = document.getElementById("selTema").value;
   const subtema = document.getElementById("selSubtema").value;
-  resetDetalle(); ocultarResultado();
-  if (!tema || !subtema) return;
-  detallesActivos = ARBOL[tema][subtema];
   const selDet = document.getElementById("selDetalle");
-  const searchDet = document.getElementById("searchDetalle");
-  renderOpciones(selDet, detallesActivos, "— Selecciona un detalle —");
+  selDet.innerHTML = '<option value="">— Selecciona un detalle —</option>';
+  selDet.disabled = true;
+  if (!tema || !subtema) { ocultarResultado(); return; }
+  ARBOL[tema][subtema].forEach(d => {
+    const o = document.createElement("option");
+    o.value = d; o.textContent = d;
+    selDet.appendChild(o);
+  });
   selDet.disabled = false;
-  searchDet.disabled = false;
-  document.getElementById("cntDetalle").textContent = `${detallesActivos.length} detalles`;
+  ocultarResultado();
 }
 
-function mostrarResultado() {
+function actualizarResultado() {
   const tema    = document.getElementById("selTema").value;
   const subtema = document.getElementById("selSubtema").value;
   const detalle = document.getElementById("selDetalle").value;
   if (!tema || !subtema || !detalle) { ocultarResultado(); return; }
-  document.getElementById("resTema").textContent    = tema;
-  document.getElementById("resSubtema").textContent = subtema;
-  document.getElementById("resDetalle").textContent = detalle;
-  const res = document.getElementById("resultado");
-  res.classList.add("activo");
+
+  const tipo   = document.getElementById("selTipo").value;
+  const origen = document.getElementById("selOrigen").value;
+  const sede   = document.getElementById("selSede").value;
+
+  document.getElementById("vTipo").textContent    = tipo   || "No seleccionado";
+  document.getElementById("vOrigen").textContent  = origen || "No seleccionado";
+  document.getElementById("vTema").textContent    = tema;
+  document.getElementById("vSubtema").textContent = subtema;
+  document.getElementById("vDetalle").textContent = detalle;
+  document.getElementById("vSede").textContent    = sede   || "No seleccionado";
+
+  // marcar vacíos
+  ["rTipo","rOrigen","rSede"].forEach(id => {
+    const el = document.getElementById(id);
+    const val = el.querySelector(".res-val").textContent;
+    el.classList.toggle("vacio", val === "No seleccionado");
+  });
+
+  document.getElementById("resultado").classList.add("activo");
   document.getElementById("btnCopiar").textContent = "📋 Copiar tipificación";
   document.getElementById("btnCopiar").classList.remove("copiado");
-}
-
-// ── HELPERS ──
-function renderOpciones(sel, lista, placeholder) {
-  sel.innerHTML = `<option value="">${placeholder}</option>`;
-  lista.forEach(v => {
-    const opt = document.createElement("option");
-    opt.value = v; opt.textContent = v;
-    sel.appendChild(opt);
-  });
-}
-
-function resetSubtema() {
-  const sel = document.getElementById("selSubtema");
-  const search = document.getElementById("searchSubtema");
-  sel.innerHTML = '<option value="">— Primero selecciona un tema —</option>';
-  sel.disabled = true; search.disabled = true; search.value = "";
-  document.getElementById("cntSubtema").textContent = "";
-  subtemasActivos = [];
-}
-
-function resetDetalle() {
-  const sel = document.getElementById("selDetalle");
-  const search = document.getElementById("searchDetalle");
-  sel.innerHTML = '<option value="">— Primero selecciona un subtema —</option>';
-  sel.disabled = true; search.disabled = true; search.value = "";
-  document.getElementById("cntDetalle").textContent = "";
-  detallesActivos = [];
 }
 
 function ocultarResultado() {
@@ -1179,25 +1242,28 @@ function ocultarResultado() {
 }
 
 function copiarResultado() {
-  const tema    = document.getElementById("selTema").value;
-  const subtema = document.getElementById("selSubtema").value;
-  const detalle = document.getElementById("selDetalle").value;
-  const texto = `Tema: ${tema} | Subtema: ${subtema} | Detalle: ${detalle}`;
+  const tipo   = document.getElementById("selTipo").value   || "—";
+  const origen = document.getElementById("selOrigen").value || "—";
+  const tema   = document.getElementById("selTema").value;
+  const sub    = document.getElementById("selSubtema").value;
+  const det    = document.getElementById("selDetalle").value;
+  const sede   = document.getElementById("selSede").value   || "—";
+  const texto  = `Tipo: ${tipo} | Origen: ${origen} | Tema: ${tema} | Subtema: ${sub} | Detalle: ${det} | Sede: ${sede}`;
   navigator.clipboard.writeText(texto).then(() => {
     const btn = document.getElementById("btnCopiar");
     btn.textContent = "✓ Copiado";
     btn.classList.add("copiado");
-    setTimeout(() => {
-      btn.textContent = "📋 Copiar tipificación";
-      btn.classList.remove("copiado");
-    }, 2500);
+    setTimeout(() => { btn.textContent = "📋 Copiar tipificación"; btn.classList.remove("copiado"); }, 2500);
   });
 }
 
 function limpiarTodo() {
-  document.getElementById("searchTema").value = "";
-  document.getElementById("selTema").value = "";
-  filtrarTemas();
+  ["selTipo","selOrigen","selTema","selSede"].forEach(id => document.getElementById(id).value = "");
+  const selSub = document.getElementById("selSubtema");
+  const selDet = document.getElementById("selDetalle");
+  selSub.innerHTML = '<option value="">— Primero selecciona un tema —</option>';
+  selDet.innerHTML = '<option value="">— Primero selecciona un subtema —</option>';
+  selSub.disabled = true; selDet.disabled = true;
   ocultarResultado();
 }
 </script>
