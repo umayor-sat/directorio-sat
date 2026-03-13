@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Árbol de Temas CRM – Universidad Mayor</title>
+<style>
+body { font-family: Calibri, Arial, sans-serif; background: #f3f6f9; margin: 0; }
+.header { background: #f2b705; padding: 20px 30px; display: flex; align-items: center; gap: 25px; }
+.header img { height: 90px; }
+.header h1 { margin: 0; font-size: 28px; color: #002f6c; }
+.container { max-width: 900px; margin: 40px auto; background: #fff; padding: 36px; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+.subtitulo { color: #555; font-size: 0.95rem; margin-bottom: 28px; border-left: 4px solid #f2b705; padding-left: 12px; }
+.pasos { display: flex; flex-direction: column; gap: 22px; }
+.paso { display: flex; flex-direction: column; gap: 6px; }
+.paso label { font-size: 0.78rem; font-weight: 700; color: #005baa; text-transform: uppercase; letter-spacing: 0.5px; }
+.paso select {
+  width: 100%; padding: 12px 14px; font-size: 15px;
+  border: 2px solid #dde3ec; border-radius: 8px;
+  background: #f8fafc; color: #222;
+  appearance: none; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23005baa' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+  transition: border-color 0.2s;
+}
+.paso select:focus { outline: none; border-color: #005baa; background-color: #fff; }
+.paso select:disabled { background: #f0f0f0; color: #aaa; cursor: not-allowed; border-color: #e0e0e0; }
+.flecha { text-align: center; font-size: 1.4rem; color: #ccc; margin: -8px 0; }
+.resultado {
+  margin-top: 28px; padding: 18px 22px;
+  border-radius: 10px; border: 2px solid #e0e0e0;
+  background: #f8fafc; display: none;
+}
+.resultado.activo { display: block; border-color: #005baa; background: #eef4fb; }
+.resultado-label { font-size: 0.75rem; font-weight: 700; color: #005baa; text-transform: uppercase; margin-bottom: 10px; }
+.resultado-fila { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+.resultado-tag {
+  background: #005baa; color: #fff;
+  padding: 5px 14px; border-radius: 20px;
+  font-size: 13px; font-weight: 600;
+}
+.resultado-tag.subtema { background: #1a5c38; }
+.resultado-tag.detalle { background: #856404; }
+.btn-copiar {
+  margin-top: 14px; background: #005baa; color: #fff;
+  border: none; padding: 9px 20px; border-radius: 7px;
+  font-size: 0.88rem; font-weight: 700; cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-copiar:hover { background: #004499; }
+.btn-copiar.copiado { background: #28a745; }
+.btn-limpiar {
+  margin-top: 10px; margin-left: 8px;
+  background: none; color: #999; border: 1px solid #ccc;
+  padding: 9px 20px; border-radius: 7px;
+  font-size: 0.88rem; cursor: pointer;
+}
+.btn-limpiar:hover { background: #f0f0f0; }
+.contador { font-size: 0.75rem; color: #888; margin-top: 6px; }
+.search-box {
+  width: 100%; padding: 10px 14px; font-size: 14px;
+  border: 1.5px solid #dde3ec; border-radius: 7px;
+  box-sizing: border-box; margin-bottom: 6px;
+}
+.search-box:focus { outline: none; border-color: #005baa; }
+.btn-home { display: inline-flex; align-items: center; gap: 6px; background: #005baa; color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-size: 14px; cursor: pointer; text-decoration: none; margin-bottom: 20px; }
+.btn-home:hover { background: #004499; }
+.footer { margin-top: 40px; text-align: center; font-size: 13px; color: #666; }
+.btn-reporte-flotante {
+  position: fixed; bottom: 24px; left: 24px;
+  background: #cc0000; color: white; border: none;
+  width: 52px; height: 52px; border-radius: 50%; font-size: 1.3rem;
+  cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  z-index: 300; display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
+}
+.btn-reporte-flotante:hover { background: #aa0000; }
+.btn-reporte-flotante::after {
+  content: "Reportar error";
+  position: absolute; left: 62px;
+  background: #333; color: #fff;
+  padding: 4px 8px; border-radius: 4px;
+  font-size: 12px; white-space: nowrap;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.btn-reporte-flotante:hover::after { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a href="https://www.umayor.cl" target="_blank">
+    <img src="{{ url_for('static', filename='img/logoum.jpg') }}" alt="Universidad Mayor">
+  </a>
+  <h1>Árbol de Temas CRM</h1>
+</div>
+
+<div class="container">
+  <a href="/" class="btn-home">← Volver al inicio</a>
+  <p class="subtitulo">Selecciona el <strong>Tema</strong>, luego el <strong>Subtema</strong> y finalmente el <strong>Detalle</strong> para obtener la tipificación correcta.</p>
+
+  <div class="pasos">
+
+    <!-- PASO 1: TEMA -->
+    <div class="paso">
+      <label>① Tema</label>
+      <input type="text" class="search-box" id="searchTema" placeholder="Filtrar temas…" oninput="filtrarTemas()" />
+      <select id="selTema" onchange="cargarSubtemas()">
+        <option value="">— Selecciona un tema —</option>
+      </select>
+      <div class="contador" id="cntTema"></div>
+    </div>
+
+    <div class="flecha">↓</div>
+
+    <!-- PASO 2: SUBTEMA -->
+    <div class="paso">
+      <label>② Subtema</label>
+      <input type="text" class="search-box" id="searchSubtema" placeholder="Filtrar subtemas…" oninput="filtrarSubtemas()" disabled />
+      <select id="selSubtema" onchange="cargarDetalles()" disabled>
+        <option value="">— Primero selecciona un tema —</option>
+      </select>
+      <div class="contador" id="cntSubtema"></div>
+    </div>
+
+    <div class="flecha">↓</div>
+
+    <!-- PASO 3: DETALLE -->
+    <div class="paso">
+      <label>③ Detalle</label>
+      <input type="text" class="search-box" id="searchDetalle" placeholder="Filtrar detalles…" oninput="filtrarDetalles()" disabled />
+      <select id="selDetalle" onchange="mostrarResultado()" disabled>
+        <option value="">— Primero selecciona un subtema —</option>
+      </select>
+      <div class="contador" id="cntDetalle"></div>
+    </div>
+
+  </div>
+
+  <!-- RESULTADO -->
+  <div class="resultado" id="resultado">
+    <div class="resultado-label">✅ Tipificación seleccionada</div>
+    <div class="resultado-fila">
+      <span class="resultado-tag" id="resTema">—</span>
+      <span style="color:#999; align-self:center;">›</span>
+      <span class="resultado-tag subtema" id="resSubtema">—</span>
+      <span style="color:#999; align-self:center;">›</span>
+      <span class="resultado-tag detalle" id="resDetalle">—</span>
+    </div>
+    <button class="btn-copiar" id="btnCopiar" onclick="copiarResultado()">📋 Copiar tipificación</button>
+    <button class="btn-limpiar" onclick="limpiarTodo()">↺ Nueva búsqueda</button>
+  </div>
+
+</div>
+
+<div class="footer">Desarrollado por <strong>Eduardo Ferrada</strong> · Universidad Mayor · 2026</div>
+
+<!-- BOTÓN REPORTE -->
+<a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de error – Directorio SAT&body=Página donde ocurrió el error:%0A%0ADescripción del problema:%0A%0A(Agrega aquí cualquier detalle adicional)" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
+
+<script>
+const ARBOL = {
+  "ACADÉMICO": {
+    "CALENDARIO ACADÉMICO": [
+      "CALENDARIO ACADÉMICO"
+    ],
+    "CARGA ACADÉMICA": [
+      "CARGA ACADÉMICA"
+    ],
+    "CEREMONIA TITULACIÓN": [
+      "CEREMONIA TITULACIÓN"
+    ],
+    "ESCUELA": [
+      "INSCRIPCIÓN DE ASIGNATURAS/PROBLEMA ACADÉMICO",
+      "OTRO"
+    ],
+    "HORARIOS": [
+      "HORARIOS"
+    ],
+    "INICIO DE CLASES": [
+      "INICIO DE CLASES"
+    ],
+    "JUSTIFICACIÓN": [
+      "JUSTIFICACIÓN"
+    ],
+    "OTRO": [
+      "APRECIACIÓN PROFESIONAL",
+      "OTRO"
+    ],
+    "PROCESO INSCRIPCIÓN ASIGNATURAS": [
+      "DEPORTISTA DESTACADO",
+      "MADRE/PADRE",
+      "OTRAS CONSULTAS",
+      "TRAMO"
+    ],
+    "REGLAMENTACIÓN": [
+      "REGLAMENTACIÓN"
+    ]
+  },
+  "ACOMPAÑAMIENTO ESTUDIANTIL": {
+    "ACOMPAÑAMIENTO ESTUDIANTIL ESCUELA (EAE)": [
+      "ACOMPAÑAMIENTO ESTUDIANTIL ESCUELA (EAE)"
+    ],
+    "CONVIVENCIA ESTUDIANTIL": [
+      "CONVIVENCIA ESTUDIANTIL"
+    ],
+    "ORIENTACIÓN PSICOEDUCATIVA": [
+      "ORIENTACIÓN PSICOEDUCATIVA"
+    ],
+    "OTRO": [
+      "OTRO"
+    ],
+    "SEGUIMIENTO ESTUDIANTIL": [
+      "SEGUIMIENTO ESTUDIANTIL"
+    ]
+  },
+  "ACOMPAÑAMIENTO PSICOPEDAGÓGICO": {
+    "COMPRENSIÓN LECTORA": [
+      "COMPRENSIÓN LECTORA"
+    ],
+    "ESTRATEGIAS DE ESTUDIO": [
+      "ESTRATEGIAS DE ESTUDIO"
+    ],
+    "ORGANIZACIÓN DEL TIEMPO": [
+      "ORGANIZACIÓN DEL TIEMPO"
+    ],
+    "OTRO": [
+      "OTRO"
+    ],
+    "RENDIMIENTO ACADÉMICO": [
+      "RENDIMIENTO ACADÉMICO"
+    ]
+  },
+  "ACOMPAÑAMIENTO PSM": {
+    "ATENCIÓN": [
+      "ATENCIÓN"
+    ],
+    "HORA HAI": [
+      "HORA HAI"
+    ],
+    "ORIENTACIÓN": [
+      "ORIENTACIÓN"
+    ],
+    "OTRO": [
+      "OTRO"
+    ]
+  },
+  "ACOMPAÑAMIENTO TERAPEUTA OCUPACIONAL": {
+    "APRECIACIÓN PROFESIONAL": [
+      "APRECIACIÓN PROFESIONAL"
+    ],
+    "ATENCIÓN PROFESIONAL": [
+      "ATENCIÓN PROFESIONAL"
+    ],
+    "OTRO": [
+      "OTRO"
+    ],
+    "SEGUIMIENTO INCLUSIÓN": [
+      "SEGUIMIENTO INCLUSIÓN"
+    ]
+  },
+  "ACOMPAÑAMIENTO Y BIENESTAR": {
+    "CAMBIO DE CARRERA": [
+      "CAMBIO DE CARRERA"
+    ],
+    "REINCORPORACIONES": [
+      "REINCORPORACIONES"
+    ],
+    "RETIRO VOLUNTARIO": [
+      "RETIRO PRE-INICIO/ VOLUNTARIO"
+    ],
+    "SERVICIO ATENCIÓN PSICOLÓGICA": [
+      "SERVICIO ATENCIÓN PSICOLÓGICA"
+    ],
+    "SOLICITUD DE ACOMPAÑAMIENTO": [
+      "SOLICITUD DE ACOMPAÑAMIENTO"
+    ],
+    "SUSPENSIÓN DE ESTUDIO": [
+      "SUSPENSIÓN DE ESTUDIO"
+    ]
+  },
+  "ACTIVIDADES Y/O EVENTOS": {
+    "CONFIRMACIONES": [
+      "CONFIRMACIONES"
+    ],
+    "INFORMACIÓN GENERAL": [
+      "INFORMACIÓN GENERAL"
+    ]
+  },
+  "ADMINISTRACIÓN": {
+    "ASEO/ORNATO": [
+      "ASEO/ORNATO"
+    ],
+    "BUSES": [
+      "BUSES"
+    ],
+    "CAMPUS SEGURO": [
+      "EMERGENCIA",
+      "ENROLAMIENTO",
+      "NEW FORECE"
+    ],
+    "ESTACIONAMIENTO": [
+      "ESTACIONAMIENTO"
+    ],
+    "GUARDIAS": [
+      "GUARDIAS"
+    ],
+    "INFRAESTRUCTURA": [
+      "INFRAESTRUCTURA"
+    ],
+    "OTRA INFORMACIÓN": [
+      "OTRA INFORMACIÓN"
+    ]
+  },
+  "ADMISIÓN": {
+    "CONSERVATORIO DE MÚSICA": [
+      "COMPOSICION MUSICAL SUPERIOR",
+      "COMPOSICIÓN MUSICAL ETAPA  BÁSICA",
+      "INTERPRETACIÓN MUSICAL BÁSICO (2) C/M",
+      "INTERPRETACIÓN MUSICAL BÁSICO (6) C/M",
+      "INTERPRETACIÓN MUSICAL BÁSICO (8) C/M",
+      "INTERPRETACIÓN MUSICAL SUPERIOR C/M."
+    ],
+    "DIPLOMADOS": [
+      "DIP.  EN ERGONOMÍA Y SALUD LABORAL (b)",
+      "DIP.  EN MEDICINA TRASLACIONAL (ONL)",
+      "DIP. ABORDAJE INT. CONSUMO ALCOHOL Y DRO",
+      "DIP. COACHING Y LIDERAZGO ORGANIZACIONAL",
+      "DIP. CONTROL DE GESTIÓN GERENCIAL (ONL)",
+      "DIP. DERECHO DELTRABAJO",
+      "DIP. EN ANÁLISIS DEL SECTOR PÚBLICO",
+      "DIP. EN GESTION DE CALIDAD SEG CLINICA Y",
+      "DIP. EN INTERNET DE LAS COSAS",
+      "DIP. EVALUACIÓN Y GESTIÓN DE PROYECTOS",
+      "DIP. FORMACIÓN DE ENFERMERAS / EDUC. (B)",
+      "DIP. GESTIÓN CLINICA, CALIDAD Y ACR.(ON)",
+      "DIP. HEMODINAMIA, ANG. Y TERAPIA GUIADA",
+      "DIP. LIDERAZGO EJEC. PARA INST. DE SALUD",
+      "DIP. ORDENAMIENTO TERRITORIAL APLICADO",
+      "DIP. TERAPIA OCP. LESIONES Y PAT. MANO",
+      "DIP.EN MEDICINA BIORREGULADORA (SEMI PR)",
+      "DIP.SALUD FAMILIAR CON ENFOQ. EN SALUD M",
+      "DIP.TOMOGRAFÍA COMPUTARIZADA MULTICORTE",
+      "DIPL. APLIC. CLINICA DE TEC. EN REHABIL.",
+      "DIPL. EN ABORDAJE INT. EN COND. DEL ESP.",
+      "DIPL. EN ACREDITACIÓN DE INST. D SALUD",
+      "DIPL. EN ARMONIZACIÓN FACIAL, PREV. Y PR",
+      "DIPL. EN EVAL. Y PRES. DE EJERCICIO EN P",
+      "DIPL. EN FISIOLOGÍA DEL EJERCICIO (ELE.)",
+      "DIPL. EN GEOLOGÍA Y GEOTEC. APLIC. MINER",
+      "DIPL. EN GEOQUÍMICA AMBIENTAL APL. MINER",
+      "DIPL. EN IMAGEN POR RESONANCIA MAGNÉTICA",
+      "DIPL. EN INNOV. EDUC. PARA LA DOCEN. UN.",
+      "DIPL. EN MARKETING DIGITAL",
+      "DIPL. EN NEUROCIENCIA, CREATI. Y GESTIÓN",
+      "DIPL. EN ORTODONCIA DIG. Y TRAT. CON AL.",
+      "DIPL. EN PSICOTERAPIA COGNITIVA CONSTRU.",
+      "DIPL. EN TRANSF. DIGITAL Y GOB. ABIERTO",
+      "DIPL. ENFERMERÍA EN ONCOLOGÍA DEL ADULTO",
+      "DIPL. GESTIÓN ACAD.Y LIDERAZGO EN ED. S.",
+      "DIPL. LATINOAM. DE ENCUESTAS Y OP. PÚBL.",
+      "DIPL. MULTIDIMENSIONAL EN TRASTORNOS ANS",
+      "DIPLOMADO EN ANIMACIÓN DE PERSONAJES 3D",
+      "DIPLOMADO EN ANÁLISIS DEL SECTOR PÚBLICO",
+      "DIPLOMADO EN DERECHO ADMINISTRATIVO",
+      "DIPLOMADO EN DIDÁCTICA  DE LA MÚSICA",
+      "DIPLOMADO EN DIRECCIÓN Y GESTIÓN PÚBLICA",
+      "DIPLOMADO EN DOCENCIA CLINICA EN CIENCIAS DE LA SALUD (blended)",
+      "DIPLOMADO EN DOSIMETRÍA (SEMIPRESENCIAL)",
+      "DIPLOMADO EN KINESIOLOGÍA MAXILOFACIAL",
+      "DIPLOMADO EN MOLINERIA AVANZADA",
+      "DIPLOMADO EN ORTODONCIA PREVENTIVA E INT",
+      "DIPLOMADO EN SALUD PRIMARIA",
+      "DIPLOMADO EN SIMULACIÓN CLÍNICA",
+      "DIPLOMADO EN TERAPIA RESPIRATORIA (SP)"
+    ],
+    "DOCTORADOS": [
+      "DOCTORADO EN CS. DE MATERIALES AVANZADOS",
+      "DOCTORADO EN ECOLOGÍA INTEGRATIVA",
+      "DOCTORADO EN FISICA, MENCIÓN EN ÓPTICA",
+      "DOCTORADO EN GENÓMICA INTEGRATIVA",
+      "DOCTORADO EN NEUROBIOLOGÍA",
+      "DOCTORADO EN POLÍTICAS PÚBLICAS"
+    ],
+    "ESPECIALIDADES MÉDICAS": [
+      "ESP. EN MEDICINA FÍSICA Y REHABILITACIÓN",
+      "ESP. EN RADIOLOGÍA E IMAGENOLOGÍA",
+      "ESPEC MED EN ANESTESIOLOGIA Y REANIM",
+      "ESPEC MÉD. EN RADIOLOGÍA E IMAGENOLOGÍA",
+      "ESPEC. EN MED. DEL DEPORTE Y ACT. FÍSICA",
+      "ESPECIALIDAD EN MEDICINA INTERNA",
+      "ESPECIALIDAD MED. EN NEUROLOGÍA ADULTO",
+      "ESPECIALIDAD MEDICA EN PSIQUIATRIA ADUL.",
+      "ESPECIALIDAD MÉDICA EN PEDIATRÍA",
+      "ESPECIALIDAD MÉDICA EN UROLOGÍA"
+    ],
+    "ESPECIALIDADES ODONTOLÓGICAS": [
+      "ESP. EN IMPLANTOLOGÍA BUCO MAXILO (T)",
+      "ESP. EN PATOLOGÍA ORAL",
+      "ESPEC. EN IMPLANTOLOGÍA  BUCO MAXILOFAC.",
+      "ESPECIALIDAD EN ENDODONCIA",
+      "ESPECIALIDAD EN ENDODONCIA (T)",
+      "ESPECIALIDAD EN ODONTOPEDIATRÍA",
+      "ESPECIALIZACION EN CIR.Y TRAUM.BUCAL Y M",
+      "ESPECIALIZACIÓN EN PERIODONCIA",
+      "ESPECIALIZACIÓN EN REHABILITACIÓN ORAL"
+    ],
+    "INGRESO ESPECIAL": [
+      "ADMINISTRACIÓN PÚBLICA",
+      "AGRONOMÍA",
+      "AGRONOMÍA (T)",
+      "ANIMACIÓN DIGITAL",
+      "ANIMACIÓN DIGITAL (T)",
+      "ARQUITECTURA",
+      "ARQUITECTURA (T)",
+      "BACHILLERATO EN CIENCIAS DE LA SALUD",
+      "BACHILLERATO EN CIENCIAS DE LA SALUD (T)",
+      "BIOTECNOLOGÍA",
+      "CINE",
+      "DERECHO",
+      "DERECHO (T)",
+      "FONOAUDIOLOGÍA",
+      "FONOAUDIOLOGÍA (T)",
+      "ING. EN MEDIO AMBIENTE Y SUSTENTABILIDAD",
+      "INGENIERÍA CIVIL ELECTRÓNICA",
+      "INGENIERÍA CIVIL EN MINAS",
+      "INGENIERÍA CIVIL INDUSTRIAL",
+      "INGENIERÍA CIVIL INDUSTRIAL (T)",
+      "INGENIERÍA COMERCIAL (DIURNO)",
+      "INGENIERÍA COMERCIAL (DIURNO) (T)",
+      "INGENIERÍA EN ADMINISTRACIÓN",
+      "INGENIERÍA EN CIENCIA DE DATOS",
+      "INGENIERÍA EN CONSTRUCCIÓN",
+      "INGENIERÍA EN CONSTRUCCIÓN (T)",
+      "INGENIERÍA FORESTAL",
+      "INGENIERÍA  CIVIL  EN  COMP. E  INF.",
+      "KINESIOLOGÍA",
+      "KINESIOLOGÍA (T)",
+      "MEDICINA",
+      "MEDICINA (T)",
+      "MEDICINA VETERINARIA",
+      "MEDICINA VETERINARIA (T)",
+      "NUTRICIÓN Y DIETÉTICA",
+      "NUTRICIÓN Y DIETÉTICA (T)",
+      "OBSTETRICIA Y PUERICULTURA",
+      "OBSTETRICIA Y PUERICULTURA (T)",
+      "ODONTOLOGÍA",
+      "ODONTOLOGÍA (T)",
+      "OTRA CARRERA SANTIAGO",
+      "OTRA CARRERA TEMUCO",
+      "PEDAG. EN EDUCACIÓN DIFERENCIAL C/DISC.",
+      "PEDAGOGÍA EN  EDUCACIÓN PARVULARIA",
+      "PEDAGOGÍA EN EDUC. FÍSICA, DEP. Y RECR.",
+      "PSICOLOGÍA",
+      "PSICOLOGÍA (T)",
+      "TEATRO",
+      "TECNOLOGÍA MÉDICA",
+      "TECNOLOGÍA MÉDICA (T)",
+      "TERAPIA OCUPACIONAL",
+      "TERAPIA OCUPACIONAL (T)",
+      "TURISMO SUSTENTABLE (T)"
+    ],
+    "INGRESO REGULAR": [
+      "ADMINISTRACIÓN PÚBLICA",
+      "AGRONOMÍA",
+      "AGRONOMÍA (T)",
+      "ANIMACIÓN DIGITAL",
+      "ANIMACIÓN DIGITAL (T)",
+      "ARQUITECTURA",
+      "ARQUITECTURA (T)",
+      "BACHILLERATO EN CIENCIAS DE LA SALUD",
+      "BACHILLERATO EN CIENCIAS DE LA SALUD (T)",
+      "BIOTECNOLOGÍA",
+      "CINE",
+      "DERECHO",
+      "DERECHO (T)",
+      "FONOAUDIOLOGÍA",
+      "FONOAUDIOLOGÍA (T)",
+      "ING. EN MEDIO AMBIENTE Y SUSTENTABILIDAD",
+      "INGENIERÍA CIVIL ELECTRÓNICA",
+      "INGENIERÍA CIVIL EN MINAS",
+      "INGENIERÍA CIVIL INDUSTRIAL",
+      "INGENIERÍA CIVIL INDUSTRIAL (T)",
+      "INGENIERÍA COMERCIAL (DIURNO)",
+      "INGENIERÍA COMERCIAL (DIURNO) (T)",
+      "INGENIERÍA EN ADMINISTRACIÓN",
+      "INGENIERÍA EN CIENCIA DE DATOS",
+      "INGENIERÍA EN CONSTRUCCIÓN",
+      "INGENIERÍA EN CONSTRUCCIÓN (T)",
+      "INGENIERÍA FORESTAL",
+      "INGENIERÍA  CIVIL  EN  COMP. E  INF.",
+      "KINESIOLOGÍA",
+      "KINESIOLOGÍA (T)",
+      "MEDICINA",
+      "MEDICINA (T)",
+      "MEDICINA VETERINARIA",
+      "MEDICINA VETERINARIA (T)",
+      "NUTRICIÓN Y DIETÉTICA",
+      "NUTRICIÓN Y DIETÉTICA (T)",
+      "OBSTETRICIA Y PUERICULTURA",
+      "OBSTETRICIA Y PUERICULTURA (T)",
+      "ODONTOLOGÍA",
+      "ODONTOLOGÍA (T)",
+      "OTRA CARRERA SANTIAGO",
+      "OTRA CARRERA TEMUCO",
+      "PEDAG. EN EDUCACIÓN DIFERENCIAL C/DISC.",
+      "PEDAGOGÍA EN  EDUCACIÓN PARVULARIA",
+      "PEDAGOGÍA EN EDUC. FÍSICA, DEP. Y RECR.",
+      "PSICOLOGÍA",
+      "PSICOLOGÍA (T)",
+      "TEATRO",
+      "TECNOLOGÍA MÉDICA",
+      "TECNOLOGÍA MÉDICA (T)",
+      "TERAPIA OCUPACIONAL",
+      "TERAPIA OCUPACIONAL (T)",
+      "TURISMO SUSTENTABLE"
+    ],
+    "INSTITUTO DE IDIOMAS": [
+      "INSTITUTO DE IDIOMAS"
+    ],
+    "MAGISTER": [
+      "MAG EN DIRECCIÓN Y GESTION ESTRAT. PERS.",
+      "MAG EN GES. DE SEG.DE PAC. Y CAL. ATENCI",
+      "MAG. EN DOCENCIA EN EDUCACIÓN SUPERIOR",
+      "MAG. EN PLANIFICACIÓN Y CONTROL GESTIÓN",
+      "MAG. EN PLANIFICACIÓN Y CONTROL GESTIÓN (T)",
+      "MAG. EN PSI.FAMILIAR E IND., ENF. CONST",
+      "MAG. EN PSICOLOGÍA JURÍDICA E INTERV. PS",
+      "MAG. EN SALUD PÚBLICA Y PLANI. SANITARIA",
+      "MAG. EN SALUD PÚBLICA Y PLANI. SANITARIA (T)",
+      "MAG. ING. EN SEGURIDAD DE LA INFORMACION",
+      "MAG. NUTRICIÓN P ACTIVIDAD FÍSICA Y DEP.",
+      "MAGISTER EN CURRICULUM Y EVALUACIÓN Y ED",
+      "MAGISTER EN CURRICULUM Y EVALUACIÓN Y ED (T)",
+      "MAGISTER EN DIREC. DE EMPRESAS(MBA-EXEC)",
+      "MAGISTER EN DIREC. EMPRESAS (MBA-EXEC)",
+      "MAGISTER EN DIRECCION COMERCIAL Y MKTG",
+      "MAGISTER EN FISIOLOGIA CLINICA DEL EJERC",
+      "MAGISTER EN INV. PARA LA CREACIÓN ARTÍST",
+      "MAGISTER EN MEDICINA Y CIENCIAS DEL DEPO",
+      "MAGISTER EN MEDIO AMB. Y DESARR. SUST.",
+      "MAGISTER EN NEUROCIENCIA DE LA EDUCACIÓN",
+      "MAGISTER EN NEUROCIENCIA DE LA EDUCACIÓN (T)",
+      "MAGÍSTER EN ALTA DIRECCIÓN PÚBLICA",
+      "MAGÍSTER EN ALTA DIRECCIÓN PÚBLICA (T)",
+      "MAGÍSTER EN DERECHO DE LA EMPRESA",
+      "MAGÍSTER EN DERECHO PÚBLICO",
+      "MAGÍSTER EN ENTRENAMIENTO DEPORTIVO",
+      "MAGÍSTER EN NEUROPSICOLOGÍA",
+      "MAGÍSTER EN SALUD DE LA MUJER",
+      "MAGÍSTER EN TELEDETECCIÓN"
+    ],
+    "MBA EXECUTIVE": [
+      "MBA",
+      "MBA EXECUTIVE (T)"
+    ],
+    "OTRA INFORMACIÓN": [
+      "PROGRAMA DE INTERCAMBIO PREGRADO STGO.",
+      "PROGRAMA DE INTERCAMBIO PREGRADO TEMUCO"
+    ],
+    "POSTÍTULOS": [
+      "ALUMNO PLUS POSTGRADO (STGO. MULTIPER)",
+      "ALUMNO PLUS POSTGRADO (TCO. MULTIPER)",
+      "POST. ABORDAJE DE LOS TRASTS. DE DEGLUC.",
+      "POST. ABORDAJE FONO. DE LOS TRAST. DE LA DEGLU Y ALIM. EN ADULTOS",
+      "POST. ABORDAJE FONO. DE LOS TRAST. DE LA DEGLU Y ALIM. EN ADULTOS (T)"
+    ],
+    "PREGADO ONLINE (ADVANCE)": [
+      "ADMINISTRACIÓN PÚBLICA  (CONT., ONL)",
+      "ADMINISTRACIÓN PÚBLICA (ONL)",
+      "ALUMNO LIBRE PREGRADO (STGO.)",
+      "ALUMNO LIBRE PREGRADO (TCO.)",
+      "CONTADOR PÚBLICO Y AUDITOR (CONT., ONL)",
+      "CONTADOR PÚBLICO Y AUDITOR (ONL)",
+      "DISEÑO",
+      "ENFERMERÍA",
+      "GEOLOGÍA",
+      "ING. CIVIL INDUSTRIAL  (CONT., ONL)",
+      "ING. EN ADMINISTRACIÓN (CONT., ONL)",
+      "ING. PREVENCIÓN EN RIESGOS (CONT., ONL)",
+      "INGENIERIA COMERCIAL (CONT., ONL)",
+      "INGENIERÍA  EN LOGÍSTICA (CONT., ONL)",
+      "INGENIERÍA CIVIL EN COMPUTACIÓN E INFORMÁTICA (CONT, ONL)",
+      "INGENIERÍA COMERCIAL  (ONL)",
+      "INGENIERÍA EN ADMINISTRACIÓN (ONL)",
+      "INGENIERÍA EN CIBERSEGURIDAD (CONT. ONL)",
+      "INGENIERÍA EN INFORMÁTICA (ONL)",
+      "INGENIERÍA EN INTELIGENCIA ARTIFICIAL",
+      "INGENIERÍA EN INTELIGENCIA DE NEGOCIOS",
+      "INGENIERÍA EN MINAS",
+      "INGENIERÍA INDUSTRIAL (ONL)",
+      "PSICOPEDAGOGÍA (ONL)"
+    ],
+    "PREGADO VESPERTINO (ADVANCE)": [
+      "DERECHO",
+      "PSICOLOGÍA (B)"
+    ],
+    "PUNTAJE DE CORTE": [
+      "PUNTAJE DE CORTE"
+    ],
+    "TEC MAYOR (ADVANCE)": [
+      "OTRAS CARRERAS TÉCNICAS",
+      "TÉC. UNIV. EN ADMINISTRACIÓN DE EMPRESAS",
+      "TÉC. UNIV. EN ADMINISTRACIÓN PÚBLICA",
+      "TÉC. UNIV. EN CIBERSEGURIDAD",
+      "TÉC. UNIV. EN CONTABILIDAD GENERAL",
+      "TÉC. UNIV. EN DESARROLLO Y DISEÑO WEB",
+      "TÉC. UNIV. EN ENFERMERÍA",
+      "TÉC. UNIV. EN GESTION COMERCIAL",
+      "TÉC. UNIV. EN GESTIÓN DE PERSONAS",
+      "TÉC. UNIV. EN INFORMÁTICA",
+      "TÉC. UNIV. EN LOGÍSTICA",
+      "TÉC. UNIV. EN MARKETING DIGITAL",
+      "TÉC. UNIV. EN MINERÍA REMOTA E INTELIGENTE",
+      "TÉC. UNIV. EN ODONTOLOGÍA",
+      "TÉC. UNIV. EN PROGRAMACIÓN COMPUTACIONAL",
+      "TÉC. UNIV. EN QUÍMICA Y FARMACIA",
+      "TÉC. UNIV. EN RADIOLOGÍA Y RADIODIAGNÓS.",
+      "TÉC. UNIV. EN TELC. CONECTIVIDAD Y REDES"
+    ]
+  },
+  "AGENDAMIENTO": {
+    "AGENDAMIENTO DEPARTAMENTOS": [
+      "BECAS Y CRÉDITOS",
+      "GESTIÓN FINANCIERA",
+      "MATRÍCULA",
+      "ORE"
+    ]
+  },
+  "ALUMNI": {
+    "INFORMACIÓN": [
+      "ACTIVIDADES",
+      "BENEFICIOS",
+      "BOLSA DE TRABAJO",
+      "EVENTOS",
+      "POSTGRADO",
+      "PREGRADO"
+    ]
+  },
+  "ASUNTOS ESTUDIANTILES": {
+    "DEPORTES": [
+      "DEPORTE ESTUDIANTE",
+      "SOLICITUD INFREAESTRUCTURA EXTERNO",
+      "TALLERES ESTUDIANTES",
+      "USO DE INFRAESTRUCTURA DEPORTIVA"
+    ],
+    "MI CLUB MAYOR": [
+      "MI CLUB MAYOR"
+    ],
+    "OTRA INFORMACIÓN": [
+      "OTRA INFORMACIÓN"
+    ],
+    "PASE ESCOLAR": [
+      "OTRO",
+      "REPOSICIÓN",
+      "SOLICITUD",
+      "TOMA DE FOTOGRAFÍA"
+    ],
+    "TRABAJO MI CLUB MAYOR": [
+      "TRABAJO MI CLUB MAYOR"
+    ]
+  },
+  "BECAS Y CRÉDITOS": {
+    "BECA MINISTERIAL": [
+      "BECA MINISTERIAL"
+    ],
+    "CRÉDITOS": [
+      "CAE",
+      "CRÉDITO INTERNO"
+    ],
+    "GRATUIDAD": [
+      "ARANCEL AJUSTADO ESTUDIANTE",
+      "ARANCEL AJUSTADO PROSPECTO",
+      "GRATUIDAD ESTUDIANTES",
+      "GRATUIDAD PROSPECTO"
+    ],
+    "OTRA BECA INTERNA": [
+      "OTRA BECA INTERNA"
+    ],
+    "OTRA INFORMACIÓN": [
+      "OTRA INFORMACIÓN"
+    ],
+    "SEGUROS": [
+      "DESGRAVAMEN",
+      "DPS",
+      "ESTUDIANTE MEDICO"
+    ]
+  },
+  "BIBLIOTECA": {
+    "CONTRASEÑA MI CUENTA": [
+      "CONTRASEÑA MI CUENTA"
+    ],
+    "INFORMACIÓN DE SERVICIO": [
+      "INFORMACIÓN DE SERVICIO"
+    ],
+    "NAVEGACIÓN SIBUM": [
+      "NAVEGACIÓN SIBUM"
+    ]
+  },
+  "CAMPUS VIRTUAL": {
+    "TEMAS ACADÉMICOS": [
+      "ADVANCE",
+      "CURSOS",
+      "POSTGRADO",
+      "PREGRADO DIURNO"
+    ],
+    "TEMAS TÉCNICOS": [
+      "ADVANCE",
+      "CURSOS",
+      "POSTGRADO",
+      "PREGRADO DIURNO"
+    ]
+  },
+  "CENTROS DE INVESTIGACIÓN Y LABORATORIOS": {
+    "CENTRO DE EMPRENDIMIENTO APÍCOLA -CEAPI": [
+      "CENTRO DE EMPRENDIMIENTO APÍCOLA -CEAPI"
+    ],
+    "CENTRO DE ESTUDIO DE MOVIMIENTO HUMANO - CEMH": [
+      "CENTRO DE ESTUDIO DE MOVIMIENTO HUMANO - CEMH"
+    ],
+    "CENTRO DE ESTUDIO DE RECURSOS NATURALES - OTERRA": [
+      "CENTRO DE ESTUDIO DE RECURSOS NATURALES - OTERRA"
+    ],
+    "CENTRO DE ESTUDIOS Y ANÁLISIS DE GESTIÓN PÚBLICA": [
+      "CENTRO DE ESTUDIOS Y ANÁLISIS DE GESTIÓN PÚBLICA"
+    ],
+    "CENTRO DE INVESTIGACIONES ECO TOXICOLÓGICAS - CIE": [
+      "CENTRO DE INVESTIGACIONES ECO TOXICOLÓGICAS - CIE"
+    ],
+    "CENTRO DE INVESTIGACIÓN Y EMPRESARIAL - CIGE": [
+      "CENTRO DE INVESTIGACIÓN Y EMPRESARIAL - CIGE"
+    ],
+    "CENTRO DE PROPAGACIÓN Y CONSERVACIÓN VEGETAL - CEPROVEG": [
+      "CENTRO DE PROPAGACIÓN Y CONSERVACIÓN VEGETAL - CEPROVEG"
+    ],
+    "CENTRO GENOMA Y BIOINFORMÁTICA": [
+      "CENTRO GENOMA Y BIOINFORMÁTICA"
+    ],
+    "INSTITUTO DE BIOTECNOLOGÍA": [
+      "INSTITUTO DE BIOTECNOLOGÍA"
+    ],
+    "LABORATORIO DE TECNOLOGÍA MÉDICA": [
+      "LABORATORIO DE TECNOLOGÍA MÉDICA"
+    ],
+    "NÚCLEO DE CLIENCIAS BIOLÓGICAS": [
+      "NÚCLEO DE CLIENCIAS BIOLÓGICAS"
+    ],
+    "NÚCLEO DE FORMACIÓN GENERAL": [
+      "NÚCLEO DE FORMACIÓN GENERAL"
+    ],
+    "NÚCLEO DE INGLÉS": [
+      "NÚCLEO DE INGLÉS"
+    ],
+    "NÚCLEO DE MATEMÁTICAS, FÍSICA Y ESTADÍSTICAS": [
+      "NÚCLEO DE MATEMÁTICAS, FÍSICA Y ESTADÍSTICAS"
+    ],
+    "NÚCLEO DE PSICOLOGÍA": [
+      "NÚCLEO DE PSICOLOGÍA"
+    ],
+    "NÚCLEO DE QUÍMICA Y BIOQUÍMICA": [
+      "NÚCLEO DE QUÍMICA Y BIOQUÍMICA"
+    ],
+    "NÚCLEO DE SALUD PÚBLICA": [
+      "NÚCLEO DE SALUD PÚBLICA"
+    ],
+    "OTRO": [
+      "OTRO"
+    ]
+  },
+  "CLÍNICAS": {
+    "CLÍNICA FONIÁTRICA": [
+      "CLÍNICA FONIÁTRICA"
+    ],
+    "CLÍNICA FONOAUDIOLÓGICA": [
+      "CLÍNICA FONOAUDIOLÓGICA"
+    ],
+    "CLÍNICA JURÍDICA": [
+      "CLÍNICA JURÍDICA"
+    ],
+    "CLÍNICA KINÉSICA": [
+      "CLÍNICA KINÉSICA"
+    ],
+    "CLÍNICA ODONTOLÓGICA": [
+      "CLÍNICA ODONTOLÓGICA"
+    ],
+    "CLÍNICA PSICOLÓGICA": [
+      "CLÍNICA PSICOLÓGICA"
+    ],
+    "CLÍNICA VETERINARIA": [
+      "CLÍNICA VETERINARIA"
+    ],
+    "HOSPITAL DOCENTE HIPÓDROMO CHILE": [
+      "HOSPITAL DOCENTE HIPÓDROMO CHILE"
+    ],
+    "OTRO": [
+      "OTRO"
+    ]
+  },
+  "CONSULTAS SIN CATEGORÍA": {
+    "CONSULTAS SIN CATEGORÍA": [
+      "CONSULTAS SIN CATEGORÍA"
+    ]
+  },
+  "CONTRASEÑA MAYOR": {
+    "AUTORECUPERACIÓN CLAVE ALUMNO": [
+      "AUTORECUPERACIÓN CLAVE ALUMNO"
+    ],
+    "AUTORECUPERACIÓN CLAVE PROFESOR": [
+      "AUTORECUPERACIÓN CLAVE PROFESOR"
+    ],
+    "RECUPERACIÓN CLAVE ADMINISTRATIVO": [
+      "RECUPERACIÓN CLAVE ADMINISTRATIVO"
+    ]
+  },
+  "CORREO CORPORATIVO": {
+    "ACTIVACIÓN CUENTA DE CORREO": [
+      "ACTIVACIÓN CUENTA DE CORREO"
+    ],
+    "NO RECIBE CORREOS INSTITUCIONALES": [
+      "NO RECIBE CORREOS INSTITUCIONALES"
+    ],
+    "NO SABE COMO ENTRAR AL CORREO": [
+      "NO SABE COMO ENTRAR AL CORREO"
+    ],
+    "SOLICITA CAMBIO DE CORREO": [
+      "SOLICITA CAMBIO DE CORREO"
+    ]
+  },
+  "DATO HISTORICO": {
+    "DATO HISTORICO": [
+      "DATO HISTORICO"
+    ]
+  },
+  "DIFUSIÓN": {
+    "DIFUSIÓN COLEGIOS": [
+      "CHARLAS EN COLEGIO",
+      "FERIAS",
+      "VISITA CAMPUS"
+    ],
+    "OTRA INFORMACIÓN": [
+      "OTRA INFORMACIÓN"
+    ]
+  },
+  "LABORATORIOS E IMPRESIONES": {
+    "CARGA DE SALDO DE IMPRESIONES": [
+      "CARGA DE SALDO DE IMPRESIONES"
+    ],
+    "DEVOLUCIÓN DE CUOTAS": [
+      "DEVOLUCIÓN DE CUOTAS"
+    ],
+    "FUNCIONAMIENTO IMPRESORAS": [
+      "FUNCIONAMIENTO IMPRESORAS"
+    ],
+    "HORARIOS LABORATORIOS": [
+      "HORARIOS LABORATORIOS"
+    ],
+    "INGRESO Y CONTRASEÑA COMPUTADORES": [
+      "INGRESO Y CONTRASEÑA COMPUTADORES"
+    ],
+    "SOLICITUD DE REPORTE": [
+      "SOLICITUD DE REPORTE"
+    ],
+    "WIFI": [
+      "WIFI"
+    ]
+  },
+  "LLAMADA ABANDONADA": {
+    "LLAMADA EQUIVOCADA": [
+      "LLAMADA EQUIVOCADA"
+    ],
+    "SE CORTA EL LLAMADO AL LEVANTAR EL AURICULAR": [
+      "SE CORTA EL LLAMADO AL LEVANTAR EL AURICULAR"
+    ],
+    "SE CORTA EL LLAMADO DURANTE LA CONVERSACIÓN": [
+      "SE CORTA EL LLAMADO DURANTE LA CONVERSACIÓN"
+    ]
+  },
+  "MATRÍCULAS": {
+    "ARANCELES": [
+      "ARANCEL DE TITULACIÓN",
+      "CONSULTA ARANCEL",
+      "REBAJA DE ARANCEL"
+    ],
+    "DUPLICIDAD DE MATRÍCULA": [
+      "DUPLICIDAD DE MATRÍCULA"
+    ],
+    "FECHA DE MATRÍCULA": [
+      "FECHA DE MATRÍCULA"
+    ],
+    "FORMAS DE PAGO": [
+      "FORMAS DE PAGO"
+    ],
+    "INFORMACIÓN GENERAL": [
+      "INFORMACIÓN GENERAL"
+    ],
+    "MATRÍCULA ONLINE": [
+      "MATRÍCULA ONLINE"
+    ],
+    "NO RECONOCE BECAS": [
+      "NO RECONOCE BECAS"
+    ],
+    "NO RECONOCE PAGO": [
+      "NO RECONOCE PAGO"
+    ]
+  },
+  "NORMALIZACIÓN Y COBRANZA": {
+    "COBRANZA (ATENCIÓN ALUMNOS Y APODERADOS)": [
+      "CAMBIO MODALIDAD DE PAGO",
+      "COBRANZA ERRONEA",
+      "RENEGOCIAR DEUDA"
+    ],
+    "COBRANZA FACTURAS": [
+      "COBRANZA FACTURAS"
+    ],
+    "EMPRESAS DE COBRANZA": [
+      "EMPRESAS DE COBRANZA"
+    ],
+    "PORTAL FINANCIERO": [
+      "PORTAL FINANCIERO"
+    ],
+    "RESOLUCIONES FINANCIERAS": [
+      "RESOLUCIONES FINANCIERAS"
+    ]
+  },
+  "OFICINA REGISTROS ESTUDIANTILES": {
+    "CERTIFICADOS": [
+      "EMITIDO CON ERROR",
+      "ENTREGA FUERA DE PLAZO"
+    ],
+    "CERTIFICADOS PROBLEMA TÉCNICO": [
+      "NO RECIBE CORREO INGRESO SOLICITUD",
+      "NO SE EMTIÓ DOCUMENTO",
+      "PAGÍNA CAIDA AL SOLICITAR DOCUMENTO",
+      "PROBLEMA EN PROCESO PAGO"
+    ],
+    "CONSULTAS GENERALES": [
+      "CONSULTAS GENERALES"
+    ],
+    "PROCESO DE TITULACIÓN": [
+      "CAMBIO DE FECHA",
+      "NOMBRE CORRECTO EN DIPLOMA"
+    ]
+  },
+  "OFIGEN": {
+    "CAMBIO DE  NOMBRE (SOCIAL Y LEGAL)": [
+      "CAMBIO DE  NOMBRE (SOCIAL Y LEGAL)"
+    ],
+    "DENUNCIA DE GÉNERO Y ABUSO": [
+      "DENUNCIA DE GÉNERO Y ABUSO"
+    ],
+    "OTRO": [
+      "OTRO"
+    ]
+  },
+  "PORTAL DOCENTE": {
+    "CONSULTAS SERVICIOS PORTAL": [
+      "CONSULTAS SERVICIOS PORTAL"
+    ],
+    "INGRESO DE CALIFICACIONES - PROBLEMA ACADÉMICO": [
+      "INGRESO DE CALIFICACIONES - PROBLEMA ACADÉMICO"
+    ],
+    "INGRESO DE CALIFICACIONES - PROBLEMA TÉCNICO": [
+      "INGRESO DE CALIFICACIONES - PROBLEMA TÉCNICO"
+    ],
+    "PORTAL CAÍDO": [
+      "PORTAL CAÍDO"
+    ],
+    "PROBLEMAS INTERIOR PORTAL": [
+      "PROBLEMAS INTERIOR PORTAL"
+    ]
+  },
+  "PORTAL ESTUDIANTIL": {
+    "BLOQUEO DE MATRICULA": [
+      "BLOQUEO DE MATRICULA"
+    ],
+    "CONSULTAS SERVICIOS PORTAL": [
+      "CONSULTAS SERVICIOS PORTAL"
+    ],
+    "PORTAL CAÍDO": [
+      "PORTAL CAÍDO"
+    ],
+    "PROBLEMAS INTERIOR PORTAL": [
+      "PROBLEMAS INTERIOR PORTAL"
+    ]
+  },
+  "PRUEBAS SISTEMAS": {
+    "PRUEBA TELEFÓNICA": [
+      "PRUEBA TELEFÓNICA"
+    ],
+    "PRUEBAS CRM": [
+      "PRUEBA CRM"
+    ]
+  },
+  "RECURSOS HUMANOS": {
+    "BIENESTAR": [
+      "BIENESTAR"
+    ],
+    "DESARROLLO ORGANIZACIONAL": [
+      "DESARROLLO ORGANIZACIONAL"
+    ],
+    "PERSONAL": [
+      "PERSONAL"
+    ],
+    "PORTAL DE FUNCIONARIO": [
+      "PORTAL DE FUNCIONARIO"
+    ],
+    "REMUNERACIONES": [
+      "HONORARIOS",
+      "REMUNERACIÓN PERSONAL"
+    ],
+    "SELECCIÓN": [
+      "SELECCIÓN"
+    ]
+  },
+  "RELACIONES INTERNACIONALES": {
+    "BECAS POSTGRADOS EXTRANJEROS": [
+      "BECAS POSTGRADOS EXTRANJEROS"
+    ],
+    "CURSOS IDIOMAS CHILE/EXTRANJEROS": [
+      "CURSOS IDIOMAS CHILE/EXTRANJEROS"
+    ],
+    "INTERCAMBIOS": [
+      "MOVILIDAD ENTRANTE",
+      "MOVILIDAD SALIENTE"
+    ],
+    "OFICINA ASESORÍA ACADÉMICA EDUCATION USA": [
+      "OFICINA ASESORÍA ACADÉMICA EDUCATION USA"
+    ],
+    "TRABAJOS EN EXTRAJERO": [
+      "TRABAJOS EN EXTRAJERO"
+    ]
+  },
+  "TESORERÍA (CAJA/EGRESO)": {
+    "CAJA Y ENTREGA DE DOCUMENTO EN GARANTÍA": [
+      "CAJA Y ENTREGA DE DOCUMENTO EN GARANTÍA"
+    ],
+    "GESTIONES BANCARIAS": [
+      "GESTIONES BANCARIAS"
+    ],
+    "PAGO PROVEEDORES": [
+      "PAGO PROVEEDORES"
+    ]
+  },
+  "UNIVERSIDAD": {
+    "JUSTIFICACIÓN": [
+      "prueba"
+    ],
+    "OTRO": [
+      "OTRO"
+    ],
+    "PARO ESTUDIANTIL": [
+      "PARO ESTUDIANTIL"
+    ],
+    "SECRETARÍA GENERAL": [
+      "ABOGADOS",
+      "NFORMACIÓN GENERAL RECTORÍA",
+      "VALIDACIÓN DE TÍTULO"
+    ],
+    "SITUACIONES EXTERNAS A LA UNIVERSIDAD": [
+      "CONSTANCIA PERSONA EXTERNA"
+    ],
+    "VICOM": [
+      "VICOM"
+    ]
+  }
+};
+
+let temasActivos = Object.keys(ARBOL);
+let subtemasActivos = [];
+let detallesActivos = [];
+
+// ── INICIO ──
+window.onload = () => {
+  renderOpciones(document.getElementById("selTema"), temasActivos, "— Selecciona un tema —");
+  document.getElementById("cntTema").textContent = `${temasActivos.length} temas disponibles`;
+};
+
+// ── FILTROS ──
+function filtrarTemas() {
+  const q = document.getElementById("searchTema").value.toLowerCase();
+  temasActivos = Object.keys(ARBOL).filter(t => t.toLowerCase().includes(q));
+  renderOpciones(document.getElementById("selTema"), temasActivos, "— Selecciona un tema —");
+  document.getElementById("cntTema").textContent = `${temasActivos.length} temas`;
+  resetSubtema(); resetDetalle();
+}
+
+function filtrarSubtemas() {
+  const tema = document.getElementById("selTema").value;
+  if (!tema) return;
+  const q = document.getElementById("searchSubtema").value.toLowerCase();
+  subtemasActivos = Object.keys(ARBOL[tema]).filter(s => s.toLowerCase().includes(q));
+  renderOpciones(document.getElementById("selSubtema"), subtemasActivos, "— Selecciona un subtema —");
+  document.getElementById("cntSubtema").textContent = `${subtemasActivos.length} subtemas`;
+  resetDetalle();
+}
+
+function filtrarDetalles() {
+  const tema = document.getElementById("selTema").value;
+  const subtema = document.getElementById("selSubtema").value;
+  if (!tema || !subtema) return;
+  const q = document.getElementById("searchDetalle").value.toLowerCase();
+  detallesActivos = ARBOL[tema][subtema].filter(d => d.toLowerCase().includes(q));
+  renderOpciones(document.getElementById("selDetalle"), detallesActivos, "— Selecciona un detalle —");
+  document.getElementById("cntDetalle").textContent = `${detallesActivos.length} detalles`;
+  ocultarResultado();
+}
+
+// ── CARGA ENCADENADA ──
+function cargarSubtemas() {
+  const tema = document.getElementById("selTema").value;
+  resetSubtema(); resetDetalle(); ocultarResultado();
+  if (!tema) return;
+  subtemasActivos = Object.keys(ARBOL[tema]);
+  const selSub = document.getElementById("selSubtema");
+  const searchSub = document.getElementById("searchSubtema");
+  renderOpciones(selSub, subtemasActivos, "— Selecciona un subtema —");
+  selSub.disabled = false;
+  searchSub.disabled = false;
+  document.getElementById("cntSubtema").textContent = `${subtemasActivos.length} subtemas`;
+}
+
+function cargarDetalles() {
+  const tema = document.getElementById("selTema").value;
+  const subtema = document.getElementById("selSubtema").value;
+  resetDetalle(); ocultarResultado();
+  if (!tema || !subtema) return;
+  detallesActivos = ARBOL[tema][subtema];
+  const selDet = document.getElementById("selDetalle");
+  const searchDet = document.getElementById("searchDetalle");
+  renderOpciones(selDet, detallesActivos, "— Selecciona un detalle —");
+  selDet.disabled = false;
+  searchDet.disabled = false;
+  document.getElementById("cntDetalle").textContent = `${detallesActivos.length} detalles`;
+}
+
+function mostrarResultado() {
+  const tema    = document.getElementById("selTema").value;
+  const subtema = document.getElementById("selSubtema").value;
+  const detalle = document.getElementById("selDetalle").value;
+  if (!tema || !subtema || !detalle) { ocultarResultado(); return; }
+  document.getElementById("resTema").textContent    = tema;
+  document.getElementById("resSubtema").textContent = subtema;
+  document.getElementById("resDetalle").textContent = detalle;
+  const res = document.getElementById("resultado");
+  res.classList.add("activo");
+  document.getElementById("btnCopiar").textContent = "📋 Copiar tipificación";
+  document.getElementById("btnCopiar").classList.remove("copiado");
+}
+
+// ── HELPERS ──
+function renderOpciones(sel, lista, placeholder) {
+  sel.innerHTML = `<option value="">${placeholder}</option>`;
+  lista.forEach(v => {
+    const opt = document.createElement("option");
+    opt.value = v; opt.textContent = v;
+    sel.appendChild(opt);
+  });
+}
+
+function resetSubtema() {
+  const sel = document.getElementById("selSubtema");
+  const search = document.getElementById("searchSubtema");
+  sel.innerHTML = '<option value="">— Primero selecciona un tema —</option>';
+  sel.disabled = true; search.disabled = true; search.value = "";
+  document.getElementById("cntSubtema").textContent = "";
+  subtemasActivos = [];
+}
+
+function resetDetalle() {
+  const sel = document.getElementById("selDetalle");
+  const search = document.getElementById("searchDetalle");
+  sel.innerHTML = '<option value="">— Primero selecciona un subtema —</option>';
+  sel.disabled = true; search.disabled = true; search.value = "";
+  document.getElementById("cntDetalle").textContent = "";
+  detallesActivos = [];
+}
+
+function ocultarResultado() {
+  document.getElementById("resultado").classList.remove("activo");
+}
+
+function copiarResultado() {
+  const tema    = document.getElementById("selTema").value;
+  const subtema = document.getElementById("selSubtema").value;
+  const detalle = document.getElementById("selDetalle").value;
+  const texto = `Tema: ${tema} | Subtema: ${subtema} | Detalle: ${detalle}`;
+  navigator.clipboard.writeText(texto).then(() => {
+    const btn = document.getElementById("btnCopiar");
+    btn.textContent = "✓ Copiado";
+    btn.classList.add("copiado");
+    setTimeout(() => {
+      btn.textContent = "📋 Copiar tipificación";
+      btn.classList.remove("copiado");
+    }, 2500);
+  });
+}
+
+function limpiarTodo() {
+  document.getElementById("searchTema").value = "";
+  document.getElementById("selTema").value = "";
+  filtrarTemas();
+  ocultarResultado();
+}
+</script>
+
+</body>
+</html>
