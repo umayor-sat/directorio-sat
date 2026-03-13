@@ -83,10 +83,15 @@ def api_contactos_administrativos():
 def bitacora():
     return render_template("bitacora.html")
 # =========================
+# ÁRBOL DE TEMAS CRM
+# =========================
+@app.route("/temas-crm")
+def temas_crm():
+    return render_template("temas_crm.html")
+# =========================
 # EJECUCIÓN
 # =========================
 import os
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
-
