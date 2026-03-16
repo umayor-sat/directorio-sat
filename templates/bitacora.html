@@ -6,264 +6,88 @@
   <title>Bitácora SAT – Universidad Mayor</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f4f6f8; min-height: 100vh; }
 
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f6f8;
-      min-height: 100vh;
-    }
-
-    /* HEADER */
-    .header {
-      background: #f0a500;
-      padding: 0 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 80px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+    .header { background: #f0a500; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 80px; position: sticky; top: 0; z-index: 100; }
     .header-left { display: flex; align-items: center; gap: 16px; }
     .header img { height: 60px; background: white; padding: 4px 8px; border-radius: 4px; }
     .header h1 { font-size: 1.4rem; font-weight: 700; color: #1a3a2a; }
-    .btn-volver {
-      background: #1a5c38;
-      color: white;
-      border: none;
-      padding: 8px 18px;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-    }
+    .btn-volver { background: #1a5c38; color: white; border: none; padding: 8px 18px; border-radius: 6px; font-size: 0.9rem; cursor: pointer; text-decoration: none; display: inline-block; }
     .btn-volver:hover { background: #144d2f; }
 
-    /* CONTENEDOR */
-    .container {
-      max-width: 900px;
-      margin: 32px auto;
-      padding: 0 16px;
-    }
+    .container { max-width: 900px; margin: 32px auto; padding: 0 16px; }
 
-    /* FILTROS */
-    .filtros {
-      background: white;
-      border-radius: 10px;
-      padding: 20px 24px;
-      margin-bottom: 24px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-      display: flex;
-      gap: 16px;
-      align-items: flex-end;
-      flex-wrap: wrap;
-    }
+    .filtros { background: white; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; }
     .filtro-group { display: flex; flex-direction: column; gap: 6px; }
     .filtro-group label { font-size: 0.82rem; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.5px; }
-    .filtro-group select, .filtro-group input[type="text"] {
-      padding: 8px 12px;
-      border: 1.5px solid #ddd;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      color: #333;
-      background: white;
-    }
-    .filtro-group select:focus, .filtro-group input:focus {
-      outline: none;
-      border-color: #f0a500;
-    }
-    .btn-limpiar {
-      background: #eee;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      color: #555;
-      align-self: flex-end;
-    }
+    .filtro-group select, .filtro-group input[type="text"] { padding: 8px 12px; border: 1.5px solid #ddd; border-radius: 6px; font-size: 0.95rem; color: #333; background: white; }
+    .filtro-group select:focus, .filtro-group input:focus { outline: none; border-color: #f0a500; }
+    .btn-limpiar { background: #eee; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; color: #555; align-self: flex-end; }
     .btn-limpiar:hover { background: #ddd; }
 
-    /* BADGE PUBLICADO POR */
-    .badge-publicado {
-      font-size: 0.75rem;
-      background: #e8f5e9;
-      color: #2e7d32;
-      padding: 2px 8px;
-      border-radius: 20px;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-    .badge-publicado.historico {
-      background: #f3f3f3;
-      color: #999;
-    }
+    .banner-admin { background: #fff3cd; border: 1px solid #f0a500; border-radius: 8px; padding: 10px 18px; margin-bottom: 16px; font-size: 0.9rem; color: #856404; display: none; align-items: center; justify-content: space-between; }
+    .banner-admin.visible { display: flex; }
+    .banner-admin button { background: none; border: 1px solid #856404; border-radius: 6px; padding: 4px 10px; cursor: pointer; color: #856404; font-size: 0.85rem; }
 
-    /* COMUNICADOS */
+    .badge-publicado { font-size: 0.75rem; background: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 20px; font-weight: 600; white-space: nowrap; }
+    .badge-publicado.historico { background: #f3f3f3; color: #999; }
+
     .comunicados { display: flex; flex-direction: column; gap: 14px; }
 
-    .comunicado {
-      background: white;
-      border-radius: 10px;
-      padding: 18px 22px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      border-left: 5px solid #f0a500;
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-      animation: fadeIn 0.3s ease;
-    }
+    .comunicado { background: white; border-radius: 10px; padding: 18px 22px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 5px solid #f0a500; display: flex; gap: 16px; align-items: flex-start; animation: fadeIn 0.3s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-    .comunicado-fecha {
-      min-width: 90px;
-      text-align: center;
-      background: #fff8e1;
-      border-radius: 8px;
-      padding: 8px 4px;
-    }
+    .comunicado-fecha { min-width: 90px; text-align: center; background: #fff8e1; border-radius: 8px; padding: 8px 4px; }
     .fecha-dia { font-size: 1.6rem; font-weight: 800; color: #1a3a2a; line-height: 1; }
     .fecha-mes { font-size: 0.75rem; font-weight: 600; color: #888; text-transform: uppercase; }
     .fecha-anio { font-size: 0.75rem; color: #aaa; }
 
     .comunicado-body { flex: 1; }
-    .comunicado-texto {
-      font-size: 0.95rem;
-      color: #333;
-      line-height: 1.55;
-      margin-bottom: 8px;
-      white-space: pre-wrap;
-    }
-    .comunicado-meta { display: flex; align-items: center; gap: 8px; }
+    .comunicado-texto { font-size: 0.95rem; color: #333; line-height: 1.55; margin-bottom: 8px; white-space: pre-wrap; }
+    .comunicado-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
-    .sin-resultados {
-      text-align: center;
-      padding: 48px;
-      color: #999;
-      font-size: 1rem;
-      background: white;
-      border-radius: 10px;
-    }
+    .btn-eliminar-com { background: none; border: 1px solid #cc0000; color: #cc0000; border-radius: 4px; font-size: 0.75rem; padding: 2px 8px; cursor: pointer; display: none; }
+    .btn-eliminar-com:hover { background: #cc0000; color: #fff; }
+    .btn-eliminar-com.visible { display: inline-block; }
 
-    /* MODAL JEFATURA */
-    .btn-jefatura {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: #1a5c38;
-      color: white;
-      border: none;
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      font-size: 1.4rem;
-      cursor: pointer;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-      z-index: 200;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    .sin-resultados { text-align: center; padding: 48px; color: #999; font-size: 1rem; background: white; border-radius: 10px; }
+
+    .btn-jefatura { position: fixed; bottom: 24px; right: 24px; background: #1a5c38; color: white; border: none; width: 52px; height: 52px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); z-index: 200; display: flex; align-items: center; justify-content: center; }
     .btn-jefatura:hover { background: #144d2f; }
 
-    .overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 300;
-      align-items: center;
-      justify-content: center;
-    }
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; align-items: center; justify-content: center; }
     .overlay.active { display: flex; }
 
-    .modal {
-      background: white;
-      border-radius: 12px;
-      padding: 32px;
-      width: 100%;
-      max-width: 480px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-    }
+    .modal { background: white; border-radius: 12px; padding: 32px; width: 100%; max-width: 480px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
     .modal h2 { font-size: 1.1rem; color: #1a3a2a; margin-bottom: 20px; }
 
     .form-group { margin-bottom: 16px; }
     .form-group label { display: block; font-size: 0.82rem; font-weight: 600; color: #555; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .form-group input, .form-group textarea, .form-group select {
-      width: 100%;
-      padding: 10px 14px;
-      border: 1.5px solid #ddd;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      font-family: inherit;
-      color: #333;
-    }
-    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
-      outline: none;
-      border-color: #f0a500;
-    }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px 14px; border: 1.5px solid #ddd; border-radius: 8px; font-size: 0.95rem; font-family: inherit; color: #333; }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: #f0a500; }
     .form-group textarea { resize: vertical; min-height: 100px; }
 
     .modal-btns { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
-    .btn-cancelar {
-      background: #eee;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      color: #555;
-    }
-    .btn-publicar {
-      background: #f0a500;
-      border: none;
-      padding: 10px 24px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: #1a3a2a;
-    }
+    .btn-cancelar { background: #eee; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; color: #555; }
+    .btn-publicar { background: #f0a500; border: none; padding: 10px 24px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 700; color: #1a3a2a; }
     .btn-publicar:hover { background: #d4920a; }
 
     .msg-ok { color: #2e7d32; font-size: 0.9rem; margin-top: 10px; text-align: center; font-weight: 600; display: none; }
     .msg-err { color: #c62828; font-size: 0.9rem; margin-top: 10px; text-align: center; display: none; }
 
-    /* LOGIN */
     .modal-login h2 { text-align: center; }
     .modal-login .form-group input { text-align: center; letter-spacing: 4px; font-size: 1.1rem; }
 
-    .contador {
-      font-size: 0.82rem;
-      color: #888;
-      margin-bottom: 16px;
-    }
-    /* BOTÓN REPORTE */
-    .btn-reporte-flotante {
-      position: fixed; bottom: 24px; left: 24px;
-      background: #cc0000; color: white;
-      width: 52px; height: 52px; border-radius: 50%; font-size: 1.3rem;
-      cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-      z-index: 300; display: flex; align-items: center; justify-content: center;
-      text-decoration: none;
-    }
+    .contador { font-size: 0.82rem; color: #888; margin-bottom: 16px; }
+
+    .btn-reporte-flotante { position: fixed; bottom: 24px; left: 24px; background: #cc0000; color: white; width: 52px; height: 52px; border-radius: 50%; font-size: 1.3rem; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); z-index: 300; display: flex; align-items: center; justify-content: center; text-decoration: none; }
     .btn-reporte-flotante:hover { background: #aa0000; }
-    .btn-reporte-flotante::after {
-      content: "Reportar error";
-      position: absolute; left: 62px;
-      background: #333; color: #fff;
-      padding: 4px 8px; border-radius: 4px;
-      font-size: 12px; white-space: nowrap;
-      opacity: 0; pointer-events: none; transition: opacity 0.2s;
-    }
+    .btn-reporte-flotante::after { content: "Reportar error"; position: absolute; left: 62px; background: #333; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 12px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
     .btn-reporte-flotante:hover::after { opacity: 1; }
   </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="header">
   <div class="header-left">
     <img src="{{ url_for('static', filename='img/logoum.jpg') }}" alt="Universidad Mayor"/>
@@ -272,10 +96,13 @@
   <a href="/" class="btn-volver">← Volver</a>
 </div>
 
-<!-- CONTENEDOR PRINCIPAL -->
 <div class="container">
 
-  <!-- FILTROS -->
+  <div class="banner-admin" id="bannerAdmin">
+    ✏️ <strong>Modo jefatura activo</strong> — puedes publicar y eliminar comunicados.
+    <button onclick="salirJefatura()">Salir</button>
+  </div>
+
   <div class="filtros">
     <div class="filtro-group">
       <label>Año</label>
@@ -316,10 +143,8 @@
   <div class="comunicados" id="listaComunicados"></div>
 </div>
 
-<!-- BOTÓN JEFATURA -->
 <button class="btn-jefatura" onclick="abrirLogin()" title="Acceso jefatura">✏️</button>
 
-<!-- BOTÓN REPORTE -->
 <a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de error – Directorio SAT&body=Página donde ocurrió el error:%0A%0ADescripción del problema:%0A%0A(Agrega aquí cualquier detalle adicional)" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
 
 <!-- OVERLAY LOGIN -->
@@ -372,38 +197,29 @@
   const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
   const SUPABASE_KEY = "sb_publishable_3Shj63dB3uBAL_TVvqfBRw_3RyTRZ1U";
   const PASSWORD_JEFATURA = "SAT@UM2026";
-
   const MESES = ["","Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
 
   let todosLosComunicados = [];
+  let modoJefatura = false;
 
-  // Cargar comunicados al iniciar
   async function cargarComunicados() {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/Bitacora?select=*&order=fecha.desc`, {
-      headers: {
-        "apikey": SUPABASE_KEY,
-        "Authorization": `Bearer ${SUPABASE_KEY}`
-      }
+      headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
     });
     todosLosComunicados = await res.json();
     aplicarFiltros();
   }
 
   function aplicarFiltros() {
-    const anio = document.getElementById("filtroAnio").value;
-    const mes = document.getElementById("filtroMes").value;
+    const anio  = document.getElementById("filtroAnio").value;
+    const mes   = document.getElementById("filtroMes").value;
     const texto = document.getElementById("filtroBuscar").value.toLowerCase();
 
-    let filtrados = todosLosComunicados.filter(c => {
-      const fecha = c.fecha || "";
-      const partes = fecha.split("-");
-      const anioC = partes[0] || "";
-      const mesC = partes[1] || "";
-      const eventoC = (c.evento || "").toLowerCase();
-
-      if (anio && anioC !== anio) return false;
-      if (mes && mesC !== mes) return false;
-      if (texto && !eventoC.includes(texto)) return false;
+    const filtrados = todosLosComunicados.filter(c => {
+      const partes = (c.fecha || "").split("-");
+      if (anio  && partes[0] !== anio)  return false;
+      if (mes   && partes[1] !== mes)   return false;
+      if (texto && !(c.evento || "").toLowerCase().includes(texto)) return false;
       return true;
     });
 
@@ -412,27 +228,26 @@
 
   function renderComunicados(lista) {
     const contenedor = document.getElementById("listaComunicados");
-    const contador = document.getElementById("contador");
+    const contador   = document.getElementById("contador");
 
     contador.textContent = `${lista.length} comunicado${lista.length !== 1 ? "s" : ""} encontrado${lista.length !== 1 ? "s" : ""}`;
 
-    if (lista.length === 0) {
+    if (!lista.length) {
       contenedor.innerHTML = `<div class="sin-resultados">No se encontraron comunicados para los filtros seleccionados.</div>`;
       return;
     }
 
     contenedor.innerHTML = lista.map(c => {
-      const fecha = c.fecha || "";
-      const partes = fecha.split("-");
-      const anio = partes[0] || "";
-      const mesNum = parseInt(partes[1]) || 0;
-      const dia = partes[2] || "";
-      const mes = MESES[mesNum] || "";
-      const pub = c.publicado_por || "";
-      const esHistorico = pub === "Registro histórico";
+      const partes  = (c.fecha || "").split("-");
+      const anio    = partes[0] || "";
+      const mesNum  = parseInt(partes[1]) || 0;
+      const dia     = partes[2] || "";
+      const mes     = MESES[mesNum] || "";
+      const pub     = c.publicado_por || "";
+      const esHist  = pub === "Registro histórico";
 
       return `
-        <div class="comunicado">
+        <div class="comunicado" id="com-${c.id}">
           <div class="comunicado-fecha">
             <div class="fecha-dia">${dia}</div>
             <div class="fecha-mes">${mes}</div>
@@ -441,23 +256,43 @@
           <div class="comunicado-body">
             <div class="comunicado-texto">${c.evento || ""}</div>
             <div class="comunicado-meta">
-              <span class="badge-publicado ${esHistorico ? 'historico' : ''}">${pub}</span>
+              <span class="badge-publicado ${esHist ? 'historico' : ''}">${pub}</span>
+              <button class="btn-eliminar-com ${modoJefatura ? 'visible' : ''}"
+                onclick="eliminarComunicado(${c.id}, this)">🗑️ Eliminar</button>
             </div>
           </div>
-        </div>
-      `;
+        </div>`;
     }).join("");
   }
 
   function limpiarFiltros() {
-    document.getElementById("filtroAnio").value = "";
-    document.getElementById("filtroMes").value = "";
+    document.getElementById("filtroAnio").value  = "";
+    document.getElementById("filtroMes").value   = "";
     document.getElementById("filtroBuscar").value = "";
     aplicarFiltros();
   }
 
-  // LOGIN
+  // ── ELIMINAR ──
+  async function eliminarComunicado(id, btn) {
+    if (!confirm("¿Eliminar este comunicado? Esta acción no se puede deshacer.")) return;
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/Bitacora?id=eq.${id}`, {
+      method: "DELETE",
+      headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
+    });
+    if (res.ok) {
+      document.getElementById(`com-${id}`)?.remove();
+      todosLosComunicados = todosLosComunicados.filter(c => c.id !== id);
+      const contador = document.getElementById("contador");
+      const restantes = document.querySelectorAll(".comunicado").length;
+      contador.textContent = `${restantes} comunicado${restantes !== 1 ? "s" : ""} encontrado${restantes !== 1 ? "s" : ""}`;
+    } else {
+      alert("Error al eliminar. Intenta nuevamente.");
+    }
+  }
+
+  // ── LOGIN ──
   function abrirLogin() {
+    if (modoJefatura) { abrirFormulario(); return; }
     document.getElementById("overlayLogin").classList.add("active");
     document.getElementById("inputPassword").value = "";
     document.getElementById("errorLogin").style.display = "none";
@@ -469,23 +304,34 @@
   }
 
   function verificarPassword() {
-    const val = document.getElementById("inputPassword").value;
-    if (val === PASSWORD_JEFATURA) {
+    if (document.getElementById("inputPassword").value === PASSWORD_JEFATURA) {
       cerrarLogin();
-      abrirFormulario();
+      activarJefatura();
     } else {
       document.getElementById("errorLogin").style.display = "block";
     }
   }
 
-  // FORMULARIO
+  function activarJefatura() {
+    modoJefatura = true;
+    document.getElementById("bannerAdmin").classList.add("visible");
+    // Mostrar botones eliminar en todos los comunicados visibles
+    document.querySelectorAll(".btn-eliminar-com").forEach(b => b.classList.add("visible"));
+    abrirFormulario();
+  }
+
+  function salirJefatura() {
+    modoJefatura = false;
+    document.getElementById("bannerAdmin").classList.remove("visible");
+    document.querySelectorAll(".btn-eliminar-com").forEach(b => b.classList.remove("visible"));
+  }
+
+  // ── FORMULARIO ──
   function abrirFormulario() {
     document.getElementById("overlayFormulario").classList.add("active");
     document.getElementById("msgOk").style.display = "none";
     document.getElementById("msgErr").style.display = "none";
-    // Fecha de hoy por defecto
-    const hoy = new Date().toISOString().split("T")[0];
-    document.getElementById("inputFecha").value = hoy;
+    document.getElementById("inputFecha").value  = new Date().toISOString().split("T")[0];
     document.getElementById("inputEvento").value = "";
   }
 
@@ -494,8 +340,8 @@
   }
 
   async function publicarComunicado() {
-    const fecha = document.getElementById("inputFecha").value;
-    const evento = document.getElementById("inputEvento").value.trim();
+    const fecha        = document.getElementById("inputFecha").value;
+    const evento       = document.getElementById("inputEvento").value.trim();
     const publicado_por = document.getElementById("inputPublicadoPor").value;
 
     if (!fecha || !evento) {
@@ -526,7 +372,6 @@
     }
   }
 
-  // Cerrar overlay al hacer click fuera
   document.getElementById("overlayLogin").addEventListener("click", function(e) {
     if (e.target === this) cerrarLogin();
   });
@@ -534,9 +379,9 @@
     if (e.target === this) cerrarFormulario();
   });
 
-  // Arrancar
   cargarComunicados();
 </script>
 
 </body>
 </html>
+
