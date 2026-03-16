@@ -1,372 +1,400 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Directorio General Umayor</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<title>Directorio General Umayor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <style>
-        :root{
-            --um-amarillo:#f2b705;
-            --um-azul:#005aa9;
-            --um-gris:#f5f7fa;
-        }
+<style>
+:root{
+--um-amarillo:#f2b705;
+--um-azul:#005aa9;
+--um-gris:#f5f7fa;
+}
 
-        body{
-            margin:0;
-            font-family: Arial, Helvetica, sans-serif;
-            background:#ffffff;
-            color:#222;
-        }
+body{
+margin:0;
+font-family: Arial, Helvetica, sans-serif;
+background:#ffffff;
+color:#222;
+}
 
-        .top-bar{
-            background:var(--um-amarillo);
-            padding:10px 30px;
-            display:flex;
-            align-items:center;
-            position:relative;
-            font-size:14px;
-        }
+.top-bar{
+background:var(--um-amarillo);
+padding:10px 30px;
+display:flex;
+align-items:center;
+position:relative;
+font-size:14px;
+}
 
-        .links-hover{
-            position:relative;
-            cursor:pointer;
-            font-weight:600;
-        }
+.links-hover{
+position:relative;
+cursor:pointer;
+font-weight:600;
+}
 
-        .links-hover span{
-            display:inline-flex;
-            align-items:center;
-            gap:6px;
-        }
+.links-hover span{
+display:inline-flex;
+align-items:center;
+gap:6px;
+}
 
-        .links-hover ul{
-            list-style:none;
-            margin:0;
-            padding:10px 0;
-            position:absolute;
-            top:100%;
-            left:0;
-            background:#fff;
-            min-width:260px;
-            box-shadow:0 6px 18px rgba(0,0,0,.15);
-            border-radius:6px;
-            display:none;
-            z-index:10;
-        }
+.links-hover ul{
+list-style:none;
+margin:0;
+padding:10px 0;
+position:absolute;
+top:100%;
+left:0;
+background:#fff;
+min-width:260px;
+box-shadow:0 6px 18px rgba(0,0,0,.15);
+border-radius:6px;
+display:none;
+z-index:10;
+}
 
-        .links-hover:hover ul{ display:block; }
+.links-hover:hover ul{ display:block; }
 
-        .links-hover ul li{ padding:8px 16px; }
+.links-hover ul li{ padding:8px 16px; }
 
-        .links-hover ul li a{
-            text-decoration:none;
-            color:#222;
-            display:block;
-        }
+.links-hover ul li a{
+text-decoration:none;
+color:#222;
+display:block;
+}
 
-        .links-hover ul li a:hover{ background:#f0f0f0; }
+.links-hover ul li a:hover{ background:#f0f0f0; }
 
-        .container{
-            max-width:1100px;
-            margin:0 auto;
-            padding:30px 20px 10px;
-            text-align:center;
-        }
+.container{
+max-width:1100px;
+margin:0 auto;
+padding:30px 20px 10px;
+text-align:center;
+}
 
-        .logo{ margin-top:10px; }
+.logo{ margin-top:10px; }
 
-        .logo img{
-            max-width:300px;
-            width:100%;
-            height:auto;
-        }
+.logo img{
+max-width:300px;
+width:100%;
+height:auto;
+}
 
-        .divider{
-            width:70%;
-            height:4px;
-            background:var(--um-amarillo);
-            margin:30px auto;
-        }
+.divider{
+width:70%;
+height:4px;
+background:var(--um-amarillo);
+margin:30px auto;
+}
 
-        h1{ font-size:32px; margin:10px 0 6px; }
+h1{ font-size:32px; margin:10px 0 6px; }
 
-        h2{
-            font-size:18px;
-            font-weight:normal;
-            margin:0 0 18px;
-        }
+h2{
+font-size:18px;
+font-weight:normal;
+margin:0 0 18px;
+}
 
-        .descripcion{
-            font-size:15px;
-            color:#444;
-            margin-bottom:30px;
-        }
+.descripcion{
+font-size:15px;
+color:#444;
+margin-bottom:30px;
+}
 
-        .buttons-primary{
-            display:flex;
-            justify-content:center;
-            gap:20px;
-            flex-wrap:wrap;
-            margin-bottom:16px;
-        }
+.buttons-primary{
+display:flex;
+justify-content:center;
+gap:20px;
+flex-wrap:wrap;
+margin-bottom:16px;
+}
 
-        .btn-primary-item{
-            background:var(--um-azul);
-            color:#fff;
-            padding:16px 32px;
-            border-radius:6px;
-            text-decoration:none;
-            font-size:17px;
-            font-weight:700;
-            display:inline-flex;
-            align-items:center;
-            gap:8px;
-            min-width:260px;
-            justify-content:center;
-        }
+.btn-primary-item{
+background:var(--um-azul);
+color:#fff;
+padding:16px 32px;
+border-radius:6px;
+text-decoration:none;
+font-size:17px;
+font-weight:700;
+display:inline-flex;
+align-items:center;
+gap:8px;
+min-width:260px;
+justify-content:center;
+}
 
-        .btn-primary-item:hover{ opacity:.9; }
+.btn-primary-item:hover{ opacity:.9; }
 
-        .buttons-secondary{
-            display:flex;
-            justify-content:center;
-            gap:14px;
-            flex-wrap:wrap;
-            margin-bottom:25px;
-        }
+.buttons-secondary{
+display:flex;
+justify-content:center;
+gap:14px;
+flex-wrap:wrap;
+margin-bottom:25px;
+}
 
-        .btn-secondary-item{
-            background:#e8eef5;
-            color:var(--um-azul);
-            padding:10px 22px;
-            border-radius:6px;
-            text-decoration:none;
-            font-size:14px;
-            font-weight:600;
-            display:inline-flex;
-            align-items:center;
-            gap:7px;
-            border:1.5px solid #c5d4e8;
-        }
+.btn-secondary-item{
+background:#e8eef5;
+color:var(--um-azul);
+padding:10px 22px;
+border-radius:6px;
+text-decoration:none;
+font-size:14px;
+font-weight:600;
+display:inline-flex;
+align-items:center;
+gap:7px;
+border:1.5px solid #c5d4e8;
+}
 
-        .btn-secondary-item:hover{ background:#d5e2f0; }
+.btn-secondary-item:hover{ background:#d5e2f0; }
 
-        .btn-bitacora{
-            background:#1a5c38;
-            color:#fff;
-            border-color:#1a5c38;
-        }
-        .btn-bitacora:hover{ background:#144d2f; }
+.btn-bitacora{
+background:#1a5c38;
+color:#fff;
+border-color:#1a5c38;
+}
 
-        footer{
-            text-align:center;
-            font-size:13px;
-            color:#666;
-            margin:40px 0 20px;
-        }
+footer{
+text-align:center;
+font-size:13px;
+color:#666;
+margin:40px 0 20px;
+}
 
-        .modal-aviso{
-            display:none;
-            position:fixed;
-            inset:0;
-            background:rgba(0,0,0,0.6);
-            z-index:500;
-        }
+.modal-aviso{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.6);
+z-index:500;
+}
 
-        .modal-aviso-content{
-            background:#ffffff;
-            width:80%;
-            max-width:900px;
-            margin:5% auto;
-            padding:40px;
-            border-radius:14px;
-            border-top:10px solid var(--um-amarillo);
-            box-shadow:0 15px 40px rgba(0,0,0,0.35);
-            text-align:left;
-            font-size:16px;
-            line-height:1.5;
-        }
+.modal-aviso-content{
+background:#ffffff;
+width:80%;
+max-width:900px;
+margin:5% auto;
+padding:40px;
+border-radius:14px;
+border-top:10px solid var(--um-amarillo);
+box-shadow:0 15px 40px rgba(0,0,0,0.35);
+text-align:left;
+font-size:16px;
+line-height:1.5;
+}
 
-        .modal-aviso-content h3{
-            margin-top:0;
-            color:var(--um-azul);
-            font-size:24px;
-        }
+.modal-aviso-content h3{
+margin-top:0;
+color:var(--um-azul);
+font-size:24px;
+}
 
-        .modal-aviso-content ul{ margin-left:20px; }
+.modal-aviso-content ul{ margin-left:20px; }
 
-        .modal-aviso-actions{
-            text-align:center;
-            margin-top:30px;
-        }
+.modal-aviso-actions{
+text-align:center;
+margin-top:30px;
+}
 
-        .modal-aviso-actions button{
-            background:var(--um-azul);
-            color:#fff;
-            border:none;
-            padding:14px 32px;
-            font-size:16px;
-            font-weight:600;
-            border-radius:8px;
-            cursor:pointer;
-        }
+.modal-aviso-actions button{
+background:var(--um-azul);
+color:#fff;
+border:none;
+padding:14px 32px;
+font-size:16px;
+font-weight:600;
+border-radius:8px;
+cursor:pointer;
+}
 
-        .btn-reporte-flotante {
-            position: fixed; bottom: 24px; left: 24px;
-            background: #cc0000; color: white; border: none;
-            width: 52px; height: 52px; border-radius: 50%; font-size: 1.3rem;
-            cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-            z-index: 300; display: flex; align-items: center; justify-content: center;
-            text-decoration: none;
-        }
-        .btn-reporte-flotante:hover { background: #aa0000; }
-        .btn-reporte-flotante::after {
-            content: "Reportar error";
-            position: absolute; left: 62px;
-            background: #333; color: #fff;
-            padding: 4px 8px; border-radius: 4px;
-            font-size: 12px; white-space: nowrap;
-            opacity: 0; pointer-events: none; transition: opacity 0.2s;
-        }
-        .btn-reporte-flotante:hover::after { opacity: 1; }
+/* BOTON ERROR */
 
-        .label-secundario {
-            font-size: 12px;
-            color: #aaa;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
-    </style>
+.btn-reporte-flotante{
+position: fixed;
+bottom:24px;
+left:24px;
+background:#cc0000;
+color:white;
+border:none;
+width:52px;
+height:52px;
+border-radius:50%;
+font-size:1.3rem;
+cursor:pointer;
+box-shadow:0 4px 14px rgba(0,0,0,0.25);
+z-index:300;
+display:flex;
+align-items:center;
+justify-content:center;
+text-decoration:none;
+}
+
+.btn-reporte-flotante:hover{ background:#aa0000; }
+
+/* BOTON FEEDBACK */
+
+.btn-feedback-flotante{
+position:fixed;
+bottom:24px;
+left:90px;
+background:#005aa9;
+color:white;
+border:none;
+width:52px;
+height:52px;
+border-radius:50%;
+font-size:1.2rem;
+cursor:pointer;
+box-shadow:0 4px 14px rgba(0,0,0,0.25);
+z-index:300;
+display:flex;
+align-items:center;
+justify-content:center;
+text-decoration:none;
+}
+
+.btn-feedback-flotante:hover{
+background:#004b8f;
+}
+
+.label-secundario{
+font-size:12px;
+color:#aaa;
+text-transform:uppercase;
+letter-spacing:1px;
+margin-bottom:10px;
+}
+</style>
 </head>
 
 <body>
 
-<!-- POP-UP AVISO -->
+<!-- POPUP -->
+
 <div id="modalAviso" class="modal-aviso">
-    <div class="modal-aviso-content">
-        <h3>Aviso de uso y confidencialidad</h3>
-        <p>
-            Esta plataforma es de <strong>uso interno exclusivo del Servicio de Atención (SAT)</strong>
-            de la Universidad Mayor.
-        </p>
-        <p>
-            La información aquí contenida es <strong>confidencial</strong>, se mantiene en actualización
-            continua con el aporte del equipo SAT, y <strong>no debe ser compartida ni utilizada fuera del ámbito institucional</strong>.
-        </p>
-        <ul>
-            <li>Utiliza siempre el directorio en línea como fuente oficial.</li>
-            <li>Evita guardar o distribuir copias externas de la información.</li>
-            <li>Ante dudas, verifica directamente en esta plataforma.</li>
-            <li>Si detectas información desactualizada o un error, repórtalo usando el botón 🐛 disponible en cada sección.</li>
-        </ul>
-        <p>
-            <strong>Importante:</strong><br>
-            En el primer acceso del día, la plataforma puede tardar algunos segundos en cargar.
-            Si la pantalla demora en responder, espera brevemente y refresca el navegador.
-        </p>
-        <p style="font-size:14px; color:#666; margin-top:16px; font-style:italic;">
-            El uso de esta plataforma implica aceptar las políticas de manejo de información institucional de la Universidad Mayor.
-        </p>
-        <div class="modal-aviso-actions">
-            <button onclick="cerrarAviso()">Entendido</button>
-        </div>
-    </div>
+<div class="modal-aviso-content">
+
+<h3>Aviso de uso y confidencialidad</h3>
+
+<p>
+Esta plataforma es de <strong>uso interno exclusivo del Servicio de Atención (SAT)</strong>
+de la Universidad Mayor.
+</p>
+
+<p>
+La información aquí contenida es <strong>confidencial</strong>, se mantiene en actualización continua
+con el aporte del equipo SAT, y <strong>no debe ser compartida ni utilizada fuera del ámbito institucional</strong>.
+</p>
+
+<ul>
+<li>Utiliza siempre el directorio en línea como fuente oficial.</li>
+<li>Evita guardar o distribuir copias externas de la información.</li>
+<li>Ante dudas, verifica directamente en esta plataforma.</li>
+<li>Si detectas información desactualizada o un error, repórtalo usando el botón 🐛 disponible en cada sección.</li>
+</ul>
+
+<p>
+<strong>Importante:</strong><br>
+En el primer acceso del día, la plataforma puede tardar algunos segundos en cargar.
+Si la pantalla demora en responder, espera brevemente y refresca el navegador.
+</p>
+
+<p style="font-size:14px;color:#666;margin-top:16px;font-style:italic;">
+El uso de esta plataforma implica aceptar las políticas de manejo de información institucional de la Universidad Mayor.
+</p>
+
+<div class="modal-aviso-actions">
+<button onclick="cerrarAviso()">Entendido</button>
 </div>
 
-<!-- Franja amarilla -->
+</div>
+</div>
+
+<!-- NAVBAR -->
+
 <div class="top-bar">
-    <div class="links-hover">
-        <span>🔗 Links de uso frecuente ▾</span>
-        <ul>
-            <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Registro-Estudiantes" target="_blank">ORE</a></li>
-            <li><a href="https://sso.umayor.cl/authentication/SignIn?SID=13&app_url=certificadosalumnos.umayor.cl" target="_blank">Portal de Certificados</a></li>
-            <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Gratuidad-Becas-y-ayudas-estudiantiles" target="_blank">Becas y Créditos</a></li>
-            <li><a href="https://www.umayor.cl/um/servicios-estudiantiales/Gestion-Financiera" target="_blank">Gestión Financiera</a></li>
-            <li><a href="https://www.umayor.cl/um/oferta-academica" target="_blank">Oferta Académica</a></li>
-            <li><a href="https://www.admisionmayor.cl/preguntas-frecuentes" target="_blank">Preguntas Frecuentes Admisión</a></li>
-            <li><a href="https://mayorcl.sharepoint.com/sites/IntranetServiciodeAtencin" target="_blank">Intranet SAT</a></li>
-        </ul>
-    </div>
+<div class="links-hover">
+<span>🔗 Links de uso frecuente ▾</span>
+<ul>
+<li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Registro-Estudiantes" target="_blank">ORE</a></li>
+<li><a href="https://sso.umayor.cl/authentication/SignIn?SID=13&app_url=certificadosalumnos.umayor.cl" target="_blank">Portal de Certificados</a></li>
+<li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Gratuidad-Becas-y-ayudas-estudiantiles" target="_blank">Becas y Créditos</a></li>
+<li><a href="https://www.umayor.cl/um/servicios-estudiantiales/Gestion-Financiera" target="_blank">Gestión Financiera</a></li>
+<li><a href="https://www.umayor.cl/um/oferta-academica" target="_blank">Oferta Académica</a></li>
+<li><a href="https://www.admisionmayor.cl/preguntas-frecuentes" target="_blank">Preguntas Frecuentes Admisión</a></li>
+<li><a href="https://mayorcl.sharepoint.com/sites/IntranetServiciodeAtencin" target="_blank">Intranet SAT</a></li>
+</ul>
+</div>
 </div>
 
-<!-- Contenido -->
+<!-- CONTENIDO -->
+
 <div class="container">
 
-    <div class="logo">
-        <a href="https://www.umayor.cl" target="_blank">
-            <img src="{{ url_for('static', filename='img/logoum.jpg') }}" alt="Universidad Mayor">
-        </a>
-    </div>
+<div class="logo">
+<a href="https://www.umayor.cl" target="_blank">
+<img src="{{ url_for('static', filename='img/logoum.jpg') }}" alt="Universidad Mayor">
+</a>
+</div>
 
-    <div class="divider"></div>
+<div class="divider"></div>
 
-    <h1>Directorio General Umayor</h1>
-    <h2>Uso exclusivo SAT</h2>
+<h1>Directorio General Umayor</h1>
+<h2>Uso exclusivo SAT</h2>
 
-    <p class="descripcion">
-        Plataforma interna para consulta de contactos, bitácora y recursos del equipo SAT.
-    </p>
+<p class="descripcion">
+Plataforma interna para consulta de contactos, bitácora y recursos del equipo SAT.
+</p>
 
-    <!-- BOTONES PRIORITARIOS -->
-    <div class="buttons-primary">
-        <a href="/escuelas" class="btn-primary-item">📘 Directorio de Escuelas</a>
-        <a href="/contactos-administrativos" class="btn-primary-item">🏢 Contactos Administrativos</a>
-    </div>
+<div class="buttons-primary">
+<a href="/escuelas" class="btn-primary-item">📘 Directorio de Escuelas</a>
+<a href="/contactos-administrativos" class="btn-primary-item">🏢 Contactos Administrativos</a>
+</div>
 
-    <!-- BOTONES SECUNDARIOS -->
-    <div class="label-secundario">Recursos adicionales</div>
-    <div class="buttons-secondary">
-        <a href="/academicos" class="btn-secondary-item">🎓 Contactos Académicos Núcleos</a>
-        <a href="/temas-crm" class="btn-secondary-item">🗂️ Simulador Tipificación CRM</a>
-        <a href="/bitacora" class="btn-secondary-item btn-bitacora">📋 Bitácora SAT</a>
-    </div>
+<div class="label-secundario">Recursos adicionales</div>
+
+<div class="buttons-secondary">
+<a href="/academicos" class="btn-secondary-item">🎓 Contactos Académicos Núcleos</a>
+<a href="/temas-crm" class="btn-secondary-item">🗂️ Simulador Tipificación CRM</a>
+<a href="/bitacora" class="btn-secondary-item btn-bitacora">📋 Bitácora SAT</a>
+</div>
 
 </div>
 
 <footer>
-    Desarrollado por <strong>Eduardo Ferrada</strong><br>
-    Universidad Mayor · Enero 2026
+Desarrollado por <strong>Eduardo Ferrada</strong><br>
+Universidad Mayor · Enero 2026
 </footer>
 
-<!-- BOTÓN REPORTE -->
-<a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de error – Directorio SAT&body=Página donde ocurrió el error:%0A%0ADescripción del problema:%0A%0A(Agrega aquí cualquier detalle adicional)" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
+<!-- BOTONES -->
 
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        if (!sessionStorage.getItem("avisoSATVisto")) {
-            document.getElementById("modalAviso").style.display = "block";
-        }
-    });
+<a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de error – Directorio SAT&body=Página donde ocurrió el error:%0A%0ADescripción del problema:%0A%0A(Agrega aquí cualquier detalle adicional)"
+class="btn-reporte-flotante">🐛</a>
 
-    function cerrarAviso(){
-        document.getElementById("modalAviso").style.display = "none";
-        sessionStorage.setItem("avisoSATVisto","true");
-    }
-</script>
-
-<!-- BOTÓN FEEDBACK -->
-<a href="#" onclick="enviarFeedback()" class="btn-feedback-flotante" title="Enviar feedback">💬</a>
+<a href="#" onclick="enviarFeedback()" class="btn-feedback-flotante">💬</a>
 
 <script>
 
 document.addEventListener("DOMContentLoaded", () => {
-    if (!sessionStorage.getItem("avisoSATVisto")) {
-        document.getElementById("modalAviso").style.display = "block";
-    }
+if (!sessionStorage.getItem("avisoSATVisto")) {
+document.getElementById("modalAviso").style.display = "block";
+}
 });
 
 function cerrarAviso(){
-    document.getElementById("modalAviso").style.display = "none";
-    sessionStorage.setItem("avisoSATVisto","true");
+document.getElementById("modalAviso").style.display = "none";
+sessionStorage.setItem("avisoSATVisto","true");
 }
 
 function enviarFeedback(){
 
-    const pagina = window.location.href;
+const pagina = window.location.href;
 
-    const cuerpo = `
+const cuerpo = `
 Hola,
 
 Me gustaría compartir el siguiente feedback sobre la herramienta SAT.
