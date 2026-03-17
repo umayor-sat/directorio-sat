@@ -292,6 +292,7 @@ const sugerenciasBase = [
   { label: "Psicología", value: "psicologia", aliases: ["psico"] },
   { label: "Psicopedagogía", value: "psicopedagogia", aliases: ["psicopeda"] },
   { label: "Derecho", value: "derecho", aliases: ["leyes","abogado"] },
+
   { label: "Ingeniería Civil Industrial", value: "ingenieria civil industrial", aliases: ["ici"] },
   { label: "Ingeniería Comercial", value: "ingenieria comercial", aliases: ["icom","comercial"] },
   { label: "Ingeniería en Computación e Informática", value: "ingenieria en computacion e informatica", aliases: ["informatica","computacion"] },
@@ -301,12 +302,14 @@ const sugerenciasBase = [
   { label: "Ingeniería en Minas", value: "ingenieria en minas", aliases: ["minas"] },
   { label: "Ingeniería en Medio Ambiente", value: "ingenieria en medio ambiente y sustentabilidad", aliases: ["medio ambiente"] },
   { label: "Ingeniería en Logística/Prevención/Ciberseguridad", value: "ingenieria en logistica prevencion ciberseguridad", aliases: ["logistica","prevencion","ciberseguridad"] },
-  { label: "Ingeniería en Inteligencia Artificial", value: "ingeniero en inteligencia artificial", aliases: ["ia"] },
-  { label: "Ingeniería en Ciencia de Datos", value: "ingeniero en ciencia de datos", aliases: ["datos"] },
+  { label: "Ingeniería en Inteligencia Artificial", value: "ingenieria en inteligencia artificial", aliases: ["ia"] },
+  { label: "Ingeniería en Ciencia de Datos", value: "ingenieria en ciencia de datos", aliases: ["datos"] },
+
   { label: "Biotecnología", value: "biotecnologia", aliases: ["bio"] },
   { label: "Geología", value: "geologia", aliases: ["geo"] },
   { label: "Agronomía", value: "agronomia", aliases: ["agro"] },
   { label: "Medicina Veterinaria", value: "medicina veterinaria", aliases: ["veterinaria","vet"] },
+
   { label: "Arquitectura", value: "arquitectura", aliases: ["arq"] },
   { label: "Diseño", value: "diseno", aliases: ["diseño"] },
   { label: "Animación Digital", value: "animacion digital", aliases: ["animacion"] },
@@ -314,62 +317,78 @@ const sugerenciasBase = [
   { label: "Periodismo", value: "periodismo", aliases: ["perio"] },
   { label: "Sociología", value: "sociologia", aliases: ["socio"] },
   { label: "Administración Pública", value: "administracion publica", aliases: [] },
+
   { label: "Pedagogía en Inglés", value: "pedagogia en ingles", aliases: ["ingles"] },
   { label: "Pedagogía en Educación Física", value: "pedagogia en educacion fisica", aliases: ["ef"] },
   { label: "Pedagogía en Educación Parvularia", value: "pedagogia en educacion parvularia", aliases: ["parvularia"] },
   { label: "Pedagogía en Educación Diferencial", value: "pedagogia en educacion diferencial", aliases: ["diferencial"] },
   { label: "Pedagogía en Artes Musicales", value: "pedagogia en artes musicales", aliases: ["musica"] },
+
   { label: "Conservatorio de Música", value: "conservatorio de musica", aliases: ["conservatorio"] },
   { label: "Teatro", value: "teatro", aliases: [] },
   { label: "Turismo Sustentable", value: "turismo sustentable", aliases: ["turismo"] },
+
   { label: "Auditoría / Contador Público", value: "auditoria contador publico y auditor", aliases: ["auditoria","contador"] },
   { label: "Salud Pública", value: "salud publica", aliases: [] },
   { label: "Rector / Vicerrectores", value: "rector", aliases: ["rector","vicerrector"] },
+
   { label: "Escuela de Negocios", value: "escuela de negocios", aliases: ["negocios"] },
   { label: "Escuela de Ingeniería", value: "escuela de ingenieria", aliases: [] },
-  { label: "TEC Mayor – Autoridades", value: "tec mayor", aliases: ["tec","téc","tec mayor","tecmayor"] },
-  { label: "Técnico en Gestión de Personas", value: "tecnico gestion de personas", aliases: ["tec","téc","tecni","técnico","gestion personas"] },
-  { label: "Técnico en Administración Pública", value: "tecnico administracion publica", aliases: ["tec","téc","tecni","técnico","adm publica"] },
-  { label: "Técnico en Administración de Empresas", value: "tecnico administracion de empresas", aliases: ["tec","téc","tecni","técnico","adm empresas"] },
-  { label: "Técnico en Contabilidad General", value: "tecnico contabilidad general", aliases: ["tec","téc","tecni","técnico","contabilidad"] },
-  { label: "Técnico en Finanzas", value: "tecnico finanzas", aliases: ["tec","téc","tecni","técnico","finanzas"] },
-  { label: "Técnico en Marketing y Gestión Comercial", value: "tecnico marketing gestion comercial", aliases: ["tec","téc","tecni","técnico","marketing"] },
-  { label: "Técnico en Logística", value: "tecnico logistica", aliases: ["tec","téc","tecni","técnico","logistica tec"] },
-  { label: "Técnico en Prevención de Riesgos", value: "tecnico prevencion de riesgos", aliases: ["tec","téc","tecni","técnico","prevencion tec"] },
-  { label: "Técnico en Ciberseguridad", value: "tecnico ciberseguridad", aliases: ["tec","téc","tecni","técnico","ciber tec"] },
-  { label: "Técnico en Tecnologías de la Información", value: "tecnico tecnologias de la informacion", aliases: ["tec","téc","tecni","técnico","ti tec"] },
-  { label: "Técnico en Telecomunicaciones, Conectividad y Redes", value: "tecnico telecomunicaciones conectividad redes", aliases: ["tec","téc","tecni","técnico","redes","telecomunicaciones tec"] },
-  { label: "Técnico en Programación Computacional", value: "tecnico programacion computacional", aliases: ["tec","téc","tecni","técnico","programacion tec"] },
-  { label: "Técnico en Minería Remota Inteligente", value: "tecnico mineria remota inteligente", aliases: ["tec","téc","tecni","técnico","mineria tec"] },
-  { label: "Técnico en Enfermería (Blended)", value: "tecnico enfermeria blended", aliases: ["tec","téc","tecni","técnico","blended","enfermeria tec"] },
-  { label: "Técnico en Odontología (Blended)", value: "tecnico odontologia blended", aliases: ["tec","téc","tecni","técnico","blended","odontologia tec"] },
-  { label: "Técnico en Química y Farmacia (Blended)", value: "tecnico quimica y farmacia blended", aliases: ["tec","téc","tecni","técnico","blended","quimica tec"] },
-  { label: "Técnico en Radiología y Radiodiagnóstico (Blended)", value: "tecnico radiologia radiodiagnostico blended", aliases: ["tec","téc","tecni","técnico","blended","radiologia tec"] },
-  { label: "Ingeniería en Minas", value: "ingenieria en minas", aliases: ["minas"] },
-  { label: "Ingeniería Industrial (Online)", value: "ingenieria industrial (onl)", aliases: ["industrial online","industrial onl"] },
-  { label: "Ingeniería en Informática (Online)", value: "ingenieria en informatica (onl)", aliases: ["informatica online","informatica onl"] },
-  { label: "Ingeniería Civil Industrial (Continuidad / Online)", value: "ing. civil industrial (cont., onl)", aliases: ["ici continuidad","ici online","civil industrial cont"] },
-  { label: "Ingeniería en Inteligencia Artificial", value: "ingenieria en inteligencia artificial", aliases: ["ia"] },
-  { label: "Ingeniería en Ciberseguridad (Continuidad / Online)", value: "ingenieria en ciberseguridad (cont. onl)", aliases: ["ciberseguridad online","ciber cont"] },
-  { label: "Ingeniería en Prevención de Riesgos (Continuidad / Online)", value: "ing. prevencion en riesgos (cont., onl)", aliases: ["prevencion online","riesgos cont"] },
-  { label: "Ingeniería en Logística (Continuidad / Online)", value: "ingenieria en logistica (cont., onl)", aliases: ["logistica online","logistica cont"] },
-  { label: "Ingeniería Civil en Computación e Informática (Continuidad)", value: "ing. civil en comp. e informatica (cont)", aliases: ["civil informatica cont","computacion cont"] }
 
+  { label: "TEC Mayor – Autoridades", value: "tec mayor", aliases: ["tec mayor","tecmayor"] },
+
+  { label: "Técnico en Gestión de Personas", value: "tecnico gestion de personas", aliases: ["gestion personas"] },
+  { label: "Técnico en Administración Pública", value: "tecnico administracion publica", aliases: ["adm publica"] },
+  { label: "Técnico en Administración de Empresas", value: "tecnico administracion de empresas", aliases: ["adm empresas"] },
+  { label: "Técnico en Contabilidad General", value: "tecnico contabilidad general", aliases: ["contabilidad"] },
+  { label: "Técnico en Finanzas", value: "tecnico finanzas", aliases: ["finanzas"] },
+  { label: "Técnico en Marketing y Gestión Comercial", value: "tecnico marketing gestion comercial", aliases: ["marketing"] },
+  { label: "Técnico en Logística", value: "tecnico logistica", aliases: ["logistica tec"] },
+  { label: "Técnico en Prevención de Riesgos", value: "tecnico prevencion de riesgos", aliases: ["prevencion tec"] },
+  { label: "Técnico en Ciberseguridad", value: "tecnico ciberseguridad", aliases: ["ciber tec"] },
+  { label: "Técnico en Tecnologías de la Información", value: "tecnico tecnologias de la informacion", aliases: ["ti tec"] },
+  { label: "Técnico en Telecomunicaciones, Conectividad y Redes", value: "tecnico telecomunicaciones conectividad redes", aliases: ["redes","telecomunicaciones tec"] },
+  { label: "Técnico en Programación Computacional", value: "tecnico programacion computacional", aliases: ["programacion tec"] },
+  { label: "Técnico en Minería Remota Inteligente", value: "tecnico mineria remota inteligente", aliases: ["mineria tec"] },
+  { label: "Técnico en Enfermería (Blended)", value: "tecnico enfermeria blended", aliases: ["enfermeria tec"] },
+  { label: "Técnico en Odontología (Blended)", value: "tecnico odontologia blended", aliases: ["odontologia tec"] },
+  { label: "Técnico en Química y Farmacia (Blended)", value: "tecnico quimica y farmacia blended", aliases: ["quimica tec"] },
+  { label: "Técnico en Radiología y Radiodiagnóstico (Blended)", value: "tecnico radiologia radiodiagnostico blended", aliases: ["radiologia tec"] },
+
+  { label: "Ingeniería Industrial (Online)", value: "ingenieria industrial (onl)", aliases: ["industrial online"] },
+  { label: "Ingeniería en Informática (Online)", value: "ingenieria en informatica (onl)", aliases: ["informatica online"] },
+  { label: "Ingeniería Civil Industrial (Continuidad / Online)", value: "ing. civil industrial (cont., onl)", aliases: ["ici continuidad","civil industrial cont"] },
+  { label: "Ingeniería en Ciberseguridad (Continuidad / Online)", value: "ingenieria en ciberseguridad (cont. onl)", aliases: ["ciberseguridad online"] },
+  { label: "Ingeniería en Prevención de Riesgos (Continuidad / Online)", value: "ing. prevencion en riesgos (cont., onl)", aliases: ["prevencion online"] },
+  { label: "Ingeniería en Logística (Continuidad / Online)", value: "ingenieria en logistica (cont., onl)", aliases: ["logistica online"] },
+  { label: "Ingeniería Civil en Computación e Informática (Continuidad)", value: "ing. civil en comp. e informatica (cont)", aliases: ["computacion cont"] }
 ];
-
+function normalizar(texto) {
+  return texto
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
 const input = document.getElementById("q");
 const suggestionsBox = document.getElementById("suggestions");
 let terminoPendiente = null;
 
 input.addEventListener("input", () => {
   terminoPendiente = null;
-  const val = input.value.toLowerCase().trim();
+  const val = normalizar(input.value);
   suggestionsBox.innerHTML = "";
   if (val.length < 2) { suggestionsBox.style.display = "none"; return; }
-  const matches = sugerenciasBase.filter(s =>
-    s.label.toLowerCase().includes(val) || s.value.toLowerCase().includes(val) ||
-    (s.aliases || []).some(a => a.toLowerCase().includes(val))
+const matches = sugerenciasBase.filter(s => {
+  const label = normalizar(s.label);
+  const value = normalizar(s.value);
+  const aliases = (s.aliases || []).map(a => normalizar(a));
+
+  return (
+    label.includes(val) ||
+    value.includes(val) ||
+    aliases.some(a => a.includes(val))
   );
+});
   if (!matches.length) { suggestionsBox.style.display = "none"; return; }
   matches.forEach(s => {
     const div = document.createElement("div");
