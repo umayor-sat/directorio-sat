@@ -392,7 +392,7 @@ const matches = sugerenciasBase.filter(s => {
     const div = document.createElement("div");
     div.className = "suggestion-item";
     div.textContent = s.label;
-    div.onclick = () => { input.value = s.label; terminoPendiente = s.value; suggestionsBox.style.display = "none"; ejecutarBusqueda(s.value); };
+    div.onclick = () => { input.value = s.label; terminoPendiente = s.value; suggestionsBox.style.display = "none"; ejecutarBusqueda(s.value.replace(/\s*\(.*?\)/, "")); };
     suggestionsBox.appendChild(div);
   });
   suggestionsBox.style.display = "block";
@@ -416,7 +416,12 @@ function getModalidad(escuela) {
   if (t.includes("vespertino")) return "🌙 Modalidad: Vespertino";
   return "☀️ Modalidad: Diurno";
 }
-function buscar() { const termino = terminoPendiente || input.value.trim(); terminoPendiente = null; ejecutarBusqueda(termino); }
+function buscar() {
+  let termino = terminoPendiente || input.value.trim();
+  terminoPendiente = null;
+  termino = termino.replace(/\s*\(.*?\)/, "");
+  ejecutarBusqueda(termino);
+}
 function ejecutarBusqueda(q) {
   ultimaBusqueda = q;
   suggestionsBox.style.display = "none";
