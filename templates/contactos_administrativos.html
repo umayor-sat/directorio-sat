@@ -195,7 +195,9 @@ th { background: #005baa; color: white; text-align: left; }
 const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_3Shj63dB3uBAL_TVvqfBRw_3RyTRZ1U";
 const PASSWORD_ADMIN = "SAT@UM2026";
-
+const normalizar = (texto) => {
+  return texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+};
 let modoAdmin = false;
 let ultimaBusqueda = "";
 let editandoId = null;
@@ -211,7 +213,7 @@ const sugerenciasBase = [
   { label: "Departamento de Personal",                   value: "Departamentodepersonal",                      aliases: ["personal","rrhh"] },
   { label: "Remuneraciones",                             value: "DepartamentoRemuneracionesLiquidacionesPagos", aliases: ["remuneraciones","honorarios","sueldo","liquidacion"] },
   { label: "DAE / Dirección General Estudiantil",        value: "DGEexDAEdirecciongeneralestudiantil",          aliases: ["dae","dge","estudiantil"] },
-  { label: "Comunicación Estratégica (DCE)",             value: "DCEDireccióndeComunicaciónEstratégica",        aliases: ["dce","comunicacion","difusion"] },
+  { label: "Comunicación Estratégica (DCE)",             value: "DCEDireccióndeComunicaciónEstratégica",        aliases: ["dae","dge","estudiantil","apoyo","psicologico","psico","psicologia"]
   { label: "Difusión",                                   value: "Difusion",                                    aliases: ["difusion"] },
   { label: "Relaciones Internacionales (RRII)",          value: "RelacionesinternacionaleRRII",                 aliases: ["rrii","relaciones","internacional"] },
   { label: "Clínicas",                                   value: "Clinicas",                                    aliases: ["clinica","dental","fono","veterinaria","psico"] },
@@ -298,9 +300,24 @@ function abrirDetalle(texto) {
 function cerrarDetalle() { document.getElementById("modalDetalle").style.display = "none"; }
 
 function buscar() {
-  const termino = terminoPendiente || input.value.trim();
+  let termino = terminoPendiente || input.value.trim();
   terminoPendiente = null;
-  ejecutarBusqueda(termino);
+
+  if (!termino) return;
+
+  const q = normalizar(termino);
+
+  const match = sugerenciasBase.find(s =>
+    normalizar(s.label).includes(q) ||
+    normalizar(s.value).includes(q) ||
+    (s.aliases || []).some(a => normalizar(a).includes(q))
+  );
+
+  if (match) {
+    ejecutarBusqueda(match.value);
+  } else {
+    ejecutarBusqueda(termino);
+  }
 }
 
 function ejecutarBusqueda(termino) {
