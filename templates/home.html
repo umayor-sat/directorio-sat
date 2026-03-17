@@ -238,6 +238,12 @@ box-shadow:0 4px 14px rgba(0,0,0,0.25);
 display:flex;
 align-items:center;
 gap:6px;
+transition:transform .15s ease, box-shadow .15s ease;
+}
+
+.support-main:hover{
+transform:translateY(-2px);
+box-shadow:0 8px 20px rgba(0,0,0,0.25);
 }
 
 .support-menu{
@@ -245,6 +251,12 @@ display:none;
 flex-direction:column;
 gap:8px;
 margin-bottom:10px;
+animation:fadeIn .18s ease;
+}
+
+@keyframes fadeIn{
+from{opacity:0; transform:translateY(6px);}
+to{opacity:1; transform:translateY(0);}
 }
 
 .support-menu a{
@@ -286,16 +298,26 @@ de la Universidad Mayor.
 </p>
 
 <p>
-La información aquí contenida es <strong>confidencial</strong>, se mantiene en actualización continua
-con el aporte del equipo SAT.
+La información aquí contenida es <strong>confidencial</strong>, se mantiene en actualización
+continua con el aporte del equipo SAT, y <strong>no debe ser compartida ni utilizada fuera del ámbito institucional</strong>.
 </p>
 
 <ul>
 <li>Utiliza siempre el directorio en línea como fuente oficial.</li>
 <li>Evita guardar o distribuir copias externas de la información.</li>
 <li>Ante dudas, verifica directamente en esta plataforma.</li>
-<li>Si detectas información desactualizada o un error repórtalo desde Soporte SAT.</li>
+<li>Si detectas información desactualizada o un error, repórtalo usando el botón 🛟 Soporte SAT.</li>
 </ul>
+
+<p>
+<strong>Importante:</strong><br>
+En el primer acceso del día, la plataforma puede tardar algunos segundos en cargar.
+Si la pantalla demora en responder, espera brevemente y refresca el navegador.
+</p>
+
+<p style="font-size:14px;color:#666;margin-top:16px;font-style:italic;">
+El uso de esta plataforma implica aceptar las políticas de manejo de información institucional de la Universidad Mayor.
+</p>
 
 <div class="modal-aviso-actions">
 <button onclick="cerrarAviso()">Entendido</button>
@@ -370,12 +392,12 @@ Universidad Mayor · Enero 2026
 💬 Feedback
 </a>
 
-<a href="mailto:johanna.escalona@umayor.cl;barbara.fernandez@umayor.cl?cc=eduardo.ferrada@umayor.cl&subject=IC XXXXX RUT: XXXXXXXXX NOMBRE DEL SOLICITANTE MOTIVO">
-👨‍💼 Contactar supervisor
+<a href="#" onclick="enviarSupervisor()">
+👨‍💼 Derivar a supervisor
 </a>
 
-<a href="mailto:marcelo.sepulveda@umayor.cl;francisca.castillo@umayor.cl?subject=RUT XXXXX NOMBRE XXXXX CARRERA DE INTERES">
-💼 Derivar a comercial
+<a href="#" onclick="enviarComercial()">
+💼 Derivar a área comercial
 </a>
 
 </div>
@@ -439,6 +461,95 @@ Gracias.
 window.location.href =
 "mailto:eduardo.ferrada@umayor.cl"
 + "?subject=Feedback Herramienta SAT"
++ "&body=" + encodeURIComponent(cuerpo);
+
+}
+
+function enviarSupervisor(){
+
+const pagina = window.location.href;
+
+const cuerpo = `
+Estimados,
+
+Necesito su cooperación con el siguiente caso:
+[Resumen breve y claro del requerimiento]
+
+DATOS DEL SOLICITANTE
+Nombre:
+RUT:
+Teléfono:
+Correo:
+Comentario:
+
+DATOS DEL ALUMNO (eliminar bloque si no corresponde)
+Nombre:
+RUT:
+Teléfono:
+Correo:
+Comentario:
+
+CASO TI (completar solo si corresponde)
+Nombre:
+RUT:
+Teléfono:
+Correo institucional:
+Correo personal:
+Tipo de contacto:
+Perfil que presenta el error:
+Plataforma donde ocurre el error:
+Descripción del error:
+Pruebas realizadas antes de derivar:
+Ingreso con cuenta rut@mayor.cl confirmado:
+Acceso por intranet institucional confirmado:
+
+Página desde donde se envía:
+${pagina}
+
+Atte.
+
+Recuerda insertar tu firma institucional antes de enviar.
+`;
+
+window.location.href =
+"mailto:johanna.escalona@umayor.cl;barbara.fernandez@umayor.cl"
++ "?cc=eduardo.ferrada@umayor.cl"
++ "&subject=IC XXXXX RUT: XXXXXXXXX NOMBRE DEL SOLICITANTE MOTIVO [XXXXX]"
++ "&body=" + encodeURIComponent(cuerpo);
+
+}
+
+function enviarComercial(){
+
+const pagina = window.location.href;
+
+const cuerpo = `
+Estimados,
+
+Por favor solicito su colaboración con prospecto interesado en carrera XXXXX
+Modalidad: diurno / vespertino / online / TEC / etc.
+
+DATOS DE CONTACTO
+Nombre:
+RUT:
+Teléfono: (validar que esté operativo y reciba llamadas de números 600)
+Correo:
+Carrera:
+Modalidad:
+Tiene beneficios ministeriales: Sí / No (¿Cuál?)
+Comentarios adicionales:
+
+Página desde donde se envía:
+${pagina}
+
+Atentamente.
+
+Recuerda insertar tu firma institucional antes de enviar.
+`;
+
+window.location.href =
+"mailto:marcelo.sepulveda@umayor.cl;francisca.castillo@umayor.cl"
++ "?subject=RUT XXXXXXXXXXX NOMBRE XXXXXXXXX CARRERA DE INTERES [XXXXXXXXXX]"
 + "&body=" + encodeURIComponent(cuerpo);
 
 }
