@@ -19,6 +19,8 @@ background:#ffffff;
 color:#222;
 }
 
+/* NAVBAR */
+
 .top-bar{
 background:var(--um-amarillo);
 padding:10px 30px;
@@ -66,6 +68,8 @@ display:block;
 }
 
 .links-hover ul li a:hover{ background:#f0f0f0; }
+
+/* CONTENIDO */
 
 .container{
 max-width:1100px;
@@ -165,6 +169,8 @@ color:#666;
 margin:40px 0 20px;
 }
 
+/* MODAL */
+
 .modal-aviso{
 display:none;
 position:fixed;
@@ -211,54 +217,48 @@ border-radius:8px;
 cursor:pointer;
 }
 
-/* BOTON ERROR */
+/* SOPORTE SAT */
 
-.btn-reporte-flotante{
-position: fixed;
-bottom:24px;
-left:24px;
-background:#cc0000;
-color:white;
-border:none;
-width:52px;
-height:52px;
-border-radius:50%;
-font-size:1.3rem;
-cursor:pointer;
-box-shadow:0 4px 14px rgba(0,0,0,0.25);
-z-index:300;
-display:flex;
-align-items:center;
-justify-content:center;
-text-decoration:none;
-}
-
-.btn-reporte-flotante:hover{ background:#aa0000; }
-
-/* BOTON FEEDBACK */
-
-.btn-feedback-flotante{
+.support-container{
 position:fixed;
 bottom:24px;
-left:90px;
-background:#005aa9;
-color:white;
-border:none;
-width:52px;
-height:52px;
-border-radius:50%;
-font-size:1.2rem;
-cursor:pointer;
-box-shadow:0 4px 14px rgba(0,0,0,0.25);
-z-index:300;
-display:flex;
-align-items:center;
-justify-content:center;
-text-decoration:none;
+right:24px;
+z-index:400;
 }
 
-.btn-feedback-flotante:hover{
-background:#004b8f;
+.support-main{
+background:#005aa9;
+color:#fff;
+border:none;
+border-radius:28px;
+padding:12px 18px;
+font-weight:600;
+cursor:pointer;
+box-shadow:0 4px 14px rgba(0,0,0,0.25);
+display:flex;
+align-items:center;
+gap:6px;
+}
+
+.support-menu{
+display:none;
+flex-direction:column;
+gap:8px;
+margin-bottom:10px;
+}
+
+.support-menu a{
+background:#ffffff;
+border-radius:6px;
+padding:10px 14px;
+text-decoration:none;
+color:#333;
+box-shadow:0 3px 10px rgba(0,0,0,.15);
+font-size:14px;
+}
+
+.support-menu a:hover{
+background:#f0f0f0;
 }
 
 .label-secundario{
@@ -287,25 +287,15 @@ de la Universidad Mayor.
 
 <p>
 La información aquí contenida es <strong>confidencial</strong>, se mantiene en actualización continua
-con el aporte del equipo SAT, y <strong>no debe ser compartida ni utilizada fuera del ámbito institucional</strong>.
+con el aporte del equipo SAT.
 </p>
 
 <ul>
 <li>Utiliza siempre el directorio en línea como fuente oficial.</li>
 <li>Evita guardar o distribuir copias externas de la información.</li>
 <li>Ante dudas, verifica directamente en esta plataforma.</li>
-<li>Si detectas información desactualizada o un error, repórtalo usando el botón 🐛 disponible en cada sección.</li>
+<li>Si detectas información desactualizada o un error repórtalo desde Soporte SAT.</li>
 </ul>
-
-<p>
-<strong>Importante:</strong><br>
-En el primer acceso del día, la plataforma puede tardar algunos segundos en cargar.
-Si la pantalla demora en responder, espera brevemente y refresca el navegador.
-</p>
-
-<p style="font-size:14px;color:#666;margin-top:16px;font-style:italic;">
-El uso de esta plataforma implica aceptar las políticas de manejo de información institucional de la Universidad Mayor.
-</p>
 
 <div class="modal-aviso-actions">
 <button onclick="cerrarAviso()">Entendido</button>
@@ -321,11 +311,7 @@ El uso de esta plataforma implica aceptar las políticas de manejo de informaci�
 <span>🔗 Links de uso frecuente ▾</span>
 <ul>
 <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Registro-Estudiantes" target="_blank">ORE</a></li>
-<li><a href="https://sso.umayor.cl/authentication/SignIn?SID=13&app_url=certificadosalumnos.umayor.cl" target="_blank">Portal de Certificados</a></li>
-<li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Gratuidad-Becas-y-ayudas-estudiantiles" target="_blank">Becas y Créditos</a></li>
-<li><a href="https://www.umayor.cl/um/servicios-estudiantiales/Gestion-Financiera" target="_blank">Gestión Financiera</a></li>
 <li><a href="https://www.umayor.cl/um/oferta-academica" target="_blank">Oferta Académica</a></li>
-<li><a href="https://www.admisionmayor.cl/preguntas-frecuentes" target="_blank">Preguntas Frecuentes Admisión</a></li>
 <li><a href="https://mayorcl.sharepoint.com/sites/IntranetServiciodeAtencin" target="_blank">Intranet SAT</a></li>
 </ul>
 </div>
@@ -337,7 +323,7 @@ El uso de esta plataforma implica aceptar las políticas de manejo de informaci�
 
 <div class="logo">
 <a href="https://www.umayor.cl" target="_blank">
-<img src="{{ url_for('static', filename='img/logoum.jpg') }}" alt="Universidad Mayor">
+<img src="{{ url_for('static', filename='img/logoum.jpg') }}">
 </a>
 </div>
 
@@ -370,19 +356,58 @@ Desarrollado por <strong>Eduardo Ferrada</strong><br>
 Universidad Mayor · Enero 2026
 </footer>
 
-<!-- BOTONES -->
+<!-- SOPORTE SAT -->
 
-<a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de error – Directorio SAT&body=Página donde ocurrió el error:%0A%0ADescripción del problema:%0A%0A(Agrega aquí cualquier detalle adicional)"
-class="btn-reporte-flotante">🐛</a>
+<div class="support-container">
 
-<a href="#" onclick="enviarFeedback()" class="btn-feedback-flotante">💬</a>
+<div id="supportMenu" class="support-menu">
+
+<a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de error – Directorio SAT">
+🐛 Reportar error
+</a>
+
+<a href="#" onclick="enviarFeedback()">
+💬 Feedback
+</a>
+
+<a href="mailto:johanna.escalona@umayor.cl;barbara.fernandez@umayor.cl?cc=eduardo.ferrada@umayor.cl&subject=IC XXXXX RUT: XXXXXXXXX NOMBRE DEL SOLICITANTE MOTIVO">
+👨‍💼 Contactar supervisor
+</a>
+
+<a href="mailto:marcelo.sepulveda@umayor.cl;francisca.castillo@umayor.cl?subject=RUT XXXXX NOMBRE XXXXX CARRERA DE INTERES">
+💼 Derivar a comercial
+</a>
+
+</div>
+
+<button id="supportBtn" class="support-main">
+🛟 Soporte SAT
+</button>
+
+</div>
 
 <script>
 
 document.addEventListener("DOMContentLoaded", () => {
+
 if (!sessionStorage.getItem("avisoSATVisto")) {
 document.getElementById("modalAviso").style.display = "block";
 }
+
+const btn = document.getElementById("supportBtn");
+const menu = document.getElementById("supportMenu");
+
+btn.addEventListener("click", (e) => {
+e.stopPropagation();
+menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+});
+
+document.addEventListener("click", (event) => {
+if (!menu.contains(event.target) && !btn.contains(event.target)) {
+menu.style.display = "none";
+}
+});
+
 });
 
 function cerrarAviso(){
@@ -413,7 +438,7 @@ Gracias.
 
 window.location.href =
 "mailto:eduardo.ferrada@umayor.cl"
-+ "?subject=Feedback%20Herramienta%20SAT"
++ "?subject=Feedback Herramienta SAT"
 + "&body=" + encodeURIComponent(cuerpo);
 
 }
