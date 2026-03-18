@@ -318,8 +318,14 @@
     document.getElementById("overlayLogin").classList.remove("active");
   }
 
-  function verificarPassword() {
-    if (document.getElementById("inputPassword").value === PASSWORD_JEFATURA) {
+  async function verificarPassword() {
+    const pwd = document.getElementById("inputPassword").value;
+    const r = await fetch("/api/login-jefatura", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: pwd })
+    });
+    if (r.ok) {
       cerrarLogin();
       activarJefatura();
     } else {
