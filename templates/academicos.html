@@ -592,7 +592,13 @@ async function eliminarRegistro(id, btn) {
 // AYUDA
 function abrirAyuda() { document.getElementById("modalAyuda").style.display = "block"; }
 function cerrarAyuda() { document.getElementById("modalAyuda").style.display = "none"; }
-</script>
+
+    // Cerrar formulario y login al hacer click fuera del modal
+    window.addEventListener("click", function(e) {
+      if (e.target.id === "modalAgregar") cerrarAgregar();
+      if (e.target.id === "modalLogin")   cerrarLogin();
+    });
+  </script>
 
 
 </body>
