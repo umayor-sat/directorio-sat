@@ -194,39 +194,54 @@
 </div>
 
 <script>
-  const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_3Shj63dB3uBAL_TVvqfBRw_3RyTRZ1U";
-  const PASSWORD_JEFATURA = "SAT@UM2026";
-  const MESES = ["","Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+    const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_3Shj63dB3uBAL_TVvqfBRw_3RyTRZ1U";
+    const MESES = ["","Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
 
-  let todosLosComunicados = [];
-  let modoJefatura = false;
+    let modoJefatura = false;
+    let debounceTimer = null;
 
-  async function cargarComunicados() {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/Bitacora?select=*&order=fecha.desc`, {
-      headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
-    });
-    todosLosComunicados = await res.json();
-    aplicarFiltros();
-  }
+    async function cargarComunicados() {
+      const anio  = document.getElementById("filtroAnio").value;
+      const mes   = document.getElementById("filtroMes").value;
+      const texto = document.getElementById("filtroBuscar").value.trim();
 
-  function aplicarFiltros() {
-    const anio  = document.getElementById("filtroAnio").value;
-    const mes   = document.getElementById("filtroMes").value;
-    const texto = document.getElementById("filtroBuscar").value.toLowerCase();
+      const params = new URLSearchParams();
+      if (anio)  params.set("anio", anio);
+      if (mes)   params.set("mes",  mes);
+      if (texto) params.set("q",    texto);
 
-    const filtrados = todosLosComunicados.filter(c => {
-      const partes = (c.fecha || "").split("-");
-      if (anio  && partes[0] !== anio)  return false;
-      if (mes   && partes[1] !== mes)   return false;
-      if (texto && !(c.evento || "").toLowerCase().includes(texto)) return false;
-      return true;
-    });
+      const contenedor = document.getElementById("listaComunicados");
+      const contador   = document.getElementById("contador");
+      contenedor.innerHTML = '<div class="sin-resultados">Cargando...</div>';
+      contador.textContent = "";
 
-    renderComunicados(filtrados);
-  }
+      try {
+        const res  = await fetch("/api/bitacora?" + params.toString());
+        const data = await res.json();
+        renderComunicados(Array.isArray(data) ? data : []);
+      } catch (e) {
+        contenedor.innerHTML = '<div class="sin-resultados">Error al cargar. Intenta refrescar la pagina.</div>';
+      }
+    }
 
-  function renderComunicados(lista) {
+    function aplicarFiltros(esBusquedaTexto) {
+      if (esBusquedaTexto) {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(cargarComunicados, 350);
+      } else {
+        cargarComunicados();
+      }
+    }
+
+    function limpiarFiltros() {
+      document.getElementById("filtroAnio").value  = "";
+      document.getElementById("filtroMes").value   = "";
+      document.getElementById("filtroBuscar").value = "";
+      cargarComunicados();
+    }
+
+      function renderComunicados(lista) {
     const contenedor = document.getElementById("listaComunicados");
     const contador   = document.getElementById("contador");
 
