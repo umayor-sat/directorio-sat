@@ -147,7 +147,7 @@ th { background: #005baa; color: white; text-align: left; }
 </div>
 
 <!-- MODAL LOGIN -->
-<div class="modal" id="modalLogin">
+<div class="modal" id="modalLogin" onclick="if(event.target===this)cerrarLogin()">
   <div class="modal-content" style="width:360px; text-align:center;">
     <h3>🔐 Acceso Administración</h3>
     <div class="form-group" style="margin-top:16px; text-align:left;">
@@ -163,7 +163,7 @@ th { background: #005baa; color: white; text-align: left; }
 </div>
 
 <!-- MODAL AGREGAR / EDITAR -->
-<div class="modal" id="modalAgregar">
+<div class="modal" id="modalAgregar" onclick="if(event.target===this)cerrarAgregar()">
   <div class="modal-content">
     <h3 id="tituloFormulario">➕ Agregar registro</h3>
 
