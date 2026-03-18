@@ -258,7 +258,6 @@ th { background: #005baa; color: white; text-align: left; }
 <script>
 const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_3Shj63dB3uBAL_TVvqfBRw_3RyTRZ1U";
-const PASSWORD_ADMIN = "SAT@UM2026";
 
 let modoAdmin = false;
 let ultimaBusqueda = "";
@@ -457,13 +456,20 @@ function abrirLogin() {
   setTimeout(() => document.getElementById("inputPassword").focus(), 100);
 }
 function cerrarLogin() { document.getElementById("modalLogin").style.display = "none"; }
-function verificarPassword() {
-  if (document.getElementById("inputPassword").value === PASSWORD_ADMIN) {
-    cerrarLogin(); activarModoAdmin();
-  } else {
-    document.getElementById("errorLogin").style.display = "block";
-  }
-}
+async function verificarPassword() {
+      const pwd = document.getElementById("inputPassword").value;
+      const res = await fetch("/api/login-admin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: pwd })
+      });
+      if (res.ok) {
+        cerrarLogin();
+        activarModoAdmin();
+      } else {
+        document.getElementById("errorLogin").style.display = "block";
+      }
+    }
 function activarModoAdmin() {
   modoAdmin = true;
   document.getElementById("bannerAdmin").classList.add("visible");
