@@ -495,7 +495,13 @@ async function eliminarRegistro(id, btn) {
     alert("Error al eliminar el registro.");
   }
 }
-</script>
+
+    // Cerrar formulario y login al hacer click fuera del modal
+    window.addEventListener("click", function(e) {
+      if (e.target.id === "modalAgregar") cerrarAgregar();
+      if (e.target.id === "modalLogin")   cerrarLogin();
+    });
+  </script>
 
 </body>
 </html>
