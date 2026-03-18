@@ -400,8 +400,19 @@
     if (e.target === this) cerrarFormulario();
   });
 
-  cargarComunicados();
-</script>
+  // Al entrar, pre-seleccionar el mes y año actual para no cargar todo
+    (function() {
+      const hoy = new Date();
+      const anioActual = String(hoy.getFullYear());
+      const mesActual  = String(hoy.getMonth() + 1).padStart(2, "0");
+      const selAnio = document.getElementById("filtroAnio");
+      const selMes  = document.getElementById("filtroMes");
+      if ([...selAnio.options].some(o => o.value === anioActual)) selAnio.value = anioActual;
+      if ([...selMes.options].some(o => o.value === mesActual))   selMes.value  = mesActual;
+    })();
+
+    cargarComunicados();
+  </script>
 
 </body>
 </html>
