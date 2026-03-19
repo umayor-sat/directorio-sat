@@ -258,39 +258,38 @@ position:relative;
 }
 
 .support-main::after{
-  content:"💡 Reportar errores, enviar feedback o derivar casos a comercial o supervisores";
-  position:absolute;
-  top:50%;
-  right:calc(100% + 12px);
-  transform:translateY(-50%);
-  background:#2f2f2f;
-  color:#fff;
-  padding:6px 10px;
-  border-radius:6px;
-  font-size:12px;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .2s;
-  white-space:normal;
-  max-width:220px;
-  z-index:500;
+    content:"💡 Reportar errores, enviar feedback o derivar casos";
+    position:absolute;
+    bottom:0;
+    right:calc(100% + 10px);
+    background:#2f2f2f;
+    color:#fff;
+    padding:6px 10px;
+    border-radius:6px;
+    font-size:12px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .2s;
+    white-space:normal;
+    max-width:180px;
+    z-index:500;
+    line-height:1.4;
   }
 
 .support-main:hover::after{
-  opacity:1;
+    opacity:1;
   }
 
 .support-main::before{
-  content:"";
-  position:absolute;
-  top:50%;
-  right:calc(100% + 0px);
-  transform:translateY(-50%);
-  border:6px solid transparent;
-  border-left-color:#2f2f2f;
-  opacity:0;
-  transition:opacity .2s;
-  z-index:501;
+    content:"";
+    position:absolute;
+    bottom:8px;
+    right:calc(100% + 0px);
+    border:6px solid transparent;
+    border-left-color:#2f2f2f;
+    opacity:0;
+    transition:opacity .2s;
+    z-index:501;
   }
 
 .support-main:hover::before{
