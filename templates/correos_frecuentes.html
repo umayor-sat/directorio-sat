@@ -190,7 +190,6 @@ textarea{
 }
 
 .btn-enviar{
-  display:none;
   width:100%;
   background:var(--um-azul);
   color:#fff;
@@ -204,6 +203,8 @@ textarea{
 }
 
 .btn-enviar:hover{opacity:.9;}
+
+.oculto{display:none;}
 
 .btn-volver{
   position:fixed;
@@ -267,7 +268,8 @@ footer{
       <option value="otro">Otro (especificar)</option>
     </select>
 
-    <div id="bloque-ic" style="display:none;" class="form-section">
+    <!-- CAMPOS IC -->
+    <div id="bloque-ic" class="form-section oculto">
       <div class="form-section-title">Campos del asunto</div>
       <div class="form-section-sub">Estos datos arman el asunto del correo automáticamente.</div>
       <div class="form-grid">
@@ -282,7 +284,7 @@ footer{
         </div>
         <div class="form-field">
           <label>Nombre del solicitante <span class="req">*</span></label>
-          <input type="text" id="ic-nombre" placeholder="Nombre completo" oninput="actualizarAsunto()">
+          <input type="text" id="ic-nombre" placeholder="Nombre completo" oninput="actualizarAsunto();sincronizarTI()">
         </div>
         <div class="form-field">
           <label>Motivo <span class="req">*</span></label>
@@ -291,26 +293,30 @@ footer{
       </div>
     </div>
 
-    <div id="bloque-otro" style="display:none;margin-bottom:16px;">
+    <!-- OTRO -->
+    <div id="bloque-otro" class="oculto" style="margin-bottom:16px;">
       <div class="form-field">
         <label>Especifica el asunto <span class="req">*</span></label>
         <input type="text" id="otro-texto" placeholder="Escribe el asunto..." oninput="actualizarAsunto()">
       </div>
     </div>
 
+    <!-- PREVIEW -->
     <div id="preview-asunto" class="preview-asunto">
       <div class="preview-label">Vista previa del asunto del correo</div>
       <div class="preview-valor" id="asunto-generado"></div>
     </div>
 
-    <div id="bloque-resumen" style="display:none;margin-bottom:16px;">
+    <!-- RESUMEN -->
+    <div id="bloque-resumen" class="oculto" style="margin-bottom:16px;">
       <div class="form-field">
         <label>Resumen de la solicitud</label>
         <textarea id="resumen" placeholder="Describe brevemente tu solicitud (completar solo si es una solicitud interna, no de estudiante)..."></textarea>
       </div>
     </div>
 
-    <div id="bloque-solicitante" style="display:none;" class="form-section">
+    <!-- SOLICITANTE -->
+    <div id="bloque-solicitante" class="form-section oculto">
       <div class="form-section-title">Datos del solicitante</div>
       <div class="form-section-sub">Los cuatro campos de contacto son obligatorios <span class="req">*</span></div>
       <div class="form-grid">
@@ -338,7 +344,8 @@ footer{
       </div>
     </div>
 
-    <div id="bloque-alumno" style="display:none;" class="form-section">
+    <!-- ALUMNO -->
+    <div id="bloque-alumno" class="form-section oculto">
       <div class="form-section-title">Datos del alumno</div>
       <div class="form-section-sub">Completar solo si corresponde — si inicias este bloque, los datos de contacto son obligatorios</div>
       <div class="form-grid">
@@ -366,17 +373,18 @@ footer{
       </div>
     </div>
 
-    <div id="bloque-contacto-ti" style="display:none;" class="form-section">
+    <!-- CONTACTO TI (sincronizado desde campos del asunto) -->
+    <div id="bloque-contacto-ti" class="form-section oculto">
       <div class="form-section-title">Datos de contacto</div>
-      <div class="form-section-sub">Los cuatro campos son obligatorios <span class="req">*</span></div>
+      <div class="form-section-sub">Nombre y RUT se sincronizan desde los campos del asunto. Completa teléfono y correo <span class="req">*</span></div>
       <div class="form-grid">
         <div class="form-field">
           <label>Nombre <span class="req">*</span></label>
-          <input type="text" id="ti-nombre" placeholder="Nombre completo">
+          <input type="text" id="ti-nombre" placeholder="Se sincroniza automáticamente" readonly style="background:#f0f4f8;color:#555;">
         </div>
         <div class="form-field">
           <label>RUT <span class="req">*</span></label>
-          <input type="text" id="ti-rut" placeholder="123456789" oninput="limpiarRut('ti-rut')">
+          <input type="text" id="ti-rut" placeholder="Se sincroniza automáticamente" readonly style="background:#f0f4f8;color:#555;">
           <span class="field-hint">Sin puntos ni guión</span>
         </div>
         <div class="form-field">
@@ -390,7 +398,8 @@ footer{
       </div>
     </div>
 
-    <div id="bloque-ti" style="display:none;" class="form-section">
+    <!-- DETALLES TI -->
+    <div id="bloque-ti" class="form-section oculto">
       <div class="form-section-title">Detalles del caso TI</div>
       <div class="form-section-sub">Completar solo si corresponde</div>
       <div class="form-grid">
@@ -441,7 +450,7 @@ footer{
       Recuerda agregar tu firma institucional antes de enviar el correo.
     </div>
 
-    <button id="btn-enviar" class="btn-enviar" onclick="validarYEnviar()">
+    <button id="btn-enviar" class="btn-enviar oculto" onclick="validarYEnviar()">
       ✉️ Preparar y enviar correo
     </button>
 
@@ -457,7 +466,7 @@ footer{
       </select>
     </div>
 
-    <div id="bloque-comercial" style="display:none;">
+    <div id="bloque-comercial" class="oculto">
 
       <div class="form-section">
         <div class="form-section-title">Campos del asunto</div>
@@ -489,7 +498,7 @@ footer{
         </div>
       </div>
 
-      <div id="preview-com" class="preview-asunto">
+      <div id="preview-com" class="preview-asunto" style="display:block;">
         <div class="preview-label">Vista previa del asunto del correo</div>
         <div class="preview-valor" id="asunto-com-generado">RUT: XXXXXXXXX NOMBRE Carrera de interés: CARRERA Jornada: JORNADA</div>
       </div>
@@ -546,7 +555,7 @@ footer{
         Recuerda agregar tu firma institucional antes de enviar el correo.
       </div>
 
-      <button class="btn-enviar" style="display:block;" onclick="enviarComercial()">
+      <button class="btn-enviar" onclick="enviarComercial()">
         ✉️ Preparar y enviar correo
       </button>
 
@@ -566,28 +575,47 @@ function showTab(i){
   document.querySelectorAll('.tab-panel').forEach((p,j)=>p.classList.toggle('active',i===j));
 }
 
-function show(id){const el=document.getElementById(id);if(el)el.style.display='';}
-function hide(id){const el=document.getElementById(id);if(el)el.style.display='none';}
-function val(id){const el=document.getElementById(id);return el?el.value.trim():'';}
-
-// ── Hash routing — abre pestaña según URL ─────────────────────────────────────
+// ── Hash routing ──────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function(){
   if(window.location.hash === '#comercial') showTab(1);
 });
+
+function show(id){
+  const el=document.getElementById(id);
+  if(el) el.classList.remove('oculto');
+}
+function hide(id){
+  const el=document.getElementById(id);
+  if(el) el.classList.add('oculto');
+}
+function val(id){
+  const el=document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
 
 // ── SUPERVISOR ────────────────────────────────────────────────────────────────
 function cambiarAsunto(){
   const v=document.getElementById('asunto').value;
   ['bloque-ic','bloque-otro','bloque-resumen','bloque-solicitante','bloque-alumno',
    'bloque-contacto-ti','bloque-ti','preview-asunto','aviso-firma','btn-enviar','error-validacion'].forEach(hide);
-  if(!v)return;
-  show('preview-asunto'); show('aviso-firma'); show('btn-enviar');
+
+  if(!v) return;
+
+  show('preview-asunto');
+  show('aviso-firma');
+  show('btn-enviar');
+
   if(v==='escalamiento'){
-    show('bloque-ic'); show('bloque-solicitante'); show('bloque-alumno');
+    show('bloque-ic');
+    show('bloque-solicitante');
+    show('bloque-alumno');
   } else if(v==='ti'){
-    show('bloque-ic'); show('bloque-contacto-ti'); show('bloque-ti');
+    show('bloque-ic');
+    show('bloque-contacto-ti');
+    show('bloque-ti');
   } else if(v==='otro'){
-    show('bloque-otro'); show('bloque-resumen');
+    show('bloque-otro');
+    show('bloque-resumen');
   } else {
     show('bloque-resumen');
   }
@@ -598,6 +626,7 @@ function limpiarRut(id){
   const el=document.getElementById(id);
   if(el) el.value=el.value.replace(/[.\-]/g,'');
   actualizarAsunto();
+  sincronizarTI();
 }
 
 function actualizarAsunto(){
@@ -618,6 +647,18 @@ function actualizarAsunto(){
   if(el) el.textContent=texto;
 }
 
+// Sincroniza RUT y Nombre del asunto TI hacia el bloque de contacto TI
+function sincronizarTI(){
+  const v=document.getElementById('asunto').value;
+  if(v!=='ti') return;
+  const nombre=val('ic-nombre');
+  const rut=val('ic-rut');
+  const tiNombre=document.getElementById('ti-nombre');
+  const tiRut=document.getElementById('ti-rut');
+  if(tiNombre) tiNombre.value=nombre;
+  if(tiRut) tiRut.value=rut;
+}
+
 function checkAlumno(){
   const campos=['alu-nombre','alu-rut','alu-tel','alu-correo'];
   const alguno=campos.some(id=>val(id)!=='');
@@ -627,13 +668,20 @@ function checkAlumno(){
   });
 }
 
-function marcarError(id){const el=document.getElementById(id);if(el)el.classList.add('field-error');}
-function limpiarErrores(){document.querySelectorAll('.field-error').forEach(el=>el.classList.remove('field-error'));}
+function marcarError(id){
+  const el=document.getElementById(id);
+  if(el) el.classList.add('field-error');
+}
+function limpiarErrores(){
+  document.querySelectorAll('.field-error').forEach(el=>el.classList.remove('field-error'));
+}
 
 function validarYEnviar(){
-  limpiarErrores(); hide('error-validacion');
+  limpiarErrores();
+  hide('error-validacion');
   const v=document.getElementById('asunto').value;
   let errores=[];
+
   if(v==='escalamiento'||v==='ti'){
     if(!val('ic-num')){marcarError('ic-num');errores.push('IC');}
     if(!val('ic-rut')){marcarError('ic-rut');errores.push('RUT del asunto');}
@@ -651,18 +699,20 @@ function validarYEnviar(){
     }
   }
   if(v==='ti'){
-    if(!val('ti-nombre')){marcarError('ti-nombre');errores.push('Nombre contacto');}
-    if(!val('ti-rut')){marcarError('ti-rut');errores.push('RUT contacto');}
     if(!val('ti-tel')){marcarError('ti-tel');errores.push('Teléfono contacto');}
     if(!val('ti-correo-per')){marcarError('ti-correo-per');errores.push('Correo personal');}
   }
+
   if(errores.length>0){
     const el=document.getElementById('error-validacion');
     el.textContent='Faltan campos obligatorios: '+[...new Set(errores)].join(', ')+'.';
-    show('error-validacion'); return;
+    show('error-validacion');
+    return;
   }
+
   const asuntoTexto=document.getElementById('asunto-generado').textContent;
   let cuerpo='';
+
   if(v==='escalamiento'){
     cuerpo=`Estimados,\n\nNecesito su cooperación con el siguiente caso:\n${val('resumen')||'[Resumen del requerimiento]'}\n\n`;
     cuerpo+=`DATOS DEL SOLICITANTE\nNombre: ${val('sol-nombre')}\nRUT: ${val('sol-rut')}\nTeléfono: ${val('sol-tel')}\nCorreo: ${val('sol-correo')}\nComentario: ${val('sol-comentario')||'—'}\n\n`;
@@ -677,6 +727,7 @@ function validarYEnviar(){
   } else {
     cuerpo=`Estimados,\n\n${val('resumen')||'[Completar descripción de la solicitud]'}\n\nAtte.\n\n[Insertar firma institucional]`;
   }
+
   const dest='johanna.escalona@umayor.cl;barbara.fernandez@umayor.cl';
   const cc='eduardo.ferrada@umayor.cl';
   window.location.href=`mailto:${dest}?cc=${cc}&subject=${encodeURIComponent(asuntoTexto)}&body=${encodeURIComponent(cuerpo)}`;
@@ -686,8 +737,11 @@ function validarYEnviar(){
 function mostrarFormComercial(){
   const v=document.getElementById('asunto-com').value;
   const b=document.getElementById('bloque-comercial');
-  if(b) b.style.display=v?'':'none';
-  if(v){ show('preview-com'); actualizarAsuntoComercial(); }
+  if(b){
+    if(v) b.classList.remove('oculto');
+    else b.classList.add('oculto');
+  }
+  if(v) actualizarAsuntoComercial();
 }
 
 function sincronizarComercial(){
@@ -712,7 +766,8 @@ function actualizarAsuntoComercial(){
 }
 
 function enviarComercial(){
-  limpiarErrores(); hide('error-com');
+  limpiarErrores();
+  hide('error-com');
   let errores=[];
   if(!val('com-rut-asunto')){marcarError('com-rut-asunto');errores.push('RUT');}
   if(!val('com-nombre-asunto')){marcarError('com-nombre-asunto');errores.push('Nombre');}
@@ -723,18 +778,9 @@ function enviarComercial(){
   if(errores.length>0){
     const el=document.getElementById('error-com');
     el.textContent='Faltan campos obligatorios: '+[...new Set(errores)].join(', ')+'.';
-    show('error-com'); return;
+    show('error-com');
+    return;
   }
   const asunto=document.getElementById('asunto-com-generado').textContent;
   const cuerpo=
-    `Estimados,\n\nPor favor solicito su colaboración con prospecto interesado en la carrera ${val('com-carrera')}.\nJornada: ${val('com-jornada')}\n\n`+
-    `DATOS DE CONTACTO\nNombre: ${val('com-nombre-asunto')}\nRUT: ${val('com-rut-asunto')}\nTeléfono: ${val('com-tel')}\nCorreo: ${val('com-correo')}\n\n`+
-    `Carrera de interés: ${val('com-carrera')}\nJornada: ${val('com-jornada')}\nTiene beneficios ministeriales: ${val('com-beneficios')||'No indicado'}\nComentarios: ${val('com-comentario')||'—'}\n\n`+
-    `Atentamente.\n\n[Insertar firma institucional]`;
-  const dest='marcelo.sepulveda@umayor.cl;francisca.castillo@umayor.cl';
-  window.location.href=`mailto:${dest}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
-}
-</script>
-
-</body>
-</html>
+    `Estimados,\n\nPor favor solicito su colaboración con prospecto interesado en la carrera ${val('com-carrera')}.\nJor
