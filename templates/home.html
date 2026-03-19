@@ -2,44 +2,45 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Directorio General Umayor</title>
+<title>Portal SAT · Universidad Mayor</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <style>
 :root{
---um-amarillo:#f2b705;
---um-azul:#005aa9;
---um-gris:#f5f7fa;
+  --um-amarillo:#f2b705;
+  --um-azul:#005aa9;
+  --um-verde:#1a5c38;
+  --um-gris:#f5f7fa;
 }
+
+*{box-sizing:border-box;}
 
 body{
-margin:0;
-font-family: Arial, Helvetica, sans-serif;
-background:#ffffff;
-color:#222;
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#ffffff;
+  color:#222;
 }
 
-/* NAVBAR */
-
+/* TOP BAR */
 .top-bar{
-background:var(--um-amarillo);
-padding:10px 30px;
-display:flex;
-align-items:center;
-position:relative;
-font-size:14px;
+  background:var(--um-amarillo);
+  padding:10px 30px;
+  display:flex;
+  align-items:center;
+  gap:25px;
+  font-size:14px;
 }
 
 .links-hover{
-position:relative;
-cursor:pointer;
-font-weight:600;
+  position:relative;
+  cursor:pointer;
+  font-weight:600;
 }
 
 .links-hover span{
-display:inline-flex;
-align-items:center;
-gap:6px;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
 }
 
 .links-hover ul{
@@ -55,459 +56,273 @@ gap:6px;
   border-radius:6px;
   display:none;
   z-index:10;
-  }
-
-.links-hover:hover ul{ display:block; }
-
-.links-hover ul li{ padding:8px 16px; }
-
-.links-hover ul li a{
-text-decoration:none;
-color:#222;
-display:block;
 }
 
-.links-hover ul li a:hover{ background:#f0f0f0; }
+.links-hover:hover ul{display:block;}
+.links-hover ul li{padding:8px 16px;}
+.links-hover ul li a{text-decoration:none;color:#222;display:block;}
+.links-hover ul li a:hover{background:#f0f0f0;}
 
-/* CONTENIDO */
-
-.container{
-max-width:1100px;
-margin:0 auto;
-padding:10px 20px 10px;
-text-align:center;
+/* HERO */
+.hero{
+  text-align:center;
+  padding:48px 20px 32px;
+  max-width:1100px;
+  margin:0 auto;
 }
 
-.logo{ margin-top:0px; }
+.identidad{
+  display:inline-block;
+  margin-bottom:24px;
+}
 
-.logo img{
-max-width:300px;
-width:100%;
-height:auto;
+.identidad .nombre{
+  font-size:20px;
+  font-weight:700;
+  color:#222;
+  letter-spacing:0.5px;
+}
+
+.identidad .lema{
+  font-size:11px;
+  color:#888;
+  letter-spacing:2px;
+  margin-top:3px;
 }
 
 .divider{
-width:70%;
-height:4px;
-background:var(--um-amarillo);
-margin:30px auto;
+  width:50px;
+  height:3px;
+  background:var(--um-amarillo);
+  margin:0 auto 20px;
+  border-radius:2px;
 }
 
-h1{ font-size:32px; margin:10px 0 6px; }
-
-h2{
-font-size:18px;
-font-weight:normal;
-margin:0 0 18px;
+.hero h1{
+  font-size:32px;
+  font-weight:700;
+  margin:0 0 8px;
+  color:#222;
 }
 
-.descripcion{
-font-size:15px;
-color:#444;
-margin-bottom:30px;
+.hero .tagline{
+  font-size:15px;
+  color:#666;
+  margin:0 0 40px;
 }
 
+/* BOTONES PRINCIPALES */
 .buttons-primary{
-display:flex;
-justify-content:center;
-gap:20px;
-flex-wrap:wrap;
-margin-bottom:16px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  max-width:700px;
+  margin:0 auto 16px;
 }
 
 .btn-primary-item{
-background:var(--um-azul);
-color:#fff;
-padding:16px 32px;
-border-radius:6px;
-text-decoration:none;
-font-size:17px;
-font-weight:700;
-display:inline-flex;
-align-items:center;
-gap:8px;
-min-width:260px;
-justify-content:center;
+  background:var(--um-azul);
+  border-radius:10px;
+  padding:28px 20px;
+  text-align:center;
+  text-decoration:none;
+  display:block;
+  transition:opacity .15s;
 }
 
-.btn-primary-item:hover{ opacity:.9; }
+.btn-primary-item:hover{opacity:.9;}
 
+.btn-primary-item .icono{
+  font-size:26px;
+  margin-bottom:10px;
+}
+
+.btn-primary-item .titulo{
+  color:#fff;
+  font-size:17px;
+  font-weight:700;
+}
+
+.btn-primary-item .desc{
+  color:rgba(255,255,255,0.65);
+  font-size:12px;
+  margin-top:5px;
+}
+
+/* BOTONES SECUNDARIOS */
 .buttons-secondary{
-display:flex;
-justify-content:center;
-gap:14px;
-flex-wrap:wrap;
-margin-bottom:25px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  max-width:700px;
+  margin:0 auto;
 }
 
 .btn-secondary-item{
-background:#e8eef5;
-color:var(--um-azul);
-padding:10px 22px;
-border-radius:6px;
-text-decoration:none;
-font-size:14px;
-font-weight:600;
-display:inline-flex;
-align-items:center;
-gap:7px;
-border:1.5px solid #c5d4e8;
+  background:#f0f4f8;
+  border:1.5px solid #dde4ee;
+  border-radius:8px;
+  padding:16px 8px;
+  text-align:center;
+  text-decoration:none;
+  display:block;
+  transition:background .15s;
 }
 
-.btn-secondary-item:hover{ background:#d5e2f0; }
+.btn-secondary-item:hover{background:#e2eaf3;}
 
-.btn-bitacora{
-background:#1a5c38;
-color:#fff;
-border-color:#1a5c38;
+.btn-secondary-item .icono{
+  font-size:20px;
+  margin-bottom:7px;
 }
 
+.btn-secondary-item .titulo{
+  font-size:12px;
+  font-weight:600;
+  color:#005aa9;
+}
+
+.btn-secondary-item.btn-bitacora{
+  background:var(--um-verde);
+  border-color:var(--um-verde);
+}
+
+.btn-secondary-item.btn-bitacora:hover{background:#144a2d;}
+
+.btn-secondary-item.btn-bitacora .titulo{
+  color:#fff;
+}
+
+/* FOOTER */
 footer{
-text-align:center;
-font-size:13px;
-color:#666;
-margin:40px 0 20px;
+  text-align:center;
+  font-size:13px;
+  color:#666;
+  margin:48px 0 20px;
+  border-top:1px solid #eee;
+  padding-top:20px;
 }
 
 /* MODAL */
-
 .modal-aviso{
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,0.6);
-z-index:500;
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  z-index:500;
 }
 
 .modal-aviso-content{
-background:#ffffff;
-width:80%;
-max-width:900px;
-margin:5% auto;
-padding:40px;
-border-radius:14px;
-border-top:10px solid var(--um-amarillo);
-box-shadow:0 15px 40px rgba(0,0,0,0.35);
-text-align:left;
-font-size:16px;
-line-height:1.5;
+  background:#ffffff;
+  width:80%;
+  max-width:900px;
+  margin:5% auto;
+  padding:40px;
+  border-radius:14px;
+  border-top:10px solid var(--um-amarillo);
+  box-shadow:0 15px 40px rgba(0,0,0,0.35);
+  text-align:left;
+  font-size:16px;
+  line-height:1.5;
 }
 
 .modal-aviso-content h3{
-margin-top:0;
-color:var(--um-azul);
-font-size:24px;
+  margin-top:0;
+  color:var(--um-azul);
+  font-size:24px;
 }
 
-.modal-aviso-content ul{ margin-left:20px; }
+.modal-aviso-content ul{margin-left:20px;}
 
 .modal-aviso-actions{
-text-align:center;
-margin-top:30px;
+  text-align:center;
+  margin-top:30px;
 }
 
 .modal-aviso-actions button{
-background:var(--um-azul);
-color:#fff;
-border:none;
-padding:14px 32px;
-font-size:16px;
-font-weight:600;
-border-radius:8px;
-cursor:pointer;
+  background:var(--um-azul);
+  color:#fff;
+  border:none;
+  padding:14px 32px;
+  font-size:16px;
+  font-weight:600;
+  border-radius:8px;
+  cursor:pointer;
 }
 
 /* SOPORTE SAT */
-
 .support-container{
-position:fixed;
-bottom:24px;
-right:24px;
-z-index:400;
+  position:fixed;
+  bottom:24px;
+  right:24px;
+  z-index:400;
 }
 
 .support-main{
-background:#005aa9;
-color:#fff;
-border:none;
-border-radius:28px;
-padding:12px 18px;
-font-weight:600;
-cursor:pointer;
-box-shadow:0 4px 14px rgba(0,0,0,0.25);
-display:flex;
-align-items:center;
-gap:6px;
-transition:transform .15s ease, box-shadow .15s ease;
-}
-
-.support-main:hover{
-transform:translateY(-2px);
-box-shadow:0 8px 20px rgba(0,0,0,0.25);
-}
-/* TOOLTIP SOPORTE */
-
-.support-main{
+  background:#005aa9;
+  color:#fff;
+  border:none;
+  border-radius:28px;
+  padding:12px 18px;
+  font-weight:600;
+  cursor:pointer;
+  box-shadow:0 4px 14px rgba(0,0,0,0.25);
+  display:flex;
+  align-items:center;
+  gap:6px;
+  transition:transform .15s ease, box-shadow .15s ease;
   position:relative;
 }
 
-/* TOOLTIP */
+.support-main:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(0,0,0,0.25);
+}
+
 .support-main::after{
   content:"💡 Usa esta opción para derivar casos a supervisión o al área comercial, y también para reportar errores o enviar sugerencias.";
   position:absolute;
   bottom:50%;
   right:calc(100% + 12px);
   transform:translateY(50%) scale(0.95);
-  
   background:#2f2f2f;
   color:#fff;
   padding:8px 12px;
   border-radius:8px;
-   font-size:12.5px;
-  
+  font-size:12.5px;
   opacity:0;
   pointer-events:none;
-  
   white-space:normal;
   min-width:220px;
   max-width:260px;
   line-height:1.4;
   text-align:left;
   letter-spacing:0.2px;
-
   box-shadow:0 6px 18px rgba(0,0,0,0.25);
-  
   transition:all .2s ease-out;
   z-index:500;
 }
 
-/* FLECHITA */
 .support-main::before{
   content:"";
   position:absolute;
   bottom:50%;
   right:calc(100% + 8px);
   transform:translateY(50%) scale(0.95);
-
   border-width:6px;
   border-style:solid;
   border-color:transparent transparent transparent #2f2f2f;
-
   opacity:0;
   transition:all .2s ease-out;
   z-index:500;
 }
 
-/* HOVER (activación) */
 .support-main:hover::after,
 .support-main:hover::before{
   opacity:1;
   transform:translateY(50%) scale(1);
 }
 
-
-.support-container .support-menu a{
-background:#ffffff;
-border-radius:6px;
-padding:10px 14px;
-text-decoration:none;
-color:#333;
-box-shadow:0 3px 10px rgba(0,0,0,.15);
-font-size:14px;
-}
-
-.support-container .support-menu a:hover{
-background:#f0f0f0;
-}
-
-.label-secundario{
-font-size:12px;
-color:#aaa;
-text-transform:uppercase;
-letter-spacing:1px;
-margin-bottom:10px;
-}
-</style>
-</head>
-
-<body>
-
-<!-- POPUP -->
-
-<div id="modalAviso" class="modal-aviso">
-<div class="modal-aviso-content">
-
-<h3>Aviso de uso y confidencialidad</h3>
-
-<p>
-Esta plataforma es de <strong>uso interno exclusivo del Servicio de Atención (SAT)</strong>
-de la Universidad Mayor.
-</p>
-
-<p>
-La información aquí contenida es <strong>confidencial</strong>, se mantiene en actualización
-continua con el aporte del equipo SAT, y <strong>no debe ser compartida ni utilizada fuera del ámbito institucional</strong>.
-</p>
-
-<ul>
-<li>Utiliza siempre el directorio en línea como fuente oficial.</li>
-<li>Evita guardar o distribuir copias externas de la información.</li>
-<li>Ante dudas, verifica directamente en esta plataforma.</li>
-<li>Si detectas información desactualizada o un error, repórtalo usando el botón 🛟 Soporte SAT.</li>
-</ul>
-
-<p>
-<strong>Importante:</strong><br>
-En el primer acceso del día, la plataforma puede tardar algunos segundos en cargar.
-Si la pantalla demora en responder, espera brevemente y refresca el navegador.
-</p>
-
-<p style="font-size:14px;color:#666;margin-top:16px;font-style:italic;">
-El uso de esta plataforma implica aceptar las políticas de manejo de información institucional de la Universidad Mayor.
-</p>
-
-<div class="modal-aviso-actions">
-<button onclick="cerrarAviso()">Entendido</button>
-</div>
-
-</div>
-</div>
-
-<!-- Franja amarilla -->
-<div class="top-bar">
-    <div style="display:flex; gap:25px; align-items:center;">
-
-        <!-- Links frecuentes -->
-        <div class="links-hover">
-            <span>🔗 Links de uso frecuente ▾</span>
-            <ul>
-                <li><a href="https://mayorcl.sharepoint.com/sites/IntranetServiciodeAtencin" target="_blank">Intranet SAT</a></li>
-                <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Registro-Estudiantes" target="_blank">Registro Estudiantil</a></li>
-                <li><a href="https://sso.umayor.cl/authentication/SignIn?SID=13&app_url=certificadosalumnos.umayor.cl" target="_blank">Portal de Certificados</a></li>
-                <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Gratuidad-Becas-y-ayudas-estudiantiles" target="_blank">Becas y Créditos</a></li>
-                <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Gestion-Financiera" target="_blank">Gestión Financiera</a></li>
-                <li><a href="https://plataformadepagos.umayor.cl/webapp/index.html" target="_blank">Portal Financiero</a></li>
-                <li><a href="https://www.umayor.cl/dae-umayor/actividades-estudiantiles.php" target="_blank">DAE</a></li>
-                <li><a href="https://sibum.umayor.cl/client/es_ES/sibum" target="_blank">Biblioteca</a></li>
-                <li><a href="https://passwordreset.microsoftonline.com/" target="_blank">Recupera tu cuenta</a></li>
-                <li><a href="https://www.youtube.com/watch?v=4JNleAcO3dM" target="_blank">Video recuperación de cuenta</a></li>
-                <li><a href="https://www.umayor.cl/um/oferta-academica" target="_blank">Oferta Académica</a></li>
-                <li><a href="https://www.admisionmayor.cl/preguntas-frecuentes" target="_blank">Preguntas Frecuentes Admisión</a></li>
-                <li><a href="https://www.umayor.cl/um/santiago-portales" target="_blank">Portales</a></li>
-                <li><a href="https://www.umayor.cl/buses" target="_blank">Buses</a></li>
-                <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Pase-Escolar" target="_blank">Pase Escolar</a></li>
-                <li><a href="https://umayor.hiringroomcampus.com/jobs/create-company/bfSbYevlWIXvZUZfPdp5sqYS" target="_blank">Registra tu Empresa (oferta de empleo)</a></li>
-            </ul>
-        </div>
-
-      <!-- NUEVO: Turnos -->
-<div class="links-hover">
-    <span>🕒 Turnos SAT ▾</span>
-    <ul>
-        <li>
-            <a href="https://mayorcl.sharepoint.com/:x:/r/sites/IntranetServiciodeAtencin/_layouts/15/Doc.aspx?sourcedoc=%7BC1513845-3E62-40FB-8B23-5CD6F5DF03F3%7D&file=programacion-de-turnos-SAT.xlsx&action=default&mobileredirect=true" target="_blank">
-                📅 Programación de turnos
-            </a>
-        </li>
-        <li>
-            <a href="https://mayorcl.sharepoint.com/:x:/r/sites/IntranetServiciodeAtencin/_layouts/15/Doc.aspx?sourcedoc=%7B36F8803B-77FC-4A42-8E4D-A27093D8445D%7D&file=descansos-SAT.xlsx&action=default&mobileredirect=true" target="_blank">
-                🍵 Descansos semanales
-            </a>
-        </li>
-    </ul>
-</div>
-
-<!-- 👇 ESTE VA AQUÍ, ANTES DEL CIERRE -->
-<div class="links-hover">
-    <span>🎓 Beneficios Ministeriales ▾</span>
-  <ul>
-    <li><a href="https://portal.beneficiosestudiantiles.cl/" target="_blank">Portal Beneficios</a></li>  
-    <li><a href="https://resultados.beneficiosestudiantiles.cl/login" target="_blank">Resultados Beneficios</a></li>  
-    <li><a href="https://postulacion.beneficiosestudiantiles.cl/fuas/" target="_blank">Fuas</a></li>
-    <li><a href="https://www.tne.cl/" target="_blank">Tarjeta nacional estudiantil</a></li>
-    <li><a href="https://sistema.tne.cl/reposiciones/estado_tarjeta_alumno" target="_blank">Estado Tarjeta TNE</a></li>
-    <li><a href="https://portal.ingresa.cl/" target="_blank">Ingresa</a></li>
-    <li><a href="https://resultadopostulacioncae.ingresa.cl/" target="_blank">Resultado Postulaciones CAE</a></li>
-    <li><a href="https://www.junaeb.cl/" target="_blank">Juneb</a></li>
-    <li><a href="https://www.junaeb.cl/preguntas-frecuentes-usuarios-baes" target="_blank">Preguntas BAES</a></li>
-</ul>
-</div>
-
-</div>
-</div>
-
-<!-- Contenido -->
-
-<div class="container">
-
-<div class="logo">
-<a href="https://www.umayor.cl" target="_blank">
-<img src="{{ url_for('static', filename='img/logoum.jpg') }}">
-</a>
-</div>
-
-<div class="divider"></div>
-
-<h1>Directorio General Umayor</h1>
-<h2>Uso exclusivo SAT</h2>
-
-<p class="descripcion">
-Plataforma interna para consulta de contactos, bitácora y recursos del equipo SAT.
-</p>
-
-<div class="buttons-primary">
-<a href="/escuelas" class="btn-primary-item">📘 Directorio de Escuelas</a>
-<a href="/contactos-administrativos" class="btn-primary-item">🏢 Contactos Administrativos</a>
-</div>
-
-<div class="label-secundario">Recursos adicionales</div>
-
-<div class="buttons-secondary">
-<a href="/academicos" class="btn-secondary-item">🎓 Contactos Académicos Núcleos</a>
-<a href="/temas-crm" class="btn-secondary-item">🗂️ Simulador Tipificación CRM</a>
-<a href="/pauta-pmcc" class="btn-secondary-item">📞 Pauta PMCC</a>
-<a href="/bitacora" class="btn-secondary-item btn-bitacora">📋 Bitácora SAT</a>
-</div>
-
-</div>
-
-<footer>
-Desarrollado por <strong>Eduardo Ferrada</strong><br>
-Universidad Mayor · Enero 2026
-</footer>
-
-<!-- SOPORTE SAT -->
-
-<div class="support-container">
-
-<div id="supportMenu" class="support-menu" style="display:none">
-
-  <a href="#" onclick="enviarSupervisor()">
-  👨‍💼 Derivar a supervisor
-  </a>
-
-  <a href="#" onclick="enviarComercial()">
-  💼 Derivar a área comercial
-  </a>
-
-  <a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de error – Directorio SAT">
-  🐛 Reportar error
-  </a>
-
-  <a href="#" onclick="enviarFeedback()">
-  💬 Feedback
-  </a>
-
-  </div>
-
-  <button id="supportBtn" class="support-main">
-🛟 Soporte SAT
-</button>
-
-</div>
-
-<style>
-/* 🔽 MENÚ EN VERTICAL */
 .support-menu{
   display:flex;
   flex-direction:column;
@@ -515,167 +330,206 @@ Universidad Mayor · Enero 2026
   margin-bottom:10px;
 }
 
-/* 🔽 ESTILO BOTÓN */
 .support-menu a{
   display:flex;
   align-items:center;
   gap:6px;
-
   background:#f1f1f1;
   padding:10px 12px;
   border-radius:8px;
-
   text-decoration:none;
   color:#333;
   font-size:13px;
-
   box-shadow:0 2px 6px rgba(0,0,0,0.15);
   transition:all .2s ease-out;
 }
 
-/* 🔽 HOVER */
 .support-menu a:hover{
   background:#e4e4e4;
   transform:translateY(-1px);
 }
 </style>
+</head>
+<body>
+
+<!-- MODAL AVISO -->
+<div id="modalAviso" class="modal-aviso">
+  <div class="modal-aviso-content">
+    <h3>Aviso de uso y confidencialidad</h3>
+    <p>Esta plataforma es de <strong>uso interno exclusivo del Servicio de Atención (SAT)</strong> de la Universidad Mayor.</p>
+    <p>La información aquí contenida es <strong>confidencial</strong>, se mantiene en actualización continua con el aporte del equipo SAT, y <strong>no debe ser compartida ni utilizada fuera del ámbito institucional</strong>.</p>
+    <ul>
+      <li>Utiliza siempre el directorio en línea como fuente oficial.</li>
+      <li>Evita guardar o distribuir copias externas de la información.</li>
+      <li>Ante dudas, verifica directamente en esta plataforma.</li>
+      <li>Si detectas información desactualizada o un error, repórtalo usando el botón 🛟 Soporte SAT.</li>
+    </ul>
+    <p><strong>Importante:</strong><br>En el primer acceso del día, la plataforma puede tardar algunos segundos en cargar. Si la pantalla demora en responder, espera brevemente y refresca el navegador.</p>
+    <p style="font-size:14px;color:#666;margin-top:16px;font-style:italic;">El uso de esta plataforma implica aceptar las políticas de manejo de información institucional de la Universidad Mayor.</p>
+    <div class="modal-aviso-actions">
+      <button onclick="cerrarAviso()">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div style="display:flex;gap:25px;align-items:center;">
+
+    <div class="links-hover">
+      <span>🔗 Links de uso frecuente ▾</span>
+      <ul>
+        <li><a href="https://mayorcl.sharepoint.com/sites/IntranetServiciodeAtencin" target="_blank">Intranet SAT</a></li>
+        <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Registro-Estudiantes" target="_blank">Registro Estudiantil</a></li>
+        <li><a href="https://sso.umayor.cl/authentication/SignIn?SID=13&app_url=certificadosalumnos.umayor.cl" target="_blank">Portal de Certificados</a></li>
+        <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Gratuidad-Becas-y-ayudas-estudiantiles" target="_blank">Becas y Créditos</a></li>
+        <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Gestion-Financiera" target="_blank">Gestión Financiera</a></li>
+        <li><a href="https://plataformadepagos.umayor.cl/webapp/index.html" target="_blank">Portal Financiero</a></li>
+        <li><a href="https://www.umayor.cl/dae-umayor/actividades-estudiantiles.php" target="_blank">DAE</a></li>
+        <li><a href="https://sibum.umayor.cl/client/es_ES/sibum" target="_blank">Biblioteca</a></li>
+        <li><a href="https://passwordreset.microsoftonline.com/" target="_blank">Recupera tu cuenta</a></li>
+        <li><a href="https://www.youtube.com/watch?v=4JNleAcO3dM" target="_blank">Video recuperación de cuenta</a></li>
+        <li><a href="https://www.umayor.cl/um/oferta-academica" target="_blank">Oferta Académica</a></li>
+        <li><a href="https://www.admisionmayor.cl/preguntas-frecuentes" target="_blank">Preguntas Frecuentes Admisión</a></li>
+        <li><a href="https://www.umayor.cl/um/santiago-portales" target="_blank">Portales</a></li>
+        <li><a href="https://www.umayor.cl/buses" target="_blank">Buses</a></li>
+        <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Pase-Escolar" target="_blank">Pase Escolar</a></li>
+        <li><a href="https://umayor.hiringroomcampus.com/jobs/create-company/bfSbYevlWIXvZUZfPdp5sqYS" target="_blank">Registra tu Empresa (oferta de empleo)</a></li>
+      </ul>
+    </div>
+
+    <div class="links-hover">
+      <span>🕒 Turnos SAT ▾</span>
+      <ul>
+        <li><a href="https://mayorcl.sharepoint.com/:x:/r/sites/IntranetServiciodeAtencin/_layouts/15/Doc.aspx?sourcedoc=%7BC1513845-3E62-40FB-8B23-5CD6F5DF03F3%7D&file=programacion-de-turnos-SAT.xlsx&action=default&mobileredirect=true" target="_blank">📅 Programación de turnos</a></li>
+        <li><a href="https://mayorcl.sharepoint.com/:x:/r/sites/IntranetServiciodeAtencin/_layouts/15/Doc.aspx?sourcedoc=%7B36F8803B-77FC-4A42-8E4D-A27093D8445D%7D&file=descansos-SAT.xlsx&action=default&mobileredirect=true" target="_blank">🍵 Descansos semanales</a></li>
+      </ul>
+    </div>
+
+    <div class="links-hover">
+      <span>🎓 Beneficios Ministeriales ▾</span>
+      <ul>
+        <li><a href="https://portal.beneficiosestudiantiles.cl/" target="_blank">Portal Beneficios</a></li>
+        <li><a href="https://resultados.beneficiosestudiantiles.cl/login" target="_blank">Resultados Beneficios</a></li>
+        <li><a href="https://postulacion.beneficiosestudiantiles.cl/fuas/" target="_blank">Fuas</a></li>
+        <li><a href="https://www.tne.cl/" target="_blank">Tarjeta Nacional Estudiantil</a></li>
+        <li><a href="https://sistema.tne.cl/reposiciones/estado_tarjeta_alumno" target="_blank">Estado Tarjeta TNE</a></li>
+        <li><a href="https://portal.ingresa.cl/" target="_blank">Ingresa</a></li>
+        <li><a href="https://resultadopostulacioncae.ingresa.cl/" target="_blank">Resultado Postulaciones CAE</a></li>
+        <li><a href="https://www.junaeb.cl/" target="_blank">Junaeb</a></li>
+        <li><a href="https://www.junaeb.cl/preguntas-frecuentes-usuarios-baes" target="_blank">Preguntas BAES</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+
+  <div class="identidad">
+    <div class="nombre">UNIVERSIDAD MAYOR</div>
+    <div class="lema">para espíritus emprendedores</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h1>Portal SAT</h1>
+  <p class="tagline">Herramientas, contactos y recursos del equipo SAT</p>
+
+  <!-- PRINCIPALES -->
+  <div class="buttons-primary">
+    <a href="/escuelas" class="btn-primary-item">
+      <div class="icono">📘</div>
+      <div class="titulo">Directorio de Escuelas</div>
+      <div class="desc">Busca por nombre, sede o cargo</div>
+    </a>
+    <a href="/contactos-administrativos" class="btn-primary-item">
+      <div class="icono">🏢</div>
+      <div class="titulo">Contactos Administrativos</div>
+      <div class="desc">Áreas, roles y contactos internos</div>
+    </a>
+  </div>
+
+  <!-- SECUNDARIOS -->
+  <div class="buttons-secondary">
+    <a href="/academicos" class="btn-secondary-item">
+      <div class="icono">🎓</div>
+      <div class="titulo">Contactos Académicos</div>
+    </a>
+    <a href="/temas-crm" class="btn-secondary-item">
+      <div class="icono">🗂️</div>
+      <div class="titulo">Simulador CRM</div>
+    </a>
+    <a href="/pauta-pmcc" class="btn-secondary-item">
+      <div class="icono">📞</div>
+      <div class="titulo">Pauta PMCC</div>
+    </a>
+    <a href="/bitacora" class="btn-secondary-item btn-bitacora">
+      <div class="icono">📋</div>
+      <div class="titulo">Bitácora SAT</div>
+    </a>
+  </div>
+
+</div>
+
+<footer>
+  Desarrollado por <strong>Eduardo Ferrada</strong><br>
+  Universidad Mayor · Enero 2026
+</footer>
+
+<!-- SOPORTE SAT -->
+<div class="support-container">
+  <div id="supportMenu" class="support-menu" style="display:none;">
+    <a href="#" onclick="enviarSupervisor()">👨‍💼 Derivar a supervisor</a>
+    <a href="#" onclick="enviarComercial()">💼 Derivar a área comercial</a>
+    <a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de error – Portal SAT">🐛 Reportar error</a>
+    <a href="#" onclick="enviarFeedback()">💬 Feedback</a>
+  </div>
+  <button id="supportBtn" class="support-main">🛟 Soporte SAT</button>
+</div>
 
 <script>
-
 document.addEventListener("DOMContentLoaded", () => {
+  if (!sessionStorage.getItem("avisoSATVisto")) {
+    document.getElementById("modalAviso").style.display = "block";
+  }
 
-if (!sessionStorage.getItem("avisoSATVisto")) {
-document.getElementById("modalAviso").style.display = "block";
-}
+  const btn = document.getElementById("supportBtn");
+  const menu = document.getElementById("supportMenu");
 
-const btn = document.getElementById("supportBtn");
-const menu = document.getElementById("supportMenu");
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+  });
 
-btn.addEventListener("click", (e) => {
-e.stopPropagation();
-menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-});
-
-document.addEventListener("click", (event) => {
-if (!menu.contains(event.target) && !btn.contains(event.target)) {
-menu.style.display = "none";
-}
-});
-
+  document.addEventListener("click", (event) => {
+    if (!menu.contains(event.target) && !btn.contains(event.target)) {
+      menu.style.display = "none";
+    }
+  });
 });
 
 function cerrarAviso(){
-document.getElementById("modalAviso").style.display = "none";
-sessionStorage.setItem("avisoSATVisto","true");
+  document.getElementById("modalAviso").style.display = "none";
+  sessionStorage.setItem("avisoSATVisto","true");
 }
 
 function enviarFeedback(){
-
-const pagina = window.location.href;
-
-const cuerpo = `
-Hola,
-
-Me gustaría compartir el siguiente feedback sobre la herramienta SAT.
-
-Página desde donde envío el feedback:
-${pagina}
-
-1. ¿Qué parte te ayuda más en tu trabajo?
-
-2. ¿Qué información falta o debería cambiar?
-
-3. ¿Qué otra cosa te gustaría tener en la herramienta?
-
-Gracias.
-`;
-
-window.location.href =
-"mailto:eduardo.ferrada@umayor.cl"
-+ "?subject=Feedback Herramienta SAT"
-+ "&body=" + encodeURIComponent(cuerpo);
-
+  const pagina = window.location.href;
+  const cuerpo = `Hola,\n\nMe gustaría compartir el siguiente feedback sobre la herramienta SAT.\n\nPágina desde donde envío el feedback:\n${pagina}\n\n1. ¿Qué parte te ayuda más en tu trabajo?\n\n2. ¿Qué información falta o debería cambiar?\n\n3. ¿Qué otra cosa te gustaría tener en la herramienta?\n\nGracias.`;
+  window.location.href = "mailto:eduardo.ferrada@umayor.cl?subject=Feedback Herramienta SAT&body=" + encodeURIComponent(cuerpo);
 }
 
 function enviarSupervisor(){
-
-const cuerpo = `
-Estimados,
-
-Necesito su cooperación con el siguiente caso:
-[Resumen breve y claro del requerimiento]
-
-DATOS DEL SOLICITANTE
-Nombre:
-RUT:
-Teléfono:
-Correo:
-Comentario:
-
-DATOS DEL ALUMNO (eliminar bloque si no corresponde)
-Nombre:
-RUT:
-Teléfono:
-Correo:
-Comentario:
-
-CASO TI (completar solo si corresponde)
-Nombre:
-RUT:
-Teléfono:
-Correo institucional:
-Correo personal:
-Tipo de contacto:
-Perfil que presenta el error:
-Plataforma donde ocurre el error:
-Descripción del error:
-Pruebas realizadas antes de derivar:
-Ingreso con cuenta rut@mayor.cl confirmado:
-Acceso por intranet institucional confirmado:
-
-Atte.
-
-Recuerda insertar tu firma institucional antes de enviar.
-`;
-
-window.location.href =
-"mailto:johanna.escalona@umayor.cl;barbara.fernandez@umayor.cl"
-+ "?cc=eduardo.ferrada@umayor.cl"
-+ "&subject=IC XXXXX RUT: XXXXXXXXX NOMBRE DEL SOLICITANTE MOTIVO [XXXXX]"
-+ "&body=" + encodeURIComponent(cuerpo);
-
+  const cuerpo = `Estimados,\n\nNecesito su cooperación con el siguiente caso:\n[Resumen breve y claro del requerimiento]\n\nDATOS DEL SOLICITANTE\nNombre:\nRUT:\nTeléfono:\nCorreo:\nComentario:\n\nDATOS DEL ALUMNO (eliminar bloque si no corresponde)\nNombre:\nRUT:\nTeléfono:\nCorreo:\nComentario:\n\nCASO TI (completar solo si corresponde)\nNombre:\nRUT:\nTeléfono:\nCorreo institucional:\nCorreo personal:\nTipo de contacto:\nPerfil que presenta el error:\nPlataforma donde ocurre el error:\nDescripción del error:\nPruebas realizadas antes de derivar:\nIngreso con cuenta rut@mayor.cl confirmado:\nAcceso por intranet institucional confirmado:\n\nAtte.\n\nRecuerda insertar tu firma institucional antes de enviar.`;
+  window.location.href = "mailto:johanna.escalona@umayor.cl;barbara.fernandez@umayor.cl?cc=eduardo.ferrada@umayor.cl&subject=IC XXXXX RUT: XXXXXXXXX NOMBRE DEL SOLICITANTE MOTIVO [XXXXX]&body=" + encodeURIComponent(cuerpo);
 }
 
 function enviarComercial(){
-
-const cuerpo = `
-Estimados,
-
-Por favor solicito su colaboración con prospecto interesado en carrera XXXXX
-Modalidad: diurno / vespertino / online / TEC / etc.
-
-DATOS DE CONTACTO
-Nombre:
-RUT:
-Teléfono: (validar que esté operativo y reciba llamadas de números 600)
-Correo:
-Carrera:
-Modalidad:
-Tiene beneficios ministeriales: Sí / No (¿Cuál?)
-Comentarios adicionales:
-
-Atentamente.
-
-Recuerda insertar tu firma institucional antes de enviar.
-`;
-
-window.location.href =
-"mailto:marcelo.sepulveda@umayor.cl;francisca.castillo@umayor.cl"
-+ "?subject=RUT XXXXXXXXXXX NOMBRE XXXXXXXXX CARRERA DE INTERES [XXXXXXXXXX]"
-+ "&body=" + encodeURIComponent(cuerpo);
-
+  const cuerpo = `Estimados,\n\nPor favor solicito su colaboración con prospecto interesado en carrera XXXXX\nModalidad: diurno / vespertino / online / TEC / etc.\n\nDATOS DE CONTACTO\nNombre:\nRUT:\nTeléfono: (validar que esté operativo y reciba llamadas de números 600)\nCorreo:\nCarrera:\nModalidad:\nTiene beneficios ministeriales: Sí / No (¿Cuál?)\nComentarios adicionales:\n\nAtentamente.\n\nRecuerda insertar tu firma institucional antes de enviar.`;
+  window.location.href = "mailto:marcelo.sepulveda@umayor.cl;francisca.castillo@umayor.cl?subject=RUT XXXXXXXXXXX NOMBRE XXXXXXXXX CARRERA DE INTERES [XXXXXXXXXX]&body=" + encodeURIComponent(cuerpo);
 }
-
 </script>
 
 </body>
