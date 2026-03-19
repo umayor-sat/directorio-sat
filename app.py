@@ -174,6 +174,15 @@ def pauta_pmcc():
 @app.route("/correos-frecuentes")
 def correos_frecuentes():
     return render_template("correos_frecuentes.html")
+
+# =========================
+# SOPORTE SAT
+# =========================
+@app.route("/soporte")
+def soporte():
+    return render_template("soporte.html")
+
+
 # =========================
 # EJECUCIÓN
 # =========================
