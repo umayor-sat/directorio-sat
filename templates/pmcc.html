@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+  <html lang="es">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pauta PMCC – Atención Telefónica · Universidad Mayor</title>
+  <style>
+  :root{--azul:#005aa9;--amarillo:#f2b705;--verde:#1a5c38;--rojo:#c0392b;--gris:#f5f7fa;}
+  *{box-sizing:border-box;}
+  body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#fff;color:#222;}
+  .header{background:var(--amarillo);padding:18px 30px;display:flex;align-items:center;gap:20px;}
+  .header img{height:70px;}
+  .header-text h1{margin:0;font-size:22px;color:var(--azul);}
+  .header-text p{margin:2px 0 0;font-size:13px;color:#555;}
+  .tabs{display:flex;background:var(--azul);overflow-x:auto;gap:2px;padding:0 20px;}
+  .tab{padding:12px 18px;color:#cce;cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap;border-bottom:3px solid transparent;}
+  .tab:hover{color:#fff;}
+  .tab.active{color:#fff;border-bottom:3px solid var(--amarillo);}
+  .content{max-width:1100px;margin:0 auto;padding:24px 20px;}
+  .panel{display:none;}
+  .panel.active{display:block;}
+  h2{color:var(--azul);font-size:20px;margin:0 0 6px;}
+  .subtitle{color:#666;font-size:13px;margin-bottom:20px;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{background:var(--azul);color:#fff;padding:10px 12px;text-align:left;}
+  td{padding:9px 12px;border-bottom:1px solid #e0e0e0;vertical-align:top;}
+  tr:hover td{background:#f0f6ff;}
+  .badge-forma{background:#ddeeff;color:#005aa9;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;}
+  .badge-fondo{background:#e6f4ec;color:#1a5c38;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;}
+  .pct-bar{height:8px;border-radius:4px;background:#e0e0e0;margin-top:4px;}
+  .pct-fill{height:8px;border-radius:4px;background:var(--azul);}
+  .frase-si{background:#e8f5e9;border-left:4px solid #43a047;padding:10px 14px;border-radius:4px;margin-bottom:6px;font-size:13px;}
+  .frase-no{background:#fdecea;border-left:4px solid #e53935;padding:10px 14px;border-radius:4px;margin-bottom:6px;font-size:13px;}
+  .frase-why{background:#fff8e1;border-left:4px solid #f9a825;padding:10px 14px;border-radius:4px;font-size:12px;color:#555;}
+  .frase-card{background:#f9f9f9;border:1px solid #e0e0e0;border-radius:8px;padding:16px;margin-bottom:16px;}
+  .frase-etapa{font-weight:700;color:var(--azul);margin-bottom:10px;font-size:14px;}
+  /* Simulador */
+  .sim-total{background:var(--azul);color:#fff;padding:16px 24px;border-radius:10px;text-align:center;margin-bottom:20px;}
+  .sim-total .nota{font-size:48px;font-weight:700;}
+  .sim-total .label{font-size:14px;opacity:.85;}
+  .sim-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #eee;}
+  .sim-row:hover{background:#f8f8f8;}
+  .sim-num{font-weight:700;color:var(--azul);width:28px;flex-shrink:0;font-size:13px;}
+  .sim-desc{flex:1;font-size:13px;}
+  .sim-badge{flex-shrink:0;}
+  .sim-pct{font-size:11px;color:#888;width:38px;text-align:right;flex-shrink:0;}
+  .sim-input{width:60px;padding:4px 8px;border:1px solid #ccc;border-radius:4px;font-size:13px;text-align:center;}
+  .sim-aporte{font-size:12px;color:#888;width:80px;text-align:right;flex-shrink:0;}
+  .estado-ok{color:#43a047;font-weight:700;}
+  .estado-riesgo{color:#e65100;font-weight:700;}
+  .estado-critico{color:#c62828;font-weight:700;}
+  /* Autoevaluación */
+  .auto-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #eee;}
+  .auto-num{font-weight:700;color:var(--azul);width:28px;flex-shrink:0;font-size:13px;}
+  .auto-desc{flex:1;font-size:13px;}
+  .auto-btns{display:flex;gap:6px;flex-shrink:0;}
+  .auto-btn{border:none;border-radius:20px;padding:4px 10px;cursor:pointer;font-size:14px;opacity:.5;transition:all .15s;}
+  .auto-btn.sel{opacity:1;transform:scale(1.15);}
+  .auto-resumen{background:var(--gris);border-radius:8px;padding:14px 20px;margin-bottom:20px;display:flex;gap:30px;flex-wrap:wrap;}
+  .auto-stat{text-align:center;}
+  .auto-stat .n{font-size:28px;font-weight:700;}
+  .auto-stat .l{font-size:12px;color:#666;}
+  footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;}
+  </style>
+  </head>
+  <body>
+
+  <div class="header">
+    <img src="{{ url_for('static', filename='img/logoum.jpg') }}" alt="Universidad Mayor">
+    <div class="header-text">
+      <h1>Pauta PMCC – Modelo de Atención Telefónica</h1>
+      <p>Guía didáctica para capacitación de ejecutivos · Universidad Mayor · Uso exclusivo SAT</p>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showTab(0)">📋 Pauta Didáctica</div>
+    <div class="tab" onclick="showTab(1)">⚖️ Ponderaciones</div>
+    <div class="tab" onclick="showTab(2)">🎯 Simulador de Nota</div>
+    <div class="tab" onclick="showTab(3)">💬 Frases Modelo</div>
+    <div class="tab" onclick="showTab(4)">⚠️ Errores Frecuentes</div>
+    <div class="tab" onclick="showTab(5)">✅ Autoevaluación</div>
+  </div>
+
+  <div class="content">
+
+  <!-- TAB 1: PAUTA DIDÁCTICA -->
+  <div class="panel active" id="panel0">
+    <h2>Pauta Didáctica</h2>
+    <p class="subtitle">🔵 FORMA = Cómo se comunica el ejecutivo &nbsp;|&nbsp; 🟢 FONDO = Qué hace y conoce el ejecutivo</p>
+    <table>
+      <tr><th>#</th><th>¿Qué se evalúa?</th><th>Aspecto</th><th>Demuestra</th><th>¿Por qué importa?</th></tr>
+      <tr><td><b>1</b></td><td>Realiza saludo protocolar (cordial, con energía y positivismo).</td><td><span class="badge-forma">FORMA</span></td><td>Actitud de servicio</td><td style="color:#555;font-size:12px">El saludo es la primera impresión. Marca el tono de toda la llamada y refleja la identidad institucional.</td></tr><tr><td><b>2</b></td><td>Solicita o confirma el nombre del cliente y lo personaliza durante toda la conversación.</td><td><span class="badge-forma">FORMA</span></td><td>Actitud de servicio</td><td style="color:#555;font-size:12px">Usar el nombre genera cercanía y demuestra que el cliente es una persona, no un número de caso.</td></tr><tr><td><b>3</b></td><td>Permite al cliente presentar su requerimiento sin interrumpirlo.</td><td><span class="badge-forma">FORMA</span></td><td>Actitud de servicio</td><td style="color:#555;font-size:12px">Interrumpir genera frustración y puede llevar a malentender el requerimiento real.</td></tr><tr><td><b>4</b></td><td>Identifica el requerimiento, realiza preguntas para entender la necesidad y responde todos los puntos planteados.</td><td><span class="badge-forma">FORMA</span></td><td>Actitud de servicio</td><td style="color:#555;font-size:12px">Una gestión correcta parte de entender bien qué necesita el cliente, no de asumir.</td></tr><tr><td><b>5</b></td><td>Utiliza términos de cortesía al solicitar datos e indica el motivo por el que los pide.</td><td><span class="badge-forma">FORMA</span></td><td>Actitud de servicio</td><td style="color:#555;font-size:12px">Pedir datos sin explicar por qué puede incomodar al cliente. La cortesía es parte del protocolo institucional.</td></tr><tr><td><b>6</b></td><td>Valida antecedentes del cliente y actualiza teléfono y correo en el CRM.</td><td><span class="badge-fondo">FONDO</span></td><td>Conocimiento Técnico</td><td style="color:#555;font-size:12px">Mantener datos actualizados permite dar seguimiento y asegura que las comunicaciones lleguen correctamente.</td></tr><tr><td><b>7</b></td><td>Conoce y aplica los procedimientos del servicio solicitado. Entrega la mejor solución al requerimiento.</td><td><span class="badge-fondo">FONDO</span></td><td>Conocimiento Técnico</td><td style="color:#555;font-size:12px">El ejecutivo debe dominar los procesos para entregar respuestas correctas y no generar falsas expectativas.</td></tr><tr><td><b>8</b></td><td>Realiza transferencia asistida entregando un resumen del requerimiento al área receptora.</td><td><span class="badge-fondo">FONDO</span></td><td>Actitud de servicio</td><td style="color:#555;font-size:12px">Derivar sin contexto obliga al cliente a repetirse. Un buen resumen demuestra respeto por su tiempo.</td></tr><tr><td><b>9</b></td><td>Entrega respuestas correctas, completas e información complementaria. Responde todas las dudas.</td><td><span class="badge-forma">FORMA</span></td><td>Actitud de servicio</td><td style="color:#555;font-size:12px">La calidad de la información es el corazón de la atención. Una respuesta incompleta genera una segunda llamada.</td></tr><tr><td><b>10</b></td><td>Dicción adecuada y tonos de voz que mantienen la atención del cliente.</td><td><span class="badge-forma">FORMA</span></td><td>Actitud de servicio</td><td style="color:#555;font-size:12px">Un tono monótono o dicción poco clara afectan directamente la comprensión y la experiencia del cliente.</td></tr><tr><td><b>11</b></td><td>Identifica el motivo de la llamada y registra el tema correspondiente en el sistema.</td><td><span class="badge-fondo">FONDO</span></td><td>Conocimiento Técnico</td><td style="color:#555;font-size:12px">El registro correcto permite clasificar, derivar y hacer seguimiento eficiente de los casos.</td></tr><tr><td><b>12</b></td><td>Registra una descripción general del caso destacando los aspectos importantes.</td><td><span class="badge-fondo">FONDO</span></td><td>Conocimiento Técnico</td><td style="color:#555;font-size:12px">Una descripción clara facilita que otra persona entienda el caso sin releer todo el historial.</td></tr><tr><td><b>13</b></td><td>Registra la respuesta entregada al solicitante.</td><td><span class="badge-fondo">FONDO</span></td><td>Conocimiento Técnico</td><td style="color:#555;font-size:12px">Dejar constancia protege al ejecutivo y al cliente ante cualquier discrepancia futura.</td></tr><tr><td><b>14</b></td><td>Existe correlación entre el tipo de caso y la descripción registrada.</td><td><span class="badge-fondo">FONDO</span></td><td>Conocimiento Técnico</td><td style="color:#555;font-size:12px">Una clasificación incorrecta desvía el caso al área equivocada y genera demoras innecesarias.</td></tr><tr><td><b>15</b></td><td>Justifica tiempos de espera e informa al cliente qué está haciendo. Máximo 10 segundos sin retroalimentar.</td><td><span class="badge-forma">FORMA</span></td><td>Actitud de Servicio</td><td style="color:#555;font-size:12px">El silencio prolongado genera ansiedad. Mantener informado al cliente demuestra que su llamada importa.</td></tr><tr><td><b>16</b></td><td>Mantiene la calma ante situaciones de tensión y ofrece soluciones sin involucrarse emocionalmente.</td><td><span class="badge-forma">FORMA</span></td><td>Actitud de servicio</td><td style="color:#555;font-size:12px">Las emociones no gestionadas escalan conflictos. Un ejecutivo ecuánime transmite seguridad y control.</td></tr><tr><td><b>17</b></td><td>Cuando no puede resolver en el momento, se compromete con un plazo y lo cumple.</td><td><span class="badge-fondo">FONDO</span></td><td>Actitud de servicio</td><td style="color:#555;font-size:12px">Un compromiso concreto y cumplido genera confianza. La vaguedad genera frustración y desconfianza.</td></tr><tr><td><b>18</b></td><td>Ante llamadas cortadas involuntariamente, retoma el contacto con el cliente.</td><td><span class="badge-forma">FORMA</span></td><td>Actitud de servicio</td><td style="color:#555;font-size:12px">No retomar el contacto puede interpretarse como desinterés. El cliente no debería tener que llamar de nuevo.</td></tr><tr><td><b>19</b></td><td>Antes de cerrar la llamada consulta si puede ayudar en algo más.</td><td><span class="badge-fondo">FONDO</span></td><td>Actitud de servicio</td><td style="color:#555;font-size:12px">Esta pregunta puede resolver una segunda llamada evitable y demuestra disposición genuina de servicio.</td></tr><tr><td><b>20</b></td><td>Realiza despedida institucional completa (nombre del cliente + nombre propio + Universidad).</td><td><span class="badge-forma">FORMA</span></td><td>Actitud de servicio</td><td style="color:#555;font-size:12px">La despedida es el último recuerdo que tiene el cliente. Una despedida cálida y formal refuerza la imagen institucional.</td></tr><tr><td><b>21</b></td><td>No corta la llamada ni pierde el respeto hacia el cliente bajo ninguna circunstancia.</td><td><span class="badge-forma">FORMA</span></td><td>Actitud de servicio</td><td style="color:#555;font-size:12px">Cortar o faltar el respeto es una falta grave. El cliente merece respeto independientemente de su actitud.</td></tr><tr><td><b>22</b></td><td>Evita ironía, sarcasmo, indiferencia o actitudes que puedan ofender al cliente.</td><td><span class="badge-forma">FORMA</span></td><td>Actitud de servicio</td><td style="color:#555;font-size:12px">Estas conductas dañan la imagen institucional y pueden derivar en reclamos formales.</td></tr><tr><td><b>23</b></td><td>Habla de la Universidad en primera persona del plural ('nosotros'), no en tercera persona.</td><td><span class="badge-forma">FORMA</span></td><td>Actitud de servicio</td><td style="color:#555;font-size:12px">Hablar en tercera persona genera distancia. 'Nosotros' transmite pertenencia y compromiso institucional.</td></tr><tr><td><b>24</b></td><td>Ofrece encuesta de satisfacción antes de la despedida (excepto en transferencias asistidas).</td><td><span class="badge-fondo">FONDO</span></td><td>Conocimiento Técnico</td><td style="color:#555;font-size:12px">La encuesta es parte del protocolo de cierre. No ofrecerla es un incumplimiento directo del procedimiento.</td></tr>
+    </table>
+  </div>
+
+  <!-- TAB 2: PONDERACIONES -->
+  <div class="panel" id="panel1">
+    <h2>Ponderaciones</h2>
+    <p class="subtitle">Ordenados de mayor a menor impacto. Los ítems con mayor ponderación afectan más la nota final.</p>
+    <table>
+      <tr><th>Ranking</th><th>Ítem</th><th>Descripción</th><th>Aspecto</th><th>Ponderación</th><th>Impacto</th></tr>
+      <tr><td><b>#1</b></td><td><b>3</b></td><td>No interrumpir al cliente</td><td><span class="badge-forma">FORMA</span></td><td><b>6.0%</b><div class="pct-bar"><div class="pct-fill" style="width:100%"></div></div></td><td>🔴 Alto</td></tr><tr><td><b>#2</b></td><td><b>5</b></td><td>Cortesía al solicitar datos</td><td><span class="badge-forma">FORMA</span></td><td><b>6.0%</b><div class="pct-bar"><div class="pct-fill" style="width:100%"></div></div></td><td>🔴 Alto</td></tr><tr><td><b>#3</b></td><td><b>21</b></td><td>No cortar ni agredir al cliente</td><td><span class="badge-forma">FORMA</span></td><td><b>5.8%</b><div class="pct-bar"><div class="pct-fill" style="width:96.66666666666667%"></div></div></td><td>🔴 Alto</td></tr><tr><td><b>#4</b></td><td><b>24</b></td><td>Ofrecer encuesta de satisfacción</td><td><span class="badge-fondo">FONDO</span></td><td><b>5.8%</b><div class="pct-bar"><div class="pct-fill" style="width:96.66666666666667%"></div></div></td><td>🔴 Alto</td></tr><tr><td><b>#5</b></td><td><b>6</b></td><td>Validar y actualizar datos CRM</td><td><span class="badge-fondo">FONDO</span></td><td><b>5.6%</b><div class="pct-bar"><div class="pct-fill" style="width:93.33333333333333%"></div></div></td><td>🔴 Alto</td></tr><tr><td><b>#6</b></td><td><b>4</b></td><td>Identificar requerimiento</td><td><span class="badge-forma">FORMA</span></td><td><b>5.4%</b><div class="pct-bar"><div class="pct-fill" style="width:90%"></div></div></td><td>🟡 Medio-Alto</td></tr><tr><td><b>#7</b></td><td><b>7</b></td><td>Aplicar procedimientos correctos</td><td><span class="badge-fondo">FONDO</span></td><td><b>4.7%</b><div class="pct-bar"><div class="pct-fill" style="width:78.33333333333333%"></div></div></td><td>🟡 Medio-Alto</td></tr><tr><td><b>#8</b></td><td><b>8</b></td><td>Transferencia asistida</td><td><span class="badge-fondo">FONDO</span></td><td><b>4.7%</b><div class="pct-bar"><div class="pct-fill" style="width:78.33333333333333%"></div></div></td><td>🟡 Medio-Alto</td></tr><tr><td><b>#9</b></td><td><b>11</b></td><td>Registrar motivo de llamada</td><td><span class="badge-fondo">FONDO</span></td><td><b>4.5%</b><div class="pct-bar"><div class="pct-fill" style="width:75%"></div></div></td><td>🟡 Medio-Alto</td></tr><tr><td><b>#10</b></td><td><b>20</b></td><td>Despedida institucional</td><td><span class="badge-forma">FORMA</span></td><td><b>4.5%</b><div class="pct-bar"><div class="pct-fill" style="width:75%"></div></div></td><td>🟡 Medio-Alto</td></tr><tr><td><b>#11</b></td><td><b>1</b></td><td>Saludo protocolar</td><td><span class="badge-forma">FORMA</span></td><td><b>4.3%</b><div class="pct-bar"><div class="pct-fill" style="width:71.66666666666667%"></div></div></td><td>🟡 Medio-Alto</td></tr><tr><td><b>#12</b></td><td><b>16</b></td><td>Manejo de situaciones difíciles</td><td><span class="badge-forma">FORMA</span></td><td><b>4.3%</b><div class="pct-bar"><div class="pct-fill" style="width:71.66666666666667%"></div></div></td><td>🟡 Medio-Alto</td></tr><tr><td><b>#13</b></td><td><b>17</b></td><td>Compromiso y seguimiento</td><td><span class="badge-fondo">FONDO</span></td><td><b>4.3%</b><div class="pct-bar"><div class="pct-fill" style="width:71.66666666666667%"></div></div></td><td>🟡 Medio-Alto</td></tr><tr><td><b>#14</b></td><td><b>22</b></td><td>Respeto durante la conversación</td><td><span class="badge-forma">FORMA</span></td><td><b>4.3%</b><div class="pct-bar"><div class="pct-fill" style="width:71.66666666666667%"></div></div></td><td>🟡 Medio-Alto</td></tr><tr><td><b>#15</b></td><td><b>9</b></td><td>Respuestas correctas y completas</td><td><span class="badge-forma">FORMA</span></td><td><b>3.9%</b><div class="pct-bar"><div class="pct-fill" style="width:65%"></div></div></td><td>🟠 Medio</td></tr><tr><td><b>#16</b></td><td><b>15</b></td><td>Tiempos de espera y retroalimentación</td><td><span class="badge-forma">FORMA</span></td><td><b>3.6%</b><div class="pct-bar"><div class="pct-fill" style="width:60%"></div></div></td><td>🟠 Medio</td></tr><tr><td><b>#17</b></td><td><b>2</b></td><td>Personalización del cliente</td><td><span class="badge-forma">FORMA</span></td><td><b>3.4%</b><div class="pct-bar"><div class="pct-fill" style="width:56.666666666666664%"></div></div></td><td>🟠 Medio</td></tr><tr><td><b>#18</b></td><td><b>14</b></td><td>Correlación tipo caso / descripción</td><td><span class="badge-fondo">FONDO</span></td><td><b>3.4%</b><div class="pct-bar"><div class="pct-fill" style="width:56.666666666666664%"></div></div></td><td>🟠 Medio</td></tr><tr><td><b>#19</b></td><td><b>19</b></td><td>Consultar requerimientos adicionales</td><td><span class="badge-fondo">FONDO</span></td><td><b>3.2%</b><div class="pct-bar"><div class="pct-fill" style="width:53.333333333333336%"></div></div></td><td>🟠 Medio</td></tr><tr><td><b>#20</b></td><td><b>23</b></td><td>Formalidad y sentido de pertenencia</td><td><span class="badge-forma">FORMA</span></td><td><b>3.1%</b><div class="pct-bar"><div class="pct-fill" style="width:51.66666666666667%"></div></div></td><td>🟠 Medio</td></tr><tr><td><b>#21</b></td><td><b>10</b></td><td>Dicción y tono de voz</td><td><span class="badge-forma">FORMA</span></td><td><b>3.0%</b><div class="pct-bar"><div class="pct-fill" style="width:50%"></div></div></td><td>🟠 Medio</td></tr><tr><td><b>#22</b></td><td><b>12</b></td><td>Descripción general del caso</td><td><span class="badge-fondo">FONDO</span></td><td><b>2.5%</b><div class="pct-bar"><div class="pct-fill" style="width:41.66666666666667%"></div></div></td><td>🟢 Menor</td></tr><tr><td><b>#23</b></td><td><b>13</b></td><td>Registrar respuesta entregada</td><td><span class="badge-fondo">FONDO</span></td><td><b>2.1%</b><div class="pct-bar"><div class="pct-fill" style="width:35%"></div></div></td><td>🟢 Menor</td></tr><tr><td><b>#24</b></td><td><b>18</b></td><td>Restablecer llamada cortada</td><td><span class="badge-forma">FORMA</span></td><td><b>2.0%</b><div class="pct-bar"><div class="pct-fill" style="width:33.33333333333333%"></div></div></td><td>🟢 Menor</td></tr>
+    </table>
+    <div style="margin-top:24px;display:flex;gap:20px;flex-wrap:wrap;">
+      <div style="background:#ddeeff;border-radius:8px;padding:14px 20px;flex:1;min-width:200px"><b>🔵 FORMA</b><br><span style="font-size:22px;font-weight:700;color:var(--azul)">59.6%</span><br><small>Cómo se comunica el ejecutivo</small></div>
+      <div style="background:#e6f4ec;border-radius:8px;padding:14px 20px;flex:1;min-width:200px"><b>🟢 FONDO</b><br><span style="font-size:22px;font-weight:700;color:var(--verde)">40.8%</span><br><small>Qué hace y conoce el ejecutivo</small></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: SIMULADOR -->
+  <div class="panel" id="panel2">
+    <h2>Simulador de Nota</h2>
+    <p class="subtitle">Ingresa una nota del 1.0 al 7.0 en cada ítem. La nota final se calcula automáticamente.</p>
+    <div class="sim-total">
+      <div class="label">Nota Final Estimada</div>
+      <div class="nota" id="notaFinal">—</div>
+      <div class="label" id="estadoNota">Ingresa notas para calcular</div>
+    </div>
+    <div id="simRows"></div>
+  </div>
+
+  <!-- TAB 4: FRASES MODELO -->
+  <div class="panel" id="panel3">
+    <h2>Frases Modelo</h2>
+    <p class="subtitle">Ejemplos de frases correctas vs incorrectas para cada etapa de la llamada.</p>
+    
+    <div class="frase-card">
+      <div class="frase-etapa">📍 Saludo</div>
+      <div class="frase-si">✅ <b>Correcto:</b> «Muy buenos días, gracias por comunicarse con Universidad Mayor. Le atiende [Nombre Apellido], ¿en qué puedo ayudarle?»</div>
+      <div class="frase-no">❌ <b>Evitar:</b> «Hola, Universidad Mayor, dígame.»</div>
+      <div class="frase-why">💡 El saludo completo transmite energía, identidad institucional y apertura. El saludo corto suena frío e impersonal.</div>
+    </div>
+    <div class="frase-card">
+      <div class="frase-etapa">📍 Personalización</div>
+      <div class="frase-si">✅ <b>Correcto:</b> «Por supuesto, Don Carlos, déjeme revisar eso para usted.»</div>
+      <div class="frase-no">❌ <b>Evitar:</b> «Espere, voy a revisar.»</div>
+      <div class="frase-why">💡 Usar el nombre del cliente humaniza la llamada y genera confianza inmediata.</div>
+    </div>
+    <div class="frase-card">
+      <div class="frase-etapa">📍 Escucha activa</div>
+      <div class="frase-si">✅ <b>Correcto:</b> «Cuénteme por favor, ¿en qué puedo ayudarle hoy?» (y guardar silencio mientras habla)</div>
+      <div class="frase-no">❌ <b>Evitar:</b> «¿Es por matrícula o por notas?» (antes de dejar hablar)</div>
+      <div class="frase-why">💡 Preguntar antes de escuchar interrumpe el relato del cliente y puede hacer perder información clave.</div>
+    </div>
+    <div class="frase-card">
+      <div class="frase-etapa">📍 Solicitar datos</div>
+      <div class="frase-si">✅ <b>Correcto:</b> «Para poder ayudarle correctamente, ¿me podría indicar su RUT por favor?»</div>
+      <div class="frase-no">❌ <b>Evitar:</b> «Deme su RUT.»</div>
+      <div class="frase-why">💡 Explicar para qué se pide el dato y usar cortesía reduce la resistencia del cliente a entregar información.</div>
+    </div>
+    <div class="frase-card">
+      <div class="frase-etapa">📍 Tiempo de espera</div>
+      <div class="frase-si">✅ <b>Correcto:</b> «Don Carlos, voy a revisar eso en el sistema, le pido un momento por favor... Gracias por su espera, ya tengo la información.»</div>
+      <div class="frase-no">❌ <b>Evitar:</b> «Espere.» (silencio prolongado)</div>
+      <div class="frase-why">💡 El cliente necesita saber que está siendo atendido. Más de 10 segundos sin señal genera ansiedad.</div>
+    </div>
+    <div class="frase-card">
+      <div class="frase-etapa">📍 Gestión del requerimiento</div>
+      <div class="frase-si">✅ <b>Correcto:</b> «Lo que corresponde en este caso es... Le explico los pasos: primero... luego... ¿quedó claro hasta aquí?»</div>
+      <div class="frase-no">❌ <b>Evitar:</b> «Eso no lo manejo yo, llame al área de...»</div>
+      <div class="frase-why">💡 Explicar con pasos simples demuestra dominio del procedimiento.</div>
+    </div>
+    <div class="frase-card">
+      <div class="frase-etapa">📍 Cliente molesto</div>
+      <div class="frase-si">✅ <b>Correcto:</b> «Entiendo su molestia, Don Carlos, y tiene razón en querer una respuesta. Voy a revisar esto ahora mismo para darle una solución.»</div>
+      <div class="frase-no">❌ <b>Evitar:</b> «Cálmese, yo no tengo la culpa de eso.»</div>
+      <div class="frase-why">💡 Validar la emoción del cliente sin involucrarse emocionalmente desactiva la tensión.</div>
+    </div>
+    <div class="frase-card">
+      <div class="frase-etapa">📍 Transferencia asistida</div>
+      <div class="frase-si">✅ <b>Correcto:</b> «Le voy a transferir con el área de Finanzas. Antes de hacerlo, les informaré que usted necesita [resumen]. Un momento por favor.»</div>
+      <div class="frase-no">❌ <b>Evitar:</b> «Le paso con otro departamento.» (transfiere sin avisar)</div>
+      <div class="frase-why">💡 Un resumen previo evita que el cliente repita su problema.</div>
+    </div>
+    <div class="frase-card">
+      <div class="frase-etapa">📍 Compromiso de seguimiento</div>
+      <div class="frase-si">✅ <b>Correcto:</b> «No tengo la respuesta en este momento, pero me comprometo a revisarlo y contactarle antes de las 48 horas a su correo [correo].»</div>
+      <div class="frase-no">❌ <b>Evitar:</b> «No sé, tendría que ver eso.»</div>
+      <div class="frase-why">💡 Comprometerse con un plazo concreto y cumplirlo genera confianza.</div>
+    </div>
+    <div class="frase-card">
+      <div class="frase-etapa">📍 Requerimientos adicionales</div>
+      <div class="frase-si">✅ <b>Correcto:</b> «¿Lo puedo ayudar en algo más, Don Carlos?»</div>
+      <div class="frase-no">❌ <b>Evitar:</b> «¿Algo más?» o pasar directo a la despedida</div>
+      <div class="frase-why">💡 La pregunta completa con el nombre del cliente es parte del protocolo.</div>
+    </div>
+    <div class="frase-card">
+      <div class="frase-etapa">📍 Despedida institucional</div>
+      <div class="frase-si">✅ <b>Correcto:</b> «Que tenga un excelente día, Don Carlos. Recuerde que le atendió [Nombre Apellido] de Universidad Mayor. ¡Hasta luego!»</div>
+      <div class="frase-no">❌ <b>Evitar:</b> «Chao, que le vaya bien.»</div>
+      <div class="frase-why">💡 La despedida institucional cierra el ciclo de atención reforzando la identidad de la Universidad.</div>
+    </div>
+    <div class="frase-card">
+      <div class="frase-etapa">📍 Encuesta de satisfacción</div>
+      <div class="frase-si">✅ <b>Correcto:</b> «Antes de finalizar, ¿le importaría responder 2 breves preguntas sobre la atención recibida hoy?»</div>
+      <div class="frase-no">❌ <b>Evitar:</b> «¿Quiere contestar una encuesta?» de forma apagada</div>
+      <div class="frase-why">💡 Ofrecerla con energía y antes del cierre aumenta la tasa de respuesta.</div>
+    </div>
+  </div>
+
+  <!-- TAB 5: ERRORES FRECUENTES -->
+  <div class="panel" id="panel4">
+    <h2>Errores Frecuentes</h2>
+    <p class="subtitle">Basado en los criterios de la Pauta PMCC. Conocerlos antes de la auditoría marca la diferencia.</p>
+    <table>
+      <tr><th>#</th><th>Error frecuente</th><th>¿Por qué ocurre?</th><th>Impacto en la nota</th><th>Cómo evitarlo</th></tr>
+      <tr><td><b>1</b></td><td><b>Saludo incompleto o sin energía</b></td><td style="color:#555;font-size:12px">El ejecutivo está apurado o no lo considera importante.</td><td style="color:#c0392b;font-size:12px">Baja directamente el ítem 1 (4.3%). Da mala impresión desde el inicio.</td><td style="color:#1a5c38;font-size:12px">Practicar el saludo completo hasta que salga natural. Grabarse si es necesario.</td></tr><tr><td><b>2</b></td><td><b>No usar el nombre del cliente</b></td><td style="color:#555;font-size:12px">Se olvida preguntar o no lo incorpora durante la llamada.</td><td style="color:#c0392b;font-size:12px">Afecta ítem 2 (3.4%). El cliente siente que es un trámite, no una atención.</td><td style="color:#1a5c38;font-size:12px">Anotar el nombre al inicio y usarlo al menos 2-3 veces durante la llamada.</td></tr><tr><td><b>3</b></td><td><b>Interrumpir al cliente</b></td><td style="color:#555;font-size:12px">Nerviosismo, querer resolver rápido o anticipar la respuesta.</td><td style="color:#c0392b;font-size:12px">Afecta ítem 3 (6.0%) — uno de los más pesados. Genera frustración inmediata.</td><td style="color:#1a5c38;font-size:12px">Respirar y dejar que el cliente termine siempre. Contar hasta 2 antes de hablar.</td></tr><tr><td><b>4</b></td><td><b>Pedir datos sin explicar por qué</b></td><td style="color:#555;font-size:12px">No es un hábito incorporado o se siente incómodo.</td><td style="color:#c0392b;font-size:12px">Afecta ítem 5 (6.0%). El cliente puede negarse o desconfiar.</td><td style="color:#1a5c38;font-size:12px">Incorporar la frase: 'Para poder ayudarle, necesito...' antes de cada solicitud.</td></tr><tr><td><b>5</b></td><td><b>No actualizar datos en el CRM</b></td><td style="color:#555;font-size:12px">Apuro, olvido o no ver la importancia del registro.</td><td style="color:#c0392b;font-size:12px">Afecta ítem 6 (5.6%). Genera problemas de seguimiento y contacto futuro.</td><td style="color:#1a5c38;font-size:12px">Hacer del registro un hábito de cierre obligatorio en cada llamada.</td></tr><tr><td><b>6</b></td><td><b>Silencio prolongado sin avisar</b></td><td style="color:#555;font-size:12px">Búsqueda de información sin pensar en el cliente.</td><td style="color:#c0392b;font-size:12px">Afecta ítem 15 (3.6%). El cliente no sabe si sigue en línea.</td><td style="color:#1a5c38;font-size:12px">Regla de oro: nunca más de 10 segundos sin retroalimentar.</td></tr><tr><td><b>7</b></td><td><b>Perder el control con cliente molesto</b></td><td style="color:#555;font-size:12px">Tomar el enojo como algo personal.</td><td style="color:#c0392b;font-size:12px">Afecta ítem 16 (4.3%). Puede escalar a una situación grave.</td><td style="color:#1a5c38;font-size:12px">Técnica: validar → separar emoción de problema → ofrecer solución concreta.</td></tr><tr><td><b>8</b></td><td><b>Transferir sin resumen previo</b></td><td style="color:#555;font-size:12px">No saber que es parte del protocolo o querer terminar rápido.</td><td style="color:#c0392b;font-size:12px">Afecta ítem 8 (4.7%). El cliente debe repetir su problema.</td><td style="color:#1a5c38;font-size:12px">Siempre antes de transferir: 'Le informaré al área que usted necesita [resumen].'</td></tr><tr><td><b>9</b></td><td><b>No consultar requerimientos adicionales</b></td><td style="color:#555;font-size:12px">Se olvida o se quiere cerrar la llamada.</td><td style="color:#c0392b;font-size:12px">Afecta ítem 19 (3.2%). Puede generar una segunda llamada evitable.</td><td style="color:#1a5c38;font-size:12px">Hacer de esta pregunta un ritual de cierre: nunca terminar sin hacerla.</td></tr><tr><td><b>10</b></td><td><b>Despedida informal o incompleta</b></td><td style="color:#555;font-size:12px">No se le da importancia al cierre de la llamada.</td><td style="color:#c0392b;font-size:12px">Afecta ítem 20 (4.5%). Pierde la oportunidad de dejar una buena impresión final.</td><td style="color:#1a5c38;font-size:12px">Memorizar la frase de despedida institucional y aplicarla siempre.</td></tr><tr><td><b>11</b></td><td><b>No ofrecer encuesta de satisfacción</b></td><td style="color:#555;font-size:12px">Olvido o incomodidad de pedirlo.</td><td style="color:#c0392b;font-size:12px">Afecta ítem 24 (5.8%) — uno de los más pesados.</td><td style="color:#1a5c38;font-size:12px">Incorporarla como penúltimo paso, antes de la despedida. Nunca en transferencias.</td></tr><tr><td><b>12</b></td><td><b>Hablar de la Universidad en tercera persona</b></td><td style="color:#555;font-size:12px">No sentirse parte de la institución o no saberlo.</td><td style="color:#c0392b;font-size:12px">Afecta ítem 23 (3.1%). Genera distancia e inconsistencia con la imagen institucional.</td><td style="color:#1a5c38;font-size:12px">Reemplazar 'ellos' o 'la universidad' por 'nosotros' o 'en Universidad Mayor'.</td></tr>
+    </table>
+  </div>
+
+  <!-- TAB 6: AUTOEVALUACIÓN -->
+  <div class="panel" id="panel5">
+    <h2>✅ Autoevaluación</h2>
+    <p class="subtitle">Completa esta lista honestamente antes de tu primera auditoría real. Es solo para ti.</p>
+    <div class="auto-resumen">
+      <div class="auto-stat"><div class="n" id="cnt-ok" style="color:#43a047">0</div><div class="l">✅ Lo domino</div></div>
+      <div class="auto-stat"><div class="n" id="cnt-pr" style="color:#f9a825">0</div><div class="l">🔄 En práctica</div></div>
+      <div class="auto-stat"><div class="n" id="cnt-no" style="color:#e53935">0</div><div class="l">❌ Por trabajar</div></div>
+      <div class="auto-stat"><div class="n" id="cnt-tot" style="color:#005aa9">0/24</div><div class="l">Completados</div></div>
+    </div>
+    <div id="autoItems"></div>
+    <p style="font-style:italic;color:#666;margin-top:24px;text-align:center">"La auditoría no es un examen sorpresa — es el reflejo de lo que ya practicas todos los días."</p>
+  </div>
+
+  </div><!-- /content -->
+
+  <footer>Pauta PMCC · Universidad Mayor · Capacitación SAT · <a href="/" style="color:var(--azul)">← Volver al directorio</a></footer>
+
+  <script>
+  // ── Tabs ──────────────────────────────────────────────────────────────────────
+  function showTab(i){
+    document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',i===j));
+    document.querySelectorAll('.panel').forEach((p,j)=>p.classList.toggle('active',i===j));
+  }
+
+  // ── Simulador ─────────────────────────────────────────────────────────────────
+  const items = [
+    [1,"Saludo protocolar","FORMA",0.043],
+    [2,"Personalización del cliente","FORMA",0.034],
+    [3,"No interrumpir al cliente","FORMA",0.060],
+    [4,"Identificar requerimiento","FORMA",0.054],
+    [5,"Cortesía al solicitar datos","FORMA",0.060],
+    [6,"Validar y actualizar datos CRM","FONDO",0.056],
+    [7,"Aplicar procedimientos correctos","FONDO",0.047],
+    [8,"Transferencia asistida","FONDO",0.047],
+    [9,"Respuestas correctas y completas","FORMA",0.039],
+    [10,"Dicción y tono de voz","FORMA",0.030],
+    [11,"Registrar motivo de llamada","FONDO",0.045],
+    [12,"Descripción general del caso","FONDO",0.025],
+    [13,"Registrar respuesta entregada","FONDO",0.021],
+    [14,"Correlación tipo caso / descripción","FONDO",0.034],
+    [15,"Justificar tiempos de espera","FORMA",0.036],
+    [16,"Manejo de situaciones difíciles","FORMA",0.043],
+    [17,"Compromiso y seguimiento","FONDO",0.043],
+    [18,"Restablecer llamada cortada","FORMA",0.020],
+    [19,"Consultar requerimientos adicionales","FONDO",0.032],
+    [20,"Despedida institucional","FORMA",0.045],
+    [21,"No cortar ni agredir al cliente","FORMA",0.058],
+    [22,"Respeto durante la conversación","FORMA",0.043],
+    [23,"Formalidad y sentido de pertenencia","FORMA",0.031],
+    [24,"Ofrecer encuesta de satisfacción","FONDO",0.058]
+  ];
+
+  const simContainer = document.getElementById('simRows');
+  items.forEach(([n,d,a,p])=>{
+    const div = document.createElement('div');
+    div.className = 'sim-row';
+    div.innerHTML = `
+      <span class="sim-num">${n}</span>
+      <span class="sim-desc">${d}</span>
+      <span class="sim-badge"><span class="badge-${a.toLowerCase()}">${a}</span></span>
+      <span class="sim-pct">${(p*100).toFixed(1)}%</span>
+      <input class="sim-input" type="number" min="1" max="7" step="0.1" placeholder="—" oninput="calcular()" id="item${n}">
+      <span class="sim-aporte" id="aporte${n}">—</span>
+    `;
+    simContainer.appendChild(div);
+  });
+
+  function calcular(){
+    let total = 0, filled = 0;
+    items.forEach(([n,d,a,p])=>{
+      const val = parseFloat(document.getElementById('item'+n).value);
+      const ap = document.getElementById('aporte'+n);
+      if(!isNaN(val) && val >= 1 && val <= 7){
+        const contrib = val * p;
+        total += contrib;
+        ap.textContent = contrib.toFixed(3);
+        filled++;
+      } else { ap.textContent = '—'; }
+    });
+    const nf = document.getElementById('notaFinal');
+    const en = document.getElementById('estadoNota');
+    if(filled === 0){ nf.textContent='—'; en.textContent='Ingresa notas para calcular'; return; }
+    const extrapolada = filled < 24 ? (total / items.slice(0,filled).reduce((s,_,i)=>s+items[i][3],0)) * 1 : total;
+    const nota = Math.max(1, Math.min(7, total * 7));
+    nf.textContent = nota.toFixed(1);
+    if(nota >= 5.5){ en.textContent = '🟢 Buen desempeño'; nf.style.color='#a5d6a7'; }
+    else if(nota >= 4){ en.textContent = '🟡 Aprobado'; nf.style.color='#fff59d'; }
+    else { en.textContent = '🔴 Bajo el mínimo'; nf.style.color='#ef9a9a'; }
+  }
+
+  // ── Autoevaluación ────────────────────────────────────────────────────────────
+  const autoItems = [
+    [1,"Realizo el saludo completo con energía y menciono mi nombre y el de la Universidad.","FORMA"],
+    [2,"Pregunto y uso el nombre del cliente durante toda la llamada.","FORMA"],
+    [3,"Escucho sin interrumpir aunque sepa lo que van a pedir.","FORMA"],
+    [4,"Identifico todos los requerimientos y respondo cada uno de ellos.","FORMA"],
+    [5,"Uso 'por favor' y 'gracias' al pedir datos y explico para qué los necesito.","FORMA"],
+    [6,"Valido los datos del cliente y actualizo teléfono y correo en el CRM.","FONDO"],
+    [7,"Conozco los procedimientos de los servicios más solicitados.","FONDO"],
+    [8,"Cuando derivo, entrego un resumen del requerimiento al área receptora.","FONDO"],
+    [9,"Entrego respuestas correctas, completas y respondo todas las dudas.","FORMA"],
+    [10,"Me entienden claramente cuando hablo y mantengo un tono adecuado.","FORMA"],
+    [11,"Registro el motivo correcto de la llamada en el sistema.","FONDO"],
+    [12,"Escribo una descripción clara y completa del caso.","FONDO"],
+    [13,"Registro la respuesta que entregué al cliente.","FONDO"],
+    [14,"El tipo de caso que selecciono corresponde a lo que describe el caso.","FONDO"],
+    [15,"Nunca dejo más de 10 segundos de silencio sin avisar al cliente qué estoy haciendo.","FORMA"],
+    [16,"Mantengo la calma ante clientes molestos y ofrezco solución sin involucrarme.","FORMA"],
+    [17,"Cuando no tengo respuesta inmediata me comprometo con un plazo y lo cumplo.","FONDO"],
+    [18,"Si el cliente corta involuntariamente, yo retomo el contacto.","FORMA"],
+    [19,"Antes de despedirme pregunto: '¿Lo puedo ayudar en algo más?'","FONDO"],
+    [20,"Realizo la despedida institucional completa con el nombre del cliente y la Universidad.","FORMA"],
+    [21,"Nunca corto la llamada ni pierdo el respeto hacia el cliente.","FORMA"],
+    [22,"Evito ironía, sarcasmo, indiferencia o cualquier actitud que pueda ofender.","FORMA"],
+    [23,"Hablo de la Universidad en primera persona ('nosotros'), no en tercera.","FORMA"],
+    [24,"Ofrezco la encuesta de satisfacción antes de despedirme (excepto en transferencias).","FONDO"]
+  ];
+  const estados = {};
+  const autoContainer = document.getElementById('autoItems');
+  autoItems.forEach(([n,d,a])=>{
+    estados[n]=null;
+    const div = document.createElement('div');
+    div.className = 'auto-item';
+    div.innerHTML = `
+      <span class="auto-num">${n}</span>
+      <span class="auto-desc">${d} <span class="badge-${a.toLowerCase()}">${a}</span></span>
+      <div class="auto-btns">
+        <button class="auto-btn" title="Lo domino" onclick="setEstado(${n},'ok',this)">✅</button>
+        <button class="auto-btn" title="En práctica" onclick="setEstado(${n},'pr',this)">🔄</button>
+        <button class="auto-btn" title="Por trabajar" onclick="setEstado(${n},'no',this)">❌</button>
+      </div>
+    `;
+    autoContainer.appendChild(div);
+  });
+
+  function setEstado(n,est,btn){
+    estados[n]=est;
+    btn.closest('.auto-btns').querySelectorAll('.auto-btn').forEach(b=>b.classList.remove('sel'));
+    btn.classList.add('sel');
+    const ok=Object.values(estados).filter(v=>v==='ok').length;
+    const pr=Object.values(estados).filter(v=>v==='pr').length;
+    const no=Object.values(estados).filter(v=>v==='no').length;
+    const tot=ok+pr+no;
+    document.getElementById('cnt-ok').textContent=ok;
+    document.getElementById('cnt-pr').textContent=pr;
+    document.getElementById('cnt-no').textContent=no;
+    document.getElementById('cnt-tot').textContent=tot+'/24';
+  }
+  </script>
+  </body>
+  </html>
