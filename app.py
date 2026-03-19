@@ -167,6 +167,13 @@ def temas_crm():
 def pauta_pmcc():
     return render_template("pmcc.html")
  
+ # =========================
+# CORREOS FRECUENTES
+# =========================
+
+@app.route("/correos-frecuentes")
+def correos_frecuentes():
+    return render_template("correos_frecuentes.html")
 # =========================
 # EJECUCIÓN
 # =========================
