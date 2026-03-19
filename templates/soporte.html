@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Soporte SAT · Portal SAT</title>
+<style>
+:root{
+  --um-amarillo:#f2b705;
+  --um-azul:#005aa9;
+  --um-gris:#f5f7fa;
+  --borde:#e0e6ef;
+  --texto:#222;
+  --texto-suave:#666;
+  --rojo:#c0392b;
+  --rojo-bg:#fdecea;
+  --alerta-borde:#f9a825;
+}
+*{box-sizing:border-box;}
+body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#fff;color:var(--texto);}
+.header{background:var(--um-amarillo);padding:20px 30px;display:flex;align-items:center;gap:25px;}
+.header img{height:70px;}
+.header-text h1{margin:0;font-size:22px;color:#222;}
+.header-text p{margin:2px 0 0;font-size:12px;color:#666;}
+.tabs-nav{background:var(--um-azul);display:flex;overflow-x:auto;gap:2px;padding:0 20px;}
+.tab-btn{padding:12px 18px;color:#cce;cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap;border-bottom:3px solid transparent;background:none;border-top:none;border-left:none;border-right:none;transition:color .15s;}
+.tab-btn:hover{color:#fff;}
+.tab-btn.active{color:#fff;border-bottom:3px solid var(--um-amarillo);}
+.content{max-width:860px;margin:0 auto;padding:32px 20px;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+.form-section{background:var(--um-gris);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+.form-section-title{font-size:13px;font-weight:700;color:var(--um-azul);margin-bottom:4px;}
+.form-section-sub{font-size:11px;color:var(--texto-suave);margin-bottom:14px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-field{display:flex;flex-direction:column;gap:4px;}
+.form-field.span2{grid-column:1/-1;}
+label{font-size:11px;color:var(--texto-suave);font-weight:600;}
+.req{color:var(--rojo);}
+input[type="text"],input[type="email"],select,textarea{width:100%;padding:8px 10px;border:1px solid var(--borde);border-radius:6px;font-size:13px;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(--texto);transition:border-color .15s;}
+input:focus,select:focus,textarea:focus{border-color:var(--um-azul);outline:none;}
+textarea{resize:vertical;min-height:70px;}
+.field-hint{font-size:10px;color:var(--texto-suave);margin-top:2px;}
+.field-error{border-color:var(--rojo) !important;background:#fff8f8 !important;}
+.error-panel{display:none;background:var(--rojo-bg);border-left:3px solid var(--rojo);border-radius:0 6px 6px 0;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#8b1a1a;}
+.btn-enviar{width:100%;background:var(--um-azul);color:#fff;border:none;border-radius:8px;padding:13px 28px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .15s;}
+.btn-enviar:hover{opacity:.9;}
+.btn-volver{position:fixed;top:12px;right:16px;background:var(--um-azul);color:#fff;border:none;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;z-index:999;opacity:.85;transition:opacity .2s;}
+.btn-volver:hover{opacity:1;}
+footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top:1px solid #eee;padding-top:16px;}
+</style>
+</head>
+<body>
+
+<a href="/" class="btn-volver">&#8592; Inicio</a>
+
+<div class="header">
+  <img src="{{ url_for('static', filename='img/logoum.jpg') }}" alt="Universidad Mayor">
+  <div class="header-text">
+    <h1>Soporte SAT</h1>
+    <p>Reporta un problema o comparte tu feedback &middot; Portal SAT &middot; Universidad Mayor</p>
+  </div>
+</div>
+
+<div class="tabs-nav">
+  <button class="tab-btn active" onclick="showTab(0)">&#128027; Reportar problema</button>
+  <button class="tab-btn" onclick="showTab(1)">&#128172; Feedback</button>
+</div>
+
+<div class="content">
+
+  <!-- TAB 1: REPORTAR PROBLEMA -->
+  <div class="tab-panel active" id="panel0">
+
+    <div class="form-section">
+      <div class="form-section-title">Descripcion del problema</div>
+      <div class="form-section-sub">Cuentanos que ocurrio con el mayor detalle posible</div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Seccion del Portal donde ocurrio <span class="req">*</span></label>
+          <select id="rep-seccion">
+            <option value="">-- Selecciona --</option>
+            <option>Directorio de Escuelas</option>
+            <option>Contactos Administrativos</option>
+            <option>Contactos Academicos</option>
+            <option>Simulador CRM</option>
+            <option>Pauta PMCC</option>
+            <option>Bitacora SAT</option>
+            <option>Correos Frecuentes</option>
+            <option>Links de uso frecuente</option>
+            <option>Turnos SAT</option>
+            <option>Beneficios Ministeriales</option>
+            <option>Home / Pagina principal</option>
+            <option>Otro (especificar abajo)</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Tipo de problema <span class="req">*</span></label>
+          <select id="rep-tipo">
+            <option value="">-- Selecciona --</option>
+            <option>Informacion incorrecta o desactualizada</option>
+            <option>Enlace o boton que no funciona</option>
+            <option>Error al cargar la pagina</option>
+            <option>Formulario con problemas</option>
+            <option>Correo no se genera correctamente</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="form-field span2">
+          <label>Descripcion detallada <span class="req">*</span></label>
+          <textarea id="rep-descripcion" placeholder="Describe el problema con el mayor detalle posible. Que esperabas que ocurriera y que ocurrio realmente..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title">Tus datos</div>
+      <div class="form-section-sub">Opcional — para poder darte seguimiento</div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Tu nombre</label>
+          <input type="text" id="rep-nombre" placeholder="Nombre completo">
+        </div>
+        <div class="form-field">
+          <label>Tu correo institucional</label>
+          <input type="email" id="rep-correo" placeholder="nombre@umayor.cl">
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#fffbea;border:2px solid var(--alerta-borde);border-radius:8px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:flex-start;gap:10px;">
+      <span style="font-size:20px;">&#9888;</span>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:#7a5c00;">Recuerda agregar tu firma institucional antes de enviar</div>
+        <div style="font-size:11px;color:#9a7800;margin-top:3px;">El correo se abrira en Outlook. Agrega tu firma antes de hacer clic en Enviar.</div>
+      </div>
+    </div>
+
+    <div id="error-rep" class="error-panel"></div>
+
+    <button class="btn-enviar" onclick="enviarReporte()">
+      &#9993;&#65039; Preparar y enviar reporte
+    </button>
+
+  </div>
+
+  <!-- TAB 2: FEEDBACK -->
+  <div class="tab-panel" id="panel1">
+
+    <div class="form-section">
+      <div class="form-section-title">Tu opinion</div>
+      <div class="form-section-sub">Tu feedback ayuda a mejorar el Portal SAT para todo el equipo</div>
+      <div class="form-grid">
+        <div class="form-field span2">
+          <label>Que parte te ayuda mas en tu trabajo? <span class="req">*</span></label>
+          <textarea id="fb-ayuda" placeholder="Escribe aqui..."></textarea>
+        </div>
+        <div class="form-field span2">
+          <label>Que informacion falta o deberia cambiar?</label>
+          <textarea id="fb-falta" placeholder="Escribe aqui..."></textarea>
+        </div>
+        <div class="form-field span2">
+          <label>Que otra cosa te gustaria tener en la herramienta?</label>
+          <textarea id="fb-sugerencia" placeholder="Escribe aqui..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title">Tus datos</div>
+      <div class="form-section-sub">Opcional — para poder responderte si corresponde</div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Tu nombre</label>
+          <input type="text" id="fb-nombre" placeholder="Nombre completo">
+        </div>
+        <div class="form-field">
+          <label>Tu correo institucional</label>
+          <input type="email" id="fb-correo" placeholder="nombre@umayor.cl">
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#fffbea;border:2px solid var(--alerta-borde);border-radius:8px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:flex-start;gap:10px;">
+      <span style="font-size:20px;">&#9888;</span>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:#7a5c00;">Recuerda agregar tu firma institucional antes de enviar</div>
+        <div style="font-size:11px;color:#9a7800;margin-top:3px;">El correo se abrira en Outlook. Agrega tu firma antes de hacer clic en Enviar.</div>
+      </div>
+    </div>
+
+    <div id="error-fb" class="error-panel"></div>
+
+    <button class="btn-enviar" onclick="enviarFeedback()">
+      &#9993;&#65039; Preparar y enviar feedback
+    </button>
+
+  </div>
+
+</div>
+
+<footer>
+  Soporte SAT &middot; Portal SAT &middot; Universidad Mayor<br>
+  <span style="color:#bbb;">Desarrollado por Eduardo Ferrada &middot; Universidad Mayor &middot; Enero 2026</span>
+</footer>
+
+<script>
+function showTab(i) {
+  document.querySelectorAll('.tab-btn').forEach(function(b,j){ b.classList.toggle('active', i===j); });
+  document.querySelectorAll('.tab-panel').forEach(function(p,j){ p.classList.toggle('active', i===j); });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.location.hash === '#feedback') showTab(1);
+});
+
+function show(id) { var el = document.getElementById(id); if (el) el.style.display = 'block'; }
+function hide(id) { var el = document.getElementById(id); if (el) el.style.display = 'none'; }
+function val(id)  { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function marcarError(id) { var el = document.getElementById(id); if (el) el.classList.add('field-error'); }
+function limpiarErrores() { document.querySelectorAll('.field-error').forEach(function(el){ el.classList.remove('field-error'); }); }
+
+function enviarReporte() {
+  limpiarErrores();
+  hide('error-rep');
+  var errores = [];
+  if (!val('rep-seccion'))     { marcarError('rep-seccion');     errores.push('Seccion del Portal'); }
+  if (!val('rep-tipo'))        { marcarError('rep-tipo');        errores.push('Tipo de problema'); }
+  if (!val('rep-descripcion')) { marcarError('rep-descripcion'); errores.push('Descripcion'); }
+  if (errores.length > 0) {
+    var el = document.getElementById('error-rep');
+    el.textContent = 'Faltan campos obligatorios: ' + errores.join(', ') + '.';
+    show('error-rep');
+    return;
+  }
+  var ejecutivo = val('rep-nombre') ? 'Ejecutivo: ' + val('rep-nombre') + (val('rep-correo') ? ' (' + val('rep-correo') + ')' : '') + '\n\n' : '';
+  var cuerpo =
+    'REPORTE DE PROBLEMA - PORTAL SAT\n' +
+    '==================================\n\n' +
+    ejecutivo +
+    'Seccion del Portal: ' + val('rep-seccion') + '\n' +
+    'Tipo de problema: ' + val('rep-tipo') + '\n\n' +
+    'Descripcion:\n' + val('rep-descripcion') + '\n\n' +
+    'Atte.\n\n[Insertar firma institucional]';
+  var dest = 'eduardo.ferrada@umayor.cl;johanna.escalona@umayor.cl;barbara.fernandez@umayor.cl';
+  var asunto = 'Reporte de problema - Portal SAT - ' + val('rep-seccion');
+  window.location.href = 'mailto:' + dest + '?subject=' + encodeURIComponent(asunto) + '&body=' + encodeURIComponent(cuerpo);
+}
+
+function enviarFeedback() {
+  limpiarErrores();
+  hide('error-fb');
+  if (!val('fb-ayuda')) {
+    marcarError('fb-ayuda');
+    var el = document.getElementById('error-fb');
+    el.textContent = 'Por favor completa al menos el primer campo.';
+    show('error-fb');
+    return;
+  }
+  var ejecutivo = val('fb-nombre') ? 'Ejecutivo: ' + val('fb-nombre') + (val('fb-correo') ? ' (' + val('fb-correo') + ')' : '') + '\n\n' : '';
+  var cuerpo =
+    'FEEDBACK - PORTAL SAT\n' +
+    '======================\n\n' +
+    ejecutivo +
+    'Que parte ayuda mas en el trabajo:\n' + val('fb-ayuda') + '\n\n' +
+    'Que informacion falta o deberia cambiar:\n' + (val('fb-falta') || '-') + '\n\n' +
+    'Que otra cosa le gustaria tener:\n' + (val('fb-sugerencia') || '-') + '\n\n' +
+    'Atte.\n\n[Insertar firma institucional]';
+  var dest = 'eduardo.ferrada@umayor.cl;johanna.escalona@umayor.cl;barbara.fernandez@umayor.cl';
+  var asunto = 'Feedback Portal SAT';
+  window.location.href = 'mailto:' + dest + '?subject=' + encodeURIComponent(asunto) + '&body=' + encodeURIComponent(cuerpo);
+}
+</script>
+
+</body>
+</html>
