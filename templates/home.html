@@ -188,10 +188,7 @@ body{
 }
 
 .btn-secondary-item.btn-bitacora:hover{background:#144a2d;}
-
-.btn-secondary-item.btn-bitacora .titulo{
-  color:#fff;
-}
+.btn-secondary-item.btn-bitacora .titulo{color:#fff;}
 
 /* FOOTER */
 footer{
@@ -280,7 +277,7 @@ footer{
 }
 
 .support-main::after{
-  content:"💡 Usa esta opción para derivar casos a supervisión o al área comercial, y también para reportar errores o enviar sugerencias.";
+  content:"💡 Usa esta opción para reportar errores en la plataforma o enviar sugerencias al equipo SAT.";
   position:absolute;
   bottom:50%;
   right:calc(100% + 12px);
@@ -421,6 +418,14 @@ footer{
       </ul>
     </div>
 
+    <div class="links-hover">
+      <span>✉️ Correos Frecuentes ▾</span>
+      <ul>
+        <li><a href="/correos-frecuentes">👨‍💼 Derivar a Supervisor</a></li>
+        <li><a href="/correos-frecuentes">💼 Derivar a Área Comercial</a></li>
+      </ul>
+    </div>
+
   </div>
 </div>
 
@@ -481,9 +486,7 @@ footer{
 <!-- SOPORTE SAT -->
 <div class="support-container">
   <div id="supportMenu" class="support-menu" style="display:none;">
-    <a href="#" onclick="enviarSupervisor()">👨‍💼 Derivar a supervisor</a>
-    <a href="#" onclick="enviarComercial()">💼 Derivar a área comercial</a>
-    <a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de error – Portal SAT">🐛 Reportar error</a>
+    <a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de problema – Portal SAT">🐛 Reportar problema</a>
     <a href="#" onclick="enviarFeedback()">💬 Feedback</a>
   </div>
   <button id="supportBtn" class="support-main">🛟 Soporte SAT</button>
@@ -517,18 +520,8 @@ function cerrarAviso(){
 
 function enviarFeedback(){
   const pagina = window.location.href;
-  const cuerpo = `Hola,\n\nMe gustaría compartir el siguiente feedback sobre la herramienta SAT.\n\nPágina desde donde envío el feedback:\n${pagina}\n\n1. ¿Qué parte te ayuda más en tu trabajo?\n\n2. ¿Qué información falta o debería cambiar?\n\n3. ¿Qué otra cosa te gustaría tener en la herramienta?\n\nGracias.`;
-  window.location.href = "mailto:eduardo.ferrada@umayor.cl?subject=Feedback Herramienta SAT&body=" + encodeURIComponent(cuerpo);
-}
-
-function enviarSupervisor(){
-  const cuerpo = `Estimados,\n\nNecesito su cooperación con el siguiente caso:\n[Resumen breve y claro del requerimiento]\n\nDATOS DEL SOLICITANTE\nNombre:\nRUT:\nTeléfono:\nCorreo:\nComentario:\n\nDATOS DEL ALUMNO (eliminar bloque si no corresponde)\nNombre:\nRUT:\nTeléfono:\nCorreo:\nComentario:\n\nCASO TI (completar solo si corresponde)\nNombre:\nRUT:\nTeléfono:\nCorreo institucional:\nCorreo personal:\nTipo de contacto:\nPerfil que presenta el error:\nPlataforma donde ocurre el error:\nDescripción del error:\nPruebas realizadas antes de derivar:\nIngreso con cuenta rut@mayor.cl confirmado:\nAcceso por intranet institucional confirmado:\n\nAtte.\n\nRecuerda insertar tu firma institucional antes de enviar.`;
-  window.location.href = "mailto:johanna.escalona@umayor.cl;barbara.fernandez@umayor.cl?cc=eduardo.ferrada@umayor.cl&subject=IC XXXXX RUT: XXXXXXXXX NOMBRE DEL SOLICITANTE MOTIVO [XXXXX]&body=" + encodeURIComponent(cuerpo);
-}
-
-function enviarComercial(){
-  const cuerpo = `Estimados,\n\nPor favor solicito su colaboración con prospecto interesado en carrera XXXXX\nModalidad: diurno / vespertino / online / TEC / etc.\n\nDATOS DE CONTACTO\nNombre:\nRUT:\nTeléfono: (validar que esté operativo y reciba llamadas de números 600)\nCorreo:\nCarrera:\nModalidad:\nTiene beneficios ministeriales: Sí / No (¿Cuál?)\nComentarios adicionales:\n\nAtentamente.\n\nRecuerda insertar tu firma institucional antes de enviar.`;
-  window.location.href = "mailto:marcelo.sepulveda@umayor.cl;francisca.castillo@umayor.cl?subject=RUT XXXXXXXXXXX NOMBRE XXXXXXXXX CARRERA DE INTERES [XXXXXXXXXX]&body=" + encodeURIComponent(cuerpo);
+  const cuerpo = `Hola,\n\nMe gustaría compartir el siguiente feedback sobre el Portal SAT.\n\nPágina desde donde envío el feedback:\n${pagina}\n\n1. ¿Qué parte te ayuda más en tu trabajo?\n\n2. ¿Qué información falta o debería cambiar?\n\n3. ¿Qué otra cosa te gustaría tener en la herramienta?\n\nGracias.`;
+  window.location.href = "mailto:eduardo.ferrada@umayor.cl?subject=Feedback Portal SAT&body=" + encodeURIComponent(cuerpo);
 }
 </script>
 
