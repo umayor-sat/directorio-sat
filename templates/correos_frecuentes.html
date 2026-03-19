@@ -267,7 +267,6 @@ footer{
       <option value="otro">Otro (especificar)</option>
     </select>
 
-    <!-- CAMPOS IC -->
     <div id="bloque-ic" style="display:none;" class="form-section">
       <div class="form-section-title">Campos del asunto</div>
       <div class="form-section-sub">Estos datos arman el asunto del correo automáticamente.</div>
@@ -292,7 +291,6 @@ footer{
       </div>
     </div>
 
-    <!-- OTRO -->
     <div id="bloque-otro" style="display:none;margin-bottom:16px;">
       <div class="form-field">
         <label>Especifica el asunto <span class="req">*</span></label>
@@ -300,13 +298,11 @@ footer{
       </div>
     </div>
 
-    <!-- PREVIEW -->
     <div id="preview-asunto" class="preview-asunto">
       <div class="preview-label">Vista previa del asunto del correo</div>
       <div class="preview-valor" id="asunto-generado"></div>
     </div>
 
-    <!-- RESUMEN -->
     <div id="bloque-resumen" style="display:none;margin-bottom:16px;">
       <div class="form-field">
         <label>Resumen de la solicitud</label>
@@ -314,7 +310,6 @@ footer{
       </div>
     </div>
 
-    <!-- SOLICITANTE -->
     <div id="bloque-solicitante" style="display:none;" class="form-section">
       <div class="form-section-title">Datos del solicitante</div>
       <div class="form-section-sub">Los cuatro campos de contacto son obligatorios <span class="req">*</span></div>
@@ -343,7 +338,6 @@ footer{
       </div>
     </div>
 
-    <!-- ALUMNO -->
     <div id="bloque-alumno" style="display:none;" class="form-section">
       <div class="form-section-title">Datos del alumno</div>
       <div class="form-section-sub">Completar solo si corresponde — si inicias este bloque, los datos de contacto son obligatorios</div>
@@ -372,7 +366,6 @@ footer{
       </div>
     </div>
 
-    <!-- CONTACTO TI -->
     <div id="bloque-contacto-ti" style="display:none;" class="form-section">
       <div class="form-section-title">Datos de contacto</div>
       <div class="form-section-sub">Los cuatro campos son obligatorios <span class="req">*</span></div>
@@ -397,7 +390,6 @@ footer{
       </div>
     </div>
 
-    <!-- DETALLES TI -->
     <div id="bloque-ti" style="display:none;" class="form-section">
       <div class="form-section-title">Detalles del caso TI</div>
       <div class="form-section-sub">Completar solo si corresponde</div>
@@ -467,7 +459,6 @@ footer{
 
     <div id="bloque-comercial" style="display:none;">
 
-      <!-- CAMPOS ASUNTO COMERCIAL -->
       <div class="form-section">
         <div class="form-section-title">Campos del asunto</div>
         <div class="form-section-sub">Estos datos arman el asunto del correo y se sincronizan automáticamente con los datos de contacto.</div>
@@ -498,13 +489,11 @@ footer{
         </div>
       </div>
 
-      <!-- PREVIEW ASUNTO COMERCIAL -->
       <div id="preview-com" class="preview-asunto">
         <div class="preview-label">Vista previa del asunto del correo</div>
         <div class="preview-valor" id="asunto-com-generado">RUT: XXXXXXXXX NOMBRE Carrera de interés: CARRERA Jornada: JORNADA</div>
       </div>
 
-      <!-- DATOS CONTACTO COMERCIAL -->
       <div class="form-section">
         <div class="form-section-title">Datos de contacto</div>
         <div class="form-section-sub">Nombre y RUT se sincronizan desde el asunto. Completa teléfono y correo <span class="req">*</span></div>
@@ -530,7 +519,6 @@ footer{
         </div>
       </div>
 
-      <!-- INFO ADICIONAL COMERCIAL -->
       <div class="form-section">
         <div class="form-section-title">Información adicional</div>
         <div class="form-grid">
@@ -581,6 +569,11 @@ function showTab(i){
 function show(id){const el=document.getElementById(id);if(el)el.style.display='';}
 function hide(id){const el=document.getElementById(id);if(el)el.style.display='none';}
 function val(id){const el=document.getElementById(id);return el?el.value.trim():'';}
+
+// ── Hash routing — abre pestaña según URL ─────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function(){
+  if(window.location.hash === '#comercial') showTab(1);
+});
 
 // ── SUPERVISOR ────────────────────────────────────────────────────────────────
 function cambiarAsunto(){
@@ -698,10 +691,8 @@ function mostrarFormComercial(){
 }
 
 function sincronizarComercial(){
-  // Limpiar RUT automáticamente
   const rutEl=document.getElementById('com-rut-asunto');
   if(rutEl) rutEl.value=rutEl.value.replace(/[.\-]/g,'');
-  // Sincronizar a campos de contacto (readonly)
   const nombre=val('com-nombre-asunto');
   const rut=val('com-rut-asunto');
   const comNombre=document.getElementById('com-nombre');
