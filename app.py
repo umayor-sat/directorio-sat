@@ -1,23 +1,26 @@
+
+Copiar
+
 from flask import Flask, render_template, request, jsonify, session
 from supabase import create_client
 import os
-
+ 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "directorio-sat-clave-2026")
-
+ 
 # =========================
 # CONFIGURACIÓN SUPABASE
 # =========================
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://jxmrznqppddabuqtbufq.supabase.co")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "sb_publishable_3Shj63dB3uBAL_TVvqfBRw_3RyTRZ1U")
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
-
+ 
 # =========================
 # CONTRASEÑAS (desde entorno)
 # =========================
 PASSWORD_ADMIN    = os.environ.get("PASSWORD_ADMIN",    "SAT@UM2026")
 PASSWORD_JEFATURA = os.environ.get("PASSWORD_JEFATURA", "SAT@UM2026")
-
+ 
 # =========================
 # LOGIN / LOGOUT
 # =========================
@@ -28,7 +31,7 @@ def login_admin():
         session["admin"] = True
         return jsonify({"ok": True})
     return jsonify({"ok": False}), 401
-
+ 
 @app.route("/api/login-jefatura", methods=["POST"])
 def login_jefatura():
     data = request.get_json(silent=True) or {}
@@ -36,26 +39,26 @@ def login_jefatura():
         session["jefatura"] = True
         return jsonify({"ok": True})
     return jsonify({"ok": False}), 401
-
+ 
 @app.route("/api/logout", methods=["POST"])
 def logout():
     session.clear()
     return jsonify({"ok": True})
-
+ 
 # =========================
 # HOME
 # =========================
 @app.route("/")
 def home():
     return render_template("home.html")
-
+ 
 # =========================
 # ESCUELAS
 # =========================
 @app.route("/escuelas")
 def escuelas():
     return render_template("escuelas.html")
-
+ 
 @app.route("/api/escuelas")
 def api_escuelas():
     q = request.args.get("q", "").strip().lower()
@@ -72,14 +75,14 @@ def api_escuelas():
         query = query.ilike("sede", f"%{sede}%")
     result = query.execute()
     return jsonify(result.data or [])
-
+ 
 # =========================
 # ACADÉMICOS
 # =========================
 @app.route("/academicos")
 def academicos():
     return render_template("academicos.html")
-
+ 
 @app.route("/api/academicos")
 def api_academicos():
     q = request.args.get("q", "").strip().lower()
@@ -96,14 +99,14 @@ def api_academicos():
         return jsonify(result.data or [])
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
+ 
 # =========================
 # CONTACTOS ADMINISTRATIVOS
 # =========================
 @app.route("/contactos-administrativos")
 def contactos_administrativos():
     return render_template("contactos_administrativos.html")
-
+ 
 @app.route("/api/contactos-administrativos")
 def api_contactos_administrativos():
     q = request.args.get("q", "").strip().lower()
@@ -125,14 +128,14 @@ def api_contactos_administrativos():
         return jsonify(result.data or [])
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
+ 
 # =========================
 # BITÁCORA
 # =========================
 @app.route("/bitacora")
 def bitacora():
     return render_template("bitacora.html")
-
+ 
 @app.route("/api/bitacora")
 def api_bitacora():
     anio = request.args.get("anio", "").strip()
@@ -152,14 +155,21 @@ def api_bitacora():
         return jsonify(result.data or [])
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
+ 
 # =========================
 # ÁRBOL DE TEMAS CRM
 # =========================
 @app.route("/temas-crm")
 def temas_crm():
     return render_template("temas_crm.html")
-
+ 
+# =========================
+# PAUTA PMCC
+# =========================
+@app.route("/pauta-pmcc")
+def pauta_pmcc():
+    return render_template("pmcc.html")
+ 
 # =========================
 # EJECUCIÓN
 # =========================
