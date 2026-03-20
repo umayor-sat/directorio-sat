@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -444,6 +443,95 @@ const sugerenciasBase = [
   { label: "Técnico en Química y Farmacia (Blended)", value: "tecnico quimica y farmacia blended", aliases: ["tec","téc","tecni","blended","quimica tec"] },
   { label: "Técnico en Radiología y Radiodiagnóstico (Blended)", value: "tecnico radiologia radiodiagnostico blended", aliases: ["tec","téc","tecni","blended","radiologia tec"] },
 ];
+
+function normalizar(texto) {
+  return texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+const input = document.getElementById("q");
+const suggestionsBox = document.getElementById("suggestions");
+let terminoPendiente = null;
+
+input.addEventListener("input", () => {
+  terminoPendiente = null;
+  const val = normalizar(input.value);
+  suggestionsBox.innerHTML = "";
+  if (val.length < 2) { suggestionsBox.style.display = "none"; return; }
+  const matches = sugerenciasBase.filter(s => {
+    const label = normalizar(s.label);
+    const value = normalizar(s.value);
+    const aliases = (s.aliases || []).map(a => normalizar(a));
+    return label.includes(val) || value.includes(val) || aliases.some(a => a.includes(val));
+  });
+  if (!matches.length) { suggestionsBox.style.display = "none"; return; }
+  matches.forEach(s => {
+    const div = document.createElement("div");
+    div.className = "suggestion-item";
+    div.textContent = s.label;
+    div.onclick = () => {
+      input.value = s.label;
+      terminoPendiente = s.value;
+      suggestionsBox.style.display = "none";
+      ejecutarBusqueda(s.value);
+    };
+    suggestionsBox.appendChild(div);
+  });
+  suggestionsBox.style.display = "block";
+});
+
+input.addEventListener("keydown", e => { if (e.key === "Enter") buscar(); });
+document.addEventListener("click", e => { if (!e.target.closest(".search-wrapper")) suggestionsBox.style.display = "none"; });
+
+function copiarCorreo(correo, btn) {
+  if (!correo || correo === "-") return;
+  navigator.clipboard.writeText(correo).then(() => {
+    btn.textContent = "\u2713 Copiado"; btn.classList.add("copiado");
+    setTimeout(() => { btn.textContent = "\ud83d\udccb Copiar"; btn.classList.remove("copiado"); }, 2000);
+  });
+}
+
+function getModalidad(escuela) {
+  if (!escuela) return "\u2600\ufe0f Modalidad: Diurno";
+  const t = escuela.toLowerCase();
+  if (t.includes("online")) return "\ud83d\udcbb Modalidad: Online";
+  if (t.includes("blended")) return "\ud83d\udd00 Modalidad: Blended";
+  if (t.includes("tecnico") || t.includes("tec mayor")) return "\ud83d\udd27 Modalidad: Tecnico";
+  if (t.includes("vespertino")) return "\ud83c\udf19 Modalidad: Vespertino";
+  return "\u2600\ufe0f Modalidad: Diurno";
+}
+
+function buscar() {
+  let termino = terminoPendiente || input.value.trim();
+  terminoPendiente = null;
+  ejecutarBusqueda(termino);
+}
+
+function ejecutarBusqueda(q) {
+  ultimaBusqueda = q;
+  suggestionsBox.style.display = "none";
+  const sede = document.getElementById("sede").value;
+  fetch("/api/escuelas?q=" + encodeURIComponent(q) + "&sede=" + encodeURIComponent(sede))
+    .then(r => r.json())
+    .then(data => {
+      const res = document.getElementById("resultados");
+      if (!data.length) { res.innerHTML = "<p>No se encontraron resultados para <strong>" + q + "</strong>.</p>"; return; }
+      let html = "<table><tr><th>Nombre</th><th>Cargo</th><th>Escuela</th><th>Sede</th><th>Campus</th><th>Correo Director</th><th>Secretaria</th><th>Correo Secretaria</th>" + (modoAdmin ? "<th>Acciones</th>" : "") + "</tr>";
+      data.forEach(function(r) {
+        const correoDir = r.correo_director || "";
+        const correoSec = r.correo_secretaria || "";
+        const correoDirHtml = correoDir && correoDir !== "-"
+          ? '<div class="correo-cell"><span class="tooltip-container"><a href="mailto:' + correoDir + '">' + correoDir + '</a><span class="tooltip-box">' + (r.anexo_director ? "Anexo: " + r.anexo_director + "<br>" : "") + (r.consultar_antes_de_entregar_contactos ? "Restriccion: " + r.consultar_antes_de_entregar_contactos : "") + '</span></span><button class="btn-copy" onclick="copiarCorreo('' + correoDir + '', this)">Copiar</button></div>' : "";
+        const correoSecHtml = correoSec && correoSec !== "-"
+          ? '<div class="correo-cell"><span class="tooltip-container"><a href="mailto:' + correoSec + '">' + correoSec + '</a><span class="tooltip-box">' + (r.anexo_secretaria ? "Anexo: " + r.anexo_secretaria + "<br>" : "") + '</span></span><button class="btn-copy" onclick="copiarCorreo('' + correoSec + '', this)">Copiar</button></div>' : "";
+        const botonesAdmin = modoAdmin ? '<td><button class="btn-accion btn-editar" onclick='editarRegistro(' + JSON.stringify(r) + ')'>Editar</button><button class="btn-accion btn-eliminar" onclick="eliminarRegistro(' + r.id + ', this)">Eliminar</button></td>' : "";
+        html += "<tr><td>" + (r.nombre||"") + "</td><td>" + (r.cargo||"") + "</td><td>" + (r.escuela_busqueda||"") + "</td><td>" + (r.sede||"") + "</td><td>" + (r.campus||"") + "</td><td>" + correoDirHtml + "</td><td>" + (r.secretaria||"") + "</td><td>" + correoSecHtml + "</td>" + botonesAdmin + "</tr>";
+      });
+      html += "</table>";
+      res.innerHTML = html;
+    })
+    .catch(function() { document.getElementById("resultados").innerHTML = "<p>Error al conectar con el servidor.</p>"; });
+}
+
 function limpiar() { input.value = ""; terminoPendiente = null; document.getElementById("sede").value = ""; document.getElementById("resultados").innerHTML = ""; suggestionsBox.style.display = "none"; }
 function abrirLogin() { if (modoAdmin) { abrirAgregar(); return; } document.getElementById("modalLogin").style.display = "block"; document.getElementById("inputPassword").value = ""; document.getElementById("errorLogin").style.display = "none"; setTimeout(() => document.getElementById("inputPassword").focus(), 100); }
 function cerrarLogin() { document.getElementById("modalLogin").style.display = "none"; }
