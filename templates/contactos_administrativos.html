@@ -109,7 +109,7 @@ th { background: #005baa; color: white; text-align: left; }
 <button class="btn-admin-flotante" onclick="abrirLogin()" title="Administración">✏️</button>
 
 <!-- BOTÓN REPORTE -->
-<a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de error – Directorio SAT&body=Página donde ocurrió el error:%0A%0ADescripción del problema:%0A%0A(Agrega aquí cualquier detalle adicional)" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
+<a href="/cdn-cgi/l/email-protection#0762637266756368296162757566636647726a667e687529646b387472656d6264733af798979c275562776875736227636227627575687527e5879427436e7562647368756e6827544653216568637e3a57c4a6606e69662763686963622768647275756ec4b427626b2762757568753d22374622374643627464756e77646ec4b4692763626b27777568656b626a663d2237462237462f46607562606627667672c4aa276472666b76726e627527636273666b6b622766636e646e6869666b2e" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
 
 <!-- MODAL AYUDA -->
 <div id="modalAyuda" class="modal">
@@ -137,7 +137,7 @@ th { background: #005baa; color: white; text-align: left; }
 </div>
 
 <!-- MODAL LOGIN -->
-<div class="modal" id="modalLogin" onclick="if(event.target===this)cerrarLogin()">
+<div class="modal" id="modalLogin">
   <div class="modal-content" style="width:360px; text-align:center;">
     <h3>🔐 Acceso Administración</h3>
     <div class="form-group" style="margin-top:16px; text-align:left;">
@@ -153,7 +153,7 @@ th { background: #005baa; color: white; text-align: left; }
 </div>
 
 <!-- MODAL AGREGAR / EDITAR -->
-<div class="modal" id="modalAgregar" onclick="if(event.target===this)cerrarAgregar()">
+<div class="modal" id="modalAgregar">
   <div class="modal-content">
     <h3 id="tituloFormulario">➕ Agregar registro</h3>
     <div class="instruccion-flujo">
@@ -191,9 +191,10 @@ th { background: #005baa; color: white; text-align: left; }
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_3Shj63dB3uBAL_TVvqfBRw_3RyTRZ1U";
+const PASSWORD_ADMIN = "SAT@UM2026";
 
 let modoAdmin = false;
 let ultimaBusqueda = "";
@@ -285,8 +286,6 @@ const sugerenciasBase = [
   { label: "Bienestar / Beneficios",                     value: "DepartamentodeBeneficiosyCalidaddeVidaBienestar", aliases: ["bienestar","beneficios","calidad de vida"] },
 ];
 
-
-
 const input = document.getElementById("q");
 const suggestionsBox = document.getElementById("suggestions");
 let terminoPendiente = null;
@@ -340,9 +339,16 @@ function abrirDetalle(texto) {
 function cerrarDetalle() { document.getElementById("modalDetalle").style.display = "none"; }
 
 function buscar() {
-  const termino = terminoPendiente || input.value.trim();
-  terminoPendiente = null;
-  ejecutarBusqueda(termino);
+  if (terminoPendiente) {
+    const t = terminoPendiente;
+    terminoPendiente = null;
+    ejecutarBusqueda(t);
+    return;
+  }
+  // Si escribió texto libre, buscar si coincide con algún value del array
+  const txt = input.value.trim();
+  const match = sugerenciasBase.find(s => s.label.toLowerCase() === txt.toLowerCase());
+  ejecutarBusqueda(match ? match.value : txt);
 }
 
 function ejecutarBusqueda(termino) {
@@ -420,20 +426,13 @@ function abrirLogin() {
   setTimeout(() => document.getElementById("inputPassword").focus(), 100);
 }
 function cerrarLogin() { document.getElementById("modalLogin").style.display = "none"; }
-async function verificarPassword() {
-      const pwd = document.getElementById("inputPassword").value;
-      const res = await fetch("/api/login-admin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password: pwd })
-      });
-      if (res.ok) {
-        cerrarLogin();
-        activarModoAdmin();
-      } else {
-        document.getElementById("errorLogin").style.display = "block";
-      }
-    }
+function verificarPassword() {
+  if (document.getElementById("inputPassword").value === PASSWORD_ADMIN) {
+    cerrarLogin(); activarModoAdmin();
+  } else {
+    document.getElementById("errorLogin").style.display = "block";
+  }
+}
 function activarModoAdmin() {
   modoAdmin = true;
   document.getElementById("bannerAdmin").classList.add("visible");
