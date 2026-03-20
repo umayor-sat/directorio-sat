@@ -21,6 +21,115 @@ body{
   color:#222;
 }
 
+/* LOGIN OVERLAY */
+.login-overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.7);
+  z-index:900;
+  align-items:center;
+  justify-content:center;
+}
+
+.login-overlay.visible{
+  display:flex;
+}
+
+.login-box{
+  background:#fff;
+  width:90%;
+  max-width:420px;
+  border-radius:14px;
+  border-top:10px solid var(--um-amarillo);
+  padding:36px 32px;
+  text-align:center;
+  box-shadow:0 15px 40px rgba(0,0,0,0.35);
+}
+
+.login-box .logo-texto{
+  font-size:18px;
+  font-weight:700;
+  color:#222;
+  margin-bottom:4px;
+}
+
+.login-box .logo-lema{
+  font-size:11px;
+  color:#888;
+  letter-spacing:1.5px;
+  margin-bottom:24px;
+}
+
+.login-box h2{
+  font-size:20px;
+  color:var(--um-azul);
+  margin:0 0 6px;
+}
+
+.login-box .subtitulo{
+  font-size:13px;
+  color:#666;
+  margin-bottom:24px;
+}
+
+.login-box input[type="password"]{
+  width:100%;
+  padding:10px 14px;
+  border:1.5px solid #dde4ee;
+  border-radius:8px;
+  font-size:14px;
+  font-family:Arial,Helvetica,sans-serif;
+  margin-bottom:12px;
+  transition:border-color .15s;
+}
+
+.login-box input[type="password"]:focus{
+  border-color:var(--um-azul);
+  outline:none;
+}
+
+.login-box button{
+  width:100%;
+  background:var(--um-azul);
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  padding:12px;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  transition:opacity .15s;
+  margin-bottom:16px;
+}
+
+.login-box button:hover{opacity:.9;}
+
+.login-error{
+  display:none;
+  background:#fdecea;
+  border-left:3px solid #c0392b;
+  border-radius:0 6px 6px 0;
+  padding:8px 12px;
+  font-size:12px;
+  color:#8b1a1a;
+  text-align:left;
+  margin-bottom:12px;
+}
+
+.login-disclaimer{
+  font-size:11px;
+  color:#888;
+  border-top:1px solid #eee;
+  padding-top:14px;
+  margin-top:4px;
+  line-height:1.5;
+}
+
+.login-disclaimer strong{
+  color:#555;
+}
+
 /* TOP BAR */
 .top-bar{
   background:var(--um-amarillo);
@@ -71,47 +180,15 @@ body{
   margin:0 auto;
 }
 
-.identidad{
-  display:inline-block;
-  margin-bottom:24px;
-}
+.identidad{display:inline-block;margin-bottom:24px;}
+.identidad .nombre{font-size:20px;font-weight:700;color:#222;letter-spacing:0.5px;}
+.identidad .lema{font-size:11px;color:#888;letter-spacing:2px;margin-top:3px;}
 
-.identidad .nombre{
-  font-size:20px;
-  font-weight:700;
-  color:#222;
-  letter-spacing:0.5px;
-}
+.divider{width:50px;height:3px;background:var(--um-amarillo);margin:0 auto 20px;border-radius:2px;}
 
-.identidad .lema{
-  font-size:11px;
-  color:#888;
-  letter-spacing:2px;
-  margin-top:3px;
-}
+.hero h1{font-size:32px;font-weight:700;margin:0 0 8px;color:#222;}
+.hero .tagline{font-size:15px;color:#666;margin:0 0 40px;}
 
-.divider{
-  width:50px;
-  height:3px;
-  background:var(--um-amarillo);
-  margin:0 auto 20px;
-  border-radius:2px;
-}
-
-.hero h1{
-  font-size:32px;
-  font-weight:700;
-  margin:0 0 8px;
-  color:#222;
-}
-
-.hero .tagline{
-  font-size:15px;
-  color:#666;
-  margin:0 0 40px;
-}
-
-/* BOTONES PRINCIPALES */
 .buttons-primary{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -131,25 +208,10 @@ body{
 }
 
 .btn-primary-item:hover{opacity:.9;}
+.btn-primary-item .icono{font-size:26px;margin-bottom:10px;}
+.btn-primary-item .titulo{color:#fff;font-size:17px;font-weight:700;}
+.btn-primary-item .desc{color:rgba(255,255,255,0.65);font-size:12px;margin-top:5px;}
 
-.btn-primary-item .icono{
-  font-size:26px;
-  margin-bottom:10px;
-}
-
-.btn-primary-item .titulo{
-  color:#fff;
-  font-size:17px;
-  font-weight:700;
-}
-
-.btn-primary-item .desc{
-  color:rgba(255,255,255,0.65);
-  font-size:12px;
-  margin-top:5px;
-}
-
-/* BOTONES SECUNDARIOS */
 .buttons-secondary{
   display:grid;
   grid-template-columns:repeat(4,1fr);
@@ -170,27 +232,13 @@ body{
 }
 
 .btn-secondary-item:hover{background:#e2eaf3;}
+.btn-secondary-item .icono{font-size:20px;margin-bottom:7px;}
+.btn-secondary-item .titulo{font-size:12px;font-weight:600;color:#005aa9;}
 
-.btn-secondary-item .icono{
-  font-size:20px;
-  margin-bottom:7px;
-}
-
-.btn-secondary-item .titulo{
-  font-size:12px;
-  font-weight:600;
-  color:#005aa9;
-}
-
-.btn-secondary-item.btn-bitacora{
-  background:var(--um-verde);
-  border-color:var(--um-verde);
-}
-
+.btn-secondary-item.btn-bitacora{background:var(--um-verde);border-color:var(--um-verde);}
 .btn-secondary-item.btn-bitacora:hover{background:#144a2d;}
 .btn-secondary-item.btn-bitacora .titulo{color:#fff;}
 
-/* FOOTER */
 footer{
   text-align:center;
   font-size:13px;
@@ -200,7 +248,7 @@ footer{
   padding-top:20px;
 }
 
-/* MODAL */
+/* MODAL AVISO */
 .modal-aviso{
   display:none;
   position:fixed;
@@ -223,131 +271,81 @@ footer{
   line-height:1.5;
 }
 
-.modal-aviso-content h3{
-  margin-top:0;
-  color:var(--um-azul);
-  font-size:24px;
-}
-
+.modal-aviso-content h3{margin-top:0;color:var(--um-azul);font-size:24px;}
 .modal-aviso-content ul{margin-left:20px;}
-
-.modal-aviso-actions{
-  text-align:center;
-  margin-top:30px;
-}
-
+.modal-aviso-actions{text-align:center;margin-top:30px;}
 .modal-aviso-actions button{
-  background:var(--um-azul);
-  color:#fff;
-  border:none;
-  padding:14px 32px;
-  font-size:16px;
-  font-weight:600;
-  border-radius:8px;
-  cursor:pointer;
+  background:var(--um-azul);color:#fff;border:none;
+  padding:14px 32px;font-size:16px;font-weight:600;border-radius:8px;cursor:pointer;
 }
 
 /* SOPORTE SAT */
-.support-container{
-  position:fixed;
-  bottom:24px;
-  right:24px;
-  z-index:400;
-}
+.support-container{position:fixed;bottom:24px;right:24px;z-index:400;}
 
 .support-main{
-  background:#005aa9;
-  color:#fff;
-  border:none;
-  border-radius:28px;
-  padding:12px 18px;
-  font-weight:600;
-  cursor:pointer;
+  background:#005aa9;color:#fff;border:none;border-radius:28px;
+  padding:12px 18px;font-weight:600;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,0.25);
-  display:flex;
-  align-items:center;
-  gap:6px;
+  display:flex;align-items:center;gap:6px;
   transition:transform .15s ease, box-shadow .15s ease;
   position:relative;
 }
 
-.support-main:hover{
-  transform:translateY(-2px);
-  box-shadow:0 8px 20px rgba(0,0,0,0.25);
-}
+.support-main:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,0.25);}
 
 .support-main::after{
-  content:"💡 Usa esta opción para reportar errores en la plataforma o enviar sugerencias al equipo SAT.";
-  position:absolute;
-  bottom:50%;
-  right:calc(100% + 12px);
+  content:"&#128161; Usa esta opcion para reportar errores en la plataforma o enviar sugerencias al equipo SAT.";
+  position:absolute;bottom:50%;right:calc(100% + 12px);
   transform:translateY(50%) scale(0.95);
-  background:#2f2f2f;
-  color:#fff;
-  padding:8px 12px;
-  border-radius:8px;
-  font-size:12.5px;
-  opacity:0;
-  pointer-events:none;
-  white-space:normal;
-  min-width:220px;
-  max-width:260px;
-  line-height:1.4;
-  text-align:left;
-  letter-spacing:0.2px;
+  background:#2f2f2f;color:#fff;padding:8px 12px;border-radius:8px;
+  font-size:12.5px;opacity:0;pointer-events:none;
+  white-space:normal;min-width:220px;max-width:260px;
+  line-height:1.4;text-align:left;letter-spacing:0.2px;
   box-shadow:0 6px 18px rgba(0,0,0,0.25);
-  transition:all .2s ease-out;
-  z-index:500;
+  transition:all .2s ease-out;z-index:500;
 }
 
 .support-main::before{
-  content:"";
-  position:absolute;
-  bottom:50%;
-  right:calc(100% + 8px);
+  content:"";position:absolute;bottom:50%;right:calc(100% + 8px);
   transform:translateY(50%) scale(0.95);
-  border-width:6px;
-  border-style:solid;
+  border-width:6px;border-style:solid;
   border-color:transparent transparent transparent #2f2f2f;
-  opacity:0;
-  transition:all .2s ease-out;
-  z-index:500;
+  opacity:0;transition:all .2s ease-out;z-index:500;
 }
 
 .support-main:hover::after,
-.support-main:hover::before{
-  opacity:1;
-  transform:translateY(50%) scale(1);
-}
+.support-main:hover::before{opacity:1;transform:translateY(50%) scale(1);}
 
-.support-menu{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  margin-bottom:10px;
-}
+.support-menu{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
 
 .support-menu a{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  background:#f1f1f1;
-  padding:10px 12px;
-  border-radius:8px;
-  text-decoration:none;
-  color:#333;
-  font-size:13px;
+  display:flex;align-items:center;gap:6px;
+  background:#f1f1f1;padding:10px 12px;border-radius:8px;
+  text-decoration:none;color:#333;font-size:13px;
   box-shadow:0 2px 6px rgba(0,0,0,0.15);
   transition:all .2s ease-out;
 }
 
-.support-menu a:hover{
-  background:#e4e4e4;
-  transform:translateY(-1px);
-}
+.support-menu a:hover{background:#e4e4e4;transform:translateY(-1px);}
 </style>
 </head>
 <body>
+
+<!-- LOGIN OVERLAY -->
+<div id="loginOverlay" class="login-overlay">
+  <div class="login-box">
+    <div class="logo-texto">UNIVERSIDAD MAYOR</div>
+    <div class="logo-lema">para espíritus emprendedores</div>
+    <h2>Portal SAT</h2>
+    <p class="subtitulo">Uso exclusivo Servicio de Atención</p>
+    <input type="password" id="loginInput" placeholder="Ingresa la clave de acceso" onkeydown="if(event.key==='Enter') verificarClave()">
+    <div id="loginError" class="login-error">Clave incorrecta. Intenta nuevamente.</div>
+    <button onclick="verificarClave()">Ingresar</button>
+    <div class="login-disclaimer">
+      <strong>Recuerda que no debes compartir la clave de acceso</strong> con personas fuera del equipo SAT ni utilizarla fuera del ámbito institucional.
+    </div>
+  </div>
+</div>
 
 <!-- MODAL AVISO -->
 <div id="modalAviso" class="modal-aviso">
@@ -422,7 +420,7 @@ footer{
       <span>✉️ Correos Frecuentes ▾</span>
       <ul>
         <li><a href="/correos-frecuentes#supervisor">👨‍💼 Derivar a Supervisor</a></li>
-      <li><a href="/correos-frecuentes#comercial">💼 Derivar a Área Comercial</a></li>
+        <li><a href="/correos-frecuentes#comercial">💼 Derivar a Área Comercial</a></li>
       </ul>
     </div>
 
@@ -442,7 +440,6 @@ footer{
   <h1>Portal SAT</h1>
   <p class="tagline">Herramientas, contactos y recursos del equipo SAT</p>
 
-  <!-- PRINCIPALES -->
   <div class="buttons-primary">
     <a href="/escuelas" class="btn-primary-item">
       <div class="icono">📘</div>
@@ -456,7 +453,6 @@ footer{
     </a>
   </div>
 
-  <!-- SECUNDARIOS -->
   <div class="buttons-secondary">
     <a href="/academicos" class="btn-secondary-item">
       <div class="icono">🎓</div>
@@ -493,36 +489,57 @@ footer{
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  if (!sessionStorage.getItem("avisoSATVisto")) {
-    document.getElementById("modalAviso").style.display = "block";
+var CLAVE_SAT = 'um@sat032026';
+var STORAGE_KEY = 'portalSAT_acceso';
+
+document.addEventListener('DOMContentLoaded', function() {
+  var acceso = localStorage.getItem(STORAGE_KEY);
+  if (acceso !== 'ok') {
+    document.getElementById('loginOverlay').classList.add('visible');
+  } else {
+    iniciarPortal();
   }
-
-  const btn = document.getElementById("supportBtn");
-  const menu = document.getElementById("supportMenu");
-
-  btn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-  });
-
-  document.addEventListener("click", (event) => {
-    if (!menu.contains(event.target) && !btn.contains(event.target)) {
-      menu.style.display = "none";
-    }
-  });
 });
 
-function cerrarAviso(){
-  document.getElementById("modalAviso").style.display = "none";
-  sessionStorage.setItem("avisoSATVisto","true");
+function verificarClave() {
+  var input = document.getElementById('loginInput').value;
+  var error = document.getElementById('loginError');
+  if (input === CLAVE_SAT) {
+    localStorage.setItem(STORAGE_KEY, 'ok');
+    document.getElementById('loginOverlay').classList.remove('visible');
+    error.style.display = 'none';
+    iniciarPortal();
+  } else {
+    error.style.display = 'block';
+    document.getElementById('loginInput').value = '';
+    document.getElementById('loginInput').focus();
+  }
 }
 
-function enviarFeedback(){
-  const pagina = window.location.href;
-  const cuerpo = `Hola,\n\nMe gustaría compartir el siguiente feedback sobre el Portal SAT.\n\nPágina desde donde envío el feedback:\n${pagina}\n\n1. ¿Qué parte te ayuda más en tu trabajo?\n\n2. ¿Qué información falta o debería cambiar?\n\n3. ¿Qué otra cosa te gustaría tener en la herramienta?\n\nGracias.`;
-  window.location.href = "mailto:eduardo.ferrada@umayor.cl?subject=Feedback Portal SAT&body=" + encodeURIComponent(cuerpo);
+function iniciarPortal() {
+  if (!sessionStorage.getItem('avisoSATVisto')) {
+    document.getElementById('modalAviso').style.display = 'block';
+  }
 }
+
+function cerrarAviso() {
+  document.getElementById('modalAviso').style.display = 'none';
+  sessionStorage.setItem('avisoSATVisto', 'true');
+}
+
+var btn = document.getElementById('supportBtn');
+var menu = document.getElementById('supportMenu');
+
+btn.addEventListener('click', function(e) {
+  e.stopPropagation();
+  menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+});
+
+document.addEventListener('click', function(event) {
+  if (!menu.contains(event.target) && !btn.contains(event.target)) {
+    menu.style.display = 'none';
+  }
+});
 </script>
 
 </body>
