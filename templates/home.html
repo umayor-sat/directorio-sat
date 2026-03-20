@@ -233,6 +233,35 @@ footer{ text-align:center; font-size:13px; color:#666; margin:48px 0 20px; borde
 </footer>
 
 <!-- SOPORTE SAT -->
+<!-- CALCULADORA DÍAS HÁBILES -->
+<div id="calcOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:600; align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:14px; padding:32px 28px; width:100%; max-width:380px; box-shadow:0 15px 40px rgba(0,0,0,0.25); border-top:8px solid #f2b705; position:relative;">
+    <button onclick="cerrarCalc()" style="position:absolute;top:12px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;">x</button>
+    <h3 style="margin:0 0 6px; font-size:1rem; color:#005aa9;">Calculadora dias habiles</h3>
+    <p style="font-size:12px; color:#888; margin-bottom:20px;">Plazo de feedback: <strong style="color:#005aa9;">3 dias habiles</strong></p>
+    <div style="margin-bottom:14px;">
+      <label style="display:block; font-size:11px; font-weight:700; color:#666; text-transform:uppercase; margin-bottom:5px;">Fecha del correo / contacto</label>
+      <input type="date" id="calcFechaInicio" style="width:100%; padding:9px 12px; border:1.5px solid #dde4ee; border-radius:8px; font-size:14px; font-family:inherit; outline:none;" oninput="calcularDias()"/>
+    </div>
+    <div style="margin-bottom:20px;">
+      <label style="display:block; font-size:11px; font-weight:700; color:#666; text-transform:uppercase; margin-bottom:5px;">Fecha de hoy / llamada</label>
+      <input type="date" id="calcFechaFin" style="width:100%; padding:9px 12px; border:1.5px solid #dde4ee; border-radius:8px; font-size:14px; font-family:inherit; outline:none;" oninput="calcularDias()"/>
+    </div>
+    <div id="calcResultado" style="display:none; border-radius:10px; padding:18px 20px; text-align:center;">
+      <div id="calcEmoji" style="font-size:2rem; margin-bottom:4px;"></div>
+      <div id="calcDias" style="font-size:2.2rem; font-weight:800; margin-bottom:4px;"></div>
+      <div id="calcLabel" style="font-size:13px; font-weight:700; margin-bottom:8px;"></div>
+      <div id="calcAccion" style="font-size:12px; padding:6px 12px; border-radius:6px; display:inline-block; font-weight:600;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTÓN FLOTANTE CALCULADORA -->
+<button onclick="abrirCalc()" title="Calculadora dias habiles"
+  style="position:fixed; bottom:88px; right:24px; background:#f2b705; color:#1a1a1a; border:none; width:48px; height:48px; border-radius:50%; font-size:1.2rem; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,0.2); z-index:400; display:flex; align-items:center; justify-content:center;">
+  📅
+</button>
+
 <div class="support-container">
   <div id="supportMenu" class="support-menu" style="display:none;">
     <a href="/soporte#problema">🐛 Reportar problema</a>
@@ -292,6 +321,87 @@ document.addEventListener('click', function(event) {
   if (!menu.contains(event.target) && !btn.contains(event.target)) {
     menu.style.display = 'none';
   }
+});
+
+// ── CALCULADORA DIAS HABILES ──
+var FERIADOS_CL = ["2024-01-01","2024-03-29","2024-03-30","2024-04-01","2024-05-01","2024-05-21","2024-06-20","2024-06-29","2024-07-16","2024-08-15","2024-09-18","2024-09-19","2024-09-20","2024-10-12","2024-10-31","2024-11-01","2024-11-16","2024-12-08","2024-12-25","2025-01-01","2025-04-18","2025-04-19","2025-04-21","2025-05-01","2025-05-21","2025-06-20","2025-06-29","2025-07-16","2025-08-15","2025-09-18","2025-09-19","2025-10-12","2025-10-31","2025-11-01","2025-11-16","2025-12-08","2025-12-25","2026-01-01","2026-04-03","2026-04-04","2026-04-06","2026-05-01","2026-05-21","2026-06-20","2026-06-29","2026-07-16","2026-08-15","2026-09-18","2026-09-19","2026-10-12","2026-10-31","2026-11-01","2026-11-16","2026-12-08","2026-12-25","2027-01-01","2027-03-26","2027-03-27","2027-03-29","2027-05-01","2027-05-21","2027-06-20","2027-06-29","2027-07-16","2027-08-15","2027-09-18","2027-09-19","2027-10-12","2027-10-31","2027-11-01","2027-11-16","2027-12-08","2027-12-25"];
+
+function esHabil(fecha) {
+  var d = fecha.getDay();
+  if (d === 0 || d === 6) return false;
+  var iso = fecha.toISOString().split("T")[0];
+  return FERIADOS_CL.indexOf(iso) === -1;
+}
+
+function diasHabiles(inicio, fin) {
+  var count = 0;
+  var cur = new Date(inicio);
+  cur.setDate(cur.getDate() + 1);
+  var end = new Date(fin);
+  while (cur <= end) {
+    if (esHabil(cur)) count++;
+    cur.setDate(cur.getDate() + 1);
+  }
+  return count;
+}
+
+function abrirCalc() {
+  var overlay = document.getElementById("calcOverlay");
+  overlay.style.display = "flex";
+  var hoy = new Date().toISOString().split("T")[0];
+  document.getElementById("calcFechaFin").value = hoy;
+  document.getElementById("calcFechaInicio").value = "";
+  document.getElementById("calcResultado").style.display = "none";
+}
+
+function cerrarCalc() {
+  document.getElementById("calcOverlay").style.display = "none";
+}
+
+function calcularDias() {
+  var ini = document.getElementById("calcFechaInicio").value;
+  var fin = document.getElementById("calcFechaFin").value;
+  if (!ini || !fin) return;
+  var d1 = new Date(ini + "T12:00:00");
+  var d2 = new Date(fin + "T12:00:00");
+  if (d2 < d1) { document.getElementById("calcResultado").style.display = "none"; return; }
+  var dias = diasHabiles(d1, d2);
+  var res = document.getElementById("calcResultado");
+  var emoji = document.getElementById("calcEmoji");
+  var num = document.getElementById("calcDias");
+  var label = document.getElementById("calcLabel");
+  var accion = document.getElementById("calcAccion");
+  num.textContent = dias + (dias === 1 ? " dia habil" : " dias habiles");
+  if (dias <= 3) {
+    res.style.background = "#e8f5e9";
+    emoji.textContent = "🟢";
+    label.style.color = "#2e7d32";
+    label.textContent = "Dentro del plazo";
+    accion.style.background = "#c8e6c9";
+    accion.style.color = "#1b5e20";
+    accion.textContent = "Sin accion requerida";
+  } else if (dias <= 5) {
+    res.style.background = "#fff8e1";
+    emoji.textContent = "🟡";
+    label.style.color = "#856404";
+    label.textContent = "Plazo vencido";
+    accion.style.background = "#fff3cd";
+    accion.style.color = "#856404";
+    accion.textContent = "Derivar a Customer";
+  } else {
+    res.style.background = "#fdecea";
+    emoji.textContent = "🔴";
+    label.style.color = "#c62828";
+    label.textContent = "Plazo critico";
+    accion.style.background = "#fce4e4";
+    accion.style.color = "#a32d2d";
+    accion.textContent = "Escalar a Supervisor";
+  }
+  res.style.display = "block";
+}
+
+document.getElementById("calcOverlay").addEventListener("click", function(e) {
+  if (e.target === this) cerrarCalc();
 });
 </script>
 
