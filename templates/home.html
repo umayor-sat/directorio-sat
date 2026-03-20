@@ -11,321 +11,79 @@
   --um-verde:#1a5c38;
   --um-gris:#f5f7fa;
 }
-
 *{box-sizing:border-box;}
-
-body{
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:#ffffff;
-  color:#222;
-}
+body{ margin:0; font-family:Arial,Helvetica,sans-serif; background:#ffffff; color:#222; }
 
 /* LOGIN OVERLAY */
-.login-overlay{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.7);
-  z-index:900;
-  align-items:center;
-  justify-content:center;
-}
-
-.login-overlay.visible{
-  display:flex;
-}
-
-.login-box{
-  background:#fff;
-  width:90%;
-  max-width:420px;
-  border-radius:14px;
-  border-top:10px solid var(--um-amarillo);
-  padding:36px 32px;
-  text-align:center;
-  box-shadow:0 15px 40px rgba(0,0,0,0.35);
-}
-
-.login-box .logo-texto{
-  font-size:18px;
-  font-weight:700;
-  color:#222;
-  margin-bottom:4px;
-}
-
-.login-box .logo-lema{
-  font-size:11px;
-  color:#888;
-  letter-spacing:1.5px;
-  margin-bottom:24px;
-}
-
-.login-box h2{
-  font-size:20px;
-  color:var(--um-azul);
-  margin:0 0 6px;
-}
-
-.login-box .subtitulo{
-  font-size:13px;
-  color:#666;
-  margin-bottom:24px;
-}
-
-.login-box input[type="password"]{
-  width:100%;
-  padding:10px 14px;
-  border:1.5px solid #dde4ee;
-  border-radius:8px;
-  font-size:14px;
-  font-family:Arial,Helvetica,sans-serif;
-  margin-bottom:12px;
-  transition:border-color .15s;
-}
-
-.login-box input[type="password"]:focus{
-  border-color:var(--um-azul);
-  outline:none;
-}
-
-.login-box button{
-  width:100%;
-  background:var(--um-azul);
-  color:#fff;
-  border:none;
-  border-radius:8px;
-  padding:12px;
-  font-size:14px;
-  font-weight:700;
-  cursor:pointer;
-  transition:opacity .15s;
-  margin-bottom:16px;
-}
-
+.login-overlay{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:900; align-items:center; justify-content:center; }
+.login-overlay.visible{ display:flex; }
+.login-box{ background:#fff; width:90%; max-width:420px; border-radius:14px; border-top:10px solid var(--um-amarillo); padding:36px 32px; text-align:center; box-shadow:0 15px 40px rgba(0,0,0,0.35); }
+.login-box .logo-texto{ font-size:18px; font-weight:700; color:#222; margin-bottom:4px; }
+.login-box .logo-lema{ font-size:11px; color:#888; letter-spacing:1.5px; margin-bottom:24px; }
+.login-box h2{ font-size:20px; color:var(--um-azul); margin:0 0 6px; }
+.login-box .subtitulo{ font-size:13px; color:#666; margin-bottom:24px; }
+.login-box input[type="password"]{ width:100%; padding:10px 14px; border:1.5px solid #dde4ee; border-radius:8px; font-size:14px; font-family:Arial,Helvetica,sans-serif; margin-bottom:12px; transition:border-color .15s; }
+.login-box input[type="password"]:focus{ border-color:var(--um-azul); outline:none; }
+.login-box button{ width:100%; background:var(--um-azul); color:#fff; border:none; border-radius:8px; padding:12px; font-size:14px; font-weight:700; cursor:pointer; transition:opacity .15s; margin-bottom:16px; }
 .login-box button:hover{opacity:.9;}
-
-.login-error{
-  display:none;
-  background:#fdecea;
-  border-left:3px solid #c0392b;
-  border-radius:0 6px 6px 0;
-  padding:8px 12px;
-  font-size:12px;
-  color:#8b1a1a;
-  text-align:left;
-  margin-bottom:12px;
-}
-
-.login-disclaimer{
-  font-size:11px;
-  color:#888;
-  border-top:1px solid #eee;
-  padding-top:14px;
-  margin-top:4px;
-  line-height:1.5;
-}
-
-.login-disclaimer strong{
-  color:#555;
-}
+.login-error{ display:none; background:#fdecea; border-left:3px solid #c0392b; border-radius:0 6px 6px 0; padding:8px 12px; font-size:12px; color:#8b1a1a; text-align:left; margin-bottom:12px; }
+.login-disclaimer{ font-size:11px; color:#888; border-top:1px solid #eee; padding-top:14px; margin-top:4px; line-height:1.5; }
+.login-disclaimer strong{ color:#555; }
 
 /* TOP BAR */
-.top-bar{
-  background:var(--um-amarillo);
-  padding:10px 30px;
-  display:flex;
-  align-items:center;
-  gap:25px;
-  font-size:14px;
-}
-
-.links-hover{
-  position:relative;
-  cursor:pointer;
-  font-weight:600;
-}
-
-.links-hover span{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-}
-
-.links-hover ul{
-  list-style:none;
-  margin:0;
-  padding:10px 0;
-  position:absolute;
-  top:100%;
-  left:0;
-  background:#fff;
-  min-width:260px;
-  box-shadow:0 6px 18px rgba(0,0,0,.15);
-  border-radius:6px;
-  display:none;
-  z-index:10;
-}
-
+.top-bar{ background:var(--um-amarillo); padding:10px 30px; display:flex; align-items:center; gap:25px; font-size:14px; }
+.links-hover{ position:relative; cursor:pointer; font-weight:600; }
+.links-hover span{ display:inline-flex; align-items:center; gap:6px; }
+.links-hover ul{ list-style:none; margin:0; padding:10px 0; position:absolute; top:100%; left:0; background:#fff; min-width:260px; box-shadow:0 6px 18px rgba(0,0,0,.15); border-radius:6px; display:none; z-index:10; }
 .links-hover:hover ul{display:block;}
 .links-hover ul li{padding:8px 16px;}
 .links-hover ul li a{text-decoration:none;color:#222;display:block;}
 .links-hover ul li a:hover{background:#f0f0f0;}
 
 /* HERO */
-.hero{
-  text-align:center;
-  padding:48px 20px 32px;
-  max-width:1100px;
-  margin:0 auto;
-}
-
+.hero{ text-align:center; padding:48px 20px 32px; max-width:1100px; margin:0 auto; }
 .identidad{display:inline-block;margin-bottom:24px;}
 .identidad .nombre{font-size:20px;font-weight:700;color:#222;letter-spacing:0.5px;}
 .identidad .lema{font-size:11px;color:#888;letter-spacing:2px;margin-top:3px;}
-
 .divider{width:50px;height:3px;background:var(--um-amarillo);margin:0 auto 20px;border-radius:2px;}
-
 .hero h1{font-size:32px;font-weight:700;margin:0 0 8px;color:#222;}
 .hero .tagline{font-size:15px;color:#666;margin:0 0 40px;}
 
-.buttons-primary{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:16px;
-  max-width:700px;
-  margin:0 auto 16px;
-}
-
-.btn-primary-item{
-  background:var(--um-azul);
-  border-radius:10px;
-  padding:28px 20px;
-  text-align:center;
-  text-decoration:none;
-  display:block;
-  transition:opacity .15s;
-}
-
+.buttons-primary{ display:grid; grid-template-columns:1fr 1fr; gap:16px; max-width:700px; margin:0 auto 16px; }
+.btn-primary-item{ background:var(--um-azul); border-radius:10px; padding:28px 20px; text-align:center; text-decoration:none; display:block; transition:opacity .15s; }
 .btn-primary-item:hover{opacity:.9;}
 .btn-primary-item .icono{font-size:26px;margin-bottom:10px;}
 .btn-primary-item .titulo{color:#fff;font-size:17px;font-weight:700;}
 .btn-primary-item .desc{color:rgba(255,255,255,0.65);font-size:12px;margin-top:5px;}
 
-.buttons-secondary{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-  max-width:700px;
-  margin:0 auto;
-}
-
-.btn-secondary-item{
-  background:#f0f4f8;
-  border:1.5px solid #dde4ee;
-  border-radius:8px;
-  padding:16px 8px;
-  text-align:center;
-  text-decoration:none;
-  display:block;
-  transition:background .15s;
-}
-
+.buttons-secondary{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; max-width:700px; margin:0 auto; }
+.btn-secondary-item{ background:#f0f4f8; border:1.5px solid #dde4ee; border-radius:8px; padding:16px 8px; text-align:center; text-decoration:none; display:block; transition:background .15s; }
 .btn-secondary-item:hover{background:#e2eaf3;}
 .btn-secondary-item .icono{font-size:20px;margin-bottom:7px;}
 .btn-secondary-item .titulo{font-size:12px;font-weight:600;color:#005aa9;}
-
 .btn-secondary-item.btn-bitacora{background:var(--um-verde);border-color:var(--um-verde);}
 .btn-secondary-item.btn-bitacora:hover{background:#144a2d;}
 .btn-secondary-item.btn-bitacora .titulo{color:#fff;}
 
-footer{
-  text-align:center;
-  font-size:13px;
-  color:#666;
-  margin:48px 0 20px;
-  border-top:1px solid #eee;
-  padding-top:20px;
-}
+footer{ text-align:center; font-size:13px; color:#666; margin:48px 0 20px; border-top:1px solid #eee; padding-top:20px; }
 
 /* MODAL AVISO */
-.modal-aviso{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.6);
-  z-index:500;
-}
-
-.modal-aviso-content{
-  background:#ffffff;
-  width:80%;
-  max-width:900px;
-  margin:5% auto;
-  padding:40px;
-  border-radius:14px;
-  border-top:10px solid var(--um-amarillo);
-  box-shadow:0 15px 40px rgba(0,0,0,0.35);
-  text-align:left;
-  font-size:16px;
-  line-height:1.5;
-}
-
+.modal-aviso{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:500; }
+.modal-aviso-content{ background:#ffffff; width:80%; max-width:900px; margin:5% auto; padding:40px; border-radius:14px; border-top:10px solid var(--um-amarillo); box-shadow:0 15px 40px rgba(0,0,0,0.35); text-align:left; font-size:16px; line-height:1.5; }
 .modal-aviso-content h3{margin-top:0;color:var(--um-azul);font-size:24px;}
 .modal-aviso-content ul{margin-left:20px;}
 .modal-aviso-actions{text-align:center;margin-top:30px;}
-.modal-aviso-actions button{
-  background:var(--um-azul);color:#fff;border:none;
-  padding:14px 32px;font-size:16px;font-weight:600;border-radius:8px;cursor:pointer;
-}
+.modal-aviso-actions button{ background:var(--um-azul);color:#fff;border:none; padding:14px 32px;font-size:16px;font-weight:600;border-radius:8px;cursor:pointer; }
 
 /* SOPORTE SAT */
 .support-container{position:fixed;bottom:24px;right:24px;z-index:400;}
-
-.support-main{
-  background:#005aa9;color:#fff;border:none;border-radius:28px;
-  padding:12px 18px;font-weight:600;cursor:pointer;
-  box-shadow:0 4px 14px rgba(0,0,0,0.25);
-  display:flex;align-items:center;gap:6px;
-  transition:transform .15s ease, box-shadow .15s ease;
-  position:relative;
-}
-
+.support-main{ background:#005aa9;color:#fff;border:none;border-radius:28px; padding:12px 18px;font-weight:600;cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,0.25); display:flex;align-items:center;gap:6px; transition:transform .15s ease, box-shadow .15s ease; position:relative; }
 .support-main:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,0.25);}
-
-.support-main::after{
-  content:"&#128161; Usa esta opcion para reportar errores en la plataforma o enviar sugerencias al equipo SAT.";
-  position:absolute;bottom:50%;right:calc(100% + 12px);
-  transform:translateY(50%) scale(0.95);
-  background:#2f2f2f;color:#fff;padding:8px 12px;border-radius:8px;
-  font-size:12.5px;opacity:0;pointer-events:none;
-  white-space:normal;min-width:220px;max-width:260px;
-  line-height:1.4;text-align:left;letter-spacing:0.2px;
-  box-shadow:0 6px 18px rgba(0,0,0,0.25);
-  transition:all .2s ease-out;z-index:500;
-}
-
-.support-main::before{
-  content:"";position:absolute;bottom:50%;right:calc(100% + 8px);
-  transform:translateY(50%) scale(0.95);
-  border-width:6px;border-style:solid;
-  border-color:transparent transparent transparent #2f2f2f;
-  opacity:0;transition:all .2s ease-out;z-index:500;
-}
-
-.support-main:hover::after,
-.support-main:hover::before{opacity:1;transform:translateY(50%) scale(1);}
-
+.support-main::after{ content:"💡 Usa esta opcion para reportar errores en la plataforma o enviar sugerencias al equipo SAT."; position:absolute;bottom:50%;right:calc(100% + 12px); transform:translateY(50%) scale(0.95); background:#2f2f2f;color:#fff;padding:8px 12px;border-radius:8px; font-size:12.5px;opacity:0;pointer-events:none; white-space:normal;min-width:220px;max-width:260px; line-height:1.4;text-align:left;letter-spacing:0.2px; box-shadow:0 6px 18px rgba(0,0,0,0.25); transition:all .2s ease-out;z-index:500; }
+.support-main::before{ content:"";position:absolute;bottom:50%;right:calc(100% + 8px); transform:translateY(50%) scale(0.95); border-width:6px;border-style:solid; border-color:transparent transparent transparent #2f2f2f; opacity:0;transition:all .2s ease-out;z-index:500; }
+.support-main:hover::after, .support-main:hover::before{opacity:1;transform:translateY(50%) scale(1);}
 .support-menu{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
-
-.support-menu a{
-  display:flex;align-items:center;gap:6px;
-  background:#f1f1f1;padding:10px 12px;border-radius:8px;
-  text-decoration:none;color:#333;font-size:13px;
-  box-shadow:0 2px 6px rgba(0,0,0,0.15);
-  transition:all .2s ease-out;
-}
-
+.support-menu a{ display:flex;align-items:center;gap:6px; background:#f1f1f1;padding:10px 12px;border-radius:8px; text-decoration:none;color:#333;font-size:13px; box-shadow:0 2px 6px rgba(0,0,0,0.15); transition:all .2s ease-out; }
 .support-menu a:hover{background:#e4e4e4;transform:translateY(-1px);}
 </style>
 </head>
@@ -370,7 +128,6 @@ footer{
 <!-- TOP BAR -->
 <div class="top-bar">
   <div style="display:flex;gap:25px;align-items:center;">
-
     <div class="links-hover">
       <span>🔗 Links de uso frecuente ▾</span>
       <ul>
@@ -389,10 +146,9 @@ footer{
         <li><a href="https://www.umayor.cl/um/santiago-portales" target="_blank">Portales</a></li>
         <li><a href="https://www.umayor.cl/buses" target="_blank">Buses</a></li>
         <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Pase-Escolar" target="_blank">Pase Escolar</a></li>
-        <li><a href="https://umayor.hiringroomcampus.com/jobs/create-company/bfSbYevlWIXvZUZfPdp5sqYS" target="_blank">Registra tu Empresa (oferta de empleo)</a></li>
+        <li><a href="https://umayor.hiringroomcampus.com/jobs/create-company/bfSbYevlWIXvZUZfPdp5sqYS" target="_blank">Registra tu Empresa</a></li>
       </ul>
     </div>
-
     <div class="links-hover">
       <span>🕒 Turnos SAT ▾</span>
       <ul>
@@ -400,7 +156,6 @@ footer{
         <li><a href="https://mayorcl.sharepoint.com/:x:/r/sites/IntranetServiciodeAtencin/_layouts/15/Doc.aspx?sourcedoc=%7B36F8803B-77FC-4A42-8E4D-A27093D8445D%7D&file=descansos-SAT.xlsx&action=default&mobileredirect=true" target="_blank">🍵 Descansos semanales</a></li>
       </ul>
     </div>
-
     <div class="links-hover">
       <span>🎓 Beneficios Ministeriales ▾</span>
       <ul>
@@ -415,7 +170,6 @@ footer{
         <li><a href="https://www.junaeb.cl/preguntas-frecuentes-usuarios-baes" target="_blank">Preguntas BAES</a></li>
       </ul>
     </div>
-
     <div class="links-hover">
       <span>✉️ Correos Frecuentes ▾</span>
       <ul>
@@ -423,20 +177,16 @@ footer{
         <li><a href="/correos-frecuentes#comercial">💼 Derivar a Área Comercial</a></li>
       </ul>
     </div>
-
   </div>
 </div>
 
 <!-- HERO -->
 <div class="hero">
-
   <div class="identidad">
     <div class="nombre">UNIVERSIDAD MAYOR</div>
     <div class="lema">para espíritus emprendedores</div>
   </div>
-
   <div class="divider"></div>
-
   <h1>Portal SAT</h1>
   <p class="tagline">Herramientas, contactos y recursos del equipo SAT</p>
 
@@ -477,6 +227,9 @@ footer{
 <footer>
   Desarrollado por <strong>Eduardo Ferrada</strong><br>
   Universidad Mayor · Enero 2026
+  <div style="margin-top:14px;">
+    <a href="/monitor-calidad" style="font-size:11px; color:#ccc; text-decoration:none; letter-spacing:0.5px;">· Monitor de Calidad ·</a>
+  </div>
 </footer>
 
 <!-- SOPORTE SAT -->
