@@ -182,6 +182,13 @@ def correos_frecuentes():
 def soporte():
     return render_template("soporte.html")
 
+# =========================
+# MONITOR DE CALIDAD
+# =========================
+@app.route("/monitor-calidad")
+def monitor_calidad():
+    return render_template("monitor_calidad.html")
+
 
 # =========================
 # EJECUCIÓN
