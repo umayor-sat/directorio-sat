@@ -6,126 +6,36 @@
 <title>Monitor de Calidad — SAT Universidad Mayor</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --amarillo:      #f2b705;
-    --amarillo-dark: #d4a004;
-    --amarillo-bg:   #fffbe6;
-    --azul:          #005baa;
-    --azul-dark:     #004490;
-    --negro:         #1a1a1a;
-    --gris-dark:     #3D3D3D;
-    --gris-mid:      #6b6b6b;
-    --gris-light:    #e4e4e4;
-    --gris-pale:     #f3f6f9;
-    --border:        #d8d8d8;
-    --white:         #ffffff;
+    --amarillo: #f2b705; --amarillo-dark: #d4a004; --amarillo-bg: #fffbe6;
+    --azul: #005baa; --azul-dark: #004490;
+    --negro: #1a1a1a; --gris-dark: #3D3D3D; --gris-mid: #6b6b6b;
+    --gris-light: #e4e4e4; --gris-pale: #f3f6f9; --border: #d8d8d8; --white: #ffffff;
   }
-
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    font-size: 15px;
-    background: var(--gris-pale);
-    color: var(--gris-dark);
-    min-height: 100vh;
-  }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 15px; background: var(--gris-pale); color: var(--gris-dark); min-height: 100vh; }
 
   /* HEADER */
-  .header {
-    background: var(--amarillo);
-    padding: 20px 30px;
-    display: flex;
-    align-items: center;
-    gap: 25px;
-  }
+  .header { background: var(--amarillo); padding: 20px 30px; display: flex; align-items: center; gap: 25px; }
   .header img { height: 90px; }
   .header-text h1 { font-size: 26px; font-weight: 700; color: #002f6c; margin: 0; }
-  .header-text p  { font-size: 13px; color: rgba(0,0,0,0.55); margin-top: 3px; }
-
-  .btn-volver {
-    margin-left: auto;
-    background: var(--azul);
-    color: #fff;
-    border: none;
-    padding: 9px 18px;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    white-space: nowrap;
-  }
+  .header-text p { font-size: 13px; color: rgba(0,0,0,0.55); margin-top: 3px; }
+  .btn-volver { margin-left: auto; background: var(--azul); color: #fff; border: none; padding: 9px 18px; border-radius: 6px; font-size: 14px; cursor: pointer; text-decoration: none; display: inline-block; white-space: nowrap; }
   .btn-volver:hover { background: var(--azul-dark); }
 
   /* CONTENEDOR */
-  .container {
-    max-width: 700px;
-    margin: 36px auto;
-    padding: 0 16px 60px;
-  }
+  .container { max-width: 700px; margin: 36px auto; padding: 0 16px 60px; }
 
   /* CARD */
-  .card {
-    background: var(--white);
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    padding: 2rem 2.25rem;
-    box-shadow: 0 0 20px rgba(0,0,0,0.08);
-  }
+  .card { background: var(--white); border-radius: 12px; border: 1px solid var(--border); padding: 2rem 2.25rem; box-shadow: 0 0 20px rgba(0,0,0,0.08); }
 
-  .section-title {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--negro);
-    text-transform: uppercase;
-    letter-spacing: 0.09em;
-    margin-bottom: 1.25rem;
-    padding-bottom: 8px;
-    border-bottom: 3px solid var(--amarillo);
-    display: inline-block;
-  }
+  .section-title { font-size: 11px; font-weight: 700; color: var(--negro); text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 1.25rem; padding-bottom: 8px; border-bottom: 3px solid var(--amarillo); display: inline-block; }
 
   .field { margin-bottom: 1.25rem; }
+  .field-label { display: block; font-size: 11px; font-weight: 600; color: var(--gris-mid); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 7px; }
 
-  .field-label {
-    display: block;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--gris-mid);
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    margin-bottom: 7px;
-  }
-
-  select, input[type=text], textarea {
-    width: 100%;
-    font-family: inherit;
-    font-size: 14px;
-    color: var(--gris-dark);
-    background: var(--gris-pale);
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    padding: 9px 12px;
-    outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
-    appearance: none;
-    -webkit-appearance: none;
-  }
-
-  select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6b6b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    padding-right: 32px;
-    cursor: pointer;
-  }
-
-  select:focus, input[type=text]:focus, textarea:focus {
-    border-color: var(--azul);
-    background: var(--white);
-    box-shadow: 0 0 0 3px rgba(0,91,170,0.12);
-  }
-
+  select, input[type=text], textarea { width: 100%; font-family: inherit; font-size: 14px; color: var(--gris-dark); background: var(--gris-pale); border: 1.5px solid var(--border); border-radius: 8px; padding: 9px 12px; outline: none; transition: border-color 0.15s, box-shadow 0.15s; appearance: none; -webkit-appearance: none; }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6b6b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; cursor: pointer; }
+  select:focus, input[type=text]:focus, textarea:focus { border-color: var(--azul); background: var(--white); box-shadow: 0 0 0 3px rgba(0,91,170,0.12); }
   input[type=text].rut-input { max-width: 220px; }
   textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
   #transcripcion { min-height: 160px; }
@@ -133,157 +43,42 @@
 
   /* RADIO */
   .radio-group { display: flex; gap: 8px; flex-wrap: wrap; }
-
-  .radio-group label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    color: var(--gris-dark);
-    cursor: pointer;
-    padding: 6px 16px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    background: var(--gris-pale);
-    transition: background 0.1s, border-color 0.1s;
-    user-select: none;
-  }
-
+  .radio-group label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--gris-dark); cursor: pointer; padding: 6px 16px; border: 1.5px solid var(--border); border-radius: 8px; background: var(--gris-pale); transition: background 0.1s, border-color 0.1s; user-select: none; }
   .radio-group input[type=radio] { display: none; }
-
-  .radio-group label.selected {
-    background: #eef4fb;
-    border-color: var(--azul);
-    color: var(--azul);
-    font-weight: 600;
-  }
-
+  .radio-group label.selected { background: #eef4fb; border-color: var(--azul); color: var(--azul); font-weight: 600; }
   .radio-group label:hover:not(.selected) { background: var(--gris-light); }
 
   .divider { border: none; border-top: 1px solid var(--gris-light); margin: 1.75rem 0; }
 
   /* BOTONES */
-  .btn-row {
-    display: flex;
-    gap: 10px;
-    margin-top: 1.75rem;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .btn {
-    padding: 10px 22px;
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    border: 1px solid var(--border);
-    background: var(--white);
-    color: var(--gris-dark);
-    transition: background 0.12s, transform 0.08s;
-  }
-
+  .btn-row { display: flex; gap: 10px; margin-top: 1.75rem; align-items: center; flex-wrap: wrap; }
+  .btn { padding: 10px 22px; border-radius: 8px; font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--gris-dark); transition: background 0.12s, transform 0.08s; }
   .btn:hover { background: var(--gris-light); }
   .btn:active { transform: scale(0.98); }
-
-  .btn.primary {
-    background: var(--azul);
-    color: var(--white);
-    border-color: var(--azul-dark);
-    font-weight: 700;
-  }
-
+  .btn.primary { background: var(--azul); color: var(--white); border-color: var(--azul-dark); font-weight: 700; }
   .btn.primary:hover { background: var(--azul-dark); }
-
   .btn.danger { color: #a32d2d; border-color: #f09595; }
   .btn.danger:hover { background: #fcebeb; }
 
-  .toast {
-    display: none;
-    font-size: 13px;
-    color: #1a5c38;
-    padding: 7px 14px;
-    background: #e8f5e9;
-    border-radius: 8px;
-    align-items: center;
-    border: 1px solid #a5d6a7;
-  }
+  .toast { display: none; font-size: 13px; color: #1a5c38; padding: 7px 14px; background: #e8f5e9; border-radius: 8px; align-items: center; border: 1px solid #a5d6a7; }
   .toast.show { display: flex; }
 
   /* LOGIN OVERLAY */
-  .overlay-login {
-    display: flex;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.55);
-    z-index: 500;
-    align-items: center;
-    justify-content: center;
-  }
+  .overlay-login { display: flex; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 500; align-items: center; justify-content: center; }
   .overlay-login.oculto { display: none; }
-
-  .login-box {
-    background: #fff;
-    border-radius: 14px;
-    padding: 40px 36px;
-    width: 100%;
-    max-width: 380px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
-    border-top: 8px solid var(--amarillo);
-    text-align: center;
-  }
+  .login-box { background: #fff; border-radius: 14px; padding: 40px 36px; width: 100%; max-width: 380px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); border-top: 8px solid var(--amarillo); text-align: center; }
   .login-box h2 { font-size: 1.1rem; color: var(--azul); margin-bottom: 6px; }
-  .login-box p  { font-size: 0.85rem; color: #888; margin-bottom: 24px; }
-
-  .login-box input[type=password] {
-    width: 100%;
-    padding: 11px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    font-size: 1rem;
-    text-align: center;
-    letter-spacing: 4px;
-    font-family: inherit;
-    outline: none;
-    margin-bottom: 14px;
-  }
+  .login-box p { font-size: 0.85rem; color: #888; margin-bottom: 24px; }
+  .login-box input[type=password] { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 1rem; text-align: center; letter-spacing: 4px; font-family: inherit; outline: none; margin-bottom: 14px; }
   .login-box input[type=password]:focus { border-color: var(--azul); box-shadow: 0 0 0 3px rgba(0,91,170,0.12); }
-
-  .btn-ingresar {
-    width: 100%;
-    background: var(--azul);
-    color: #fff;
-    border: none;
-    padding: 12px;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: inherit;
-  }
+  .btn-ingresar { width: 100%; background: var(--azul); color: #fff; border: none; padding: 12px; border-radius: 8px; font-size: 0.95rem; font-weight: 700; cursor: pointer; font-family: inherit; }
   .btn-ingresar:hover { background: var(--azul-dark); }
-
   .login-error { color: #c62828; font-size: 0.85rem; margin-top: 10px; display: none; }
 
   /* BOTÓN REPORTE */
-  .btn-reporte-flotante {
-    position: fixed; bottom: 24px; left: 24px;
-    background: #cc0000; color: white; border: none;
-    width: 52px; height: 52px; border-radius: 50%; font-size: 1.3rem;
-    cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-    z-index: 300; display: flex; align-items: center; justify-content: center;
-    text-decoration: none;
-  }
+  .btn-reporte-flotante { position: fixed; bottom: 24px; left: 24px; background: #cc0000; color: white; border: none; width: 52px; height: 52px; border-radius: 50%; font-size: 1.3rem; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); z-index: 300; display: flex; align-items: center; justify-content: center; text-decoration: none; }
   .btn-reporte-flotante:hover { background: #aa0000; }
-  .btn-reporte-flotante::after {
-    content: "Reportar error";
-    position: absolute; left: 62px;
-    background: #333; color: #fff;
-    padding: 4px 8px; border-radius: 4px;
-    font-size: 12px; white-space: nowrap;
-    opacity: 0; pointer-events: none; transition: opacity 0.2s;
-  }
+  .btn-reporte-flotante::after { content: "Reportar error"; position: absolute; left: 62px; background: #333; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 12px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
   .btn-reporte-flotante:hover::after { opacity: 1; }
 
   @media (max-width: 480px) {
@@ -405,7 +200,6 @@
 <script>
   const PASSWORD_MONITOR = "monitor@um2026";
 
-  // ── LOGIN ──
   function verificarAcceso() {
     const val = document.getElementById("inputPassword").value;
     if (val === PASSWORD_MONITOR) {
@@ -417,13 +211,11 @@
     }
   }
 
-  // Mostrar login al cargar
   window.onload = () => {
     document.getElementById("overlayLogin").classList.remove("oculto");
     setTimeout(() => document.getElementById("inputPassword").focus(), 100);
   };
 
-  // ── RADIO GROUPS ──
   document.querySelectorAll('.radio-group').forEach(function(group) {
     group.querySelectorAll('label').forEach(function(lbl) {
       lbl.addEventListener('click', function() {
@@ -438,7 +230,6 @@
     return el ? el.value : '—';
   }
 
-  // ── COPIAR ──
   function copiar() {
     var ej    = document.getElementById('ejecutivo').value.trim()           || '—';
     var nom   = document.getElementById('nombre_solicitante').value.trim();
@@ -448,10 +239,8 @@
     var aseg  = getRadio('asegura');
     var desp  = getRadio('despedida');
     var trans = document.getElementById('transcripcion').value.trim()       || '—';
-
     var nomLinea = nom ? 'Nombre solicitante: ' + nom + '\n' : '';
     var rutLinea = rut ? 'RUT solicitante (tercero): ' + rut + '\n' : '';
-
     var texto =
       'EVALUACIÓN DE LLAMADA — SAT / Universidad Mayor\n' +
       '================================================\n' +
@@ -462,7 +251,6 @@
       'Despedida institucional: ' + desp + '\n\n' +
       'Resumen de la llamada:\n' + res + '\n\n' +
       'Transcripción:\n' + trans;
-
     navigator.clipboard.writeText(texto).then(function() {
       var t = document.getElementById('toast');
       t.classList.add('show');
@@ -470,7 +258,6 @@
     });
   }
 
-  // ── LIMPIAR ──
   function limpiar() {
     if (!confirm('¿Limpiar todos los campos?')) return;
     document.getElementById('ejecutivo').value = '';
