@@ -114,7 +114,7 @@ def api_contactos_administrativos():
             supabase
             .table("contactos_administrativos")
             .select("*")
-            .ilike("area_busqueda", f"%{q}%")  # ← solo area_busqueda, sin mezclar columnas
+            .ilike("area_busqueda", q)  # ← coincidencia exacta, sin %
         )
         result = query.execute()
         return jsonify(result.data or [])
