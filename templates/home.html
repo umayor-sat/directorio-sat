@@ -257,10 +257,37 @@ footer{ text-align:center; font-size:13px; color:#666; margin:48px 0 20px; borde
 </div>
 
 <!-- BOTÓN FLOTANTE CALCULADORA -->
-<button onclick="abrirCalc()" title="Calculadora dias habiles"
-  style="position:fixed; bottom:88px; right:24px; background:#f2b705; color:#1a1a1a; border:none; width:48px; height:48px; border-radius:50%; font-size:1.2rem; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,0.2); z-index:400; display:flex; align-items:center; justify-content:center;">
-  📅
-</button>
+<button onclick="abrirCalc()" id="calcBtn">📅</button>
+<style>
+#calcBtn {
+  position: fixed; bottom: 88px; right: 24px;
+  background: #f2b705; color: #1a1a1a; border: none;
+  width: 52px; height: 52px; border-radius: 50%; font-size: 1.3rem;
+  cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  z-index: 400; display: flex; align-items: center; justify-content: center;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+#calcBtn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.25); }
+#calcBtn::after {
+  content: "Herramienta para calcular dias habiles";
+  position: absolute; bottom: 50%; right: calc(100% + 12px);
+  transform: translateY(50%) scale(0.95);
+  background: #2f2f2f; color: #fff; padding: 8px 12px; border-radius: 8px;
+  font-size: 12.5px; opacity: 0; pointer-events: none;
+  white-space: normal; min-width: 200px; max-width: 240px;
+  line-height: 1.4; text-align: left; letter-spacing: 0.2px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  transition: all .2s ease-out; z-index: 500;
+}
+#calcBtn::before {
+  content: ""; position: absolute; bottom: 50%; right: calc(100% + 8px);
+  transform: translateY(50%) scale(0.95);
+  border-width: 6px; border-style: solid;
+  border-color: transparent transparent transparent #2f2f2f;
+  opacity: 0; transition: all .2s ease-out; z-index: 500;
+}
+#calcBtn:hover::after, #calcBtn:hover::before { opacity: 1; transform: translateY(50%) scale(1); }
+</style>
 
 <div class="support-container">
   <div id="supportMenu" class="support-menu" style="display:none;">
@@ -407,3 +434,4 @@ document.getElementById("calcOverlay").addEventListener("click", function(e) {
 
 </body>
 </html>
+
