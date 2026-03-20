@@ -117,7 +117,7 @@ th { background: #005baa; color: white; text-align: left; }
 <button class="btn-admin-flotante" onclick="abrirLogin()" title="Administración">✏️</button>
 
 <!-- BOTÓN REPORTE -->
-<a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de error – Directorio SAT&body=Página donde ocurrió el error:%0A%0ADescripción del problema:%0A%0A(Agrega aquí cualquier detalle adicional)" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
+<a href="/cdn-cgi/l/email-protection#98fdfcedf9eafcf7b6fefdeaeaf9fcf9d8edf5f9e1f7eab6fbf4a7ebedfaf2fdfbeca568070803b8cafde8f7eaecfdb8fcfdb8fdeaeaf7eab87a180bb8dcf1eafdfbecf7eaf1f7b8cbd9ccbefaf7fce1a5c85b39fff1f6f9b8fcf7f6fcfdb8f7fbedeaeaf15b2bb8fdf4b8fdeaeaf7eaa2bda8d9bda8d9dcfdebfbeaf1e8fbf15b2bf6b8fcfdf4b8e8eaf7faf4fdf5f9a2bda8d9bda8d9b0d9ffeafdfff9b8f9e9ed5b35b8fbedf9f4e9edf1fdeab8fcfdecf9f4f4fdb8f9fcf1fbf1f7f6f9f4b1" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
 
 <!-- MODAL AYUDA -->
 <div id="modalAyuda" class="modal">
@@ -136,7 +136,7 @@ th { background: #005baa; color: white; text-align: left; }
 </div>
 
 <!-- MODAL LOGIN -->
-<div class="modal" id="modalLogin" onclick="if(event.target===this)cerrarLogin()">
+<div class="modal" id="modalLogin">
   <div class="modal-content" style="width:360px; text-align:center;">
     <h3>🔐 Acceso Administración</h3>
     <div class="form-group" style="margin-top:16px; text-align:left;">
@@ -152,7 +152,7 @@ th { background: #005baa; color: white; text-align: left; }
 </div>
 
 <!-- MODAL AGREGAR / EDITAR -->
-<div class="modal" id="modalAgregar" onclick="if(event.target===this)cerrarAgregar()">
+<div class="modal" id="modalAgregar">
   <div class="modal-content">
     <h3 id="tituloFormulario">➕ Agregar registro</h3>
     <div class="instruccion-flujo">
@@ -186,10 +186,11 @@ th { background: #005baa; color: white; text-align: left; }
         <option value="ingenieria en construccion">Ingeniería en Construcción</option>
         <option value="ingenieria industrial">Ingeniería Industrial</option>
         <option value="ingenieria forestal">Ingeniería Forestal</option>
+        <option value="ingenieria en minas">Ingeniería en Minas</option>
         <option value="ingenieria en medio ambiente y sustentabilidad">Ingeniería en Medio Ambiente</option>
         <option value="ingenieria en logistica prevencion ciberseguridad">Ingeniería Logística/Prevención/Ciberseguridad</option>
-        <option value="ingenieria en inteligencia artificial">Ingeniería en Inteligencia Artificial</option>
-        <option value="ingenieria en ciencia de datos">Ingeniería en Ciencia de Datos</option>
+        <option value="ingeniero en inteligencia artificial">Ingeniería en Inteligencia Artificial</option>
+        <option value="ingeniero en ciencia de datos">Ingeniería en Ciencia de Datos</option>
         <option value="biotecnologia">Biotecnología</option>
         <option value="geologia">Geología</option>
         <option value="agronomia">Agronomía</option>
@@ -214,15 +215,6 @@ th { background: #005baa; color: white; text-align: left; }
         <option value="rector">Rector / Vicerrectores</option>
         <option value="escuela de negocios">Escuela de Negocios</option>
         <option value="escuela de ingenieria">Escuela de Ingeniería</option>
-        <option value="ingenieria en minas">Ingeniería en Minas</option>
-        <option value="ingenieria industrial (onl)">Ingeniería industrial (onl)</option>
-        <option value="ingenieria en informatica (onl)">Ingeniería en informática (onl)</option>
-        <option value="ing. civil industrial (cont., onl)">Ing. Civil industrial (cont., onl)</option>
-        <option value="ingenieria en ciberseguridad (cont. onl)">Ingeniería en ciberseguridad (cont. Onl)</option>
-        <option value="ing. prevencion en riesgos (cont., onl)">Ing. Prevención en riesgos (cont., onl)</option>
-        <option value="ingenieria en logistica (cont., onl)">Ingeniería en logística (cont., onl)</option>
-        <option value="ing. civil en comp. e informatica (cont)">Ing. Civil en comp. E informática (cont)</option>
-        
         <optgroup label="── TEC Mayor ──">
           <option value="tec mayor">TEC Mayor – Autoridades / General</option>
           <option value="tecnico gestion de personas">Técnico en Gestión de Personas</option>
@@ -269,16 +261,19 @@ th { background: #005baa; color: white; text-align: left; }
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_3Shj63dB3uBAL_TVvqfBRw_3RyTRZ1U";
+const PASSWORD_ADMIN = "SAT@UM2026";
 let modoAdmin = false;
 let ultimaBusqueda = "";
 let editandoId = null;
 
 const sugerenciasBase = [
+  // ── SALUD ──
   { label: "Medicina", value: "medicina", aliases: ["med"] },
   { label: "Odontología", value: "odontologia", aliases: ["dental","dent"] },
+  { label: "Escuela de Graduados Odontología", value: "escuela de graduados odontologia", aliases: ["graduados odontologia","postgrado odonto"] },
   { label: "Enfermería", value: "enfermeria", aliases: ["enfer"] },
   { label: "Kinesiología", value: "kinesiologia", aliases: ["kine"] },
   { label: "Fonoaudiología", value: "fonoaudiologia", aliases: ["fono"] },
@@ -286,167 +281,169 @@ const sugerenciasBase = [
   { label: "Obstetricia y Puericultura", value: "obstetricia y puericultura", aliases: ["obstetricia","matrona"] },
   { label: "Tecnología Médica", value: "tecnologia medica", aliases: ["tecmed"] },
   { label: "Terapia Ocupacional", value: "terapia ocupacional", aliases: ["to","terapia"] },
+  { label: "Salud Pública", value: "salud publica", aliases: ["salud pub"] },
+  { label: "Entrenador Deportivo", value: "entrenador deportivo", aliases: ["entrenador","deporte","deportivo"] },
+
+  // ── PSICOLOGÍA Y EDUCACIÓN ──
   { label: "Psicología", value: "psicologia", aliases: ["psico"] },
   { label: "Psicopedagogía", value: "psicopedagogia", aliases: ["psicopeda"] },
-  { label: "Derecho", value: "derecho", aliases: ["leyes","abogado"] },
+  { label: "Pedagogía en Inglés", value: "pedagogia en ingles", aliases: ["ingles","pedagogia ingles"] },
+  { label: "Pedagogía en Educación Física", value: "pedagogia en educacion fisica", aliases: ["ef","educ fisica"] },
+  { label: "Pedagogía en Educación Parvularia", value: "pedagogia en educacion parvularia", aliases: ["parvularia"] },
+  { label: "Pedagogía en Educación Diferencial", value: "pedagogia en educacion diferencial", aliases: ["diferencial"] },
+  { label: "Pedagogía en Artes Musicales", value: "pedagogia en artes musicales", aliases: ["musica","artes musicales"] },
+  { label: "Pedagogías (General)", value: "pedagogias", aliases: ["pedagogia","pedagogias"] },
+  { label: "Programa de Formación Pedagógica", value: "programa de formacion pedagogica", aliases: ["formacion pedagogica","pfp"] },
 
-  { label: "Ingeniería Civil Industrial", value: "ingenieria civil industrial", aliases: ["ici"] },
+  // ── DERECHO ──
+  { label: "Derecho", value: "derecho", aliases: ["leyes","abogado"] },
+  { label: "Derecho Campus Manuel Montt / Oriente", value: "derecho campus manuel montt campus oriente", aliases: ["derecho montt","derecho oriente"] },
+  { label: "Derecho Diurno y Vespertino", value: "derecho jornada diurna y vespertina campus manuel montt y oriente", aliases: ["derecho diurno","derecho vespertino"] },
+
+  // ── INGENIERÍA CIVIL ──
+  { label: "Ingeniería Civil", value: "ingenieria civil", aliases: ["ing civil","civil"] },
+  { label: "Ingeniería Civil Industrial", value: "ingenieria civil industrial", aliases: ["ici","civil industrial"] },
+  { label: "Ingeniería Civil Industrial (Diurno/Vespertino)", value: "ingenieria civil industrial diurno y vespertino", aliases: ["ici","ici diurno","ici vespertino"] },
+  { label: "Ingeniería Civil Industrial (Online)", value: "ingenieria civil industrial online", aliases: ["ici","ici online"] },
+  { label: "Ingeniería Civil Industrial (Cont./Online)", value: "ing. civil industrial (cont., onl)", aliases: ["ici","ici cont"] },
+  { label: "Ingeniería Civil en Comp. e Informática (Cont.)", value: "ing. civil en comp. e informatica (cont)", aliases: ["ici comp","computacion cont"] },
+  { label: "Escuela de Ingeniería (General)", value: "escuela de ingenieria", aliases: ["escuela ingenieria"] },
+  { label: "Escuela de Ingeniería Civil Industrial / Ing. Industrial / Prevención / Logística / Informática / Ciberseguridad / Minas", value: "escuela de ingenieria civil industrial ingenieria industrial prevencion de riesgos logistica informatica ciberseguridad minas", aliases: ["escuela ing civil","escuela ingenieria general"] },
+
+  // ── INGENIERÍA COMERCIAL ──
   { label: "Ingeniería Comercial", value: "ingenieria comercial", aliases: ["icom","comercial"] },
-  { label: "Ingeniería en Computación e Informática", value: "ingenieria en computacion e informatica", aliases: ["informatica","computacion"] },
+  { label: "Ingeniería Comercial (Cont./Online/Blended/Vespertino)", value: "ingenieria comercial continuidad online blended vespertino", aliases: ["icom","comercial cont","comercial online"] },
+  { label: "Ingeniería Comercial (Online)", value: "ingenieria comercial online", aliases: ["icom","comercial online"] },
+
+  // ── INGENIERÍA EN COMPUTACIÓN E INFORMÁTICA ──
+  { label: "Ingeniería en Computación e Informática", value: "ingenieria en computacion e informatica", aliases: ["informatica","computacion","icci"] },
+  { label: "Ingeniería en Computación e Informática (Cont./Online)", value: "ingenieria en computacion e informatica continuidad online", aliases: ["informatica cont","computacion online"] },
+  { label: "Ingeniería en Computación e Informática / IA", value: "ingenieria en computacion e informatica inteligencia artificial", aliases: ["informatica ia","computacion ia"] },
+  { label: "Ingeniería en Informática (Online)", value: "ingenieria en informatica (onl)", aliases: ["informatica online","Ingeniería en informática (onl)"] },
+
+  // ── INGENIERÍA EN ADMINISTRACIÓN ──
+  { label: "Ingeniería en Administración de Empresas", value: "ingenieria en administracion de empresas", aliases: ["ing admin","adm empresas ing"] },
+  { label: "Ingeniería en Administración (Online)", value: "ingenieria en administracion online", aliases: ["ing admin online"] },
+  { label: "Coordinador Ingeniería en Administración (Online)", value: "coordinador ingenieria en administracion online", aliases: ["coordinador ing admin"] },
+
+  // ── INGENIERÍA EN CONSTRUCCIÓN ──
   { label: "Ingeniería en Construcción", value: "ingenieria en construccion", aliases: ["construccion"] },
+  { label: "Construcción Civil / Ingeniería en Construcción Civil", value: "construccion civil ingenieria en construccion civil", aliases: ["construccion civil","ing construccion civil"] },
+
+  // ── INGENIERÍA EN CIBERSEGURIDAD ──
+  { label: "Ingeniería en Ciberseguridad (Continuidad)", value: "ingenieria en ciberseguridad continuidad", aliases: ["ciberseguridad cont","ciber cont"] },
+  { label: "Ingeniería en Ciberseguridad (Online)", value: "ingenieria en ciberseguridad online", aliases: ["ciberseguridad online","ciber online"] },
+  { label: "Ingeniería en Ciberseguridad (Cont./Online)", value: "Ingeniería en ciberseguridad (cont. Onl)", aliases: ["ciberseguridad","ciber"] },
+
+  // ── INGENIERÍA EN PREVENCIÓN ──
+  { label: "Ingeniería en Prevención de Riesgos", value: "ingenieria en prevencion de riesgos", aliases: ["prevencion","prev riesgos"] },
+  { label: "Ingeniería en Prevención de Riesgos (Online)", value: "ingenieria en prevencion de riesgos online", aliases: ["prevencion online"] },
+  { label: "Ingeniería en Prevención de Riesgos (Cont./Online)", value: "ing. prevencion en riesgos (cont., onl)", aliases: ["prev cont","prevencion cont"] },
+  { label: "Ingeniería en Logística/Prevención/Ciberseguridad (General)", value: "ingenieria en logistica prevencion ciberseguridad", aliases: ["logistica","prevencion","ciberseguridad"] },
+
+  // ── INGENIERÍA EN LOGÍSTICA ──
+  { label: "Ingeniería en Logística (Online)", value: "ingenieria en logistica online", aliases: ["logistica online"] },
+  { label: "Ingeniería en Logística (Cont./Online)", value: "ingenieria en logistica (cont., onl)", aliases: ["logistica cont"] },
+
+  // ── INGENIERÍA EN IA Y DATOS ──
+  { label: "Ingeniería en Inteligencia Artificial", value: "ingenieria en inteligencia artificial", aliases: ["ia","inteligencia artificial"] },
+  { label: "Ingeniería en Inteligencia Artificial (Online)", value: "ingenieria en inteligencia artificial online", aliases: ["ia online"] },
+  { label: "Ingeniería en Inteligencia de Negocios", value: "ingenieria en inteligencia de negocios", aliases: ["inteligencia negocios","bi"] },
+  { label: "Ingeniero en Inteligencia Artificial", value: "ingeniero en inteligencia artificial", aliases: ["ia","ingeniero ia"] },
+  { label: "Ingeniero en Ciencia de Datos", value: "ingeniero en ciencia de datos", aliases: ["datos","data science","ciencia datos"] },
+  { label: "Data Science", value: "data science", aliases: ["data","ciencia datos","ds"] },
+
+  // ── OTRAS INGENIERÍAS ──
   { label: "Ingeniería Industrial", value: "ingenieria industrial", aliases: ["industrial"] },
+  { label: "Ingeniería Industrial (Online)", value: "ingenieria industrial (onl)", aliases: ["industrial online"] },
+  { label: "Ingeniería Industrial (Online 2)", value: "ingenieria industrial online", aliases: ["industrial online"] },
   { label: "Ingeniería Forestal", value: "ingenieria forestal", aliases: ["forestal"] },
   { label: "Ingeniería en Minas", value: "ingenieria en minas", aliases: ["minas"] },
-  { label: "Ingeniería en Medio Ambiente", value: "ingenieria en medio ambiente y sustentabilidad", aliases: ["medio ambiente"] },
-  { label: "Ingeniería en Logística/Prevención/Ciberseguridad", value: "ingenieria en logistica prevencion ciberseguridad", aliases: ["logistica","prevencion","ciberseguridad"] },
-  { label: "Ingeniería en Inteligencia Artificial", value: "ingenieria en inteligencia artificial", aliases: ["ia"] },
-  { label: "Ingeniería en Ciencia de Datos", value: "ingenieria en ciencia de datos", aliases: ["datos"] },
+  { label: "Ingeniería en Minas (Online)", value: "ingenieria en minas online", aliases: ["minas online"] },
+  { label: "Ingeniería en Medio Ambiente", value: "ingenieria en medio ambiente y sustentabilidad", aliases: ["medio ambiente","sustentabilidad"] },
+  { label: "Ingeniería Electrónica", value: "ingenieria electronica", aliases: ["electronica","ing electronica"] },
+  { label: "Escuela de Negocios", value: "escuela de negocios", aliases: ["negocios"] },
 
+  // ── CIENCIAS ──
   { label: "Biotecnología", value: "biotecnologia", aliases: ["bio"] },
   { label: "Geología", value: "geologia", aliases: ["geo"] },
   { label: "Agronomía", value: "agronomia", aliases: ["agro"] },
   { label: "Medicina Veterinaria", value: "medicina veterinaria", aliases: ["veterinaria","vet"] },
+  { label: "Bachillerato en Ciencias", value: "bachillerato en ciencias", aliases: ["bachillerato","bach ciencias"] },
+  { label: "Bachillerato en Ciencias de la Salud", value: "bachillerato en ciencias de la salud", aliases: ["bach salud","bachillerato salud"] },
+  { label: "Coordinadora Bachillerato Ciencias de la Salud", value: "coordinadora bachillerato en ciencias de la salud", aliases: ["coord bach salud"] },
+  { label: "Bachillerato en Humanidades", value: "bachillerato en humanidades", aliases: ["bach humanidades","bachillerato humanidades"] },
 
+  // ── ARTES Y COMUNICACIONES ──
   { label: "Arquitectura", value: "arquitectura", aliases: ["arq"] },
   { label: "Diseño", value: "diseno", aliases: ["diseño"] },
   { label: "Animación Digital", value: "animacion digital", aliases: ["animacion"] },
   { label: "Cine", value: "cine", aliases: [] },
   { label: "Periodismo", value: "periodismo", aliases: ["perio"] },
   { label: "Sociología", value: "sociologia", aliases: ["socio"] },
-  { label: "Administración Pública", value: "administracion publica", aliases: [] },
-
-  { label: "Pedagogía en Inglés", value: "pedagogia en ingles", aliases: ["ingles"] },
-  { label: "Pedagogía en Educación Física", value: "pedagogia en educacion fisica", aliases: ["ef"] },
-  { label: "Pedagogía en Educación Parvularia", value: "pedagogia en educacion parvularia", aliases: ["parvularia"] },
-  { label: "Pedagogía en Educación Diferencial", value: "pedagogia en educacion diferencial", aliases: ["diferencial"] },
-  { label: "Pedagogía en Artes Musicales", value: "pedagogia en artes musicales", aliases: ["musica"] },
-
   { label: "Conservatorio de Música", value: "conservatorio de musica", aliases: ["conservatorio"] },
   { label: "Teatro", value: "teatro", aliases: [] },
   { label: "Turismo Sustentable", value: "turismo sustentable", aliases: ["turismo"] },
 
+  // ── ADMINISTRACIÓN Y CONTABILIDAD ──
+  { label: "Administración Pública", value: "administracion publica", aliases: ["adm publica"] },
+  { label: "Administración Pública (Coordinadora Virtual)", value: "administracion publica coordinadora virtual", aliases: ["adm publica virtual","coord virtual"] },
+  { label: "Administración Pública (Continuidad Online)", value: "administracion publica plan continuidad online", aliases: ["adm publica online","adm publica cont"] },
   { label: "Auditoría / Contador Público", value: "auditoria contador publico y auditor", aliases: ["auditoria","contador"] },
-  { label: "Salud Pública", value: "salud publica", aliases: [] },
+  { label: "Contador Público y Auditor (Online)", value: "contador publico y auditor online", aliases: ["contador online","auditoria online"] },
+  { label: "Escuela de Gobierno y Administración Pública", value: "escuela de gobierno y administracion publica", aliases: ["gobierno","escuela gobierno","adm publica escuela"] },
+  { label: "Multicarrera", value: "multicarrera", aliases: ["multi","multicarrera"] },
+
+  // ── AUTORIDADES ──
   { label: "Rector / Vicerrectores", value: "rector", aliases: ["rector","vicerrector"] },
+  { label: "Prorector", value: "prorector", aliases: ["prorector"] },
+  { label: "Secretario General", value: "secretario general", aliases: ["secretario","secretario general"] },
+  { label: "Vicerrector Académico / Director Investigación", value: "vicerrector academico director de investigacion y creacion art", aliases: ["vicerrector academico","vra"] },
+  { label: "Vicerrector Académico Regional", value: "vicerrector academico regional", aliases: ["vicerrector regional","vra regional"] },
+  { label: "Vicerrector Aseguramiento Calidad", value: "vicerrector aseg del calidad y plan", aliases: ["vicerrector calidad","vac"] },
+  { label: "Vicerrector de Investigación", value: "vicerrector de investigacion", aliases: ["vicerrector investigacion","vri"] },
+  { label: "Vicerrectora de Comunicaciones y Vinculación", value: "vicerrectora de comunicaciones y vinculacion con el medio", aliases: ["vicerrectora comunicaciones","vcm"] },
+  { label: "Vicerrectoría de Asuntos Globales y Desarrollo", value: "vicerrectoria de asuntos globales y desarrollo", aliases: ["asuntos globales","vicerrectoria global"] },
+  { label: "Decano Facultad Ciencias, Ingeniería y Tecnología", value: "decano de la facultad de ciencias ingenieria y tecnologia", aliases: ["decano ingenieria","decano ciencias"] },
+  { label: "Decano Facultad Ciencias Sociales y Artes", value: "decano facultad de cs sociales y artes", aliases: ["decano sociales","decano artes"] },
+  { label: "Decano Facultad Medicina y Ciencias de la Salud", value: "decano facultad de medicina y ciencias de la salud", aliases: ["decano medicina","decano salud"] },
+  { label: "Director Académico", value: "director academico", aliases: ["director academico","dir academico"] },
+  { label: "Directora Académica de Facultad", value: "directora academica de facultad", aliases: ["directora academica","dir academica"] },
+  { label: "Director de Educación Técnica y Tecnológica", value: "director de educacion tecnica y tecnologica", aliases: ["director tecnica","dir tec"] },
+  { label: "Director Regional Admisión y Difusión", value: "director regional de admision y difusion", aliases: ["director regional","admision regional"] },
+  { label: "Coordinador Regional Académico", value: "coordinador regional academico", aliases: ["coord regional","coordinador regional"] },
 
-  { label: "Escuela de Negocios", value: "escuela de negocios", aliases: ["negocios"] },
-  { label: "Escuela de Ingeniería", value: "escuela de ingenieria", aliases: [] },
-
-  { label: "TEC Mayor – Autoridades", value: "tec mayor", aliases: ["tec mayor","tecmayor"] },
-
-  { label: "Técnico en Gestión de Personas", value: "tecnico gestion de personas", aliases: ["gestion personas"] },
-  { label: "Técnico en Administración Pública", value: "tecnico administracion publica", aliases: ["adm publica"] },
-  { label: "Técnico en Administración de Empresas", value: "tecnico administracion de empresas", aliases: ["adm empresas"] },
-  { label: "Técnico en Contabilidad General", value: "tecnico contabilidad general", aliases: ["contabilidad"] },
-  { label: "Técnico en Finanzas", value: "tecnico finanzas", aliases: ["finanzas"] },
-  { label: "Técnico en Marketing y Gestión Comercial", value: "tecnico marketing gestion comercial", aliases: ["marketing"] },
-  { label: "Técnico en Logística", value: "tecnico logistica", aliases: ["logistica tec"] },
-  { label: "Técnico en Prevención de Riesgos", value: "tecnico prevencion de riesgos", aliases: ["prevencion tec"] },
-  { label: "Técnico en Ciberseguridad", value: "tecnico ciberseguridad", aliases: ["ciber tec"] },
-  { label: "Técnico en Tecnologías de la Información", value: "tecnico tecnologias de la informacion", aliases: ["ti tec"] },
-  { label: "Técnico en Telecomunicaciones, Conectividad y Redes", value: "tecnico telecomunicaciones conectividad redes", aliases: ["redes","telecomunicaciones tec"] },
-  { label: "Técnico en Programación Computacional", value: "tecnico programacion computacional", aliases: ["programacion tec"] },
-  { label: "Técnico en Minería Remota Inteligente", value: "tecnico mineria remota inteligente", aliases: ["mineria tec"] },
-  { label: "Técnico en Enfermería (Blended)", value: "tecnico enfermeria blended", aliases: ["enfermeria tec"] },
-  { label: "Técnico en Odontología (Blended)", value: "tecnico odontologia blended", aliases: ["odontologia tec"] },
-  { label: "Técnico en Química y Farmacia (Blended)", value: "tecnico quimica y farmacia blended", aliases: ["quimica tec"] },
-  { label: "Técnico en Radiología y Radiodiagnóstico (Blended)", value: "tecnico radiologia radiodiagnostico blended", aliases: ["radiologia tec"] },
-
-  { label: "Ingeniería Industrial (Online)", value: "ingenieria industrial (onl)", aliases: ["industrial online"] },
-  { label: "Ingeniería en Informática (Online)", value: "ingenieria en informatica (onl)", aliases: ["informatica online"] },
-  { label: "Ingeniería Civil Industrial (Continuidad / Online)", value: "ing. civil industrial (cont., onl)", aliases: ["ici continuidad","civil industrial cont"] },
-  { label: "Ingeniería en Ciberseguridad (Continuidad / Online)", value: "ingenieria en ciberseguridad (cont. onl)", aliases: ["ciberseguridad online"] },
-  { label: "Ingeniería en Prevención de Riesgos (Continuidad / Online)", value: "ing. prevencion en riesgos (cont., onl)", aliases: ["prevencion online"] },
-  { label: "Ingeniería en Logística (Continuidad / Online)", value: "ingenieria en logistica (cont., onl)", aliases: ["logistica online"] },
-  { label: "Ingeniería Civil en Computación e Informática (Continuidad)", value: "ing. civil en comp. e informatica (cont)", aliases: ["computacion cont"] }
+  // ── TEC MAYOR ──
+  { label: "TEC Mayor – Autoridades", value: "tec mayor", aliases: ["tec","téc","tec mayor","tecmayor"] },
+  { label: "Técnico en Gestión de Personas", value: "tecnico gestion de personas", aliases: ["tec","téc","tecni","gestion personas"] },
+  { label: "Técnico en Administración Pública", value: "tecnico administracion publica", aliases: ["tec","téc","tecni","adm publica tec"] },
+  { label: "Técnico en Administración Pública (Universitario)", value: "tecnico universitario en administracion publica", aliases: ["tec","téc","tecni","adm publica univ"] },
+  { label: "Técnico en Administración de Empresas", value: "tecnico administracion de empresas", aliases: ["tec","téc","tecni","adm empresas tec"] },
+  { label: "Jefe de Carrera Administración de Empresas", value: "jefe de carrera administracion de empresas", aliases: ["jefe carrera adm empresas"] },
+  { label: "Jefe de Carrera Administración Pública", value: "jefe de carrera administracion publica", aliases: ["jefe carrera adm publica"] },
+  { label: "Técnico en Contabilidad General", value: "tecnico contabilidad general", aliases: ["tec","téc","tecni","contabilidad tec"] },
+  { label: "Jefe de Carrera Contabilidad General", value: "jefe de carrera contabilidad general", aliases: ["jefe carrera contabilidad"] },
+  { label: "Técnico en Finanzas", value: "tecnico finanzas", aliases: ["tec","téc","tecni","finanzas tec"] },
+  { label: "Jefe de Carrera Técnico en Finanzas", value: "jefe de carrera tecnico universitario en finanzas", aliases: ["jefe carrera finanzas"] },
+  { label: "Técnico en Marketing y Gestión Comercial", value: "tecnico marketing gestion comercial", aliases: ["tec","téc","tecni","marketing tec"] },
+  { label: "Jefe de Carrera Marketing y Gestión Comercial", value: "jefe de carrera tecnico universitario en marketing y gestion comercial", aliases: ["jefe carrera marketing"] },
+  { label: "Técnico en Logística", value: "tecnico logistica", aliases: ["tec","téc","tecni","logistica tec"] },
+  { label: "Jefe de Carrera Logística", value: "jefe de carrera logistica", aliases: ["jefe carrera logistica"] },
+  { label: "Técnico en Prevención de Riesgos", value: "tecnico prevencion de riesgos", aliases: ["tec","téc","tecni","prevencion tec"] },
+  { label: "Técnico en Ciberseguridad", value: "tecnico ciberseguridad", aliases: ["tec","téc","tecni","ciber tec"] },
+  { label: "Jefe de Carrera Ciberseguridad", value: "jefe de carrera ciberseguridad", aliases: ["jefe carrera ciber"] },
+  { label: "Técnico en Tecnologías de la Información", value: "tecnico tecnologias de la informacion", aliases: ["tec","téc","tecni","ti tec"] },
+  { label: "Jefe de Carrera Tecnologías de la Información", value: "jefe de carrera tecnologias de la informacion", aliases: ["jefe carrera ti"] },
+  { label: "Técnico en Telecomunicaciones, Conectividad y Redes", value: "tecnico telecomunicaciones conectividad redes", aliases: ["tec","téc","tecni","redes","telecomunicaciones tec"] },
+  { label: "Jefe de Carrera Telecomunicaciones, Conectividad y Redes", value: "jefe de carrera tecnico universitario en telecomunicaciones conectividad y redes", aliases: ["jefe carrera redes","jefe carrera telecomunicaciones"] },
+  { label: "Técnico en Programación Computacional", value: "tecnico programacion computacional", aliases: ["tec","téc","tecni","programacion tec"] },
+  { label: "Técnico en Minería Remota Inteligente", value: "tecnico mineria remota inteligente", aliases: ["tec","téc","tecni","mineria tec"] },
+  { label: "Técnico en Gestión de Personas (Universitario)", value: "jefe de carrera tecnico universitario en gestion de personas", aliases: ["jefe carrera gestion personas"] },
+  { label: "Técnico en Enfermería (Blended)", value: "tecnico enfermeria blended", aliases: ["tec","téc","tecni","blended","enfermeria tec"] },
+  { label: "Técnico en Odontología (Blended)", value: "tecnico odontologia blended", aliases: ["tec","téc","tecni","blended","odontologia tec"] },
+  { label: "Técnico en Química y Farmacia (Blended)", value: "tecnico quimica y farmacia blended", aliases: ["tec","téc","tecni","blended","quimica tec"] },
+  { label: "Técnico en Radiología y Radiodiagnóstico (Blended)", value: "tecnico radiologia radiodiagnostico blended", aliases: ["tec","téc","tecni","blended","radiologia tec"] },
 ];
-function normalizar(texto) {
-  return texto
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-}
-const input = document.getElementById("q");
-const suggestionsBox = document.getElementById("suggestions");
-let terminoPendiente = null;
-
-input.addEventListener("input", () => {
-  terminoPendiente = null;
-  const val = normalizar(input.value);
-  suggestionsBox.innerHTML = "";
-  if (val.length < 2) { suggestionsBox.style.display = "none"; return; }
-const matches = sugerenciasBase.filter(s => {
-  const label = normalizar(s.label);
-  const value = normalizar(s.value);
-  const aliases = (s.aliases || []).map(a => normalizar(a));
-
-  return (
-    label.includes(val) ||
-    value.includes(val) ||
-    aliases.some(a => a.includes(val))
-  );
-});
-  if (!matches.length) { suggestionsBox.style.display = "none"; return; }
-  matches.forEach(s => {
-    const div = document.createElement("div");
-    div.className = "suggestion-item";
-    div.textContent = s.label;
-    div.onclick = () => { input.value = s.label; terminoPendiente = s.value; suggestionsBox.style.display = "none"; ejecutarBusqueda(s.value.replace(/\s*\(.*?\)/, "")); };
-    suggestionsBox.appendChild(div);
-  });
-  suggestionsBox.style.display = "block";
-});
-input.addEventListener("keydown", e => { if (e.key === "Enter") buscar(); });
-document.addEventListener("click", e => { if (!e.target.closest(".search-wrapper")) suggestionsBox.style.display = "none"; });
-
-function copiarCorreo(correo, btn) {
-  if (!correo || correo === "-") return;
-  navigator.clipboard.writeText(correo).then(() => {
-    btn.textContent = "✓ Copiado"; btn.classList.add("copiado");
-    setTimeout(() => { btn.textContent = "📋 Copiar"; btn.classList.remove("copiado"); }, 2000);
-  });
-}
-function getModalidad(escuela) {
-  if (!escuela) return "☀️ Modalidad: Diurno";
-  const t = escuela.toLowerCase();
-  if (t.includes("online")) return "💻 Modalidad: Online";
-  if (t.includes("blended")) return "🔀 Modalidad: Blended";
-  if (t.includes("técnico") || t.includes("tecnico") || t.includes("tec mayor")) return "🔧 Modalidad: Técnico";
-  if (t.includes("vespertino")) return "🌙 Modalidad: Vespertino";
-  return "☀️ Modalidad: Diurno";
-}
-function buscar() {
-  let termino = terminoPendiente || input.value.trim();
-  terminoPendiente = null;
-  termino = termino.replace(/\s*\(.*?\)/, "");
-  ejecutarBusqueda(termino);
-}
-function ejecutarBusqueda(q) {
-  ultimaBusqueda = q;
-  suggestionsBox.style.display = "none";
-  const sede = document.getElementById("sede").value;
-  fetch(`/api/escuelas?q=${encodeURIComponent(q)}&sede=${encodeURIComponent(sede)}`)
-    .then(r => r.json())
-    .then(data => {
-      const res = document.getElementById("resultados");
-      if (!data.length) { res.innerHTML = `<p>No se encontraron resultados para <strong>${q}</strong>.</p>`; return; }
-      let html = `<table><tr><th>Nombre</th><th>Cargo</th><th>Escuela</th><th>Sede</th><th>Campus</th><th>Correo Director</th><th>Secretaría</th><th>Correo Secretaría</th>${modoAdmin ? "<th>Acciones</th>" : ""}</tr>`;
-      data.forEach(r => {
-        const modalidad = getModalidad(r.escuela_busqueda);
-        const correoDir = r.correo_director || "";
-        const correoSec = r.correo_secretaria || "";
-        const correoDirHtml = correoDir && correoDir !== "-"
-          ? `<div class="correo-cell"><span class="tooltip-container"><a href="mailto:${correoDir}">${correoDir}</a><span class="tooltip-box">${r.anexo_director ? "📞 <strong>Anexo:</strong> " + r.anexo_director + "<br>" : ""}${r.consultar_antes_de_entregar_contactos ? "⚠️ <strong>Restricción:</strong> " + r.consultar_antes_de_entregar_contactos : ""}</span></span><button class="btn-copy" onclick="copiarCorreo('${correoDir}', this)">📋 Copiar</button></div>` : "";
-        const correoSecHtml = correoSec && correoSec !== "-"
-          ? `<div class="correo-cell"><span class="tooltip-container"><a href="mailto:${correoSec}">${correoSec}</a><span class="tooltip-box">${r.anexo_secretaria ? "📞 <strong>Anexo:</strong> " + r.anexo_secretaria + "<br>" : ""}${r.consultar_antes_de_entregar_contactos ? "⚠️ <strong>Restricción:</strong> " + r.consultar_antes_de_entregar_contactos : ""}</span></span><button class="btn-copy" onclick="copiarCorreo('${correoSec}', this)">📋 Copiar</button></div>` : "";
-        const botonesAdmin = modoAdmin ? `<td><button class="btn-accion btn-editar" onclick='editarRegistro(${JSON.stringify(r)})'>✏️ Editar</button><button class="btn-accion btn-eliminar" onclick="eliminarRegistro(${r.id}, this)">🗑️ Eliminar</button></td>` : "";
-        html += `<tr><td>${r.nombre||""}</td><td>${r.cargo||""}</td><td>${r.escuela_busqueda||""}</td><td><span class="tooltip-container">${r.sede||""}<span class="tooltip-box">${modalidad}</span></span></td><td>${r.campus||""}</td><td>${correoDirHtml}</td><td>${r.secretaria||""}</td><td>${correoSecHtml}</td>${botonesAdmin}</tr>`;
-      });
-      html += "</table>";
-      res.innerHTML = html;
-    })
-    .catch(() => { document.getElementById("resultados").innerHTML = "<p>Error al conectar con el servidor.</p>"; });
-}
 function limpiar() { input.value = ""; terminoPendiente = null; document.getElementById("sede").value = ""; document.getElementById("resultados").innerHTML = ""; suggestionsBox.style.display = "none"; }
 function abrirLogin() { if (modoAdmin) { abrirAgregar(); return; } document.getElementById("modalLogin").style.display = "block"; document.getElementById("inputPassword").value = ""; document.getElementById("errorLogin").style.display = "none"; setTimeout(() => document.getElementById("inputPassword").focus(), 100); }
 function cerrarLogin() { document.getElementById("modalLogin").style.display = "none"; }
