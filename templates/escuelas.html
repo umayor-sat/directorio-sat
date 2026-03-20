@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -516,15 +517,15 @@ function ejecutarBusqueda(q) {
       const res = document.getElementById("resultados");
       if (!data.length) { res.innerHTML = "<p>No se encontraron resultados para <strong>" + q + "</strong>.</p>"; return; }
       let html = "<table><tr><th>Nombre</th><th>Cargo</th><th>Escuela</th><th>Sede</th><th>Campus</th><th>Correo Director</th><th>Secretaria</th><th>Correo Secretaria</th>" + (modoAdmin ? "<th>Acciones</th>" : "") + "</tr>";
-      data.forEach(function(r) {
+      data.forEach(r => {
         const correoDir = r.correo_director || "";
         const correoSec = r.correo_secretaria || "";
         const correoDirHtml = correoDir && correoDir !== "-"
-          ? '<div class="correo-cell"><span class="tooltip-container"><a href="mailto:' + correoDir + '">' + correoDir + '</a><span class="tooltip-box">' + (r.anexo_director ? "Anexo: " + r.anexo_director + "<br>" : "") + (r.consultar_antes_de_entregar_contactos ? "Restriccion: " + r.consultar_antes_de_entregar_contactos : "") + '</span></span><button class="btn-copy" onclick="copiarCorreo('' + correoDir + '', this)">Copiar</button></div>' : "";
+          ? `<div class="correo-cell"><span class="tooltip-container"><a href="mailto:${correoDir}">${correoDir}</a><span class="tooltip-box">${r.anexo_director ? "Anexo: " + r.anexo_director + "<br>" : ""}${r.consultar_antes_de_entregar_contactos ? "Restriccion: " + r.consultar_antes_de_entregar_contactos : ""}</span></span><button class="btn-copy" onclick="copiarCorreo('${correoDir}', this)">Copiar</button></div>` : "";
         const correoSecHtml = correoSec && correoSec !== "-"
-          ? '<div class="correo-cell"><span class="tooltip-container"><a href="mailto:' + correoSec + '">' + correoSec + '</a><span class="tooltip-box">' + (r.anexo_secretaria ? "Anexo: " + r.anexo_secretaria + "<br>" : "") + '</span></span><button class="btn-copy" onclick="copiarCorreo('' + correoSec + '', this)">Copiar</button></div>' : "";
-        const botonesAdmin = modoAdmin ? '<td><button class="btn-accion btn-editar" onclick='editarRegistro(' + JSON.stringify(r) + ')'>Editar</button><button class="btn-accion btn-eliminar" onclick="eliminarRegistro(' + r.id + ', this)">Eliminar</button></td>' : "";
-        html += "<tr><td>" + (r.nombre||"") + "</td><td>" + (r.cargo||"") + "</td><td>" + (r.escuela_busqueda||"") + "</td><td>" + (r.sede||"") + "</td><td>" + (r.campus||"") + "</td><td>" + correoDirHtml + "</td><td>" + (r.secretaria||"") + "</td><td>" + correoSecHtml + "</td>" + botonesAdmin + "</tr>";
+          ? `<div class="correo-cell"><span class="tooltip-container"><a href="mailto:${correoSec}">${correoSec}</a><span class="tooltip-box">${r.anexo_secretaria ? "Anexo: " + r.anexo_secretaria + "<br>" : ""}</span></span><button class="btn-copy" onclick="copiarCorreo('${correoSec}', this)">Copiar</button></div>` : "";
+        const botonesAdmin = modoAdmin ? `<td><button class="btn-accion btn-editar" onclick='editarRegistro(${JSON.stringify(r)})'>Editar</button><button class="btn-accion btn-eliminar" onclick="eliminarRegistro(${r.id}, this)">Eliminar</button></td>` : "";
+        html += `<tr><td>${r.nombre||""}</td><td>${r.cargo||""}</td><td>${r.escuela_busqueda||""}</td><td>${r.sede||""}</td><td>${r.campus||""}</td><td>${correoDirHtml}</td><td>${r.secretaria||""}</td><td>${correoSecHtml}</td>${botonesAdmin}</tr>`;
       });
       html += "</table>";
       res.innerHTML = html;
