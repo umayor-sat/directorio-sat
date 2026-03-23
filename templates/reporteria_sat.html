@@ -5,12 +5,81 @@
 <title>Reportería SAT 2026</title>
 
 <style>
-body { font-family: Arial; background:#f4f6f9; margin:0; }
-.header { background:#4a4a4a; color:#fff; padding:20px; }
-.kpi { display:grid; grid-template-columns:repeat(3,1fr); gap:15px; padding:20px; }
-.card { background:#fff; padding:20px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
-.numero { font-size:28px; font-weight:bold; }
-.error { color:red; padding:20px; }
+body {
+  font-family: 'Segoe UI', Arial;
+  background:#f3f6f9;
+  margin:0;
+}
+
+.header {
+  background:#4a4a4a;
+  color:#fff;
+  padding:25px;
+  display:flex;
+  justify-content:space-between;
+}
+
+.header h1 {
+  margin:0;
+}
+
+.kpi-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+  padding:20px;
+}
+
+.card {
+  background:#fff;
+  border-radius:10px;
+  padding:20px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.08);
+  position:relative;
+}
+
+.card::before {
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:6px;
+  border-radius:10px 0 0 10px;
+}
+
+/* COLORES */
+.consulta::before { background:#2196F3; }
+.queja::before { background:#FFC107; }
+.reclamo::before { background:#F44336; }
+.riesgo::before { background:#FF9800; }
+.agradecimiento::before { background:#4CAF50; }
+.felicitaciones::before { background:#66BB6A; }
+
+.titulo {
+  font-weight:700;
+  font-size:14px;
+  margin-bottom:10px;
+}
+
+.numero {
+  font-size:32px;
+  font-weight:800;
+}
+
+.pct {
+  font-size:13px;
+  color:#777;
+}
+
+.delta {
+  font-size:12px;
+  margin-top:6px;
+}
+
+.baja { color:#e53935; }
+.sube { color:#43a047; }
+
 </style>
 </head>
 
@@ -18,55 +87,105 @@ body { font-family: Arial; background:#f4f6f9; margin:0; }
 
 <div class="header">
   <h1>REPORTERÍA SAT 2026</h1>
+  <div id="fecha"></div>
 </div>
 
-<div class="kpi">
-  <div class="card"><div>Consultas</div><div id="consulta" class="numero">—</div></div>
-  <div class="card"><div>Quejas</div><div id="queja" class="numero">—</div></div>
-  <div class="card"><div>Reclamos</div><div id="reclamo" class="numero">—</div></div>
-  <div class="card"><div>Riesgo</div><div id="riesgo" class="numero">—</div></div>
-  <div class="card"><div>Agradecimiento</div><div id="agradecimiento" class="numero">—</div></div>
-  <div class="card"><div>Felicitaciones</div><div id="felicitaciones" class="numero">—</div></div>
-</div>
+<div class="kpi-grid">
 
-<div id="error" class="error"></div>
+  <div class="card consulta">
+    <div class="titulo">CONSULTAS</div>
+    <div id="consulta" class="numero">—</div>
+    <div id="pct-consulta" class="pct"></div>
+  </div>
+
+  <div class="card queja">
+    <div class="titulo">QUEJAS</div>
+    <div id="queja" class="numero">—</div>
+    <div id="pct-queja" class="pct"></div>
+  </div>
+
+  <div class="card reclamo">
+    <div class="titulo">RECLAMOS</div>
+    <div id="reclamo" class="numero">—</div>
+    <div id="pct-reclamo" class="pct"></div>
+  </div>
+
+  <div class="card riesgo">
+    <div class="titulo">RIESGO</div>
+    <div id="riesgo" class="numero">—</div>
+    <div id="pct-riesgo" class="pct"></div>
+  </div>
+
+  <div class="card agradecimiento">
+    <div class="titulo">AGRADECIMIENTO</div>
+    <div id="agradecimiento" class="numero">—</div>
+    <div id="pct-agradecimiento" class="pct"></div>
+  </div>
+
+  <div class="card felicitaciones">
+    <div class="titulo">FELICITACIONES</div>
+    <div id="felicitaciones" class="numero">—</div>
+    <div id="pct-felicitaciones" class="pct"></div>
+  </div>
+
+</div>
 
 <script>
 const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTA4MTcsImV4cCI6MjA4ODEyNjgxN30.pqT_PlAAn3oR6g_0Iaa2fs6qV8M3RQFzNOCAssyZZh4";
+const SUPABASE_KEY = "TU_KEY_AQUI";
 
 async function cargarKPIs() {
-  try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/kpi_2026`, {
-      headers: {
-        apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`
-      }
-    });
 
-    if (!res.ok) {
-      const err = await res.text();
-      throw new Error(err);
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/kpi_2026`, {
+    headers: {
+      apikey: SUPABASE_KEY,
+      Authorization: `Bearer ${SUPABASE_KEY}`
+    }
+  });
+
+  const data = await res.json();
+
+  let totalGeneral = 0;
+  data.forEach(r => totalGeneral += r.total);
+
+  data.forEach(row => {
+    const tipo = row.tipo;
+    const total = row.total;
+    const pct = ((total / totalGeneral) * 100).toFixed(1);
+
+    if (tipo === "Consulta") {
+      document.getElementById("consulta").textContent = total;
+      document.getElementById("pct-consulta").textContent = pct + "% del total";
     }
 
-    const data = await res.json();
+    if (tipo === "Queja") {
+      document.getElementById("queja").textContent = total;
+      document.getElementById("pct-queja").textContent = pct + "%";
+    }
 
-    data.forEach(row => {
-      const tipo = row.tipo;
-      const total = row.total;
+    if (tipo === "Reclamo") {
+      document.getElementById("reclamo").textContent = total;
+      document.getElementById("pct-reclamo").textContent = pct + "%";
+    }
 
-      if (tipo === "Consulta") document.getElementById("consulta").textContent = total;
-      if (tipo === "Queja") document.getElementById("queja").textContent = total;
-      if (tipo === "Reclamo") document.getElementById("reclamo").textContent = total;
-      if (tipo === "Riesgo") document.getElementById("riesgo").textContent = total;
-      if (tipo === "Agradecimiento") document.getElementById("agradecimiento").textContent = total;
-      if (tipo === "Felicitaciones") document.getElementById("felicitaciones").textContent = total;
-    });
+    if (tipo === "Riesgo") {
+      document.getElementById("riesgo").textContent = total;
+      document.getElementById("pct-riesgo").textContent = pct + "%";
+    }
 
-  } catch (e) {
-    console.error(e);
-    document.getElementById("error").textContent = "Error al cargar datos: " + e.message;
-  }
+    if (tipo === "Agradecimiento") {
+      document.getElementById("agradecimiento").textContent = total;
+      document.getElementById("pct-agradecimiento").textContent = pct + "%";
+    }
+
+    if (tipo === "Felicitaciones") {
+      document.getElementById("felicitaciones").textContent = total;
+      document.getElementById("pct-felicitaciones").textContent = pct + "%";
+    }
+  });
+
+  document.getElementById("fecha").textContent =
+    "Actualizado: " + new Date().toLocaleString("es-CL");
 }
 
 cargarKPIs();
