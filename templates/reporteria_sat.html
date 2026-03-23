@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reportería SAT – Universidad Mayor</title>
+<style>
+:root {
+  --amarillo: #f2b705;
+  --azul: #005aa9;
+  --gris-header: #4a4a4a;
+  --consulta: #2196F3;
+  --queja: #FFC107;
+  --reclamo: #F44336;
+  --riesgo: #FF9800;
+  --agradecimiento: #4CAF50;
+  --felicitacion: #66BB6A;
+  --bg: #f3f6f9;
+  --white: #ffffff;
+  --border: #e0e0e0;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: #222; min-height: 100vh; }
+
+/* LOGIN */
+.overlay-login { display: flex; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 900; align-items: center; justify-content: center; }
+.overlay-login.oculto { display: none; }
+.login-box { background: #fff; border-radius: 14px; padding: 40px 36px; width: 100%; max-width: 380px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); border-top: 8px solid var(--amarillo); text-align: center; }
+.login-box h2 { font-size: 1.1rem; color: var(--azul); margin-bottom: 6px; }
+.login-box p { font-size: 0.85rem; color: #888; margin-bottom: 24px; }
+.login-box input[type=password] { width: 100%; padding: 11px 14px; border: 1.5px solid #ddd; border-radius: 8px; font-size: 1rem; text-align: center; letter-spacing: 4px; font-family: inherit; outline: none; margin-bottom: 14px; }
+.login-box input[type=password]:focus { border-color: var(--azul); }
+.btn-ingresar { width: 100%; background: var(--azul); color: #fff; border: none; padding: 12px; border-radius: 8px; font-size: 0.95rem; font-weight: 700; cursor: pointer; font-family: inherit; }
+.btn-ingresar:hover { background: #004490; }
+.login-error { color: #c62828; font-size: 0.85rem; margin-top: 10px; display: none; }
+
+/* HEADER */
+.header { background: var(--gris-header); padding: 20px 30px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.header-title { flex: 1; }
+.header-title h1 { font-size: 1.8rem; font-weight: 800; color: #fff; letter-spacing: 0.5px; }
+.header-title p { font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 2px; }
+.header-stats { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+.header-stat { text-align: center; }
+.header-stat .label { font-size: 0.7rem; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.5px; }
+.header-stat .value { font-size: 1.1rem; font-weight: 700; color: #fff; }
+.header-stat .delta { font-size: 0.75rem; color: #ff6b6b; }
+.header-updated { font-size: 0.75rem; color: rgba(255,255,255,0.5); text-align: right; }
+.btn-volver { background: var(--amarillo); color: #222; border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; white-space: nowrap; }
+
+/* FILTROS */
+.filtros-bar { background: #fff; border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.filtro-group { display: flex; flex-direction: column; gap: 3px; }
+.filtro-group label { font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+.filtro-group select, .filtro-group input[type=date] { padding: 7px 10px; border: 1.5px solid var(--border); border-radius: 6px; font-size: 13px; font-family: inherit; outline: none; background: #f8f9fa; min-width: 140px; }
+.filtro-group select:focus, .filtro-group input[type=date]:focus { border-color: var(--azul); background: #fff; }
+.btn-filtrar { background: var(--azul); color: #fff; border: none; padding: 9px 20px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; align-self: flex-end; }
+.btn-filtrar:hover { background: #004490; }
+.btn-limpiar { background: #eee; color: #555; border: none; padding: 9px 16px; border-radius: 6px; font-size: 13px; cursor: pointer; align-self: flex-end; }
+.btn-limpiar:hover { background: #ddd; }
+
+/* CONTENIDO */
+.content { max-width: 1400px; margin: 0 auto; padding: 24px 20px; }
+
+/* SPINNER */
+.spinner-wrap { text-align: center; padding: 60px; color: #888; font-size: 14px; }
+
+/* KPI CARDS */
+.kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+
+.kpi-card { background: #fff; border-radius: 10px; padding: 20px; border: 1px solid var(--border); position: relative; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.kpi-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; border-radius: 10px 0 0 10px; }
+.kpi-card.consulta::before { background: var(--consulta); }
+.kpi-card.queja::before { background: var(--queja); }
+.kpi-card.reclamo::before { background: var(--reclamo); }
+.kpi-card.riesgo::before { background: var(--riesgo); }
+.kpi-card.agradecimiento::before { background: var(--agradecimiento); }
+.kpi-card.felicitacion::before { background: var(--felicitacion); }
+
+.kpi-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.kpi-tipo { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #666; }
+.kpi-badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; }
+.kpi-card.consulta .kpi-badge { background: #e3f2fd; color: #1565c0; }
+.kpi-card.queja .kpi-badge { background: #fff8e1; color: #f57f17; }
+.kpi-card.reclamo .kpi-badge { background: #ffebee; color: #b71c1c; }
+.kpi-card.riesgo .kpi-badge { background: #fff3e0; color: #e65100; }
+.kpi-card.agradecimiento .kpi-badge { background: #e8f5e9; color: #2e7d32; }
+.kpi-card.felicitacion .kpi-badge { background: #e8f5e9; color: #1b5e20; }
+
+.kpi-numero { font-size: 2.4rem; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.kpi-card.consulta .kpi-numero { color: var(--consulta); }
+.kpi-card.queja .kpi-numero { color: var(--queja); }
+.kpi-card.reclamo .kpi-numero { color: var(--reclamo); }
+.kpi-card.riesgo .kpi-numero { color: var(--riesgo); }
+.kpi-card.agradecimiento .kpi-numero { color: var(--agradecimiento); }
+.kpi-card.felicitacion .kpi-numero { color: var(--felicitacion); }
+
+.kpi-pct { font-size: 13px; color: #888; margin-bottom: 8px; }
+.kpi-delta { font-size: 12px; font-weight: 600; }
+.kpi-delta.baja { color: #e53935; }
+.kpi-delta.sube { color: #43a047; }
+.kpi-delta.igual { color: #888; }
+
+/* TOP 5 */
+.tops-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.top-card { background: #fff; border-radius: 10px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.top-card-header { padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; }
+.kpi-card.consulta + .top-card .top-card-header,
+.top-card.consulta .top-card-header { background: var(--consulta); }
+.top-card.queja .top-card-header { background: var(--queja); }
+.top-card.reclamo .top-card-header { background: var(--reclamo); }
+.top-card.riesgo .top-card-header { background: var(--riesgo); }
+.top-card.agradecimiento .top-card-header { background: var(--agradecimiento); }
+.top-card.felicitacion .top-card-header { background: var(--felicitacion); }
+
+.top-card-header .tipo { font-size: 13px; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 0.5px; }
+.top-card-header .label-top { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.8); text-align: right; }
+
+.top-table { width: 100%; }
+.top-table tr { border-bottom: 1px solid #f0f0f0; }
+.top-table tr:last-child { border-bottom: none; }
+.top-table td { padding: 9px 14px; font-size: 13px; }
+.top-table .rank { font-weight: 700; color: #bbb; width: 24px; }
+.top-table .tema { color: #333; }
+.top-table .cantidad { font-weight: 700; color: #444; text-align: right; }
+.top-empty { padding: 20px; text-align: center; color: #ccc; font-size: 13px; }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .kpi-grid, .tops-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .kpi-grid, .tops-grid { grid-template-columns: 1fr; }
+  .filtros-bar { flex-direction: column; align-items: stretch; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="overlay-login" id="overlayLogin">
+  <div class="login-box">
+    <h2>📊 Reportería SAT</h2>
+    <p>Acceso restringido — uso interno</p>
+    <input type="password" id="inputPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter') verificarAcceso()"/>
+    <button class="btn-ingresar" onclick="verificarAcceso()">Ingresar</button>
+    <div class="login-error" id="loginError">Contraseña incorrecta. Intenta nuevamente.</div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-title">
+    <h1>REPORTERÍA SAT 2026</h1>
+    <p>Universidad Mayor — Servicio de Atención</p>
+  </div>
+  <div class="header-stats">
+    <div class="header-stat">
+      <div class="label">Casos 2026 a la fecha</div>
+      <div class="value" id="totalAnioActual">—</div>
+    </div>
+    <div class="header-stat">
+      <div class="label">Casos 2025 total</div>
+      <div class="value" id="totalAnioAnterior">—</div>
+    </div>
+    <div class="header-stat">
+      <div class="label">Variación</div>
+      <div class="delta" id="deltaGeneral">—</div>
+    </div>
+  </div>
+  <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
+    <div class="header-updated" id="fechaActualizacion">Cargando...</div>
+    <a href="/" class="btn-volver">← Volver</a>
+  </div>
+</div>
+
+<!-- FILTROS -->
+<div class="filtros-bar">
+  <div class="filtro-group">
+    <label>Desde</label>
+    <input type="date" id="filtroDesde">
+  </div>
+  <div class="filtro-group">
+    <label>Hasta</label>
+    <input type="date" id="filtroHasta">
+  </div>
+  <div class="filtro-group">
+    <label>Tipo de caso</label>
+    <select id="filtroTipo">
+      <option value="">Todos</option>
+      <option value="Consulta">Consulta</option>
+      <option value="Queja">Queja</option>
+      <option value="Reclamo">Reclamo</option>
+      <option value="Riesgo">Riesgo</option>
+      <option value="Agradecimiento">Agradecimiento</option>
+      <option value="Felicitaciones">Felicitaciones</option>
+    </select>
+  </div>
+  <div class="filtro-group">
+    <label>Tema</label>
+    <select id="filtroTema"><option value="">Todos</option></select>
+  </div>
+  <div class="filtro-group">
+    <label>Subtema</label>
+    <select id="filtroSubtema"><option value="">Todos</option></select>
+  </div>
+  <div class="filtro-group">
+    <label>Origen</label>
+    <select id="filtroOrigen"><option value="">Todos</option></select>
+  </div>
+  <button class="btn-filtrar" onclick="aplicarFiltros()">🔍 Aplicar</button>
+  <button class="btn-limpiar" onclick="limpiarFiltros()">✕ Limpiar</button>
+</div>
+
+<!-- CONTENIDO -->
+<div class="content">
+  <div id="spinnerWrap" class="spinner-wrap">⏳ Cargando datos...</div>
+
+  <!-- KPIs -->
+  <div class="kpi-grid" id="kpiGrid" style="display:none;">
+    <div class="kpi-card consulta">
+      <div class="kpi-header"><span class="kpi-tipo">Consultas</span><span class="kpi-badge">PRINCIPAL</span></div>
+      <div class="kpi-numero" id="kpi-Consulta">—</div>
+      <div class="kpi-pct" id="pct-Consulta">—</div>
+      <div class="kpi-delta" id="delta-Consulta">—</div>
+    </div>
+    <div class="kpi-card queja">
+      <div class="kpi-header"><span class="kpi-tipo">Quejas</span><span class="kpi-badge">ATENCIÓN</span></div>
+      <div class="kpi-numero" id="kpi-Queja">—</div>
+      <div class="kpi-pct" id="pct-Queja">—</div>
+      <div class="kpi-delta" id="delta-Queja">—</div>
+    </div>
+    <div class="kpi-card reclamo">
+      <div class="kpi-header"><span class="kpi-tipo">Reclamos</span><span class="kpi-badge">CRÍTICO</span></div>
+      <div class="kpi-numero" id="kpi-Reclamo">—</div>
+      <div class="kpi-pct" id="pct-Reclamo">—</div>
+      <div class="kpi-delta" id="delta-Reclamo">—</div>
+    </div>
+    <div class="kpi-card riesgo">
+      <div class="kpi-header"><span class="kpi-tipo">Riesgo</span><span class="kpi-badge">ALERTA</span></div>
+      <div class="kpi-numero" id="kpi-Riesgo">—</div>
+      <div class="kpi-pct" id="pct-Riesgo">—</div>
+      <div class="kpi-delta" id="delta-Riesgo">—</div>
+    </div>
+    <div class="kpi-card agradecimiento">
+      <div class="kpi-header"><span class="kpi-tipo">Agradecimientos</span><span class="kpi-badge">POSITIVO</span></div>
+      <div class="kpi-numero" id="kpi-Agradecimiento">—</div>
+      <div class="kpi-pct" id="pct-Agradecimiento">—</div>
+      <div class="kpi-delta" id="delta-Agradecimiento">—</div>
+    </div>
+    <div class="kpi-card felicitacion">
+      <div class="kpi-header"><span class="kpi-tipo">Felicitaciones</span><span class="kpi-badge">POSITIVO</span></div>
+      <div class="kpi-numero" id="kpi-Felicitaciones">—</div>
+      <div class="kpi-pct" id="pct-Felicitaciones">—</div>
+      <div class="kpi-delta" id="delta-Felicitaciones">—</div>
+    </div>
+  </div>
+
+  <!-- TOP 5 -->
+  <div class="tops-grid" id="topsGrid" style="display:none;">
+    <div class="top-card consulta">
+      <div class="top-card-header"><span class="tipo">Consultas</span><span class="label-top">TOP 5<br>TEMAS</span></div>
+      <table class="top-table" id="top-Consulta"></table>
+    </div>
+    <div class="top-card queja">
+      <div class="top-card-header"><span class="tipo">Quejas</span><span class="label-top">TOP 5<br>TEMAS</span></div>
+      <table class="top-table" id="top-Queja"></table>
+    </div>
+    <div class="top-card reclamo">
+      <div class="top-card-header"><span class="tipo">Reclamos</span><span class="label-top">TOP 5<br>TEMAS</span></div>
+      <table class="top-table" id="top-Reclamo"></table>
+    </div>
+    <div class="top-card riesgo">
+      <div class="top-card-header"><span class="tipo">Riesgo</span><span class="label-top">TOP 5<br>TEMAS</span></div>
+      <table class="top-table" id="top-Riesgo"></table>
+    </div>
+    <div class="top-card agradecimiento">
+      <div class="top-card-header"><span class="tipo">Agradecimientos</span><span class="label-top">TOP 5<br>TEMAS</span></div>
+      <table class="top-table" id="top-Agradecimiento"></table>
+    </div>
+    <div class="top-card felicitacion">
+      <div class="top-card-header"><span class="tipo">Felicitaciones</span><span class="label-top">TOP 5<br>TEMAS</span></div>
+      <table class="top-table" id="top-Felicitaciones"></table>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_3Shj63dB3uBAL_TVvqfBRw_3RyTRZ1U";
+const PASSWORD = "reporteria@um2026";
+const TABLA = "BBDD MAESTRO";
+const TIPOS = ["Consulta","Queja","Reclamo","Riesgo","Agradecimiento","Felicitaciones"];
+
+// LOGIN
+function verificarAcceso() {
+  if (document.getElementById("inputPassword").value === PASSWORD) {
+    document.getElementById("overlayLogin").classList.add("oculto");
+    iniciar();
+  } else {
+    document.getElementById("loginError").style.display = "block";
+    document.getElementById("inputPassword").value = "";
+    document.getElementById("inputPassword").focus();
+  }
+}
+window.onload = () => setTimeout(() => document.getElementById("inputPassword").focus(), 100);
+
+// SUPABASE FETCH
+async function sbFetch(params) {
+  const url = `${SUPABASE_URL}/rest/v1/${encodeURIComponent(TABLA)}?${params}`;
+  const res = await fetch(url, {
+    headers: {
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      "Content-Type": "application/json"
+    }
+  });
+  return res.json();
+}
+
+async function iniciar() {
+  await cargarFiltros();
+  await cargarDatos();
+}
+
+// Cargar opciones de filtros dinámicos
+async function cargarFiltros() {
+  try {
+    const data = await sbFetch('select=Tema,Subtema,"Origen del caso"&limit=5000');
+    const temas = [...new Set(data.map(r => r["Tema"]).filter(Boolean))].sort();
+    const subtemas = [...new Set(data.map(r => r["Subtema"]).filter(Boolean))].sort();
+    const origenes = [...new Set(data.map(r => r["Origen del caso"]).filter(Boolean))].sort();
+
+    const selTema = document.getElementById("filtroTema");
+    temas.forEach(t => { const o = document.createElement("option"); o.value = t; o.textContent = t; selTema.appendChild(o); });
+
+    const selSub = document.getElementById("filtroSubtema");
+    subtemas.forEach(t => { const o = document.createElement("option"); o.value = t; o.textContent = t; selSub.appendChild(o); });
+
+    const selOrigen = document.getElementById("filtroOrigen");
+    origenes.forEach(t => { const o = document.createElement("option"); o.value = t; o.textContent = t; selOrigen.appendChild(o); });
+  } catch(e) { console.error("Error cargando filtros", e); }
+}
+
+async function cargarDatos() {
+  document.getElementById("spinnerWrap").style.display = "block";
+  document.getElementById("kpiGrid").style.display = "none";
+  document.getElementById("topsGrid").style.display = "none";
+
+  try {
+    // Construir filtros
+    const desde = document.getElementById("filtroDesde").value;
+    const hasta = document.getElementById("filtroHasta").value;
+    const tipo  = document.getElementById("filtroTipo").value;
+    const tema  = document.getElementById("filtroTema").value;
+    const sub   = document.getElementById("filtroSubtema").value;
+    const orig  = document.getElementById("filtroOrigen").value;
+
+    let filtros = [];
+    if (desde) filtros.push(`"Fecha de creación"=gte.${desde}`);
+    if (hasta) filtros.push(`"Fecha de creación"=lte.${hasta}T23:59:59`);
+    if (tipo)  filtros.push(`"Tipo de caso"=eq.${encodeURIComponent(tipo)}`);
+    if (tema)  filtros.push(`Tema=eq.${encodeURIComponent(tema)}`);
+    if (sub)   filtros.push(`Subtema=eq.${encodeURIComponent(sub)}`);
+    if (orig)  filtros.push(`"Origen del caso"=eq.${encodeURIComponent(orig)}`);
+
+    const qFiltros = filtros.length ? "&" + filtros.join("&") : "";
+
+    // Datos año actual (2026)
+    const data2026 = await sbFetch(`select="Tipo de caso",Tema&"Fecha de creación"=gte.2026-01-01${qFiltros}&limit=100000`);
+
+    // Datos año anterior (2025) — mismo período para comparar
+    const mesActual = new Date().toISOString().slice(0,10);
+    const data2025periodo = await sbFetch(`select="Tipo de caso"&"Fecha de creación"=gte.2025-01-01&"Fecha de creación"=lte.${mesActual.replace("2026","2025")}&limit=100000`);
+    const data2025total   = await sbFetch(`select="Tipo de caso"&"Fecha de creación"=gte.2025-01-01&"Fecha de creación"=lte.2025-12-31&limit=100000`);
+
+    // Calcular KPIs
+    const total2026 = data2026.length;
+    const total2025total = data2025total.length;
+
+    // Header stats
+    document.getElementById("totalAnioActual").textContent = total2026.toLocaleString("es-CL");
+    document.getElementById("totalAnioAnterior").textContent = total2025total.toLocaleString("es-CL");
+    const deltaGen = total2025periodo.length > 0
+      ? ((total2026 - total2025periodo.length) / total2025periodo.length * 100).toFixed(1)
+      : "—";
+    const deltaGenEl = document.getElementById("deltaGeneral");
+    deltaGenEl.textContent = deltaGen !== "—" ? `↓ ${Math.abs(deltaGen)}% vs 2025` : "—";
+    deltaGenEl.style.color = "#ff6b6b";
+
+    // Fecha actualización
+    document.getElementById("fechaActualizacion").textContent =
+      "Actualizado: " + new Date().toLocaleString("es-CL");
+
+    // KPIs por tipo
+    const conteo2026 = {};
+    const conteo2025 = {};
+    TIPOS.forEach(t => { conteo2026[t] = 0; conteo2025[t] = 0; });
+    data2026.forEach(r => { const t = r["Tipo de caso"]; if (conteo2026[t] !== undefined) conteo2026[t]++; });
+    data2025periodo.forEach(r => { const t = r["Tipo de caso"]; if (conteo2025[t] !== undefined) conteo2025[t]++; });
+
+    TIPOS.forEach(tipo => {
+      const n = conteo2026[tipo] || 0;
+      const n25 = conteo2025[tipo] || 0;
+      const pct = total2026 > 0 ? (n / total2026 * 100).toFixed(1) : "0.0";
+      const delta = n25 > 0 ? ((n - n25) / n25 * 100).toFixed(1) : null;
+
+      document.getElementById(`kpi-${tipo}`).textContent = n.toLocaleString("es-CL");
+      document.getElementById(`pct-${tipo}`).textContent = pct + "%";
+
+      const deltaEl = document.getElementById(`delta-${tipo}`);
+      if (delta !== null) {
+        const signo = parseFloat(delta) >= 0 ? "↑" : "↓";
+        deltaEl.textContent = `${signo} ${Math.abs(delta)}% vs 2025`;
+        deltaEl.className = "kpi-delta " + (parseFloat(delta) >= 0 ? "sube" : "baja");
+      } else {
+        deltaEl.textContent = "Sin dato 2025";
+        deltaEl.className = "kpi-delta igual";
+      }
+    });
+
+    // TOP 5 temas
+    TIPOS.forEach(tipo => {
+      const filas = data2026.filter(r => r["Tipo de caso"] === tipo);
+      const temaCount = {};
+      filas.forEach(r => {
+        const t = r["Tema"] || "Sin tema";
+        temaCount[t] = (temaCount[t] || 0) + 1;
+      });
+      const top5 = Object.entries(temaCount).sort((a,b) => b[1]-a[1]).slice(0,5);
+      const tabla = document.getElementById(`top-${tipo}`);
+      if (top5.length === 0) {
+        tabla.innerHTML = '<tr><td colspan="3" class="top-empty">Sin datos</td></tr>';
+      } else {
+        tabla.innerHTML = top5.map(([ t, c ], i) =>
+          `<tr><td class="rank">${i+1}</td><td class="tema">${t}</td><td class="cantidad">${c.toLocaleString("es-CL")}</td></tr>`
+        ).join("");
+      }
+    });
+
+    document.getElementById("spinnerWrap").style.display = "none";
+    document.getElementById("kpiGrid").style.display = "grid";
+    document.getElementById("topsGrid").style.display = "grid";
+
+  } catch(e) {
+    console.error(e);
+    document.getElementById("spinnerWrap").innerHTML = "❌ Error al cargar datos. Revisa la consola.";
+  }
+}
+
+function aplicarFiltros() { cargarDatos(); }
+
+function limpiarFiltros() {
+  ["filtroDesde","filtroHasta"].forEach(id => document.getElementById(id).value = "");
+  ["filtroTipo","filtroTema","filtroSubtema","filtroOrigen"].forEach(id => document.getElementById(id).value = "");
+  cargarDatos();
+}
+</script>
+</body>
+</html>
