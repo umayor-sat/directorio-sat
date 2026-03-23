@@ -5,43 +5,20 @@
 <title>Reportería SAT 2026</title>
 
 <style>
-body {
-  font-family: 'Segoe UI', Arial;
-  background:#f3f6f9;
-  margin:0;
-}
+body { font-family:'Segoe UI', Arial; background:#f3f6f9; margin:0; }
 
-.header {
-  background:#4a4a4a;
-  color:#fff;
-  padding:25px;
-}
+.header { background:#4a4a4a; color:#fff; padding:25px; }
 
 .header-top {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
+  display:flex; justify-content:space-between; align-items:center;
 }
 
 .header-stats {
-  display:flex;
-  gap:40px;
-  flex-wrap:wrap;
+  display:flex; gap:40px; margin-top:10px; flex-wrap:wrap;
 }
 
-.stat {
-  font-size:13px;
-}
-
-.stat .label {
-  opacity:0.7;
-}
-
-.stat .value {
-  font-size:18px;
-  font-weight:bold;
-}
+.stat .label { font-size:12px; opacity:0.7; }
+.stat .value { font-size:18px; font-weight:bold; }
 
 .kpi-grid {
   display:grid;
@@ -61,9 +38,7 @@ body {
 .card::before {
   content:"";
   position:absolute;
-  left:0;
-  top:0;
-  bottom:0;
+  left:0; top:0; bottom:0;
   width:6px;
   border-radius:10px 0 0 10px;
 }
@@ -151,19 +126,19 @@ body {
 
 <script>
 const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
-const SUPABASE_KEY = "TU_KEY_AQUI";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTA4MTcsImV4cCI6MjA4ODEyNjgxN30.pqT_PlAAn3oR6g_0Iaa2fs6qV8M3RQFzNOCAssyZZh4";
 
 /* KPI */
 async function cargarKPIs() {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/kpi_2026`, {
-  method: "POST",
-  headers: {
-    apikey: SUPABASE_KEY,
-    Authorization: `Bearer ${SUPABASE_KEY}`,
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({})
-});
+    method:"POST",
+    headers:{
+      apikey:SUPABASE_KEY,
+      Authorization:`Bearer ${SUPABASE_KEY}`,
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({})
+  });
 
   const data = await res.json();
 
@@ -171,74 +146,51 @@ async function cargarKPIs() {
   data.forEach(r => totalGeneral += r.total);
 
   data.forEach(row => {
-    const tipo = row.tipo;
-    const total = row.total;
-    const pct = ((total / totalGeneral) * 100).toFixed(1);
+    const pct = ((row.total / totalGeneral) * 100).toFixed(1);
 
-    if (tipo === "Consulta") {
-      document.getElementById("consulta").textContent = total;
-      document.getElementById("pct-consulta").textContent = pct + "%";
-    }
-    if (tipo === "Queja") {
-      document.getElementById("queja").textContent = total;
-      document.getElementById("pct-queja").textContent = pct + "%";
-    }
-    if (tipo === "Reclamo") {
-      document.getElementById("reclamo").textContent = total;
-      document.getElementById("pct-reclamo").textContent = pct + "%";
-    }
-    if (tipo === "Riesgo") {
-      document.getElementById("riesgo").textContent = total;
-      document.getElementById("pct-riesgo").textContent = pct + "%";
-    }
-    if (tipo === "Agradecimiento") {
-      document.getElementById("agradecimiento").textContent = total;
-      document.getElementById("pct-agradecimiento").textContent = pct + "%";
-    }
-    if (tipo === "Felicitaciones") {
-      document.getElementById("felicitaciones").textContent = total;
-      document.getElementById("pct-felicitaciones").textContent = pct + "%";
-    }
+    document.getElementById(row.tipo.toLowerCase()).textContent = row.total;
+    document.getElementById("pct-" + row.tipo.toLowerCase()).textContent = pct + "%";
   });
 }
 
 /* FECHA */
 async function cargarFecha() {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/kpi_2026`, {
-  headers: {
-    apikey: SUPABASE_KEY,
-    Authorization: `Bearer ${SUPABASE_KEY}`,
-    "Content-Type": "application/json"
-    }
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/ultima_fecha`, {
+    method:"POST",
+    headers:{
+      apikey:SUPABASE_KEY,
+      Authorization:`Bearer ${SUPABASE_KEY}`,
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({})
   });
 
   const data = await res.json();
-
-  if (data) {
-    const fecha = new Date(data);
-    document.getElementById("fecha").textContent =
-      "Actualizado al: " + fecha.toLocaleString("es-CL");
-  }
+  const fecha = new Date(data);
+  document.getElementById("fecha").textContent =
+    "Actualizado al: " + fecha.toLocaleString("es-CL");
 }
 
 /* TOTALES */
 async function cargarTotales() {
 
-  const res2026 = await fetch(`${SUPABASE_URL}/rest/v1/rpc/total_2026`, {
-    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
-  });
+  const total2026 = (await (await fetch(`${SUPABASE_URL}/rest/v1/rpc/total_2026`,{
+    method:"POST",
+    headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`},
+    body:JSON.stringify({})
+  })).json())[0];
 
-  const res2025 = await fetch(`${SUPABASE_URL}/rest/v1/rpc/total_2025`, {
-    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
-  });
+  const total2025 = (await (await fetch(`${SUPABASE_URL}/rest/v1/rpc/total_2025`,{
+    method:"POST",
+    headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`},
+    body:JSON.stringify({})
+  })).json())[0];
 
-  const resVar = await fetch(`${SUPABASE_URL}/rest/v1/rpc/variacion_2026_vs_2025`, {
-    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
-  });
-
-   const total2026 = (await res2026.json())[0];
-   const total2025 = (await res2025.json())[0];
-   const variacion = (await resVar.json())[0];
+  const variacion = (await (await fetch(`${SUPABASE_URL}/rest/v1/rpc/variacion_2026_vs_2025`,{
+    method:"POST",
+    headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`},
+    body:JSON.stringify({})
+  })).json())[0];
 
   document.getElementById("total2026").textContent = total2026;
   document.getElementById("total2025").textContent = total2025;
