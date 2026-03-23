@@ -201,10 +201,11 @@ async function cargarKPIs() {
 
 /* FECHA */
 async function cargarFecha() {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/ultima_fecha`, {
-    headers: {
-      apikey: SUPABASE_KEY,
-      Authorization: `Bearer ${SUPABASE_KEY}`
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/kpi_2026`, {
+  headers: {
+    apikey: SUPABASE_KEY,
+    Authorization: `Bearer ${SUPABASE_KEY}`,
+    "Content-Type": "application/json"
     }
   });
 
