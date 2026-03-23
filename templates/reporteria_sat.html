@@ -15,12 +15,32 @@ body {
   background:#4a4a4a;
   color:#fff;
   padding:25px;
-  display:flex;
-  justify-content:space-between;
 }
 
-.header h1 {
-  margin:0;
+.header-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+.header-stats {
+  display:flex;
+  gap:40px;
+  flex-wrap:wrap;
+}
+
+.stat {
+  font-size:13px;
+}
+
+.stat .label {
+  opacity:0.7;
+}
+
+.stat .value {
+  font-size:18px;
+  font-weight:bold;
 }
 
 .kpi-grid {
@@ -48,7 +68,6 @@ body {
   border-radius:10px 0 0 10px;
 }
 
-/* COLORES */
 .consulta::before { background:#2196F3; }
 .queja::before { background:#FFC107; }
 .reclamo::before { background:#F44336; }
@@ -56,38 +75,38 @@ body {
 .agradecimiento::before { background:#4CAF50; }
 .felicitaciones::before { background:#66BB6A; }
 
-.titulo {
-  font-weight:700;
-  font-size:14px;
-  margin-bottom:10px;
-}
-
-.numero {
-  font-size:32px;
-  font-weight:800;
-}
-
-.pct {
-  font-size:13px;
-  color:#777;
-}
-
-.delta {
-  font-size:12px;
-  margin-top:6px;
-}
-
-.baja { color:#e53935; }
-.sube { color:#43a047; }
-
+.titulo { font-weight:700; font-size:14px; margin-bottom:10px; }
+.numero { font-size:32px; font-weight:800; }
+.pct { font-size:13px; color:#777; }
 </style>
 </head>
 
 <body>
 
 <div class="header">
-  <h1>REPORTERÍA SAT 2026</h1>
-  <div id="fecha"></div>
+
+  <div class="header-top">
+    <h1>REPORTERÍA SAT 2026</h1>
+    <div id="fecha"></div>
+  </div>
+
+  <div class="header-stats">
+    <div class="stat">
+      <div class="label">Total 2026</div>
+      <div id="total2026" class="value">—</div>
+    </div>
+
+    <div class="stat">
+      <div class="label">Total 2025</div>
+      <div id="total2025" class="value">—</div>
+    </div>
+
+    <div class="stat">
+      <div class="label">Variación</div>
+      <div id="variacion" class="value">—</div>
+    </div>
+  </div>
+
 </div>
 
 <div class="kpi-grid">
@@ -132,10 +151,10 @@ body {
 
 <script>
 const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTA4MTcsImV4cCI6MjA4ODEyNjgxN30.pqT_PlAAn3oR6g_0Iaa2fs6qV8M3RQFzNOCAssyZZh4";
+const SUPABASE_KEY = "TU_KEY_AQUI";
 
+/* KPI */
 async function cargarKPIs() {
-
   const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/kpi_2026`, {
     headers: {
       apikey: SUPABASE_KEY,
@@ -155,35 +174,32 @@ async function cargarKPIs() {
 
     if (tipo === "Consulta") {
       document.getElementById("consulta").textContent = total;
-      document.getElementById("pct-consulta").textContent = pct + "% del total";
+      document.getElementById("pct-consulta").textContent = pct + "%";
     }
-
     if (tipo === "Queja") {
       document.getElementById("queja").textContent = total;
       document.getElementById("pct-queja").textContent = pct + "%";
     }
-
     if (tipo === "Reclamo") {
       document.getElementById("reclamo").textContent = total;
       document.getElementById("pct-reclamo").textContent = pct + "%";
     }
-
     if (tipo === "Riesgo") {
       document.getElementById("riesgo").textContent = total;
       document.getElementById("pct-riesgo").textContent = pct + "%";
     }
-
     if (tipo === "Agradecimiento") {
       document.getElementById("agradecimiento").textContent = total;
       document.getElementById("pct-agradecimiento").textContent = pct + "%";
     }
-
     if (tipo === "Felicitaciones") {
       document.getElementById("felicitaciones").textContent = total;
       document.getElementById("pct-felicitaciones").textContent = pct + "%";
     }
   });
+}
 
+/* FECHA */
 async function cargarFecha() {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/ultima_fecha`, {
     headers: {
@@ -200,10 +216,36 @@ async function cargarFecha() {
       "Actualizado al: " + fecha.toLocaleString("es-CL");
   }
 }
+
+/* TOTALES */
+async function cargarTotales() {
+
+  const res2026 = await fetch(`${SUPABASE_URL}/rest/v1/rpc/total_2026`, {
+    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+  });
+
+  const res2025 = await fetch(`${SUPABASE_URL}/rest/v1/rpc/total_2025`, {
+    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+  });
+
+  const resVar = await fetch(`${SUPABASE_URL}/rest/v1/rpc/variacion_2026_vs_2025`, {
+    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+  });
+
+  const total2026 = await res2026.json();
+  const total2025 = await res2025.json();
+  const variacion = await resVar.json();
+
+  document.getElementById("total2026").textContent = total2026;
+  document.getElementById("total2025").textContent = total2025;
+  document.getElementById("variacion").textContent = variacion.toFixed(1) + "%";
 }
 
+/* INIT */
 cargarKPIs();
-cargarFecha(); 
+cargarFecha();
+cargarTotales();
+
 </script>
 
 </body>
