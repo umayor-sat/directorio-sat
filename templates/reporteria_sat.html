@@ -43,174 +43,164 @@ body { font-family:'Segoe UI', Arial; background:#f3f6f9; margin:0; }
   border-radius:10px 0 0 10px;
 }
 
-.consulta::before { background:#2196F3; }
-.queja::before { background:#FFC107; }
-.reclamo::before { background:#F44336; }
-.riesgo::before { background:#FF9800; }
+.consulta::before      { background:#2196F3; }
+.queja::before         { background:#FFC107; }
+.reclamo::before       { background:#F44336; }
+.riesgo::before        { background:#FF9800; }
 .agradecimiento::before { background:#4CAF50; }
 .felicitaciones::before { background:#66BB6A; }
 
 .titulo { font-weight:700; font-size:14px; margin-bottom:10px; }
 .numero { font-size:32px; font-weight:800; }
-.pct { font-size:13px; color:#777; }
+.pct    { font-size:13px; color:#777; }
+
+.error-msg { padding:40px; text-align:center; color:#c62828; font-size:14px; }
 </style>
 </head>
 
 <body>
 
 <div class="header">
-
   <div class="header-top">
     <h1>REPORTERÍA SAT 2026</h1>
-    <div id="fecha"></div>
+    <div id="fecha" style="font-size:13px;opacity:0.7;">Cargando...</div>
   </div>
-
   <div class="header-stats">
     <div class="stat">
       <div class="label">Total 2026</div>
       <div id="total2026" class="value">—</div>
     </div>
-
     <div class="stat">
       <div class="label">Total 2025</div>
       <div id="total2025" class="value">—</div>
     </div>
-
     <div class="stat">
-      <div class="label">Variación</div>
+      <div class="label">Variación vs 2025</div>
       <div id="variacion" class="value">—</div>
     </div>
   </div>
-
 </div>
 
 <div class="kpi-grid">
-
   <div class="card consulta">
     <div class="titulo">CONSULTAS</div>
-    <div id="consulta" class="numero">—</div>
-    <div id="pct-consulta" class="pct"></div>
+    <div id="kpi-Consulta" class="numero">—</div>
+    <div id="pct-Consulta" class="pct"></div>
   </div>
-
   <div class="card queja">
     <div class="titulo">QUEJAS</div>
-    <div id="queja" class="numero">—</div>
-    <div id="pct-queja" class="pct"></div>
+    <div id="kpi-Queja" class="numero">—</div>
+    <div id="pct-Queja" class="pct"></div>
   </div>
-
   <div class="card reclamo">
     <div class="titulo">RECLAMOS</div>
-    <div id="reclamo" class="numero">—</div>
-    <div id="pct-reclamo" class="pct"></div>
+    <div id="kpi-Reclamo" class="numero">—</div>
+    <div id="pct-Reclamo" class="pct"></div>
   </div>
-
   <div class="card riesgo">
     <div class="titulo">RIESGO</div>
-    <div id="riesgo" class="numero">—</div>
-    <div id="pct-riesgo" class="pct"></div>
+    <div id="kpi-Riesgo" class="numero">—</div>
+    <div id="pct-Riesgo" class="pct"></div>
   </div>
-
   <div class="card agradecimiento">
     <div class="titulo">AGRADECIMIENTO</div>
-    <div id="agradecimiento" class="numero">—</div>
-    <div id="pct-agradecimiento" class="pct"></div>
+    <div id="kpi-Agradecimiento" class="numero">—</div>
+    <div id="pct-Agradecimiento" class="pct"></div>
   </div>
-
   <div class="card felicitaciones">
     <div class="titulo">FELICITACIONES</div>
-    <div id="felicitaciones" class="numero">—</div>
-    <div id="pct-felicitaciones" class="pct"></div>
+    <div id="kpi-Felicitaciones" class="numero">—</div>
+    <div id="pct-Felicitaciones" class="pct"></div>
   </div>
-
 </div>
 
+{% raw %}
 <script>
 const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTA4MTcsImV4cCI6MjA4ODEyNjgxN30.pqT_PlAAn3oR6g_0Iaa2fs6qV8M3RQFzNOCAssyZZh4";
 
-function normalizar(valor) {
-  if (Array.isArray(valor)) return valor[0];
-  if (typeof valor === "object") return Object.values(valor)[0];
-  return valor;
-}
+const HEADERS = {
+  "apikey": SUPABASE_KEY,
+  "Authorization": `Bearer ${SUPABASE_KEY}`,
+  "Content-Type": "application/json"
+};
 
-/* KPI */
-async function cargarKPIs() {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/kpi_2026`, {
-    method:"POST",
-    headers:{
-      apikey:SUPABASE_KEY,
-      Authorization:`Bearer ${SUPABASE_KEY}`,
-      "Content-Type":"application/json"
-    },
-    body:JSON.stringify({})
+// Llama a un RPC y devuelve el JSON parseado
+async function rpc(nombre) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${nombre}`, {
+    method: "POST",
+    headers: HEADERS,
+    body: "{}"
   });
-
-  const data = await res.json();
-
-  let totalGeneral = 0;
-  data.forEach(r => totalGeneral += r.total);
-
-  data.forEach(row => {
-    const pct = ((row.total / totalGeneral) * 100).toFixed(1);
-
-    document.getElementById(row.tipo.toLowerCase()).textContent = row.total;
-    document.getElementById("pct-" + row.tipo.toLowerCase()).textContent = pct + "%";
-  });
+  if (!res.ok) throw new Error(`RPC ${nombre} falló: ${res.status}`);
+  return res.json();
 }
 
-/* FECHA */
-async function cargarFecha() {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/ultima_fecha`, {
-    method:"POST",
-    headers:{
-      apikey:SUPABASE_KEY,
-      Authorization:`Bearer ${SUPABASE_KEY}`,
-      "Content-Type":"application/json"
-    },
-    body:JSON.stringify({})
-  });
-
-  const data = await res.json();
-  const fecha = new Date(data);
-
-  document.getElementById("fecha").textContent =
-    "Actualizado al: " + fecha.toLocaleString("es-CL");
+// Extrae el primer valor escalar de un resultado RPC
+// Supabase devuelve [{columna: valor}] para funciones que retornan un escalar
+function escalar(data) {
+  if (Array.isArray(data) && data.length > 0) {
+    return Object.values(data[0])[0];
+  }
+  return data; // por si acaso viene directo
 }
 
-/* TOTALES */
-async function cargarTotales() {
+async function init() {
+  try {
+    // Ejecutar todo en paralelo
+    const [kpis, t2026, t2025, variacion, fecha] = await Promise.all([
+      rpc("kpi_2026"),
+      rpc("total_2026"),
+      rpc("total_2025"),
+      rpc("variacion_2026_vs_2025"),
+      rpc("ultima_fecha")
+    ]);
 
-  const total2026 = normalizar(await (await fetch(`${SUPABASE_URL}/rest/v1/rpc/total_2026`,{
-    method:"POST",
-    headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`},
-    body:JSON.stringify({})
-  })).json());
+    // Totales del header
+    const total2026 = escalar(t2026);
+    const total2025 = escalar(t2025);
+    const varPct    = parseFloat(escalar(variacion));
 
-  const total2025 = normalizar(await (await fetch(`${SUPABASE_URL}/rest/v1/rpc/total_2025`,{
-    method:"POST",
-    headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`},
-    body:JSON.stringify({})
-  })).json());
+    document.getElementById("total2026").textContent =
+      Number(total2026).toLocaleString("es-CL");
+    document.getElementById("total2025").textContent =
+      Number(total2025).toLocaleString("es-CL");
 
-  const variacion = normalizar(await (await fetch(`${SUPABASE_URL}/rest/v1/rpc/variacion_2026_vs_2025`,{
-    method:"POST",
-    headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`},
-    body:JSON.stringify({})
-  })).json());
+    const signo = varPct >= 0 ? "↑" : "↓";
+    const varEl = document.getElementById("variacion");
+    varEl.textContent = `${signo} ${Math.abs(varPct).toFixed(1)}%`;
+    varEl.style.color = varPct >= 0 ? "#66BB6A" : "#ff6b6b";
 
-  document.getElementById("total2026").textContent = total2026 || 0;
-  document.getElementById("total2025").textContent = total2025 || 0;
-  document.getElementById("variacion").textContent =
-    Number(variacion).toFixed(1) + "%";
+    // Fecha de actualización
+    const fechaVal = escalar(fecha);
+    document.getElementById("fecha").textContent =
+      "Actualizado al: " + new Date(fechaVal).toLocaleString("es-CL");
+
+    // KPIs por tipo
+    // kpi_2026() devuelve [{tipo: "Consulta", total: 24625}, ...]
+    const totalGeneral = kpis.reduce((sum, r) => sum + Number(r.total), 0);
+
+    kpis.forEach(row => {
+      const tipo  = row.tipo;       // "Consulta", "Queja", etc.
+      const total = Number(row.total);
+      const pct   = totalGeneral > 0 ? (total / totalGeneral * 100).toFixed(1) : "0.0";
+
+      const elNum = document.getElementById(`kpi-${tipo}`);
+      const elPct = document.getElementById(`pct-${tipo}`);
+
+      if (elNum) elNum.textContent = total.toLocaleString("es-CL");
+      if (elPct) elPct.textContent = pct + "% del total";
+    });
+
+  } catch(e) {
+    console.error("Error cargando reportería:", e);
+    document.body.innerHTML +=
+      `<div class="error-msg">❌ Error al cargar datos: ${e.message}</div>`;
+  }
 }
 
-/* INIT */
-cargarKPIs();
-cargarFecha();
-cargarTotales();
-
+init();
 </script>
-
+{% endraw %}
 </body>
 </html>
