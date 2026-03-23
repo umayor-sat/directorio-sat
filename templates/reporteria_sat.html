@@ -238,7 +238,7 @@ async function cargarTotales() {
 
   document.getElementById("total2026").textContent = total2026;
   document.getElementById("total2025").textContent = total2025;
-  document.getElementById("variacion").textContent = variacion.toFixed(1) + "%";
+  document.getElementById("variacion").textContent = Number(variacion).toFixed(1) + "%";
 }
 
 /* INIT */
