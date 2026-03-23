@@ -232,9 +232,9 @@ async function cargarTotales() {
     headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
   });
 
-  const total2026 = await res2026.json();
-  const total2025 = await res2025.json();
-  const variacion = await resVar.json();
+   const total2026 = (await res2026.json())[0];
+   const total2025 = (await res2025.json())[0];
+   const variacion = (await resVar.json())[0];
 
   document.getElementById("total2026").textContent = total2026;
   document.getElementById("total2025").textContent = total2025;
