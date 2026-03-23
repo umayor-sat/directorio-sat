@@ -184,6 +184,13 @@ def monitor_calidad():
     return render_template("monitor_calidad.html")
 
 # =========================
+# REPORTERÍA SAT
+# =========================
+@app.route("/reporteria")
+def reporteria():
+    return render_template("reporteria_sat.html")
+
+# =========================
 # EJECUCIÓN
 # =========================
 if __name__ == "__main__":
