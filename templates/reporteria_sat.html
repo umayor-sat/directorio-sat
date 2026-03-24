@@ -202,7 +202,15 @@ body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color:
 
 <!-- CONTENIDO -->
 <div class="content">
-  <div id="spinnerWrap" class="spinner-wrap">⏳ Cargando datos...</div>
+  <div id="spinnerWrap" class="spinner-wrap">
+  <div style="font-size:2rem; margin-bottom:16px;">⏳</div>
+  <div style="font-size:16px; font-weight:600; color:#444; margin-bottom:8px;">Cargando datos...</div>
+  <div style="font-size:13px; color:#888;" id="spinnerMsg">Conectando con la base de datos...</div>
+  <div style="margin-top:16px; background:#e0e0e0; border-radius:8px; height:8px; width:300px; margin-left:auto; margin-right:auto;">
+    <div id="spinnerBar" style="background:#005aa9; height:8px; border-radius:8px; width:0%; transition:width 0.3s;"></div>
+  </div>
+  <div style="font-size:12px; color:#bbb; margin-top:8px;" id="spinnerCount"></div>
+</div>
 
   <div class="kpi-grid" id="kpiGrid" style="display:none;">
     <div class="kpi-card consulta">
@@ -308,7 +316,7 @@ function verificarAcceso() {
 }
 window.onload = () => setTimeout(() => document.getElementById("inputPassword").focus(), 100);
 
-// ── FETCH SUPABASE ──
+// ── FETCH SUPABASE CON PAGINACIÓN ──
 async function sbFetch(columnas, limite) {
   const url = `${SUPABASE_URL}/rest/v1/${encodeURIComponent(TABLA)}?select=${encodeURIComponent(columnas)}&limit=${limite}`;
   const res = await fetch(url, {
@@ -316,6 +324,47 @@ async function sbFetch(columnas, limite) {
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
+}
+
+// Trae TODOS los registros paginando de 1000 en 1000
+async function sbFetchTodos(columnas) {
+  const PAGE = 1000;
+  let todos = [];
+  let offset = 0;
+  let hayMas = true;
+
+  while (hayMas) {
+    const url = `${SUPABASE_URL}/rest/v1/${encodeURIComponent(TABLA)}?select=${encodeURIComponent(columnas)}&limit=${PAGE}&offset=${offset}`;
+    const res = await fetch(url, {
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`,
+        "Range-Unit": "items"
+      }
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const pagina = await res.json();
+    todos = todos.concat(pagina);
+
+    // Actualizar progreso
+    const msg = document.getElementById("spinnerMsg");
+    const cnt = document.getElementById("spinnerCount");
+    const bar = document.getElementById("spinnerBar");
+    if (msg) msg.textContent = `Cargando registros... esto puede tomar unos segundos`;
+    if (cnt) cnt.textContent = `${todos.length.toLocaleString("es-CL")} registros cargados`;
+    if (bar) bar.style.width = Math.min(95, (todos.length / 110000) * 100) + "%";
+
+    if (pagina.length < PAGE) {
+      hayMas = false;
+    } else {
+      offset += PAGE;
+    }
+  }
+
+  if (document.getElementById("spinnerBar"))
+    document.getElementById("spinnerBar").style.width = "100%";
+
+  return todos;
 }
 
 async function iniciar() {
@@ -350,7 +399,7 @@ async function cargarDatos() {
 
   try {
     // Traer TODOS los datos con las columnas necesarias
-    const todos = await sbFetch('"Fecha de creación","Tipo de caso",Tema', 200000);
+    const todos = await sbFetchTodos('"Fecha de creación","Tipo de caso",Tema');
 
     // Filtros de UI
     const desde  = document.getElementById("filtroDesde").value;
