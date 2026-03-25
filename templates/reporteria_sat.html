@@ -318,7 +318,7 @@ window.onload = () => setTimeout(() => document.getElementById("inputPassword").
 
 // ── FETCH SUPABASE CON PAGINACIÓN ──
 async function sbFetch(columnas, limite) {
-  const url = `${SUPABASE_URL}/rest/v1/${encodeURIComponent(TABLA)}?select=${encodeURIComponent(columnas)}&limit=${limite}`;
+ const url = `${SUPABASE_URL}/rest/v1/${encodeURIComponent(TABLA)}?select=${encodeURIComponent(columnas)}&order=id&limit=${PAGE}&offset=${offset}`;
   const res = await fetch(url, {
     headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
   });
