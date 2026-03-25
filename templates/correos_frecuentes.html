@@ -94,11 +94,11 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
       <div class="form-grid">
         <div class="form-field">
           <label>IC <span class="req">*</span></label>
-          <input type="text" id="ic-num" placeholder="Ej: 00123" oninput="actualizarAsunto()">
+          <input type="text" id="ic-num" placeholder="Ej: 55667788" oninput="actualizarAsunto()">
         </div>
         <div class="form-field">
           <label>RUT <span class="req">*</span></label>
-          <input type="text" id="ic-rut" placeholder="Ej: 123456789" oninput="limpiarRut('ic-rut')">
+          <input type="text" id="ic-rut" placeholder="Sin puntos ni guion" oninput="limpiarRut('ic-rut')">
           <span class="field-hint">Sin puntos ni guion</span>
         </div>
         <div class="form-field">
@@ -271,12 +271,12 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
         </div>
         <div class="form-field">
           <label>RUT <span class="req">*</span></label>
-          <input type="text" id="sol-rut" placeholder="123456789" oninput="limpiarRut('sol-rut')">
+          <input type="text" id="sol-rut" placeholder="Sin puntos ni guion" oninput="limpiarRut('sol-rut')">
           <span class="field-hint">Sin puntos ni guion</span>
         </div>
         <div class="form-field">
           <label>Telefono <span class="req">*</span></label>
-          <input type="text" id="sol-tel" placeholder="+56 9 ...">
+          <input type="text" id="sol-tel" placeholder="Ej: 912345678">
         </div>
         <div class="form-field">
           <label>Correo <span class="req">*</span></label>
@@ -299,12 +299,12 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
         </div>
         <div class="form-field">
           <label>RUT <span id="alu-req-rut"></span></label>
-          <input type="text" id="alu-rut" placeholder="123456789" oninput="checkAlumno();limpiarRut('alu-rut')">
+          <input type="text" id="alu-rut" placeholder="Sin puntos ni guion" oninput="checkAlumno();limpiarRut('alu-rut')">
           <span class="field-hint">Sin puntos ni guion</span>
         </div>
         <div class="form-field">
           <label>Telefono <span id="alu-req-tel"></span></label>
-          <input type="text" id="alu-tel" placeholder="+56 9 ..." oninput="checkAlumno()">
+          <input type="text" id="alu-tel" placeholder="Ej: 912345678" oninput="checkAlumno()">
         </div>
         <div class="form-field">
           <label>Correo <span id="alu-req-correo"></span></label>
@@ -332,7 +332,7 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
         </div>
         <div class="form-field">
           <label>Telefono <span class="req">*</span></label>
-          <input type="text" id="ti-tel" placeholder="+56 9 ...">
+          <input type="text" id="ti-tel" placeholder="Ej: 912345678">
         </div>
         <div class="form-field">
           <label>Correo personal <span class="req">*</span></label>
@@ -427,6 +427,9 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
     <button id="btn-enviar" class="btn-enviar" onclick="validarYEnviar()">
       &#9993;&#65039; Preparar y enviar correo
     </button>
+    <button id="btn-limpiar" class="btn-enviar" style="background:#7f8c8d; margin-top:10px;" onclick="limpiarFormulario()">
+      &#128465;&#65039; Limpiar y Nueva Solicitud
+    </button>
 
   </div>
 
@@ -447,7 +450,7 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
         <div class="form-grid">
           <div class="form-field">
             <label>RUT <span class="req">*</span></label>
-            <input type="text" id="com-rut-asunto" placeholder="123456789" oninput="sincronizarComercial()">
+            <input type="text" id="com-rut-asunto" placeholder="Sin puntos ni guion" oninput="sincronizarComercial()">
             <span class="field-hint">Sin puntos ni guion</span>
           </div>
           <div class="form-field">
@@ -491,7 +494,7 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
           </div>
           <div class="form-field">
             <label>Telefono <span class="req">*</span></label>
-            <input type="text" id="com-tel" placeholder="+56 9 ...">
+            <input type="text" id="com-tel" placeholder="Ej: 912345678">
             <span class="field-hint">Asegurarse que reciba llamadas de numeros 600</span>
           </div>
           <div class="form-field">
@@ -552,6 +555,9 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
       <button class="btn-enviar" style="display:block;" onclick="enviarComercial()">
         &#9993;&#65039; Preparar y enviar correo
       </button>
+      <button class="btn-enviar" style="display:block; background:#7f8c8d; margin-top:10px;" onclick="limpiarFormulario()">
+        &#128465;&#65039; Limpiar y Nueva Solicitud
+      </button>
 
     </div>
   </div>
@@ -580,12 +586,13 @@ function val(id)  { var el = document.getElementById(id); return el ? el.value.t
 function cambiarAsunto() {
   var v = document.getElementById('asunto').value;
   ['bloque-ic','bloque-otro','bloque-resumen','bloque-solicitante','bloque-alumno',
-   'bloque-contacto-ti','bloque-ti', 'bloque-turno', 'preview-asunto','aviso-firma','btn-enviar',
+   'bloque-contacto-ti','bloque-ti', 'bloque-turno', 'preview-asunto','aviso-firma','btn-enviar', 'btn-limpiar',
    'error-validacion','bloque-ejecutivo'].forEach(hide);
   if (!v) return;
   show('preview-asunto');
   show('aviso-firma');
   show('btn-enviar');
+  show('btn-limpiar');
   show('bloque-ejecutivo');
 
   if (v === 'escalamiento') {
@@ -662,6 +669,17 @@ function checkAlumno() {
 function marcarError(id) { var el = document.getElementById(id); if (el) el.classList.add('field-error'); }
 function limpiarErrores() { document.querySelectorAll('.field-error').forEach(function(el){ el.classList.remove('field-error'); }); }
 
+// --- NUEVAS FUNCIONES DE VALIDACIÓN ---
+function validarTelefono(tel) {
+  var limpio = tel.replace(/[\s\-]/g, '').replace(/^\+56/, '');
+  return /^\d{9}$/.test(limpio);
+}
+
+function validarCorreo(correo) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
+}
+// --------------------------------------
+
 function validarYEnviar() {
   limpiarErrores();
   hide('error-validacion');
@@ -678,20 +696,35 @@ function validarYEnviar() {
   if (v === 'escalamiento') {
     if (!val('sol-nombre')) { marcarError('sol-nombre'); errores.push('Nombre solicitante'); }
     if (!val('sol-rut'))    { marcarError('sol-rut');    errores.push('RUT solicitante'); }
-    if (!val('sol-tel'))    { marcarError('sol-tel');    errores.push('Telefono solicitante'); }
+    
+    // Validación estricta Teléfono Solicitante
+    if (!val('sol-tel')) { marcarError('sol-tel'); errores.push('Telefono solicitante'); }
+    else if (!validarTelefono(val('sol-tel'))) { marcarError('sol-tel'); errores.push('Telefono solicitante (debe tener 9 digitos)'); }
+    
+    // Validación estricta Correo Solicitante
     if (!val('sol-correo')) { marcarError('sol-correo'); errores.push('Correo solicitante'); }
+    else if (!validarCorreo(val('sol-correo'))) { marcarError('sol-correo'); errores.push('Correo solicitante invalido (falta @)'); }
+
     var aluCampos = ['alu-nombre','alu-rut','alu-tel','alu-correo'];
     if (aluCampos.some(function(id){ return val(id) !== ''; })) {
-      aluCampos.forEach(function(id){ if (!val(id)) { marcarError(id); errores.push('Datos alumno incompletos'); } });
+      if (!val('alu-nombre')) { marcarError('alu-nombre'); errores.push('Nombre alumno'); }
+      if (!val('alu-rut')) { marcarError('alu-rut'); errores.push('RUT alumno'); }
+      if (!val('alu-tel') || !validarTelefono(val('alu-tel'))) { marcarError('alu-tel'); errores.push('Telefono alumno (debe tener 9 digitos)'); }
+      if (!val('alu-correo') || !validarCorreo(val('alu-correo'))) { marcarError('alu-correo'); errores.push('Correo alumno invalido'); }
     }
   }
   
   if (v === 'ti') {
-    if (!val('ti-tel'))       { marcarError('ti-tel');       errores.push('Telefono contacto'); }
-    if (!val('ti-correo-per')){ marcarError('ti-correo-per');errores.push('Correo personal'); }
+    // Validación estricta Teléfono Contacto TI
+    if (!val('ti-tel')) { marcarError('ti-tel'); errores.push('Telefono contacto'); }
+    else if (!validarTelefono(val('ti-tel'))) { marcarError('ti-tel'); errores.push('Telefono contacto (debe tener 9 digitos)'); }
+    
+    // Validación estricta Correo Contacto TI
+    if (!val('ti-correo-per')) { marcarError('ti-correo-per'); errores.push('Correo personal'); }
+    else if (!validarCorreo(val('ti-correo-per'))) { marcarError('ti-correo-per'); errores.push('Correo personal invalido'); }
   }
 
-  // Validaciones del nuevo formulario de Turnos
+  // Validaciones del formulario de Turnos
   if (v === 'turno') {
     if (!val('turno-fecha')) { marcarError('turno-fecha'); errores.push('Fecha del turno'); }
     if (!val('turno-solicitante')) { marcarError('turno-solicitante'); errores.push('Ejecutivo que solicita'); }
@@ -714,7 +747,7 @@ function validarYEnviar() {
   if (errores.length > 0) {
     var el = document.getElementById('error-validacion');
     var unicos = errores.filter(function(e, i){ return errores.indexOf(e) === i; });
-    el.textContent = 'Faltan campos obligatorios: ' + unicos.join(', ') + '.';
+    el.textContent = 'Faltan campos u obligatorios: ' + unicos.join(', ') + '.';
     show('error-validacion');
     return;
   }
@@ -735,7 +768,6 @@ function validarYEnviar() {
     cuerpo += 'CASO TI\nCorreo institucional: ' + (val('ti-correo-inst') || '-') + '\nTipo de contacto: ' + (val('ti-contacto') || '-') + '\nPerfil con error: ' + (val('ti-perfil') || '-') + '\nPlataforma con error: ' + (val('ti-plataforma') || '-') + '\nDescripcion del error: ' + (val('ti-desc') || '-') + '\nPruebas realizadas: ' + (val('ti-pruebas') || '-') + '\nIngreso con rut@mayor.cl confirmado: ' + (val('ti-ingreso') || '-') + '\nAcceso por intranet confirmado: ' + (val('ti-intranet') || '-') + '\n\n';
     cuerpo += 'Atte.\n\n[Insertar firma institucional]';
   } else if (v === 'turno') {
-    // Formatear la fecha para que sea más legible (DD-MM-YYYY)
     var fechaCruda = val('turno-fecha');
     var fechaLegible = fechaCruda;
     if (fechaCruda) {
@@ -793,16 +825,24 @@ function enviarComercial() {
   limpiarErrores();
   hide('error-com');
   var errores = [];
+  
   if (!val('com-rut-asunto'))    { marcarError('com-rut-asunto');    errores.push('RUT'); }
   if (!val('com-nombre-asunto')) { marcarError('com-nombre-asunto'); errores.push('Nombre'); }
   if (!val('com-carrera'))       { marcarError('com-carrera');       errores.push('Carrera de interes'); }
   if (!val('com-jornada'))       { marcarError('com-jornada');       errores.push('Jornada'); }
-  if (!val('com-tel'))           { marcarError('com-tel');           errores.push('Telefono'); }
-  if (!val('com-correo'))        { marcarError('com-correo');        errores.push('Correo'); }
+  
+  // Validación estricta Teléfono Comercial
+  if (!val('com-tel')) { marcarError('com-tel'); errores.push('Telefono'); }
+  else if (!validarTelefono(val('com-tel'))) { marcarError('com-tel'); errores.push('Telefono (debe tener 9 digitos)'); }
+  
+  // Validación estricta Correo Comercial
+  if (!val('com-correo')) { marcarError('com-correo'); errores.push('Correo'); }
+  else if (!validarCorreo(val('com-correo'))) { marcarError('com-correo'); errores.push('Correo invalido (falta @)'); }
+
   if (errores.length > 0) {
     var el = document.getElementById('error-com');
     var unicos = errores.filter(function(e,i){ return errores.indexOf(e) === i; });
-    el.textContent = 'Faltan campos obligatorios: ' + unicos.join(', ') + '.';
+    el.textContent = 'Faltan campos u obligatorios: ' + unicos.join(', ') + '.';
     show('error-com');
     return;
   }
@@ -817,9 +857,20 @@ function enviarComercial() {
   var dest = 'marcelo.sepulveda@umayor.cl;francisca.castillo@umayor.cl';
   window.location.href = 'mailto:' + dest + '?subject=' + encodeURIComponent(asunto) + '&body=' + encodeURIComponent(cuerpo);
 }
+
+function limpiarFormulario() {
+  if(confirm("¿Estás seguro de limpiar los datos para ingresar una nueva solicitud?")) {
+    document.querySelectorAll('input, select, textarea').forEach(function(el) {
+      if (el.type === 'checkbox') el.checked = false;
+      else el.value = '';
+    });
+    cambiarAsunto();
+    mostrarFormComercial();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
 </script>
 
 </body>
 </html>
-
 
