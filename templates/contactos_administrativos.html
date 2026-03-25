@@ -354,15 +354,28 @@ function buscar() {
 function ejecutarBusqueda(termino) {
   ultimaBusqueda = termino;
   suggestionsBox.style.display = "none";
+  
   if (!termino || termino.length < 2) {
     document.getElementById("resultados").innerHTML = "<p>Escribe al menos 2 caracteres para buscar.</p>";
     return;
   }
-  fetch(`/api/contactos-administrativos?q=${encodeURIComponent(termino)}`)
+
+  // Construimos la URL directa a Supabase buscando por área O por nombre
+  const termEncoded = encodeURIComponent(`*${termino}*`);
+  const url = `${SUPABASE_URL}/rest/v1/contactos_administrativos?or=(area_busqueda.ilike.${termEncoded},nombre.ilike.${termEncoded})`;
+
+  fetch(url, {
+    method: "GET",
+    headers: {
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      "Content-Type": "application/json"
+    }
+  })
     .then(r => r.json())
     .then(data => {
       const res = document.getElementById("resultados");
-      if (!data.length) {
+      if (!data || !data.length) {
         res.innerHTML = `<p>No se encontraron resultados para <strong>${termino}</strong>.</p>`;
         return;
       }
@@ -373,7 +386,7 @@ function ejecutarBusqueda(termino) {
       data.forEach(r => {
         const botonesAdmin = modoAdmin
           ? `<td>
-               <button class="btn-accion btn-editar" onclick='editarRegistro(${JSON.stringify(r)})'>✏️ Editar</button>
+               <button class="btn-accion btn-editar" onclick='editarRegistro(${JSON.stringify(r).replace(/'/g, "&#39;")})'>✏️ Editar</button>
                <button class="btn-accion btn-eliminar" onclick="eliminarRegistro(${r.id}, this)">🗑️ Eliminar</button>
              </td>` : "";
         html += `<tr>
@@ -407,7 +420,7 @@ function ejecutarBusqueda(termino) {
       res.innerHTML = html;
     })
     .catch(() => {
-      document.getElementById("resultados").innerHTML = "<p>Error al conectar con el servidor.</p>";
+      document.getElementById("resultados").innerHTML = "<p>Error al conectar con la base de datos.</p>";
     });
 }
 
