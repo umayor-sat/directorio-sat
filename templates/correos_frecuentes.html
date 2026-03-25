@@ -42,7 +42,7 @@ body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#fff;color:var(-
 .form-field.span2{grid-column:1/-1;}
 label{font-size:11px;color:var(--texto-suave);font-weight:600;}
 .req{color:var(--rojo);}
-input[type="text"],input[type="email"],select,textarea{width:100%;padding:8px 10px;border:1px solid var(--borde);border-radius:6px;font-size:13px;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(--texto);transition:border-color .15s;}
+input[type="text"],input[type="email"],input[type="date"],select,textarea{width:100%;padding:8px 10px;border:1px solid var(--borde);border-radius:6px;font-size:13px;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(--texto);transition:border-color .15s;}
 input:focus,select:focus,textarea:focus{border-color:var(--um-azul);outline:none;}
 textarea{resize:vertical;min-height:70px;}
 .field-hint{font-size:10px;color:var(--texto-suave);margin-top:2px;}
@@ -76,7 +76,6 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
 
 <div class="content">
 
-  <!-- TAB 1: SUPERVISOR -->
   <div class="tab-panel active" id="panel0">
 
     <select class="asunto-select" id="asunto" onchange="cambiarAsunto()">
@@ -132,6 +131,136 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
       </div>
     </div>
 
+    <div id="bloque-turno" class="form-section" style="display:none;">
+      <div class="form-section-title">Detalles del Cambio de Turno</div>
+      <div class="form-section-sub">Completa las opciones para armar el correo de solicitud <span class="req">*</span></div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Fecha del turno <span class="req">*</span></label>
+          <input type="date" id="turno-fecha" oninput="actualizarAsunto()">
+        </div>
+        <div class="form-field">
+          <label>Motivo <span class="req">*</span></label>
+          <select id="turno-motivo">
+            <option value="">-- Selecciona --</option>
+            <option>Personal</option>
+            <option>Médico</option>
+            <option>Académico</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="form-field span2">
+          <label>Ejecutivo que solicita el cambio (Tú) <span class="req">*</span></label>
+          <select id="turno-solicitante">
+            <option value="">-- Selecciona --</option>
+            <optgroup label="Apoyo">
+              <option>Katherine Cabrera</option>
+              <option>Javiera Hormazabal</option>
+              <option>Gabriela Canobra</option>
+              <option>Javiera Consuelo González Soto</option>
+              <option>María Joscelynn Gómez Leiva</option>
+              <option>Carla Macarena Araos Carreño</option>
+              <option>Deisy Carol Pino Merino</option>
+              <option>Karen Orellana</option>
+              <option>Emperatriz Berrios</option>
+              <option>Elizabeth Manríquez</option>
+              <option>Alejandra Diaz</option>
+            </optgroup>
+            <optgroup label="Staff">
+              <option>Ana Maria Goycolea</option>
+              <option>Camila Macarena Espinoza Nuñez</option>
+              <option>Claudia Acevedo Diaz</option>
+              <option>Francisca Lizama</option>
+              <option>Francisca Valenzuela</option>
+              <option>Sebastián Moraga Cavieres</option>
+              <option>Camila Fernanda Navarrete Navarrete</option>
+              <option>Silvia Gonzalez</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Tu turno original <span class="req">*</span></label>
+          <select id="turno-original-solicitante">
+            <option value="">-- Selecciona --</option>
+            <option>08:00 a 16:30</option>
+            <option>08:30 a 17:00</option>
+            <option>09:00 a 17:30</option>
+            <option>09:30 a 18:00</option>
+            <option>10:00 a 18:30</option>
+            <option>10:30 a 19:00</option>
+            <option>11:00 a 19:30</option>
+            <option>11:30 a 20:00</option>
+          </select>
+        </div>
+        <div class="form-field">
+          </div>
+        <div class="form-field span2">
+          <label>Ejecutivo que realizará el reemplazo <span class="req">*</span></label>
+          <select id="turno-reemplazo-nombre">
+            <option value="">-- Selecciona --</option>
+            <optgroup label="Apoyo">
+              <option>Katherine Cabrera</option>
+              <option>Javiera Hormazabal</option>
+              <option>Gabriela Canobra</option>
+              <option>Javiera Consuelo González Soto</option>
+              <option>María Joscelynn Gómez Leiva</option>
+              <option>Carla Macarena Araos Carreño</option>
+              <option>Deisy Carol Pino Merino</option>
+              <option>Karen Orellana</option>
+              <option>Emperatriz Berrios</option>
+              <option>Elizabeth Manríquez</option>
+              <option>Alejandra Diaz</option>
+            </optgroup>
+            <optgroup label="Staff">
+              <option>Ana Maria Goycolea</option>
+              <option>Camila Macarena Espinoza Nuñez</option>
+              <option>Claudia Acevedo Diaz</option>
+              <option>Francisca Lizama</option>
+              <option>Francisca Valenzuela</option>
+              <option>Sebastián Moraga Cavieres</option>
+              <option>Camila Fernanda Navarrete Navarrete</option>
+              <option>Silvia Gonzalez</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Turno original del reemplazo <span class="req">*</span></label>
+          <select id="turno-original-reemplazo">
+            <option value="">-- Selecciona --</option>
+            <option>08:00 a 16:30</option>
+            <option>08:30 a 17:00</option>
+            <option>09:00 a 17:30</option>
+            <option>09:30 a 18:00</option>
+            <option>10:00 a 18:30</option>
+            <option>10:30 a 19:00</option>
+            <option>11:00 a 19:30</option>
+            <option>11:30 a 20:00</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Turno que cubrirá el reemplazo <span class="req">*</span></label>
+          <select id="turno-nuevo-reemplazo">
+            <option value="">-- Selecciona --</option>
+            <option>08:00 a 16:30</option>
+            <option>08:30 a 17:00</option>
+            <option>09:00 a 17:30</option>
+            <option>09:30 a 18:00</option>
+            <option>10:00 a 18:30</option>
+            <option>10:30 a 19:00</option>
+            <option>11:00 a 19:30</option>
+            <option>11:30 a 20:00</option>
+          </select>
+        </div>
+        <div class="form-field span2">
+          <label>Comentarios adicionales</label>
+          <textarea id="turno-comentarios" placeholder="Información adicional relevante..."></textarea>
+        </div>
+        <div class="form-field span2" style="flex-direction:row; align-items:flex-start; gap:8px; background:#fffbea; padding:12px; border:1px solid #f9a825; border-radius:6px; margin-top:8px;">
+          <input type="checkbox" id="turno-confirmacion" style="width:auto; margin-top:2px;">
+          <label for="turno-confirmacion" style="margin:0; font-size:11px; color:#7a5c00; font-weight:normal;">Confirmo que este cambio ya fue coordinado entre ambas partes y que ambos ejecutivos se comprometen a cumplir con el turno acordado, entendiendo su impacto en la continuidad operativa del servicio. <span class="req">*</span></label>
+        </div>
+      </div>
+    </div>
     <div id="bloque-solicitante" class="form-section" style="display:none;">
       <div class="form-section-title">Datos del solicitante</div>
       <div class="form-section-sub">Los cuatro campos son obligatorios <span class="req">*</span></div>
@@ -223,21 +352,21 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
         <div class="form-field">
           <label>Tipo de contacto</label>
           <select id="ti-contacto">
-  <option value="">-- Selecciona --</option>
-  <option>Llamada telefonica</option>
-  <option>Correo</option>
-  <option>Whatsapp</option>
-</select>
+            <option value="">-- Selecciona --</option>
+            <option>Llamada telefonica</option>
+            <option>Correo</option>
+            <option>Whatsapp</option>
+          </select>
         </div>
         <div class="form-field">
           <label>Perfil con error</label>
           <select id="ti-perfil">
-  <option value="">-- Selecciona --</option>
-  <option>Alumno</option>
-  <option>Ex alumno</option>
-  <option>Colaborador / administrativo</option>
-  <option>Docente</option>
-</select>
+            <option value="">-- Selecciona --</option>
+            <option>Alumno</option>
+            <option>Ex alumno</option>
+            <option>Colaborador / administrativo</option>
+            <option>Docente</option>
+          </select>
         </div>
         <div class="form-field">
           <label>Plataforma con error</label>
@@ -283,7 +412,7 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
       </div>
     </div>
 
-<div id="aviso-firma" style="display:none;background:#fffbea;border:2px solid var(--alerta-borde);border-radius:8px;padding:14px 18px;margin-bottom:20px;">
+    <div id="aviso-firma" style="display:none;background:#fffbea;border:2px solid var(--alerta-borde);border-radius:8px;padding:14px 18px;margin-bottom:20px;">
       <div style="display:flex;align-items:flex-start;gap:10px;">
         <span style="font-size:20px;">&#9888;&#65039;</span>
         <div>
@@ -301,7 +430,6 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
 
   </div>
 
-  <!-- TAB 2: COMERCIAL -->
   <div class="tab-panel" id="panel1">
 
     <div class="form-section" style="margin-bottom:20px;">
@@ -452,17 +580,20 @@ function val(id)  { var el = document.getElementById(id); return el ? el.value.t
 function cambiarAsunto() {
   var v = document.getElementById('asunto').value;
   ['bloque-ic','bloque-otro','bloque-resumen','bloque-solicitante','bloque-alumno',
-   'bloque-contacto-ti','bloque-ti','preview-asunto','aviso-firma','btn-enviar',
+   'bloque-contacto-ti','bloque-ti', 'bloque-turno', 'preview-asunto','aviso-firma','btn-enviar',
    'error-validacion','bloque-ejecutivo'].forEach(hide);
   if (!v) return;
   show('preview-asunto');
   show('aviso-firma');
   show('btn-enviar');
   show('bloque-ejecutivo');
-if (v === 'escalamiento') {
+
+  if (v === 'escalamiento') {
     show('bloque-ic'); show('bloque-resumen'); show('bloque-solicitante'); show('bloque-alumno');
   } else if (v === 'ti') {
     show('bloque-ic'); show('bloque-contacto-ti'); show('bloque-ti');
+  } else if (v === 'turno') {
+    show('bloque-turno');
   } else if (v === 'otro') {
     show('bloque-otro'); show('bloque-resumen');
   } else {
@@ -485,14 +616,27 @@ function actualizarAsunto() {
   var rut    = val('ic-rut')    || 'XXXXXXXXX';
   var nombre = val('ic-nombre') || 'NOMBRE';
   var motivo = val('ic-motivo') || 'MOTIVO';
+  
   if (v === 'escalamiento') {
     texto = 'IC: ' + ic + ' RUT: ' + rut + ' ' + nombre + ' ' + motivo;
   } else if (v === 'ti') {
     texto = 'IC: ' + ic + ' RUT: ' + rut + ' ' + nombre + ' ' + motivo + ' [TI]';
-  } else if (v === 'info')    { texto = 'Solicitud de informacion interna'; }
-  else if (v === 'turno')   { texto = 'Solicitud cambio de turno'; }
-  else if (v === 'feriado') { texto = 'Solicitud feriado legal / dia administrativo'; }
-  else if (v === 'otro')    { texto = val('otro-texto') || 'Especificar...'; }
+  } else if (v === 'info') {
+    texto = 'Solicitud de informacion interna';
+  } else if (v === 'turno') {
+    var f = val('turno-fecha');
+    var fFormat = '';
+    if (f) {
+      var p = f.split('-');
+      if(p.length === 3) fFormat = ' - ' + p[2] + '-' + p[1] + '-' + p[0];
+    }
+    texto = 'Solicitud de cambio de turno' + fFormat;
+  } else if (v === 'feriado') {
+    texto = 'Solicitud feriado legal / dia administrativo';
+  } else if (v === 'otro') {
+    texto = val('otro-texto') || 'Especificar...';
+  }
+  
   var el = document.getElementById('asunto-generado');
   if (el) el.textContent = texto;
 }
@@ -523,12 +667,14 @@ function validarYEnviar() {
   hide('error-validacion');
   var v = document.getElementById('asunto').value;
   var errores = [];
+  
   if (v === 'escalamiento' || v === 'ti') {
     if (!val('ic-num'))    { marcarError('ic-num');    errores.push('IC'); }
     if (!val('ic-rut'))    { marcarError('ic-rut');    errores.push('RUT del asunto'); }
     if (!val('ic-nombre')) { marcarError('ic-nombre'); errores.push('Nombre'); }
     if (!val('ic-motivo')) { marcarError('ic-motivo'); errores.push('Motivo'); }
   }
+  
   if (v === 'escalamiento') {
     if (!val('sol-nombre')) { marcarError('sol-nombre'); errores.push('Nombre solicitante'); }
     if (!val('sol-rut'))    { marcarError('sol-rut');    errores.push('RUT solicitante'); }
@@ -539,10 +685,32 @@ function validarYEnviar() {
       aluCampos.forEach(function(id){ if (!val(id)) { marcarError(id); errores.push('Datos alumno incompletos'); } });
     }
   }
+  
   if (v === 'ti') {
     if (!val('ti-tel'))       { marcarError('ti-tel');       errores.push('Telefono contacto'); }
     if (!val('ti-correo-per')){ marcarError('ti-correo-per');errores.push('Correo personal'); }
   }
+
+  // Validaciones del nuevo formulario de Turnos
+  if (v === 'turno') {
+    if (!val('turno-fecha')) { marcarError('turno-fecha'); errores.push('Fecha del turno'); }
+    if (!val('turno-solicitante')) { marcarError('turno-solicitante'); errores.push('Ejecutivo que solicita'); }
+    if (!val('turno-original-solicitante')) { marcarError('turno-original-solicitante'); errores.push('Tu turno original'); }
+    if (!val('turno-reemplazo-nombre')) { marcarError('turno-reemplazo-nombre'); errores.push('Ejecutivo que reemplaza'); }
+    if (!val('turno-original-reemplazo')) { marcarError('turno-original-reemplazo'); errores.push('Turno original reemplazo'); }
+    if (!val('turno-nuevo-reemplazo')) { marcarError('turno-nuevo-reemplazo'); errores.push('Turno que cubrirá'); }
+    if (!val('turno-motivo')) { marcarError('turno-motivo'); errores.push('Motivo'); }
+    
+    var conf = document.getElementById('turno-confirmacion');
+    if (conf && !conf.checked) { errores.push('Confirmar coordinación de turno'); }
+    
+    if (val('turno-solicitante') !== '' && val('turno-solicitante') === val('turno-reemplazo-nombre')) {
+      marcarError('turno-solicitante');
+      marcarError('turno-reemplazo-nombre');
+      errores.push('Solicitante y reemplazo no pueden ser la misma persona');
+    }
+  }
+
   if (errores.length > 0) {
     var el = document.getElementById('error-validacion');
     var unicos = errores.filter(function(e, i){ return errores.indexOf(e) === i; });
@@ -566,6 +734,26 @@ function validarYEnviar() {
     cuerpo = 'Estimados,\n\n' + ejecutivo + 'Necesito apoyo con el siguiente caso TI:\n\nDATOS DE CONTACTO\nNombre: ' + val('ti-nombre') + '\nRUT: ' + val('ti-rut') + '\nTelefono: ' + val('ti-tel') + '\nCorreo personal: ' + val('ti-correo-per') + '\n\n';
     cuerpo += 'CASO TI\nCorreo institucional: ' + (val('ti-correo-inst') || '-') + '\nTipo de contacto: ' + (val('ti-contacto') || '-') + '\nPerfil con error: ' + (val('ti-perfil') || '-') + '\nPlataforma con error: ' + (val('ti-plataforma') || '-') + '\nDescripcion del error: ' + (val('ti-desc') || '-') + '\nPruebas realizadas: ' + (val('ti-pruebas') || '-') + '\nIngreso con rut@mayor.cl confirmado: ' + (val('ti-ingreso') || '-') + '\nAcceso por intranet confirmado: ' + (val('ti-intranet') || '-') + '\n\n';
     cuerpo += 'Atte.\n\n[Insertar firma institucional]';
+  } else if (v === 'turno') {
+    // Formatear la fecha para que sea más legible (DD-MM-YYYY)
+    var fechaCruda = val('turno-fecha');
+    var fechaLegible = fechaCruda;
+    if (fechaCruda) {
+      var partes = fechaCruda.split('-');
+      if (partes.length === 3) fechaLegible = partes[2] + '-' + partes[1] + '-' + partes[0];
+    }
+    
+    cuerpo = 'Estimadas,\n\n' + ejecutivo + 
+             'Les escribo para solicitar autorizacion de un cambio de turno el dia ' + fechaLegible + '.\n\n' +
+             '- Solicitante: ' + val('turno-solicitante') + ', actualmente asignado(a) al turno ' + val('turno-original-solicitante') + '.\n' +
+             '- Reemplazo: ' + val('turno-reemplazo-nombre') + ', originalmente con turno ' + val('turno-original-reemplazo') + ', quien asumira el turno ' + val('turno-nuevo-reemplazo') + ' en mi lugar.\n\n' +
+             'Motivo: ' + val('turno-motivo') + '.\n\n';
+             
+    if (val('turno-comentarios')) {
+      cuerpo += 'Comentarios adicionales:\n' + val('turno-comentarios') + '\n\n';
+    }
+    
+    cuerpo += 'Agradezco mucho su apoyo y quedo atenta(o) a la confirmacion.\n\nAtte.\n\n[Insertar firma institucional]';
   } else {
     cuerpo = 'Estimados,\n\n' + ejecutivo + (val('resumen') || '[Completar descripcion de la solicitud]') + '\n\nAtte.\n\n[Insertar firma institucional]';
   }
