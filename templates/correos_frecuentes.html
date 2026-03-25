@@ -871,6 +871,38 @@ function limpiarFormulario() {
 }
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  // 2. Tus Credenciales (Ya puestas por mí para ahorrarte tiempo)
+  const supabaseUrl = 'https://jxmrznqppddabuqtbufq.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTA4MTcsImV4cCI6MjA4ODEyNjgxN30.pqT_PlAAn3oR6g_0Iaa2fs6qV8M3RQFzNOCAssyZZh4';
+  
+  // 3. Inicializamos el cliente
+  const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+  // 4. Prueba de Fuego: Vamos a ver si logramos hablar con tu tabla de ejecutivos
+  async function verificarConexion() {
+      console.log("🚀 Iniciando sistema de propulsión... Conectando a Supabase.");
+      
+      const { data, error } = await _supabase
+          .from('ejecutivos')
+          .select('nombre')
+          .limit(1);
+
+      if (error) {
+          console.error("❌ Error de conexión:", error.message);
+      } else {
+          console.log("✅ ¡CONEXIÓN EXITOSA! Reactor Arc al 100%.");
+          console.log("Dato de prueba recibido:", data);
+      }
+  }
+
+  // Ejecutamos la prueba apenas cargue la página
+  verificarConexion();
+</script>
+
+  
 </body>
 </html>
 
