@@ -3,510 +3,502 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reportería SAT – Universidad Mayor</title>
+<title>Dashboard Ejecutivo SAT · Universidad Mayor</title>
 <style>
+/* =======================================================
+   SISTEMA DE DISEÑO, VARIABLES Y MODO OSCURO
+   ======================================================= */
 :root {
-  --amarillo: #f2b705;
-  --azul: #005aa9;
-  --gris-header: #4a4a4a;
-  --consulta: #2196F3;
-  --queja: #FFC107;
-  --reclamo: #F44336;
-  --riesgo: #FF9800;
-  --agradecimiento: #4CAF50;
-  --felicitacion: #66BB6A;
-  --bg: #f3f6f9;
-  --white: #ffffff;
-  --border: #e0e0e0;
+  --um-azul: #005aa9;
+  --um-amarillo: #f2b705;
+  
+  /* Modo Claro (Por defecto) */
+  --bg-color: #f4f7f9;
+  --card-bg: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --tab-inactive: #f1f5f9;
+  
+  /* Semáforo Inteligente (Claro) */
+  --good-bg: #dcfce7;
+  --good-text: #166534;
+  --bad-bg: #fee2e2;
+  --bad-text: #991b1b;
+  --neutral-bg: #f1f5f9;
+  --neutral-text: #475569;
 }
+
+[data-theme="dark"] {
+  --bg-color: #0f172a;
+  --card-bg: #1e293b;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+  --tab-inactive: #0f172a;
+
+  /* Semáforo Inteligente (Oscuro) */
+  --good-bg: rgba(22, 101, 52, 0.4);
+  --good-text: #4ade80;
+  --bad-bg: rgba(153, 27, 27, 0.4);
+  --bad-text: #f87171;
+  --neutral-bg: rgba(71, 85, 105, 0.4);
+  --neutral-text: #cbd5e1;
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: #222; min-height: 100vh; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background-color: var(--bg-color); color: var(--text-main); line-height: 1.5; display: flex; flex-direction: column; min-height: 100vh; transition: background-color 0.3s;}
 
-/* LOGIN */
-.overlay-login { display: flex; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 900; align-items: center; justify-content: center; }
-.overlay-login.oculto { display: none; }
-.login-box { background: #fff; border-radius: 14px; padding: 40px 36px; width: 100%; max-width: 380px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); border-top: 8px solid var(--amarillo); text-align: center; }
-.login-box h2 { font-size: 1.1rem; color: var(--azul); margin-bottom: 6px; }
-.login-box p { font-size: 0.85rem; color: #888; margin-bottom: 24px; }
-.login-box input[type=password] { width: 100%; padding: 11px 14px; border: 1.5px solid #ddd; border-radius: 8px; font-size: 1rem; text-align: center; letter-spacing: 4px; font-family: inherit; outline: none; margin-bottom: 14px; }
-.login-box input[type=password]:focus { border-color: var(--azul); }
-.btn-ingresar { width: 100%; background: var(--azul); color: #fff; border: none; padding: 12px; border-radius: 8px; font-size: 0.95rem; font-weight: 700; cursor: pointer; font-family: inherit; }
-.btn-ingresar:hover { background: #004490; }
-.login-error { color: #c62828; font-size: 0.85rem; margin-top: 10px; display: none; }
+/* =======================================================
+   PANTALLAS SUPERPUESTAS (LOGIN Y CARGA)
+   ======================================================= */
+.overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.95); z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: opacity 0.3s; }
+.box-center { background: var(--card-bg); padding: 40px; border-radius: 12px; width: 100%; max-width: 380px; text-align: center; border-top: 6px solid var(--um-amarillo); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); }
+.box-title { font-size: 1.25rem; font-weight: 800; color: var(--um-azul); margin-bottom: 8px; }
 
-/* HEADER */
-.header { background: var(--gris-header); padding: 24px 30px; }
-.header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
-.header-title h1 { font-size: 2rem; font-weight: 800; color: #fff; letter-spacing: 0.5px; }
-.header-title p { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 2px; }
-.header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-.header-updated { font-size: 0.75rem; color: rgba(255,255,255,0.45); }
-.btn-volver { background: var(--amarillo); color: #222; border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; }
-.header-stats { display: flex; gap: 32px; margin-top: 20px; flex-wrap: wrap; }
-.header-stat .label { font-size: 0.7rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; }
-.header-stat .value { font-size: 1.4rem; font-weight: 800; color: #fff; }
-.header-stat .delta { font-size: 0.85rem; font-weight: 700; }
-.delta-baja { color: #ff6b6b; }
-.delta-sube { color: #69f0ae; }
+/* Login */
+.login-input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; text-align: center; margin-bottom: 16px; outline: none; font-family: monospace; letter-spacing: 2px; background: var(--bg-color); color: var(--text-main);}
+.login-btn { width: 100%; background: var(--um-azul); color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+#login-error { color: #ef4444; font-size: 0.85rem; margin-top: 12px; display: none; font-weight: 600;}
 
-/* FILTROS */
-.filtros-bar { background: #fff; border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
-.filtro-group { display: flex; flex-direction: column; gap: 3px; }
-.filtro-group label { font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
-.filtro-group select, .filtro-group input[type=date] { padding: 7px 10px; border: 1.5px solid var(--border); border-radius: 6px; font-size: 13px; font-family: inherit; outline: none; background: #f8f9fa; min-width: 140px; }
-.filtro-group select:focus, .filtro-group input[type=date]:focus { border-color: var(--azul); background: #fff; }
-.btn-filtrar { background: var(--azul); color: #fff; border: none; padding: 9px 20px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; }
-.btn-filtrar:hover { background: #004490; }
-.btn-limpiar { background: #eee; color: #555; border: none; padding: 9px 16px; border-radius: 6px; font-size: 13px; cursor: pointer; }
-.btn-limpiar:hover { background: #ddd; }
+/* Loader */
+#loader-overlay { background: var(--bg-color); z-index: 9998; display: none; }
+.spinner { width: 50px; height: 50px; border: 4px solid var(--border-color); border-top: 4px solid var(--um-azul); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 24px; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.progress-container { width: 100%; height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden; margin-bottom: 16px; }
+.progress-bar { height: 100%; background: var(--um-amarillo); width: 0%; transition: width 0.3s ease; }
+.loading-msg { font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;}
+.loading-sub { font-size: 0.8rem; color: var(--text-muted); }
 
-/* CONTENIDO */
-.content { max-width: 1400px; margin: 0 auto; padding: 24px 20px; }
-.spinner-wrap { text-align: center; padding: 60px; color: #888; font-size: 14px; }
+/* =======================================================
+   HEADER INSTITUCIONAL Y NAVEGACIÓN
+   ======================================================= */
+.header { background-color: var(--card-bg); border-bottom: 1px solid var(--border-color); padding: 20px 32px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+.header-brand h1 { font-size: 1.4rem; font-weight: 800; color: var(--um-azul); letter-spacing: -0.5px; line-height: 1.2;}
+.header-brand p { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;}
 
-/* KPI CARDS */
-.kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
-.kpi-card { background: #fff; border-radius: 10px; padding: 20px 20px 16px; border: 1px solid var(--border); position: relative; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-.kpi-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; }
-.kpi-card.consulta::before { background: var(--consulta); }
-.kpi-card.queja::before { background: var(--queja); }
-.kpi-card.reclamo::before { background: var(--reclamo); }
-.kpi-card.riesgo::before { background: var(--riesgo); }
-.kpi-card.agradecimiento::before { background: var(--agradecimiento); }
-.kpi-card.felicitacion::before { background: var(--felicitacion); }
-.kpi-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-.kpi-tipo { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #666; }
-.kpi-badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; }
-.kpi-card.consulta .kpi-badge { background: #e3f2fd; color: #1565c0; }
-.kpi-card.queja .kpi-badge { background: #fff8e1; color: #f57f17; }
-.kpi-card.reclamo .kpi-badge { background: #ffebee; color: #b71c1c; }
-.kpi-card.riesgo .kpi-badge { background: #fff3e0; color: #e65100; }
-.kpi-card.agradecimiento .kpi-badge { background: #e8f5e9; color: #2e7d32; }
-.kpi-card.felicitacion .kpi-badge { background: #e8f5e9; color: #1b5e20; }
-.kpi-numero { font-size: 2.4rem; font-weight: 800; line-height: 1; margin-bottom: 4px; }
-.kpi-card.consulta .kpi-numero { color: var(--consulta); }
-.kpi-card.queja .kpi-numero { color: var(--queja); }
-.kpi-card.reclamo .kpi-numero { color: var(--reclamo); }
-.kpi-card.riesgo .kpi-numero { color: var(--riesgo); }
-.kpi-card.agradecimiento .kpi-numero { color: var(--agradecimiento); }
-.kpi-card.felicitacion .kpi-numero { color: var(--felicitacion); }
-.kpi-pct { font-size: 13px; color: #888; margin-bottom: 8px; }
-.kpi-delta { font-size: 12px; font-weight: 600; }
-.kpi-delta.baja { color: #e53935; }
-.kpi-delta.sube { color: #43a047; }
-.kpi-delta.igual { color: #888; }
+.header-actions { display: flex; align-items: center; gap: 16px; }
+.date-badge { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-align: right;}
+.date-badge strong { color: var(--text-main); display: block; font-size: 0.9rem;}
 
-/* TOP 5 */
-.tops-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.top-card { background: #fff; border-radius: 10px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-.top-card-header { padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; }
-.top-card.consulta .top-card-header { background: var(--consulta); }
-.top-card.queja .top-card-header { background: var(--queja); }
-.top-card.reclamo .top-card-header { background: var(--reclamo); }
-.top-card.riesgo .top-card-header { background: var(--riesgo); }
-.top-card.agradecimiento .top-card-header { background: var(--agradecimiento); }
-.top-card.felicitacion .top-card-header { background: var(--felicitacion); }
-.top-card-header .tipo { font-size: 13px; font-weight: 800; color: #fff; text-transform: uppercase; }
-.top-card-header .label-top { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.8); text-align: right; }
-.top-table { width: 100%; border-collapse: collapse; }
-.top-table tr { border-bottom: 1px solid #f0f0f0; }
-.top-table tr:last-child { border-bottom: none; }
-.top-table td { padding: 9px 14px; font-size: 13px; }
-.top-table .rank { font-weight: 700; color: #bbb; width: 24px; }
-.top-table .tema { color: #333; }
-.top-table .cantidad { font-weight: 700; color: #444; text-align: right; width: 60px; }
-.top-empty { padding: 20px; text-align: center; color: #ccc; font-size: 13px; }
+.btn-action { background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); font-size: 0.8rem; font-weight: 700; padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;}
+.btn-action:hover { border-color: var(--um-azul); color: var(--um-azul); }
+.theme-switch { cursor: pointer; font-size: 1.2rem; background: none; border: none; padding: 4px; color: var(--text-main);}
 
-@media (max-width: 900px) { .kpi-grid, .tops-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 600px) { .kpi-grid, .tops-grid { grid-template-columns: 1fr; } }
+.tabs { display: flex; background: var(--card-bg); padding: 0 32px; border-bottom: 1px solid var(--border-color); gap: 8px;}
+.tab-btn { padding: 16px 24px; border: none; background: transparent; font-size: 0.9rem; font-weight: 700; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.5px;}
+.tab-btn:hover { color: var(--text-main); }
+.tab-btn.active { color: var(--um-azul); border-bottom-color: var(--um-azul); }
+
+/* =======================================================
+   CONTENEDOR Y VISTAS (TABS)
+   ======================================================= */
+.main-content { flex: 1; max-width: 1400px; width: 100%; margin: 0 auto; padding: 32px; display: none; }
+.view-section { display: none; animation: fadeIn 0.3s ease; }
+.view-section.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* =======================================================
+   COMPONENTES VISUALES (KPIS Y SEMÁFOROS)
+   ======================================================= */
+/* Panel Global */
+.global-panel { background: var(--um-azul); border-radius: 12px; padding: 32px 40px; color: #fff; margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center; border-left: 8px solid var(--um-amarillo); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+.global-info h2 { font-size: 1rem; font-weight: 600; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 1px; }
+.global-info .number { font-size: 3.5rem; font-weight: 800; line-height: 1; margin: 4px 0 8px; }
+.global-info .context { font-size: 0.9rem; font-weight: 500; background: rgba(0,0,0,0.2); padding: 4px 12px; border-radius: 20px; display: inline-block;}
+.global-comp { text-align: right; background: rgba(255,255,255,0.1); padding: 20px 24px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); }
+.global-comp .label { font-size: 0.8rem; text-transform: uppercase; font-weight: 600; color: rgba(255,255,255,0.8);}
+.global-comp .num { font-size: 1.8rem; font-weight: 700; margin: 4px 0 8px;}
+
+/* Píldoras */
+.pill { display: inline-flex; align-items: center; padding: 6px 12px; border-radius: 20px; font-weight: 800; font-size: 0.85rem; }
+.pill.bg-white { background: #fff; color: var(--text-main); }
+.pill.good { background-color: var(--good-bg); color: var(--good-text); }
+.pill.bad { background-color: var(--bad-bg); color: var(--bad-text); }
+.pill.neutral { background-color: var(--neutral-bg); color: var(--neutral-text); }
+
+/* Grillas de Tarjetas */
+.section-title { font-size: 1.1rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--border-color); padding-bottom: 8px; margin-top: 32px;}
+.section-title:first-child { margin-top: 0; }
+
+.grid-lvl-1 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 16px; }
+.grid-lvl-2 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+.kpi-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+.lvl-2-card { padding: 16px 20px; } /* Más pequeñas para nivel 2 */
+
+.kpi-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.kpi-title { font-size: 0.9rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
+.lvl-2-card .kpi-title { font-size: 0.8rem; }
+
+.kpi-body { font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1; margin-bottom: 16px; letter-spacing: -1px;}
+.lvl-2-card .kpi-body { font-size: 1.8rem; margin-bottom: 12px;}
+
+.kpi-footer { border-top: 1px solid var(--border-color); padding-top: 16px; display: flex; justify-content: space-between; align-items: center; }
+.lvl-2-card .kpi-footer { padding-top: 12px; }
+.prev-text { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+.prev-text strong { color: var(--text-main); }
+
+/* Tablas Top 5 */
+.top-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.top-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+.top-header { background: var(--bg-color); padding: 16px 20px; border-bottom: 1px solid var(--border-color); font-weight: 800; font-size: 0.9rem; color: var(--text-main); text-transform: uppercase;}
+.top-list { list-style: none; }
+.top-list li { display: flex; justify-content: space-between; padding: 12px 20px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
+.top-list li:last-child { border-bottom: none; }
+.top-list .rank { font-weight: 800; color: var(--text-muted); width: 24px; }
+.top-list .tema { flex: 1; font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 16px;}
+.top-list .val { font-weight: 800; color: var(--um-azul); }
+
+/* =======================================================
+   FOOTER INSTITUCIONAL
+   ======================================================= */
+.footer { text-align: center; padding: 24px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; background: var(--card-bg); border-top: 1px solid var(--border-color); margin-top: auto; }
+.footer strong { color: var(--text-main); }
+
+@media (max-width: 1024px) { .grid-lvl-1, .grid-lvl-2, .top-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 768px) {
+  .header { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .header-actions { width: 100%; justify-content: space-between; }
+  .date-badge { text-align: left; }
+  .global-panel { flex-direction: column; align-items: flex-start; gap: 24px; padding: 24px; }
+  .global-comp { width: 100%; text-align: left; }
+  .grid-lvl-1, .grid-lvl-2, .top-grid { grid-template-columns: 1fr; }
+  .tabs { overflow-x: auto; white-space: nowrap; padding: 0 16px; }
+}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div class="overlay-login" id="overlayLogin">
-  <div class="login-box">
-    <h2>📊 Reportería SAT</h2>
-    <p>Acceso restringido — uso interno</p>
-    <input type="password" id="inputPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter') verificarAcceso()"/>
-    <button class="btn-ingresar" onclick="verificarAcceso()">Ingresar</button>
-    <div class="login-error" id="loginError">Contraseña incorrecta. Intenta nuevamente.</div>
+<div id="login-overlay" class="overlay">
+  <div class="box-center">
+    <div class="box-title">📊 DASHBOARD EJECUTIVO</div>
+    <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:24px; font-weight:600;">Acceso restringido — Nivel Directivo</p>
+    <input type="password" id="pass-input" class="login-input" placeholder="••••••••" onkeydown="if(event.key==='Enter') verificarLogin()">
+    <button class="login-btn" onclick="verificarLogin()">INGRESAR AL SISTEMA</button>
+    <div id="login-error">Clave incorrecta. Intente nuevamente.</div>
   </div>
 </div>
 
-<!-- HEADER -->
-<div class="header">
-  <div class="header-top">
-    <div class="header-title">
-      <h1>REPORTERÍA SAT 2026</h1>
-      <p>Universidad Mayor — Servicio de Atención</p>
-    </div>
-    <div class="header-right">
-      <div class="header-updated" id="fechaActualizacion">Cargando...</div>
-      <a href="/" class="btn-volver">← Volver</a>
-    </div>
-  </div>
-  <div class="header-stats">
-    <div class="header-stat">
-      <div class="label">Total casos 2026 a la fecha</div>
-      <div class="value" id="totalAnioActual">—</div>
-    </div>
-    <div class="header-stat">
-      <div class="label">Total casos 2025</div>
-      <div class="value" id="totalAnioAnterior">—</div>
-    </div>
-    <div class="header-stat">
-      <div class="label">Variación vs 2025</div>
-      <div class="delta delta-baja" id="deltaGeneral">—</div>
-    </div>
+<div id="loader-overlay" class="overlay">
+  <div class="box-center" style="background:transparent; box-shadow:none; border:none;">
+    <div class="spinner"></div>
+    <div class="loading-msg">Cargando información por favor espere...</div>
+    <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+    <div class="loading-sub" id="loadingText">Conectando con base de datos maestra</div>
   </div>
 </div>
 
-<!-- FILTROS -->
-<div class="filtros-bar">
-  <div class="filtro-group">
-    <label>Desde</label>
-    <input type="date" id="filtroDesde">
+<header class="header">
+  <div class="header-brand">
+    <h1>Universidad Mayor</h1>
+    <p>Dashboard Ejecutivo SAT</p>
   </div>
-  <div class="filtro-group">
-    <label>Hasta</label>
-    <input type="date" id="filtroHasta">
+  <div class="header-actions">
+    <div class="date-badge">Datos actualizados al<strong id="ui-fecha-act">--/--/----</strong></div>
+    <button class="btn-action" onclick="cargarDatos()">🔄 Actualizar datos</button>
+    <button class="theme-switch" onclick="toggleTheme()" title="Cambiar tema">🌙</button>
   </div>
-  <div class="filtro-group">
-    <label>Tipo de caso</label>
-    <select id="filtroTipo">
-      <option value="">Todos</option>
-      <option value="Consulta">Consulta</option>
-      <option value="Queja">Queja</option>
-      <option value="Reclamo">Reclamo</option>
-      <option value="Riesgo">Riesgo</option>
-      <option value="Agradecimiento">Agradecimiento</option>
-      <option value="Felicitaciones">Felicitaciones</option>
-    </select>
-  </div>
-  <div class="filtro-group">
-    <label>Tema</label>
-    <select id="filtroTema"><option value="">Todos</option></select>
-  </div>
-  <div class="filtro-group">
-    <label>Subtema</label>
-    <select id="filtroSubtema"><option value="">Todos</option></select>
-  </div>
-  <div class="filtro-group">
-    <label>Origen</label>
-    <select id="filtroOrigen"><option value="">Todos</option></select>
-  </div>
-  <button class="btn-filtrar" onclick="aplicarFiltros()">🔍 Aplicar</button>
-  <button class="btn-limpiar" onclick="limpiarFiltros()">✕ Limpiar</button>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('resumen')">Resumen Ejecutivo</button>
+  <button class="tab-btn" onclick="switchTab('top')">Análisis de Áreas</button>
+  <button class="tab-btn" onclick="switchTab('historico')">Histórico 2025</button>
 </div>
 
-<!-- CONTENIDO -->
-<div class="content">
-  <div id="spinnerWrap" class="spinner-wrap">
-  <div style="font-size:2rem; margin-bottom:16px;">⏳</div>
-  <div style="font-size:16px; font-weight:600; color:#444; margin-bottom:8px;">Cargando datos...</div>
-  <div style="font-size:13px; color:#888;" id="spinnerMsg">Conectando con la base de datos...</div>
-  <div style="margin-top:16px; background:#e0e0e0; border-radius:8px; height:8px; width:300px; margin-left:auto; margin-right:auto;">
-    <div id="spinnerBar" style="background:#005aa9; height:8px; border-radius:8px; width:0%; transition:width 0.3s;"></div>
-  </div>
-  <div style="font-size:12px; color:#bbb; margin-top:8px;" id="spinnerCount"></div>
-</div>
+<main class="main-content" id="main-content">
+  
+  <div id="view-resumen" class="view-section active">
+    <div class="global-panel">
+      <div class="global-info">
+        <h2>Total Casos Registrados (2026)</h2>
+        <div class="number" id="g-total-26">0</div>
+        <div class="context" id="g-context">Acumulado: -- al --</div>
+      </div>
+      <div class="global-comp">
+        <div class="label">Mismo período 2025</div>
+        <div class="num" id="g-total-25">0</div>
+        <div class="pill bg-white" id="g-trend">0%</div>
+      </div>
+    </div>
 
-  <div class="kpi-grid" id="kpiGrid" style="display:none;">
-    <div class="kpi-card consulta">
-      <div class="kpi-header"><span class="kpi-tipo">Consultas</span><span class="kpi-badge">PRINCIPAL</span></div>
-      <div class="kpi-numero" id="kpi-Consulta">—</div>
-      <div class="kpi-pct" id="pct-Consulta">—</div>
-      <div class="kpi-delta" id="delta-Consulta">—</div>
-    </div>
-    <div class="kpi-card queja">
-      <div class="kpi-header"><span class="kpi-tipo">Quejas</span><span class="kpi-badge">ATENCIÓN</span></div>
-      <div class="kpi-numero" id="kpi-Queja">—</div>
-      <div class="kpi-pct" id="pct-Queja">—</div>
-      <div class="kpi-delta" id="delta-Queja">—</div>
-    </div>
-    <div class="kpi-card reclamo">
-      <div class="kpi-header"><span class="kpi-tipo">Reclamos</span><span class="kpi-badge">CRÍTICO</span></div>
-      <div class="kpi-numero" id="kpi-Reclamo">—</div>
-      <div class="kpi-pct" id="pct-Reclamo">—</div>
-      <div class="kpi-delta" id="delta-Reclamo">—</div>
-    </div>
-    <div class="kpi-card riesgo">
-      <div class="kpi-header"><span class="kpi-tipo">Riesgo</span><span class="kpi-badge">ALERTA</span></div>
-      <div class="kpi-numero" id="kpi-Riesgo">—</div>
-      <div class="kpi-pct" id="pct-Riesgo">—</div>
-      <div class="kpi-delta" id="delta-Riesgo">—</div>
-    </div>
-    <div class="kpi-card agradecimiento">
-      <div class="kpi-header"><span class="kpi-tipo">Agradecimientos</span><span class="kpi-badge">POSITIVO</span></div>
-      <div class="kpi-numero" id="kpi-Agradecimiento">—</div>
-      <div class="kpi-pct" id="pct-Agradecimiento">—</div>
-      <div class="kpi-delta" id="delta-Agradecimiento">—</div>
-    </div>
-    <div class="kpi-card felicitacion">
-      <div class="kpi-header"><span class="kpi-tipo">Felicitaciones</span><span class="kpi-badge">POSITIVO</span></div>
-      <div class="kpi-numero" id="kpi-Felicitaciones">—</div>
-      <div class="kpi-pct" id="pct-Felicitaciones">—</div>
-      <div class="kpi-delta" id="delta-Felicitaciones">—</div>
-    </div>
+    <div class="section-title">Nivel 1: Categorías Principales</div>
+    <div class="grid-lvl-1" id="grid-lvl-1"></div>
+
+    <div class="section-title">Nivel 2: Gestión Secundaria</div>
+    <div class="grid-lvl-2" id="grid-lvl-2"></div>
   </div>
 
-  <div class="tops-grid" id="topsGrid" style="display:none;">
-    <div class="top-card consulta">
-      <div class="top-card-header"><span class="tipo">Consultas</span><span class="label-top">TOP 5 TEMAS</span></div>
-      <table class="top-table" id="top-Consulta"></table>
-    </div>
-    <div class="top-card queja">
-      <div class="top-card-header"><span class="tipo">Quejas</span><span class="label-top">TOP 5 TEMAS</span></div>
-      <table class="top-table" id="top-Queja"></table>
-    </div>
-    <div class="top-card reclamo">
-      <div class="top-card-header"><span class="tipo">Reclamos</span><span class="label-top">TOP 5 TEMAS</span></div>
-      <table class="top-table" id="top-Reclamo"></table>
-    </div>
-    <div class="top-card riesgo">
-      <div class="top-card-header"><span class="tipo">Riesgo</span><span class="label-top">TOP 5 TEMAS</span></div>
-      <table class="top-table" id="top-Riesgo"></table>
-    </div>
-    <div class="top-card agradecimiento">
-      <div class="top-card-header"><span class="tipo">Agradecimientos</span><span class="label-top">TOP 5 TEMAS</span></div>
-      <table class="top-table" id="top-Agradecimiento"></table>
-    </div>
-    <div class="top-card felicitacion">
-      <div class="top-card-header"><span class="tipo">Felicitaciones</span><span class="label-top">TOP 5 TEMAS</span></div>
-      <table class="top-table" id="top-Felicitaciones"></table>
-    </div>
+  <div id="view-top" class="view-section">
+    <div class="section-title">Top 5 Áreas con Mayor Volumen de Contactos (2026)</div>
+    <div class="top-grid" id="top-grid-container">
+      </div>
   </div>
-</div>
+
+  <div id="view-historico" class="view-section">
+    <div class="global-panel" style="background:var(--text-muted); border-left-color:var(--text-main);">
+      <div class="global-info">
+        <h2>Cierre Total Año 2025</h2>
+        <div class="number" id="h-total-25">0</div>
+        <div class="context">Periodo completo (01-Enero a 31-Diciembre)</div>
+      </div>
+    </div>
+    <div class="section-title">Distribución Anual 2025</div>
+    <div class="grid-lvl-1" id="grid-hist-25"></div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  Desarrollado por <strong>Eduardo Ferrada</strong><br>
+  Universidad Mayor · Enero 2026
+</footer>
 
 <script>
+// =======================================================
+// CONFIGURACIÓN ESTRICTA
+// =======================================================
+const PASSWORD = "reporteria@um2026";
 const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_3Shj63dB3uBAL_TVvqfBRw_3RyTRZ1U";
-const PASSWORD = "reporteria@um2026";
-const TABLA = "BBDD MAESTRO";
-const TIPOS = ["Consulta","Queja","Reclamo","Riesgo","Agradecimiento","Felicitaciones"];
+const TABLA = "BBDD_MAESTRO";
 
-// ── PARSEAR FECHA formato DD-MM-YYYY H:MM ──
-// Devuelve un objeto Date desde "03-03-2026 9:57"
+// Jerarquía estricta exigida
+const NIVEL_1 = ["Reclamo", "Queja", "Consulta"];
+const NIVEL_2 = ["Riesgo", "Agradecimiento", "Felicitaciones"];
+// NOTA: Casos de "Riesgo" en la base actual pueden venir como "Riesgo" o similar. 
+// Las reglas de Inverso: Reclamo, Queja, Riesgo -> Subir es Malo (true).
+const REGLAS = {
+  "Reclamo": { inverse: true, label: "Reclamos" },
+  "Queja": { inverse: true, label: "Quejas" },
+  "Consulta": { inverse: false, label: "Consultas" },
+  "Riesgo": { inverse: true, label: "Casos de Riesgo" },
+  "Agradecimiento": { inverse: false, label: "Agradecimientos" },
+  "Felicitaciones": { inverse: false, label: "Felicitaciones" }
+};
+
+let rawData = []; // Memoria global para no re-procesar al cambiar tabs
+
+// =======================================================
+// UI CONTROLS (TABS & THEME)
+// =======================================================
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+  
+  event.currentTarget.classList.add('active');
+  document.getElementById(`view-${tabId}`).classList.add('active');
+}
+
+function toggleTheme() {
+  const body = document.body;
+  const isDark = body.getAttribute('data-theme') === 'dark';
+  if(isDark) { body.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); }
+  else { body.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
+}
+if(localStorage.getItem('theme') === 'dark') document.body.setAttribute('data-theme', 'dark');
+
+// =======================================================
+// LOGIN LOGIC
+// =======================================================
+window.onload = () => {
+  if(sessionStorage.getItem("sat_logged") === "yes") {
+    document.getElementById("login-overlay").style.display = "none";
+    cargarDatos();
+  } else {
+    setTimeout(() => document.getElementById("pass-input").focus(), 100);
+  }
+};
+
+function verificarLogin() {
+  if(document.getElementById("pass-input").value === PASSWORD) {
+    sessionStorage.setItem("sat_logged", "yes");
+    document.getElementById("login-overlay").style.display = "none";
+    cargarDatos();
+  } else {
+    document.getElementById("login-error").style.display = "block";
+    document.getElementById("pass-input").value = "";
+    document.getElementById("pass-input").focus();
+  }
+}
+
+// =======================================================
+// DATA FETCHING & PARSING
+// =======================================================
 function parsearFecha(str) {
   if (!str) return null;
-  const [parte_fecha, parte_hora] = str.trim().split(" ");
-  if (!parte_fecha) return null;
-  const [dd, mm, yyyy] = parte_fecha.split("-");
-  const [hh, min] = (parte_hora || "0:0").split(":");
-  return new Date(parseInt(yyyy), parseInt(mm)-1, parseInt(dd), parseInt(hh), parseInt(min));
-}
-
-// Extraer solo año de una fecha parseada
-function anioFecha(str) {
-  const d = parsearFecha(str);
-  return d ? d.getFullYear() : null;
-}
-
-// LOGIN
-function verificarAcceso() {
-  if (document.getElementById("inputPassword").value === PASSWORD) {
-    document.getElementById("overlayLogin").classList.add("oculto");
-    iniciar();
-  } else {
-    document.getElementById("loginError").style.display = "block";
-    document.getElementById("inputPassword").value = "";
-    document.getElementById("inputPassword").focus();
+  let s = str.replace(" ", "T");
+  if (s.includes("T") || s.match(/^\d{4}-\d{2}-\d{2}/)) {
+    const d = new Date(s); return isNaN(d.getTime()) ? null : d;
   }
-}
-window.onload = () => setTimeout(() => document.getElementById("inputPassword").focus(), 100);
-
-// ── FETCH SUPABASE CON PAGINACIÓN ──
-async function sbFetch(columnas, limite) {
- const url = `${SUPABASE_URL}/rest/v1/${encodeURIComponent(TABLA)}?select=${encodeURIComponent(columnas)}&order=id&limit=${PAGE}&offset=${offset}`;
-  const res = await fetch(url, {
-    headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.json();
+  const parts = str.trim().split(" ");
+  const g = parts[0].split("-");
+  if (g.length === 3 && g[2].length === 4) return new Date(parseInt(g[2]), parseInt(g[1])-1, parseInt(g[0]));
+  return new Date(str); 
 }
 
-// Trae TODOS los registros paginando de 1000 en 1000
-async function sbFetchTodos(columnas) {
-  const PAGE = 1000;
-  let todos = [];
-  let offset = 0;
-  let hayMas = true;
-
-  while (hayMas) {
-    const url = `${SUPABASE_URL}/rest/v1/${encodeURIComponent(TABLA)}?select=${encodeURIComponent(columnas)}&limit=${PAGE}&offset=${offset}`;
-    const res = await fetch(url, {
-      headers: {
-        "apikey": SUPABASE_KEY,
-        "Authorization": `Bearer ${SUPABASE_KEY}`,
-        "Range-Unit": "items"
-      }
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const pagina = await res.json();
-    todos = todos.concat(pagina);
-
-    // Actualizar progreso
-    const msg = document.getElementById("spinnerMsg");
-    const cnt = document.getElementById("spinnerCount");
-    const bar = document.getElementById("spinnerBar");
-    if (msg) msg.textContent = `Cargando registros... esto puede tomar unos segundos`;
-    if (cnt) cnt.textContent = `${todos.length.toLocaleString("es-CL")} registros cargados`;
-    if (bar) bar.style.width = Math.min(95, (todos.length / 110000) * 100) + "%";
-
-    if (pagina.length < PAGE) {
-      hayMas = false;
-    } else {
-      offset += PAGE;
-    }
-  }
-
-  if (document.getElementById("spinnerBar"))
-    document.getElementById("spinnerBar").style.width = "100%";
-
-  return todos;
-}
-
-async function iniciar() {
-  await cargarFiltros();
-  await cargarDatos();
-}
-
-// ── FILTROS DINÁMICOS ──
-async function cargarFiltros() {
-  try {
-    const data = await sbFetch('Tema,Subtema,"Origen del caso"', 5000);
-    poblarSelect("filtroTema",    [...new Set(data.map(r => r["Tema"]).filter(Boolean))].sort());
-    poblarSelect("filtroSubtema", [...new Set(data.map(r => r["Subtema"]).filter(Boolean))].sort());
-    poblarSelect("filtroOrigen",  [...new Set(data.map(r => r["Origen del caso"]).filter(Boolean))].sort());
-  } catch(e) { console.warn("Filtros no cargados:", e); }
-}
-
-function poblarSelect(id, valores) {
-  const sel = document.getElementById(id);
-  valores.forEach(v => {
-    const o = document.createElement("option");
-    o.value = v; o.textContent = v;
-    sel.appendChild(o);
-  });
-}
-
-// ── CARGA PRINCIPAL ──
 async function cargarDatos() {
-  document.getElementById("spinnerWrap").style.display = "block";
-  document.getElementById("kpiGrid").style.display = "none";
-  document.getElementById("topsGrid").style.display = "none";
-
+  document.getElementById("loader-overlay").style.display = "flex";
+  document.getElementById("progressBar").style.width = "0%";
+  document.getElementById("main-content").style.display = "none";
+  
+  const limite = 1000;
+  let datos = [];
+  let offset = 0;
+  let buscando = true;
+  const cols = encodeURIComponent('"Fecha de creación","Tipo de caso","Tema"');
+  
   try {
-    // Traer TODOS los datos con las columnas necesarias
-    const todos = await sbFetchTodos('"Fecha de creación","Tipo de caso",Tema');
+    while (buscando) {
+      const url = `${SUPABASE_URL}/rest/v1/${TABLA}?select=${cols}&limit=${limite}&offset=${offset}`;
+      const res = await fetch(url, { headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Accept": "application/json" }, cache: "no-store" });
+      
+      if (!res.ok) throw new Error(`Error BD: ${res.status}`);
+      const chunk = await res.json();
+      
+      const limpios = chunk.map(r => ({
+          tipo: r["Tipo de caso"],
+          tema: r["Tema"] || "Sin clasificación",
+          fecha: parsearFecha(r["Fecha de creación"])
+      })).filter(r => r.fecha !== null);
 
-    // Filtros de UI
-    const desde  = document.getElementById("filtroDesde").value;
-    const hasta  = document.getElementById("filtroHasta").value;
-    const tipo   = document.getElementById("filtroTipo").value;
-    const tema   = document.getElementById("filtroTema").value;
-    const sub    = document.getElementById("filtroSubtema").value;
+      datos = datos.concat(limpios);
+      
+      document.getElementById("loadingText").innerText = `Cargando ${datos.length.toLocaleString("es-CL")} registros...`;
+      document.getElementById("progressBar").style.width = Math.min(95, (datos.length / 105000) * 100) + "%";
 
-    const dDesde = desde ? new Date(desde + "T00:00:00") : null;
-    const dHasta = hasta ? new Date(hasta + "T23:59:59") : null;
-
-    // Separar por año usando parsearFecha
-    const data2026 = todos.filter(r => {
-      const d = parsearFecha(r["Fecha de creación"]);
-      if (!d || d.getFullYear() !== 2026) return false;
-      if (dDesde && d < dDesde) return false;
-      if (dHasta && d > dHasta) return false;
-      if (tipo && r["Tipo de caso"] !== tipo) return false;
-      if (tema && r["Tema"] !== tema) return false;
-      return true;
-    });
-
-    const data2025 = todos.filter(r => {
-      const d = parsearFecha(r["Fecha de creación"]);
-      return d && d.getFullYear() === 2025;
-    });
-
-    // Período espejo 2025 — mismo rango de días pero año anterior
-    const hoy2026 = new Date();
-    const hoy2025espejo = new Date(2025, hoy2026.getMonth(), hoy2026.getDate());
-    const data2025periodo = data2025.filter(r => {
-      const d = parsearFecha(r["Fecha de creación"]);
-      return d && d <= hoy2025espejo;
-    });
-
-    const total2026 = data2026.length;
-    const total2025 = data2025.length;
-    const total2025periodo = data2025periodo.length;
-
-    // Header
-    document.getElementById("totalAnioActual").textContent   = total2026.toLocaleString("es-CL");
-    document.getElementById("totalAnioAnterior").textContent = total2025.toLocaleString("es-CL");
-
-    if (total2025periodo > 0) {
-      const pct = ((total2026 - total2025periodo) / total2025periodo * 100).toFixed(1);
-      const signo = parseFloat(pct) >= 0 ? "↑" : "↓";
-      const el = document.getElementById("deltaGeneral");
-      el.textContent = `${signo} ${Math.abs(pct)}% vs 2025`;
-      el.className = "delta " + (parseFloat(pct) >= 0 ? "delta-sube" : "delta-baja");
+      if (chunk.length < limite) buscando = false;
+      else offset += limite;
     }
-
-    // Fecha actualización — usar última fecha del dataset
-    const fechas = todos.map(r => parsearFecha(r["Fecha de creación"])).filter(Boolean);
-    const ultima = fechas.length ? new Date(Math.max(...fechas)) : new Date();
-    document.getElementById("fechaActualizacion").textContent =
-      "Actualizado hasta: " + ultima.toLocaleDateString("es-CL", {weekday:"long", day:"numeric", month:"long", year:"numeric"}) +
-      " " + ultima.toLocaleTimeString("es-CL", {hour:"2-digit", minute:"2-digit"});
-
-    // KPIs por tipo
-    TIPOS.forEach(t => {
-      const n    = data2026.filter(r => r["Tipo de caso"] === t).length;
-      const n25  = data2025periodo.filter(r => r["Tipo de caso"] === t).length;
-      const pct  = total2026 > 0 ? (n / total2026 * 100).toFixed(1) : "0.0";
-      const delta = n25 > 0 ? ((n - n25) / n25 * 100).toFixed(1) : null;
-
-      document.getElementById(`kpi-${t}`).textContent  = n.toLocaleString("es-CL");
-      document.getElementById(`pct-${t}`).textContent  = pct + "% del total";
-
-      const el = document.getElementById(`delta-${t}`);
-      if (delta !== null) {
-        const signo = parseFloat(delta) >= 0 ? "↑" : "↓";
-        el.textContent  = `${signo} ${Math.abs(delta)}% vs 2025`;
-        el.className    = "kpi-delta " + (parseFloat(delta) >= 0 ? "sube" : "baja");
-      } else {
-        el.textContent = "Sin dato 2025";
-        el.className   = "kpi-delta igual";
-      }
-    });
-
-    // TOP 5 temas
-    TIPOS.forEach(t => {
-      const filas = data2026.filter(r => r["Tipo de caso"] === t);
-      const cnt = {};
-      filas.forEach(r => { const k = r["Tema"] || "Sin tema"; cnt[k] = (cnt[k]||0)+1; });
-      const top5 = Object.entries(cnt).sort((a,b) => b[1]-a[1]).slice(0,5);
-      const tabla = document.getElementById(`top-${t}`);
-      tabla.innerHTML = top5.length
-        ? top5.map(([k,v],i) => `<tr><td class="rank">${i+1}</td><td class="tema">${k}</td><td class="cantidad">${v.toLocaleString("es-CL")}</td></tr>`).join("")
-        : '<tr><td colspan="3" class="top-empty">Sin datos</td></tr>';
-    });
-
-    document.getElementById("spinnerWrap").style.display  = "none";
-    document.getElementById("kpiGrid").style.display      = "grid";
-    document.getElementById("topsGrid").style.display     = "grid";
+    
+    document.getElementById("progressBar").style.width = "100%";
+    rawData = datos; // Guardar en memoria
+    
+    setTimeout(() => {
+        procesarDashboard();
+        document.getElementById("loader-overlay").style.display = "none";
+        document.getElementById("main-content").style.display = "block";
+    }, 500);
 
   } catch(e) {
     console.error(e);
-    document.getElementById("spinnerWrap").innerHTML = "❌ Error al cargar datos: " + e.message;
+    document.getElementById("loadingText").innerHTML = `<span style="color:#ef4444;">Fallo de conexión: ${e.message}</span>`;
   }
 }
 
-function aplicarFiltros() { cargarDatos(); }
+// =======================================================
+// LÓGICA DE NEGOCIO Y RENDERIZADO
+// =======================================================
+function procesarDashboard() {
+  const d26 = rawData.filter(r => r.fecha.getFullYear() === 2026);
+  const d25 = rawData.filter(r => r.fecha.getFullYear() === 2025);
 
-function limpiarFiltros() {
-  ["filtroDesde","filtroHasta"].forEach(id => document.getElementById(id).value = "");
-  ["filtroTipo","filtroTema","filtroSubtema","filtroOrigen"].forEach(id => document.getElementById(id).value = "");
-  cargarDatos();
+  // 1. Determinar Fecha de Corte Exacta
+  const fechaMax = d26.length > 0 ? new Date(Math.max(...d26.map(r => r.fecha))) : new Date();
+  const mesCorte = fechaMax.getMonth();
+  const diaCorte = fechaMax.getDate();
+
+  // 2. Filtro YTD estricto
+  const esYTD = (fecha) => {
+    const m = fecha.getMonth();
+    const d = fecha.getDate();
+    return m < mesCorte || (m === mesCorte && d <= diaCorte);
+  };
+
+  const ytd26 = d26.filter(r => esYTD(r.fecha));
+  const ytd25 = d25.filter(r => esYTD(r.fecha));
+
+  const fmt = new Intl.NumberFormat("es-CL");
+
+  // --- HEADER: Fecha Actualización ---
+  const txtFecha = fechaMax.toLocaleDateString("es-CL", { day: '2-digit', month: 'long', year: 'numeric' });
+  document.getElementById("ui-fecha-act").innerText = txtFecha;
+
+  // --- VISTA 1: RESUMEN GLOBAL ---
+  document.getElementById("g-total-26").innerText = fmt.format(ytd26.length);
+  document.getElementById("g-total-25").innerText = fmt.format(ytd25.length);
+  document.getElementById("g-context").innerText = `Acumulado: 01-Ene al ${txtFecha.split(" de ")[0]}-${txtFecha.split(" de ")[1].substring(0,3).toUpperCase()}`;
+
+  const gt = document.getElementById("g-trend");
+  if(ytd25.length > 0) {
+    const pct = ((ytd26.length - ytd25.length) / ytd25.length) * 100;
+    const abs = Math.abs(pct).toFixed(1) + "%";
+    if(pct > 0) { gt.className="pill bad"; gt.innerText = `↑ ${abs}`; }
+    else if(pct < 0) { gt.className="pill good"; gt.innerText = `↓ ${abs}`; }
+    else { gt.className="pill neutral"; gt.innerText = `= 0%`; }
+  }
+
+  // --- RENDERIZADOR DE TARJETAS ---
+  const generarCard = (idCat, dataActual, dataPrev, esNivel2) => {
+    const config = REGLAS[idCat] || { inverse: false, label: idCat };
+    const cAct = dataActual.filter(r => r.tipo === idCat).length;
+    const cPrev = dataPrev.filter(r => r.tipo === idCat).length;
+    
+    let badge = `<div class="pill neutral">= 0%</div>`;
+    if(cPrev > 0) {
+      const pct = ((cAct - cPrev) / cPrev) * 100;
+      if(pct > 0) {
+        const cls = config.inverse ? "bad" : "good";
+        badge = `<div class="pill ${cls}">↑ ${Math.abs(pct).toFixed(1)}%</div>`;
+      } else if(pct < 0) {
+        const cls = config.inverse ? "good" : "bad";
+        badge = `<div class="pill ${cls}">↓ ${Math.abs(pct).toFixed(1)}%</div>`;
+      }
+    } else if(cAct > 0) badge = `<div class="pill neutral">S/D</div>`;
+
+    return `
+      <div class="kpi-card ${esNivel2 ? 'lvl-2-card' : ''}">
+        <div class="kpi-header"><div class="kpi-title">${config.label}</div></div>
+        <div class="kpi-body">${fmt.format(cAct)}</div>
+        <div class="kpi-footer">
+          <div class="prev-text">2025: <strong>${fmt.format(cPrev)}</strong></div>
+          ${badge}
+        </div>
+      </div>
+    `;
+  };
+
+  // Llenar Nivel 1 y 2
+  document.getElementById("grid-lvl-1").innerHTML = NIVEL_1.map(cat => generarCard(cat, ytd26, ytd25, false)).join("");
+  document.getElementById("grid-lvl-2").innerHTML = NIVEL_2.map(cat => generarCard(cat, ytd26, ytd25, true)).join("");
+
+  // --- VISTA 2: TOP TEMAS ---
+  let topHtml = "";
+  [...NIVEL_1, ...NIVEL_2].forEach(cat => {
+    const items = ytd26.filter(r => r.tipo === cat);
+    if(items.length === 0) return;
+    
+    const conteo = {};
+    items.forEach(r => conteo[r.tema] = (conteo[r.tema] || 0) + 1);
+    
+    const sorted = Object.entries(conteo).sort((a,b) => b[1] - a[1]).slice(0,5);
+    const listHtml = sorted.map((s, i) => `<li><span class="rank">${i+1}</span><span class="tema" title="${s[0]}">${s[0]}</span><span class="val">${fmt.format(s[1])}</span></li>`).join("");
+    
+    topHtml += `
+      <div class="top-card">
+        <div class="top-header">${REGLAS[cat].label}</div>
+        <ul class="top-list">${listHtml}</ul>
+      </div>
+    `;
+  });
+  document.getElementById("top-grid-container").innerHTML = topHtml;
+
+  // --- VISTA 3: HISTÓRICO 2025 ---
+  document.getElementById("h-total-25").innerText = fmt.format(d25.length);
+  
+  const genCardHist = (idCat) => {
+    const config = REGLAS[idCat] || { label: idCat };
+    const total = d25.filter(r => r.tipo === idCat).length;
+    return `
+      <div class="kpi-card">
+        <div class="kpi-header"><div class="kpi-title">${config.label}</div></div>
+        <div class="kpi-body" style="margin-bottom:0;">${fmt.format(total)}</div>
+      </div>
+    `;
+  };
+  
+  document.getElementById("grid-hist-25").innerHTML = [...NIVEL_1, ...NIVEL_2].map(cat => genCardHist(cat)).join("");
 }
 </script>
 </body>
