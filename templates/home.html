@@ -4,132 +4,157 @@
 <meta charset="UTF-8">
 <title>Portal SAT · Universidad Mayor</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
-:root{
-  --um-amarillo:#f2b705;
-  --um-azul:#005aa9;
-  --um-verde:#1a5c38;
-  --um-gris:#f5f7fa;
+:root {
+  --um-amarillo: #f2b705;
+  --um-azul: #005aa9;
+  --um-verde: #1a5c38;
+  --um-gris: #f5f7fa;
+  --fondo: #ffffff;
+  --texto: #222222;
+  --texto-suave: #666666;
+  --borde: #dde4ee;
+  --card-bg: #f0f4f8;
+  --card-hover: #e2eaf3;
+  --nota-bg: #fff9c4;
 }
-*{box-sizing:border-box;}
-body{ margin:0; font-family:Arial,Helvetica,sans-serif; background:#ffffff; color:#222; }
 
-/* LOGIN OVERLAY */
-.login-overlay{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:900; align-items:center; justify-content:center; }
-.login-overlay.visible{ display:flex; }
-.login-box{ background:#fff; width:90%; max-width:420px; border-radius:14px; border-top:10px solid var(--um-amarillo); padding:36px 32px; text-align:center; box-shadow:0 15px 40px rgba(0,0,0,0.35); }
-.login-box .logo-texto{ font-size:18px; font-weight:700; color:#222; margin-bottom:4px; }
-.login-box .logo-lema{ font-size:11px; color:#888; letter-spacing:1.5px; margin-bottom:24px; }
-.login-box h2{ font-size:20px; color:var(--um-azul); margin:0 0 6px; }
-.login-box .subtitulo{ font-size:13px; color:#666; margin-bottom:24px; }
-.login-box input[type="password"]{ width:100%; padding:10px 14px; border:1.5px solid #dde4ee; border-radius:8px; font-size:14px; font-family:Arial,Helvetica,sans-serif; margin-bottom:12px; transition:border-color .15s; }
-.login-box input[type="password"]:focus{ border-color:var(--um-azul); outline:none; }
-.login-box button{ width:100%; background:var(--um-azul); color:#fff; border:none; border-radius:8px; padding:12px; font-size:14px; font-weight:700; cursor:pointer; transition:opacity .15s; margin-bottom:16px; }
-.login-box button:hover{opacity:.9;}
-.login-error{ display:none; background:#fdecea; border-left:3px solid #c0392b; border-radius:0 6px 6px 0; padding:8px 12px; font-size:12px; color:#8b1a1a; text-align:left; margin-bottom:12px; }
-.login-disclaimer{ font-size:11px; color:#888; border-top:1px solid #eee; padding-top:14px; margin-top:4px; line-height:1.5; }
-.login-disclaimer strong{ color:#555; }
+/* MODO OSCURO */
+body.dark-mode {
+  --fondo: #121212;
+  --texto: #e0e0e0;
+  --texto-suave: #aaaaaa;
+  --um-gris: #1e1e1e;
+  --borde: #333333;
+  --card-bg: #1e1e1e;
+  --card-hover: #2a2a2a;
+  --nota-bg: #5c5423;
+}
 
-/* TOP BAR */
-.top-bar{ background:var(--um-amarillo); padding:10px 30px; display:flex; align-items:center; gap:25px; font-size:14px; }
-.links-hover{ position:relative; cursor:pointer; font-weight:600; }
-.links-hover span{ display:inline-flex; align-items:center; gap:6px; }
-.links-hover ul{ list-style:none; margin:0; padding:10px 0; position:absolute; top:100%; left:0; background:#fff; min-width:260px; box-shadow:0 6px 18px rgba(0,0,0,.15); border-radius:6px; display:none; z-index:10; }
-.links-hover:hover ul{display:block;}
-.links-hover ul li{padding:8px 16px;}
-.links-hover ul li a{text-decoration:none;color:#222;display:block;}
-.links-hover ul li a:hover{background:#f0f0f0;}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--fondo); color: var(--texto); transition: background 0.2s, color 0.2s; }
 
-/* HERO */
-.hero{ text-align:center; padding:48px 20px 32px; max-width:1100px; margin:0 auto; }
-.identidad{display:inline-block;margin-bottom:24px;}
-.identidad .nombre{font-size:20px;font-weight:700;color:#222;letter-spacing:0.5px;}
-.identidad .lema{font-size:11px;color:#888;letter-spacing:2px;margin-top:3px;}
-.divider{width:50px;height:3px;background:var(--um-amarillo);margin:0 auto 20px;border-radius:2px;}
-.hero h1{font-size:32px;font-weight:700;margin:0 0 8px;color:#222;}
-.hero .tagline{font-size:15px;color:#666;margin:0 0 40px;}
+/* -------------------------------------------
+   LOGIN OVERLAY & DOBLE VALIDACIÓN
+------------------------------------------- */
+.login-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 900; align-items: center; justify-content: center; }
+.login-overlay.visible { display: flex; }
+.login-box { background: var(--fondo); width: 90%; max-width: 420px; border-radius: 14px; border-top: 10px solid var(--um-amarillo); padding: 36px 32px; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.35); }
+.login-box .logo-texto { font-size: 18px; font-weight: 700; color: var(--texto); margin-bottom: 4px; }
+.login-box .logo-lema { font-size: 11px; color: var(--texto-suave); letter-spacing: 1.5px; margin-bottom: 24px; }
+.login-box h2 { font-size: 20px; color: var(--um-azul); margin: 0 0 6px; }
+.login-box .subtitulo { font-size: 13px; color: var(--texto-suave); margin-bottom: 24px; }
+.login-box input[type="password"] { width: 100%; padding: 12px 14px; border: 1.5px solid var(--borde); border-radius: 8px; font-size: 14px; margin-bottom: 12px; background: var(--fondo); color: var(--texto); transition: border-color .15s; }
+.login-box input[type="password"]:focus { border-color: var(--um-azul); outline: none; }
 
-.buttons-primary{ display:grid; grid-template-columns:1fr 1fr; gap:16px; max-width:700px; margin:0 auto 16px; }
-.btn-primary-item{ background:var(--um-azul); border-radius:10px; padding:28px 20px; text-align:center; text-decoration:none; display:block; transition:opacity .15s; }
-.btn-primary-item:hover{opacity:.9;}
-.btn-primary-item .icono{font-size:26px;margin-bottom:10px;}
-.btn-primary-item .titulo{color:#fff;font-size:17px;font-weight:700;}
-.btn-primary-item .desc{color:rgba(255,255,255,0.65);font-size:12px;margin-top:5px;}
+.check-confidencial { display: flex; align-items: flex-start; gap: 10px; text-align: left; margin-bottom: 20px; font-size: 12px; color: var(--texto-suave); line-height: 1.4; cursor: pointer; }
+.check-confidencial input { margin-top: 2px; cursor: pointer; width: 16px; height: 16px; }
 
-.buttons-secondary{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; max-width:700px; margin:0 auto; }
-.btn-secondary-item{ background:#f0f4f8; border:1.5px solid #dde4ee; border-radius:8px; padding:16px 8px; text-align:center; text-decoration:none; display:block; transition:background .15s; }
-.btn-secondary-item:hover{background:#e2eaf3;}
-.btn-secondary-item .icono{font-size:20px;margin-bottom:7px;}
-.btn-secondary-item .titulo{font-size:12px;font-weight:600;color:#005aa9;}
-.btn-secondary-item.btn-bitacora{background:var(--um-verde);border-color:var(--um-verde);}
-.btn-secondary-item.btn-bitacora:hover{background:#144a2d;}
-.btn-secondary-item.btn-bitacora .titulo{color:#fff;}
+.login-box button { width: 100%; background: var(--um-azul); color: #fff; border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity .15s; margin-bottom: 16px; }
+.login-box button:hover { opacity: .9; }
+.login-error { display: none; background: #fdecea; border-left: 3px solid #c0392b; border-radius: 0 6px 6px 0; padding: 8px 12px; font-size: 12px; color: #8b1a1a; text-align: left; margin-bottom: 12px; font-weight: bold; }
+.login-disclaimer { font-size: 11px; color: var(--texto-suave); border-top: 1px solid var(--borde); padding-top: 14px; margin-top: 4px; line-height: 1.5; }
 
-footer{ text-align:center; font-size:13px; color:#666; margin:48px 0 20px; border-top:1px solid #eee; padding-top:20px; }
+/* -------------------------------------------
+   MODAL AVISO EXTENDIDO (10s)
+------------------------------------------- */
+.modal-aviso { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 800; align-items: center; justify-content: center; opacity: 1; transition: opacity 0.4s ease-out; }
+.modal-aviso-content { background: var(--fondo); width: 85%; max-width: 850px; padding: 40px; border-radius: 12px; border-top: 10px solid var(--um-amarillo); box-shadow: 0 15px 40px rgba(0,0,0,0.35); text-align: left; font-size: 15px; line-height: 1.6; color: var(--texto); position: relative; overflow: hidden; }
+.modal-aviso-content h3 { margin-top: 0; color: var(--um-azul); font-size: 22px; margin-bottom: 15px; }
+.modal-aviso-content ul { margin-left: 20px; margin-bottom: 20px; }
+.progress-bar-container { position: absolute; bottom: 0; left: 0; width: 100%; background: var(--borde); height: 6px; }
+.progress-bar { height: 100%; background: var(--um-azul); width: 100%; animation: shrink 10s linear forwards; }
+@keyframes shrink { from { width: 100%; } to { width: 0%; } }
 
-/* MODAL AVISO */
-.modal-aviso{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:500; }
-.modal-aviso-content{ background:#ffffff; width:80%; max-width:900px; margin:5% auto; padding:40px; border-radius:14px; border-top:10px solid var(--um-amarillo); box-shadow:0 15px 40px rgba(0,0,0,0.35); text-align:left; font-size:16px; line-height:1.5; }
-.modal-aviso-content h3{margin-top:0;color:var(--um-azul);font-size:24px;}
-.modal-aviso-content ul{margin-left:20px;}
-.modal-aviso-actions{text-align:center;margin-top:30px;}
-.modal-aviso-actions button{ background:var(--um-azul);color:#fff;border:none; padding:14px 32px;font-size:16px;font-weight:600;border-radius:8px;cursor:pointer; }
+/* -------------------------------------------
+   TOP BAR (ENLACES ORIGINALES) Y BIENVENIDA
+------------------------------------------- */
+.top-bar { background: var(--um-amarillo); padding: 0 30px; display: flex; align-items: center; justify-content: space-between; font-size: 13.5px; height: 50px; z-index: 200; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
+.links-container { display: flex; gap: 25px; height: 100%; align-items: center; }
+.links-hover { position: relative; cursor: pointer; font-weight: 700; color: #222; height: 100%; display: flex; align-items: center; }
+.links-hover i { font-size: 14px; opacity: 0.8; }
+.links-hover ul { list-style: none; margin: 0; padding: 10px 0; position: absolute; top: 100%; left: 0; background: var(--fondo); min-width: 280px; box-shadow: 0 8px 20px rgba(0,0,0,.15); border-radius: 0 0 8px 8px; border: 1px solid var(--borde); border-top: none; display: none; z-index: 210; }
+.links-hover:hover ul { display: block; }
+.links-hover ul li { padding: 0; }
+.links-hover ul li a { text-decoration: none; color: var(--texto); display: block; padding: 10px 16px; border-bottom: 1px solid var(--borde); transition: background 0.15s, color 0.15s; font-weight: normal; }
+.links-hover ul li a:hover { background: var(--card-hover); color: var(--um-azul); font-weight: bold; }
+.links-hover ul li:last-child a { border-bottom: none; }
 
-/* SOPORTE SAT */
-.support-container{position:fixed;bottom:24px;right:24px;z-index:400;}
-.support-main{ background:#005aa9;color:#fff;border:none;border-radius:28px; padding:12px 18px;font-weight:600;cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,0.25); display:flex;align-items:center;gap:6px; transition:transform .15s ease, box-shadow .15s ease; position:relative; }
-.support-main:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,0.25);}
-.support-main::after{ content:"💡 Usa esta opcion para reportar errores en la plataforma o enviar sugerencias al equipo SAT."; position:absolute;bottom:50%;right:calc(100% + 12px); transform:translateY(50%) scale(0.95); background:#2f2f2f;color:#fff;padding:8px 12px;border-radius:8px; font-size:12.5px;opacity:0;pointer-events:none; white-space:normal;min-width:220px;max-width:260px; line-height:1.4;text-align:left;letter-spacing:0.2px; box-shadow:0 6px 18px rgba(0,0,0,0.25); transition:all .2s ease-out;z-index:500; }
-.support-main::before{ content:"";position:absolute;bottom:50%;right:calc(100% + 8px); transform:translateY(50%) scale(0.95); border-width:6px;border-style:solid; border-color:transparent transparent transparent #2f2f2f; opacity:0;transition:all .2s ease-out;z-index:500; }
-.support-main:hover::after, .support-main:hover::before{opacity:1;transform:translateY(50%) scale(1);}
-.support-menu{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
-.support-menu a{ display:flex;align-items:center;gap:6px; background:#f1f1f1;padding:10px 12px;border-radius:8px; text-decoration:none;color:#333;font-size:13px; box-shadow:0 2px 6px rgba(0,0,0,0.15); transition:all .2s ease-out; }
-.support-menu a:hover{background:#e4e4e4;transform:translateY(-1px);}
+.btn-dark-mode { background: rgba(0,0,0,0.1); color: #222; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: background 0.2s; }
+.btn-dark-mode:hover { background: rgba(0,0,0,0.2); }
+body.dark-mode .btn-dark-mode { background: #333; color: #fff; }
+
+.welcome-bar { background: var(--um-gris); border-bottom: 1px solid var(--borde); padding: 14px 20px; text-align: center; }
+.welcome-bar h2 { margin: 0 0 5px 0; color: var(--um-azul); font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.reloj-destacado { background: var(--um-azul); color: white; padding: 2px 10px; border-radius: 12px; font-size: 14px; letter-spacing: 1px; font-weight: bold;}
+.recordatorios { font-size: 13.5px; color: var(--texto-suave); font-weight: 500; }
+
+/* -------------------------------------------
+   HERO ORIGINAL (INTACTO)
+------------------------------------------- */
+.hero { text-align: center; padding: 40px 20px 32px; max-width: 1100px; margin: 0 auto; }
+.identidad { display: inline-block; margin-bottom: 24px; }
+.identidad .nombre { font-size: 20px; font-weight: 700; color: var(--texto); letter-spacing: 0.5px; }
+.identidad .lema { font-size: 11px; color: var(--texto-suave); letter-spacing: 2px; margin-top: 3px; }
+.divider { width: 50px; height: 3px; background: var(--um-amarillo); margin: 0 auto 20px; border-radius: 2px; }
+.hero h1 { font-size: 32px; font-weight: 700; margin: 0 0 8px; color: var(--texto); }
+.hero .tagline { font-size: 15px; color: var(--texto-suave); margin: 0 0 40px; }
+
+.buttons-primary { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 700px; margin: 0 auto 16px; }
+.btn-primary-item { background: var(--um-azul); border-radius: 10px; padding: 28px 20px; text-align: center; text-decoration: none; display: block; transition: transform .15s, opacity .15s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.btn-primary-item:hover { opacity: .95; transform: translateY(-2px); }
+.btn-primary-item .icono { font-size: 26px; margin-bottom: 10px; color: #fff; }
+.btn-primary-item .titulo { color: #fff; font-size: 17px; font-weight: 700; }
+.btn-primary-item .desc { color: rgba(255,255,255,0.7); font-size: 12px; margin-top: 5px; }
+
+.buttons-secondary { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; max-width: 700px; margin: 0 auto; }
+.btn-secondary-item { background: var(--card-bg); border: 1px solid var(--borde); border-radius: 8px; padding: 16px 8px; text-align: center; text-decoration: none; display: block; transition: background .15s; }
+.btn-secondary-item:hover { background: var(--card-hover); }
+.btn-secondary-item .icono { font-size: 20px; margin-bottom: 7px; }
+.btn-secondary-item .titulo { font-size: 12px; font-weight: 600; color: var(--um-azul); }
+.btn-secondary-item.btn-bitacora { background: var(--um-verde); border-color: var(--um-verde); }
+.btn-secondary-item.btn-bitacora:hover { background: #144a2d; }
+.btn-secondary-item.btn-bitacora .titulo { color: #fff; }
+
+/* -------------------------------------------
+   HERRAMIENTAS OPERATIVAS (CALC, POST-IT, SOPORTE)
+------------------------------------------- */
+/* Calculadora - Original mantenida */
+#calcBtn { position: fixed; bottom: 88px; right: 24px; background: #1a6fc4; color: #fff; border: none; width: 52px; height: 52px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); z-index: 400; display: flex; align-items: center; justify-content: center; transition: transform .15s ease; }
+#calcBtn:hover { transform: translateY(-2px); }
+#calcOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 600; align-items: center; justify-content: center; }
+
+/* Soporte SAT - Original mantenida */
+.support-container { position: fixed; bottom: 24px; right: 24px; z-index: 400; }
+.support-main { background: #005aa9; color: #fff; border: none; border-radius: 28px; padding: 12px 18px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); display: flex; align-items: center; gap: 6px; transition: transform .15s; }
+.support-main:hover { transform: translateY(-2px); }
+.support-menu { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.support-menu a { display: flex; align-items: center; gap: 6px; background: var(--card-bg); padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--texto); font-size: 13px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); border: 1px solid var(--borde); }
+.support-menu a:hover { background: var(--card-hover); }
+
+/* Block de Notas Persistente */
+.post-it-widget { position: fixed; bottom: 24px; left: 24px; z-index: 400; }
+.post-it-btn { background: #f1c40f; color: #333; border: none; width: 52px; height: 52px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; transition: transform 0.15s; }
+.post-it-btn:hover { transform: translateY(-2px); }
+.post-it-panel { display: none; position: absolute; bottom: 65px; left: 0; background: var(--nota-bg); width: 260px; padding: 15px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.25); border-top: 10px solid #f39c12; }
+.post-it-panel h4 { margin: 0 0 10px 0; font-size: 13px; color: #333; display: flex; justify-content: space-between; align-items: center; }
+.post-it-panel textarea { width: 100%; height: 180px; background: transparent; border: none; resize: none; font-family: monospace; font-size: 13px; color: var(--texto); padding: 5px; outline: none; border-left: 2px solid rgba(0,0,0,0.05); }
+
+/* FOOTER */
+footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin: 48px 0 20px; border-top: 1px solid var(--borde); padding-top: 20px; }
+.footer-links { margin-top: 12px; display: flex; justify-content: center; align-items: center; gap: 15px; font-weight: bold; }
+.footer-links a { color: var(--texto-suave); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--um-azul); }
 </style>
 </head>
 <body>
 
-<!-- LOGIN OVERLAY -->
-<div id="loginOverlay" class="login-overlay">
-  <div class="login-box">
-    <div class="logo-texto">UNIVERSIDAD MAYOR</div>
-    <div class="logo-lema">para espíritus emprendedores</div>
-    <h2>Portal SAT</h2>
-    <p class="subtitulo">Uso exclusivo Servicio de Atención</p>
-    <input type="password" id="loginInput" placeholder="Ingresa la clave de acceso" onkeydown="if(event.key==='Enter') verificarClave()">
-    <div id="loginError" class="login-error">Clave incorrecta. Intenta nuevamente.</div>
-    <button onclick="verificarClave()">Ingresar</button>
-    <div class="login-disclaimer">
-      <strong>Recuerda que no debes compartir la clave de acceso</strong> con personas fuera del equipo SAT ni utilizarla fuera del ámbito institucional.
-    </div>
-  </div>
-</div>
-
-<!-- MODAL AVISO -->
-<div id="modalAviso" class="modal-aviso">
-  <div class="modal-aviso-content">
-    <h3>Aviso de uso y confidencialidad</h3>
-    <p>Esta plataforma es de <strong>uso interno exclusivo del Servicio de Atención (SAT)</strong> de la Universidad Mayor.</p>
-    <p>La información aquí contenida es <strong>confidencial</strong>, se mantiene en actualización continua con el aporte del equipo SAT, y <strong>no debe ser compartida ni utilizada fuera del ámbito institucional</strong>.</p>
-    <ul>
-      <li>Utiliza siempre el directorio en línea como fuente oficial.</li>
-      <li>Evita guardar o distribuir copias externas de la información.</li>
-      <li>Ante dudas, verifica directamente en esta plataforma.</li>
-      <li>Si detectas información desactualizada o un error, repórtalo usando el botón 🛟 Soporte SAT.</li>
-    </ul>
-    <p><strong>Importante:</strong><br>En el primer acceso del día, la plataforma puede tardar algunos segundos en cargar. Si la pantalla demora en responder, espera brevemente y refresca el navegador.</p>
-    <p style="font-size:14px;color:#666;margin-top:16px;font-style:italic;">El uso de esta plataforma implica aceptar las políticas de manejo de información institucional de la Universidad Mayor.</p>
-    <div class="modal-aviso-actions">
-      <button onclick="cerrarAviso()">Entendido</button>
-    </div>
-  </div>
-</div>
-
-<!-- TOP BAR -->
 <div class="top-bar">
-  <div style="display:flex;gap:25px;align-items:center;">
+  <div class="links-container">
     <div class="links-hover">
-      <span>🔗 Links de uso frecuente ▾</span>
+      <span title="Herramientas y plataformas recurrentes"><i class="fa-solid fa-link"></i> Links de uso frecuente ▾</span>
       <ul>
         <li><a href="https://mayorcl.sharepoint.com/sites/IntranetServiciodeAtencin" target="_blank">Intranet SAT</a></li>
         <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Registro-Estudiantes" target="_blank">Registro Estudiantil</a></li>
@@ -149,15 +174,17 @@ footer{ text-align:center; font-size:13px; color:#666; margin:48px 0 20px; borde
         <li><a href="https://umayor.hiringroomcampus.com/jobs/create-company/bfSbYevlWIXvZUZfPdp5sqYS" target="_blank">Registra tu Empresa</a></li>
       </ul>
     </div>
+    
     <div class="links-hover">
-      <span>🕒 Turnos SAT ▾</span>
+      <span title="Programación operativa del equipo"><i class="fa-solid fa-calendar-days"></i> Turnos SAT ▾</span>
       <ul>
         <li><a href="https://mayorcl.sharepoint.com/:x:/r/sites/IntranetServiciodeAtencin/_layouts/15/Doc.aspx?sourcedoc=%7BC1513845-3E62-40FB-8B23-5CD6F5DF03F3%7D&file=programacion-de-turnos-SAT.xlsx&action=default&mobileredirect=true" target="_blank">📅 Programación de turnos</a></li>
         <li><a href="https://mayorcl.sharepoint.com/:x:/r/sites/IntranetServiciodeAtencin/_layouts/15/Doc.aspx?sourcedoc=%7B36F8803B-77FC-4A42-8E4D-A27093D8445D%7D&file=descansos-SAT.xlsx&action=default&mobileredirect=true" target="_blank">🍵 Descansos semanales</a></li>
       </ul>
     </div>
+    
     <div class="links-hover">
-      <span>🎓 Beneficios Ministeriales ▾</span>
+      <span title="Mineduc, Junaeb, CAE, TNE"><i class="fa-solid fa-landmark"></i> Beneficios Ministeriales ▾</span>
       <ul>
         <li><a href="https://portal.beneficiosestudiantiles.cl/" target="_blank">Portal Beneficios</a></li>
         <li><a href="https://resultados.beneficiosestudiantiles.cl/login" target="_blank">Resultados Beneficios</a></li>
@@ -170,17 +197,71 @@ footer{ text-align:center; font-size:13px; color:#666; margin:48px 0 20px; borde
         <li><a href="https://www.junaeb.cl/preguntas-frecuentes-usuarios-baes" target="_blank">Preguntas BAES</a></li>
       </ul>
     </div>
+    
     <div class="links-hover">
-      <span>✉️ Correos Frecuentes ▾</span>
+      <span title="Plantillas de derivación"><i class="fa-solid fa-envelope-open-text"></i> Correos Frecuentes ▾</span>
       <ul>
         <li><a href="/correos-frecuentes#supervisor">👨‍💼 Derivar a Supervisor</a></li>
         <li><a href="/correos-frecuentes#comercial">💼 Derivar a Área Comercial</a></li>
       </ul>
     </div>
   </div>
+  
+  <button class="btn-dark-mode" onclick="toggleDarkMode()" title="Cambiar contraste">
+      <i class="fa-solid fa-moon" id="iconoDark"></i> Modo Oscuro
+  </button>
 </div>
 
-<!-- HERO -->
+<div class="welcome-bar">
+    <h2>
+        <span id="saludoTexto">Buenos días, equipo.</span> 
+        <span class="reloj-destacado" id="relojHora">00:00:00</span>
+    </h2>
+    <div class="recordatorios">
+        ¿Ya marcaste tu entrada en Geovictoria? Recuerda también revisar tu conexión en Genesys.
+    </div>
+</div>
+
+<div id="loginOverlay" class="login-overlay">
+  <div class="login-box">
+    <div class="logo-texto">UNIVERSIDAD MAYOR</div>
+    <div class="logo-lema">para espíritus emprendedores</div>
+    <h2>Portal SAT</h2>
+    <p class="subtitulo">Uso exclusivo Servicio de Atención</p>
+    
+    <input type="password" id="loginInput" placeholder="Ingresa la clave de acceso" onkeydown="if(event.key==='Enter') verificarClave()">
+    
+    <label class="check-confidencial">
+        <input type="checkbox" id="checkConfidencial">
+        Declaro conocer y respetar el carácter confidencial de la información contenida en esta plataforma.
+    </label>
+
+    <div id="loginError" class="login-error"></div>
+    <button onclick="verificarClave()">Ingresar a la Operación</button>
+    
+    <div class="login-disclaimer">
+      <strong>Recuerda que no debes compartir la clave de acceso</strong> con personas fuera del equipo SAT ni utilizarla fuera del ámbito institucional.
+    </div>
+  </div>
+</div>
+
+<div id="modalAviso" class="modal-aviso">
+  <div class="modal-aviso-content">
+    <h3><i class="fa-solid fa-shield-halved"></i> Aviso de uso y confidencialidad</h3>
+    <p>Esta plataforma es de <strong>uso interno exclusivo del Servicio de Atención (SAT)</strong> de la Universidad Mayor.</p>
+    <p>La información aquí contenida es <strong>confidencial</strong>, se mantiene en actualización continua con el aporte del equipo SAT, y <strong>no debe ser compartida ni utilizada fuera del ámbito institucional</strong>.</p>
+    <ul>
+      <li>Utiliza siempre el directorio en línea como fuente oficial.</li>
+      <li>Evita guardar o distribuir copias externas de la información.</li>
+      <li>Ante dudas, verifica directamente en esta plataforma.</li>
+      <li>Si detectas información desactualizada o un error, repórtalo usando el botón 🛟 Soporte SAT.</li>
+    </ul>
+    <p><strong>Importante:</strong><br>En el primer acceso del día, la plataforma puede tardar algunos segundos en cargar. Si la pantalla demora en responder, espera brevemente y refresca el navegador.</p>
+    <p style="font-size:13px; color:var(--texto-suave); margin-top:16px; font-style:italic;">El uso de esta plataforma implica aceptar las políticas de manejo de información institucional de la Universidad Mayor.</p>
+    <div class="progress-bar-container"><div class="progress-bar"></div></div>
+  </div>
+</div>
+
 <div class="hero">
   <div class="identidad">
     <div class="nombre">UNIVERSIDAD MAYOR</div>
@@ -221,73 +302,38 @@ footer{ text-align:center; font-size:13px; color:#666; margin:48px 0 20px; borde
       <div class="titulo">Bitácora SAT</div>
     </a>
   </div>
-
 </div>
 
-<footer>
-  Desarrollado por <strong>Eduardo Ferrada</strong><br>
-  Universidad Mayor · Enero 2026
-  <div style="margin-top:14px;">
-    <a href="/monitor-calidad" style="font-size:11px; color:#ccc; text-decoration:none; letter-spacing:0.5px;">· Monitor de Calidad ·</a>
-  </div>
-</footer>
+<div class="post-it-widget">
+    <button class="post-it-btn" onclick="togglePostIt()" title="Block de Notas Rápido"><i class="fa-regular fa-note-sticky"></i></button>
+    <div class="post-it-panel" id="postItPanel">
+        <h4>Apuntes Operativos <button onclick="togglePostIt()" style="background:none; border:none; cursor:pointer; color:var(--texto-suave);"><i class="fa-solid fa-xmark"></i></button></h4>
+        <textarea id="textoPostIt" placeholder="Anota RUTs, teléfonos o datos rápidos aquí. No se borrarán si cambias de pestaña..."></textarea>
+    </div>
+</div>
 
-<!-- SOPORTE SAT -->
-<!-- CALCULADORA DÍAS HÁBILES -->
-<div id="calcOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:600; align-items:center; justify-content:center;">
-  <div style="background:#fff; border-radius:14px; padding:32px 28px; width:100%; max-width:380px; box-shadow:0 15px 40px rgba(0,0,0,0.25); border-top:8px solid #f2b705; position:relative;">
-    <button onclick="cerrarCalc()" style="position:absolute;top:12px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;">x</button>
-    <h3 style="margin:0 0 6px; font-size:1rem; color:#005aa9;">Calculadora dias habiles</h3>
-    <p style="font-size:12px; color:#888; margin-bottom:20px;">Plazo de feedback: <strong style="color:#005aa9;">3 dias habiles</strong></p>
+<button onclick="abrirCalc()" id="calcBtn" title="Calculadora de días hábiles">📅</button>
+<div id="calcOverlay">
+  <div style="background:var(--fondo); border-radius:14px; padding:32px 28px; width:100%; max-width:380px; box-shadow:0 15px 40px rgba(0,0,0,0.25); border-top:8px solid var(--um-amarillo); position:relative;">
+    <button onclick="cerrarCalc()" style="position:absolute;top:12px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--texto-suave);">x</button>
+    <h3 style="margin:0 0 6px; font-size:1rem; color:var(--um-azul);">Calculadora dias habiles</h3>
+    <p style="font-size:12px; color:var(--texto-suave); margin-bottom:20px;">Plazo de feedback: <strong style="color:var(--um-azul);">3 dias habiles</strong></p>
     <div style="margin-bottom:14px;">
-      <label style="display:block; font-size:11px; font-weight:700; color:#666; text-transform:uppercase; margin-bottom:5px;">Fecha del correo / contacto</label>
-      <input type="date" id="calcFechaInicio" style="width:100%; padding:9px 12px; border:1.5px solid #dde4ee; border-radius:8px; font-size:14px; font-family:inherit; outline:none;" oninput="calcularDias()"/>
+      <label style="display:block; font-size:11px; font-weight:700; color:var(--texto-suave); text-transform:uppercase; margin-bottom:5px;">Fecha del correo / contacto</label>
+      <input type="date" id="calcFechaInicio" style="width:100%; padding:9px 12px; border:1.5px solid var(--borde); border-radius:8px; font-size:14px; background:var(--fondo); color:var(--texto); outline:none;" oninput="calcularDias()"/>
     </div>
     <div style="margin-bottom:20px;">
-      <label style="display:block; font-size:11px; font-weight:700; color:#666; text-transform:uppercase; margin-bottom:5px;">Fecha de hoy / llamada</label>
-      <input type="date" id="calcFechaFin" style="width:100%; padding:9px 12px; border:1.5px solid #dde4ee; border-radius:8px; font-size:14px; font-family:inherit; outline:none;" oninput="calcularDias()"/>
+      <label style="display:block; font-size:11px; font-weight:700; color:var(--texto-suave); text-transform:uppercase; margin-bottom:5px;">Fecha de hoy / llamada</label>
+      <input type="date" id="calcFechaFin" style="width:100%; padding:9px 12px; border:1.5px solid var(--borde); border-radius:8px; font-size:14px; background:var(--fondo); color:var(--texto); outline:none;" oninput="calcularDias()"/>
     </div>
     <div id="calcResultado" style="display:none; border-radius:10px; padding:18px 20px; text-align:center;">
       <div id="calcEmoji" style="font-size:2rem; margin-bottom:4px;"></div>
-      <div id="calcDias" style="font-size:2.2rem; font-weight:800; margin-bottom:4px;"></div>
+      <div id="calcDias" style="font-size:2.2rem; font-weight:800; margin-bottom:4px; color:var(--texto);"></div>
       <div id="calcLabel" style="font-size:13px; font-weight:700; margin-bottom:8px;"></div>
       <div id="calcAccion" style="font-size:12px; padding:6px 12px; border-radius:6px; display:inline-block; font-weight:600;"></div>
     </div>
   </div>
 </div>
-
-<!-- BOTÓN FLOTANTE CALCULADORA -->
-<button onclick="abrirCalc()" id="calcBtn">📅</button>
-<style>
-#calcBtn {
-  position: fixed; bottom: 88px; right: 24px;
-  background: #1a6fc4; color: #1a1a1a; border: none;
-  width: 52px; height: 52px; border-radius: 50%; font-size: 1.3rem;
-  cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-  z-index: 400; display: flex; align-items: center; justify-content: center;
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-#calcBtn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.25); }
-#calcBtn::after {
-  content: "Herramienta para calcular dias habiles";
-  position: absolute; bottom: 50%; right: calc(100% + 12px);
-  transform: translateY(50%) scale(0.95);
-  background: #2f2f2f; color: #fff; padding: 8px 12px; border-radius: 8px;
-  font-size: 12.5px; opacity: 0; pointer-events: none;
-  white-space: normal; min-width: 200px; max-width: 240px;
-  line-height: 1.4; text-align: left; letter-spacing: 0.2px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-  transition: all .2s ease-out; z-index: 500;
-}
-#calcBtn::before {
-  content: ""; position: absolute; bottom: 50%; right: calc(100% + 8px);
-  transform: translateY(50%) scale(0.95);
-  border-width: 6px; border-style: solid;
-  border-color: transparent transparent transparent #2f2f2f;
-  opacity: 0; transition: all .2s ease-out; z-index: 500;
-}
-#calcBtn:hover::after, #calcBtn:hover::before { opacity: 1; transform: translateY(50%) scale(1); }
-</style>
 
 <div class="support-container">
   <div id="supportMenu" class="support-menu" style="display:none;">
@@ -297,7 +343,19 @@ footer{ text-align:center; font-size:13px; color:#666; margin:48px 0 20px; borde
   <button id="supportBtn" class="support-main">🛟 Soporte SAT</button>
 </div>
 
+<footer>
+  Desarrollado por <strong>Eduardo Ferrada</strong><br>
+  Universidad Mayor · Enero 2026
+  <div class="footer-links">
+    <a href="/monitor-calidad"><i class="fa-solid fa-chart-line"></i> Monitor de Calidad</a>
+    <span>|</span>
+    <a href="/administracion"><i class="fa-solid fa-lock"></i> Administración SAT</a>
+  </div>
+</footer>
+
+
 <script>
+// --- 1. LÓGICA DE LOGIN CON DOBLE VALIDACIÓN ---
 var CLAVE_SAT = 'um@sat032026';
 var STORAGE_KEY = 'portalSAT_acceso';
 
@@ -312,45 +370,111 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function verificarClave() {
   var input = document.getElementById('loginInput').value;
+  var check = document.getElementById('checkConfidencial').checked;
   var error = document.getElementById('loginError');
+  
+  if (!check) {
+      error.textContent = "Debes aceptar la declaración de confidencialidad para ingresar.";
+      error.style.display = 'block';
+      return;
+  }
+
   if (input === CLAVE_SAT) {
     localStorage.setItem(STORAGE_KEY, 'ok');
     document.getElementById('loginOverlay').classList.remove('visible');
     error.style.display = 'none';
     iniciarPortal();
   } else {
+    error.textContent = "Clave incorrecta. Intenta nuevamente.";
     error.style.display = 'block';
     document.getElementById('loginInput').value = '';
     document.getElementById('loginInput').focus();
   }
 }
 
+// --- 2. MODAL AVISO EXTENDIDO (10s auto-cierre o clic fuera) ---
 function iniciarPortal() {
   if (!sessionStorage.getItem('avisoSATVisto')) {
-    document.getElementById('modalAviso').style.display = 'block';
+    var modal = document.getElementById('modalAviso');
+    modal.style.display = 'flex';
+    
+    // Función centralizada para cerrar
+    const cerrarModal = () => {
+        if(modal.style.display !== 'none') {
+            modal.style.opacity = '0'; // Efecto Fade Out
+            setTimeout(() => {
+                modal.style.display = 'none';
+                sessionStorage.setItem('avisoSATVisto', 'true');
+            }, 400); // 400ms después del fade
+        }
+    };
+
+    // Cerrar haciendo clic fuera
+    modal.addEventListener('click', function(e) {
+        if(e.target === modal) cerrarModal();
+    });
+
+    // Auto cierre a los 10 segundos
+    setTimeout(cerrarModal, 10000);
   }
 }
 
-function cerrarAviso() {
-  document.getElementById('modalAviso').style.display = 'none';
-  sessionStorage.setItem('avisoSATVisto', 'true');
+// --- 3. MODO OSCURO ---
+function toggleDarkMode() {
+    const body = document.body;
+    body.classList.toggle('dark-mode');
+    const isDark = body.classList.contains('dark-mode');
+    localStorage.setItem('sat_darkmode', isDark ? 'yes' : 'no');
+    document.getElementById('iconoDark').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+}
+if (localStorage.getItem('sat_darkmode') === 'yes') {
+    document.body.classList.add('dark-mode');
+    document.getElementById('iconoDark').className = 'fa-solid fa-sun';
 }
 
+// --- 4. RELOJ Y SALUDO ---
+function actualizarReloj() {
+    const ahora = new Date();
+    const h = ahora.getHours();
+    const m = String(ahora.getMinutes()).padStart(2, '0');
+    const s = String(ahora.getSeconds()).padStart(2, '0');
+    
+    document.getElementById('relojHora').textContent = `${String(h).padStart(2,'0')}:${m}:${s}`;
+    
+    let saludo = "Buenas noches, equipo.";
+    if (h >= 6 && h < 12) saludo = "Buenos días, equipo.";
+    else if (h >= 12 && h < 20) saludo = "Buenas tardes, equipo.";
+    
+    document.getElementById('saludoTexto').textContent = saludo;
+}
+setInterval(actualizarReloj, 1000);
+actualizarReloj();
+
+// --- 5. BLOCK DE NOTAS PERSISTENTE ---
+const txtPostIt = document.getElementById('textoPostIt');
+txtPostIt.value = localStorage.getItem('sat_postit') || '';
+txtPostIt.addEventListener('input', function() {
+    localStorage.setItem('sat_postit', this.value);
+});
+function togglePostIt() {
+    const panel = document.getElementById('postItPanel');
+    panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
+}
+
+// --- 6. SOPORTE SAT (Original) ---
 var btn = document.getElementById('supportBtn');
 var menu = document.getElementById('supportMenu');
-
 btn.addEventListener('click', function(e) {
   e.stopPropagation();
   menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
 });
-
 document.addEventListener('click', function(event) {
   if (!menu.contains(event.target) && !btn.contains(event.target)) {
     menu.style.display = 'none';
   }
 });
 
-// ── CALCULADORA DIAS HABILES ──
+// --- 7. CALCULADORA DE DÍAS HÁBILES (Original) ---
 var FERIADOS_CL = ["2024-01-01","2024-03-29","2024-03-30","2024-04-01","2024-05-01","2024-05-21","2024-06-20","2024-06-29","2024-07-16","2024-08-15","2024-09-18","2024-09-19","2024-09-20","2024-10-12","2024-10-31","2024-11-01","2024-11-16","2024-12-08","2024-12-25","2025-01-01","2025-04-18","2025-04-19","2025-04-21","2025-05-01","2025-05-21","2025-06-20","2025-06-29","2025-07-16","2025-08-15","2025-09-18","2025-09-19","2025-10-12","2025-10-31","2025-11-01","2025-11-16","2025-12-08","2025-12-25","2026-01-01","2026-04-03","2026-04-04","2026-04-06","2026-05-01","2026-05-21","2026-06-20","2026-06-29","2026-07-16","2026-08-15","2026-09-18","2026-09-19","2026-10-12","2026-10-31","2026-11-01","2026-11-16","2026-12-08","2026-12-25","2027-01-01","2027-03-26","2027-03-27","2027-03-29","2027-05-01","2027-05-21","2027-06-20","2027-06-29","2027-07-16","2027-08-15","2027-09-18","2027-09-19","2027-10-12","2027-10-31","2027-11-01","2027-11-16","2027-12-08","2027-12-25"];
 
 function esHabil(fecha) {
@@ -359,7 +483,6 @@ function esHabil(fecha) {
   var iso = fecha.toISOString().split("T")[0];
   return FERIADOS_CL.indexOf(iso) === -1;
 }
-
 function diasHabiles(inicio, fin) {
   var count = 0;
   var cur = new Date(inicio);
@@ -371,7 +494,6 @@ function diasHabiles(inicio, fin) {
   }
   return count;
 }
-
 function abrirCalc() {
   var overlay = document.getElementById("calcOverlay");
   overlay.style.display = "flex";
@@ -380,11 +502,9 @@ function abrirCalc() {
   document.getElementById("calcFechaInicio").value = "";
   document.getElementById("calcResultado").style.display = "none";
 }
-
 function cerrarCalc() {
   document.getElementById("calcOverlay").style.display = "none";
 }
-
 function calcularDias() {
   var ini = document.getElementById("calcFechaInicio").value;
   var fin = document.getElementById("calcFechaFin").value;
@@ -426,7 +546,6 @@ function calcularDias() {
   }
   res.style.display = "block";
 }
-
 document.getElementById("calcOverlay").addEventListener("click", function(e) {
   if (e.target === this) cerrarCalc();
 });
@@ -434,4 +553,3 @@ document.getElementById("calcOverlay").addEventListener("click", function(e) {
 
 </body>
 </html>
-
