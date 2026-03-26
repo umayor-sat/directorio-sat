@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Correos Frecuentes · Portal SAT</title>
+
 <style>
 :root{
   --um-amarillo:#f2b705;
@@ -55,6 +56,25 @@ textarea{resize:vertical;min-height:70px;}
 .btn-volver{position:fixed;top:12px;right:16px;background:var(--um-azul);color:#fff;border:none;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;z-index:999;opacity:.85;transition:opacity .2s;}
 .btn-volver:hover{opacity:1;}
 footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top:1px solid #eee;padding-top:16px;}
+
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); z-index: 9999;
+    display: none; justify-content: center; align-items: center;
+    backdrop-filter: blur(4px);
+}
+.modal-box {
+    background: #fff; border-top: 6px solid var(--um-verde);
+    border-radius: 12px; padding: 40px 30px; max-width: 420px;
+    text-align: center; box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    animation: slideDown 0.3s ease-out;
+}
+.modal-box h3 { color: var(--um-azul); margin: 15px 0 10px 0; font-size: 22px;}
+.modal-box p { color: var(--texto-suave); font-size: 14px; margin: 0; line-height: 1.5;}
+@keyframes slideDown {
+    from { transform: translateY(-30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
 </style>
 </head>
 <body>
@@ -103,7 +123,7 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
         </div>
         <div class="form-field">
           <label>Nombre del solicitante <span class="req">*</span></label>
-          <input type="text" id="ic-nombre" placeholder="Nombre completo" oninput="actualizarAsunto();sincronizarTI()">
+          <input type="text" id="ic-nombre" placeholder="Nombre completo" oninput="actualizarAsunto();sincronizarDatos()">
         </div>
         <div class="form-field">
           <label>Motivo <span class="req">*</span></label>
@@ -149,35 +169,6 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
             <option>Otro</option>
           </select>
         </div>
-        <div class="form-field span2">
-          <label>Ejecutivo que solicita el cambio (Tú) <span class="req">*</span></label>
-          <select id="turno-solicitante">
-            <option value="">-- Selecciona --</option>
-            <optgroup label="Apoyo">
-              <option>Katherine Cabrera</option>
-              <option>Javiera Hormazabal</option>
-              <option>Gabriela Canobra</option>
-              <option>Javiera Consuelo González Soto</option>
-              <option>María Joscelynn Gómez Leiva</option>
-              <option>Carla Macarena Araos Carreño</option>
-              <option>Deisy Carol Pino Merino</option>
-              <option>Karen Orellana</option>
-              <option>Emperatriz Berrios</option>
-              <option>Elizabeth Manríquez</option>
-              <option>Alejandra Diaz</option>
-            </optgroup>
-            <optgroup label="Staff">
-              <option>Ana Maria Goycolea</option>
-              <option>Camila Macarena Espinoza Nuñez</option>
-              <option>Claudia Acevedo Diaz</option>
-              <option>Francisca Lizama</option>
-              <option>Francisca Valenzuela</option>
-              <option>Sebastián Moraga Cavieres</option>
-              <option>Camila Fernanda Navarrete Navarrete</option>
-              <option>Silvia Gonzalez</option>
-            </optgroup>
-          </select>
-        </div>
         <div class="form-field">
           <label>Tu turno original <span class="req">*</span></label>
           <select id="turno-original-solicitante">
@@ -190,37 +181,6 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
             <option>10:30 a 19:00</option>
             <option>11:00 a 19:30</option>
             <option>11:30 a 20:00</option>
-          </select>
-        </div>
-        <div class="form-field">
-          </div>
-        <div class="form-field span2">
-          <label>Ejecutivo que realizará el reemplazo <span class="req">*</span></label>
-          <select id="turno-reemplazo-nombre">
-            <option value="">-- Selecciona --</option>
-            <optgroup label="Apoyo">
-              <option>Katherine Cabrera</option>
-              <option>Javiera Hormazabal</option>
-              <option>Gabriela Canobra</option>
-              <option>Javiera Consuelo González Soto</option>
-              <option>María Joscelynn Gómez Leiva</option>
-              <option>Carla Macarena Araos Carreño</option>
-              <option>Deisy Carol Pino Merino</option>
-              <option>Karen Orellana</option>
-              <option>Emperatriz Berrios</option>
-              <option>Elizabeth Manríquez</option>
-              <option>Alejandra Diaz</option>
-            </optgroup>
-            <optgroup label="Staff">
-              <option>Ana Maria Goycolea</option>
-              <option>Camila Macarena Espinoza Nuñez</option>
-              <option>Claudia Acevedo Diaz</option>
-              <option>Francisca Lizama</option>
-              <option>Francisca Valenzuela</option>
-              <option>Sebastián Moraga Cavieres</option>
-              <option>Camila Fernanda Navarrete Navarrete</option>
-              <option>Silvia Gonzalez</option>
-            </optgroup>
           </select>
         </div>
         <div class="form-field">
@@ -237,6 +197,12 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
             <option>11:30 a 20:00</option>
           </select>
         </div>
+        <div class="form-field span2">
+          <label>Ejecutivo que realizará el reemplazo <span class="req">*</span></label>
+          <select id="turno-reemplazo-nombre">
+            <option value="">-- Cargando ejecutivos... --</option>
+          </select>
+        </div>
         <div class="form-field">
           <label>Turno que cubrirá el reemplazo <span class="req">*</span></label>
           <select id="turno-nuevo-reemplazo">
@@ -251,6 +217,8 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
             <option>11:30 a 20:00</option>
           </select>
         </div>
+        <div class="form-field">
+          </div>
         <div class="form-field span2">
           <label>Comentarios adicionales</label>
           <textarea id="turno-comentarios" placeholder="Información adicional relevante..."></textarea>
@@ -261,6 +229,7 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
         </div>
       </div>
     </div>
+    
     <div id="bloque-solicitante" class="form-section" style="display:none;">
       <div class="form-section-title">Datos del solicitante</div>
       <div class="form-section-sub">Los cuatro campos son obligatorios <span class="req">*</span></div>
@@ -399,14 +368,21 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
 
     <div id="bloque-ejecutivo" class="form-section" style="display:none;">
       <div class="form-section-title">Datos del ejecutivo</div>
-      <div class="form-section-sub">Opcional - para identificar quien envia el correo</div>
+      <div class="form-section-sub">Tu nombre y RUT son obligatorios para mantener el orden en el registro. <span class="req">*</span></div>
       <div class="form-grid">
         <div class="form-field">
-          <label>Tu nombre</label>
-          <input type="text" id="ejec-nombre" placeholder="Nombre completo">
+          <label>Tu nombre <span class="req">*</span></label>
+          <select id="ejec-nombre">
+            <option value="">-- Cargando ejecutivos... --</option>
+          </select>
         </div>
         <div class="form-field">
-          <label>Tu correo institucional</label>
+          <label>Tu RUT <span class="req">*</span></label>
+          <input type="text" id="ejec-rut" placeholder="123456789" oninput="limpiarRut('ejec-rut')">
+          <span class="field-hint">Sin puntos ni guion</span>
+        </div>
+        <div class="form-field span2">
+          <label>Tu correo institucional (Opcional)</label>
           <input type="email" id="ejec-correo" placeholder="nombre@umayor.cl">
         </div>
       </div>
@@ -427,7 +403,7 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
     <button id="btn-enviar" class="btn-enviar" onclick="validarYEnviar()">
       &#9993;&#65039; Preparar y enviar correo
     </button>
-    <button id="btn-limpiar" class="btn-enviar" style="background:#7f8c8d; margin-top:10px;" onclick="limpiarFormulario()">
+    <button id="btn-limpiar" class="btn-enviar" style="background:#7f8c8d; margin-top:10px;" onclick="limpiarFormularioConAviso()">
       &#128465;&#65039; Limpiar y Nueva Solicitud
     </button>
 
@@ -476,7 +452,7 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
 
       <div style="background:var(--preview-bg);border:0.5px solid var(--preview-borde);border-radius:8px;padding:12px 16px;margin-bottom:20px;">
         <div style="font-size:11px;color:var(--preview-titulo);font-weight:700;margin-bottom:4px;">Vista previa del asunto del correo</div>
-        <div id="asunto-com-generado" style="font-size:13px;font-weight:700;color:var(--preview-texto);word-break:break-all;">RUT: XXXXXXXXX NOMBRE Carrera de interes: CARRERA Jornada: JORNADA</div>
+        <div id="asunto-com-generado" style="font-size:13px;font-weight:700;color:var(--preview-texto);word-break:break-all;">RUT: XXXXXXXXX Nombre: NOMBRE Carrera de interes: CARRERA Jornada: JORNADA</div>
       </div>
 
       <div class="form-section">
@@ -527,13 +503,20 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
 
       <div class="form-section">
         <div class="form-section-title">Datos del ejecutivo</div>
-        <div class="form-section-sub">Opcional - para identificar quien envia el correo</div>
+        <div class="form-section-sub">Tu nombre y RUT son obligatorios para registrar el caso. El correo es opcional. <span class="req">*</span></div>
         <div class="form-grid">
           <div class="form-field">
-            <label>Tu nombre</label>
-            <input type="text" id="com-ejec-nombre" placeholder="Nombre completo">
+            <label>Tu nombre <span class="req">*</span></label>
+            <select id="com-ejec-nombre">
+              <option value="">-- Cargando ejecutivos... --</option>
+            </select>
           </div>
           <div class="form-field">
+            <label>Tu RUT <span class="req">*</span></label>
+            <input type="text" id="com-ejec-rut" placeholder="123456789" oninput="limpiarRut('com-ejec-rut')">
+            <span class="field-hint">Sin puntos ni guion</span>
+          </div>
+          <div class="form-field span2">
             <label>Tu correo institucional</label>
             <input type="email" id="com-ejec-correo" placeholder="nombre@umayor.cl">
           </div>
@@ -555,7 +538,7 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
       <button class="btn-enviar" style="display:block;" onclick="enviarComercial()">
         &#9993;&#65039; Preparar y enviar correo
       </button>
-      <button class="btn-enviar" style="display:block; background:#7f8c8d; margin-top:10px;" onclick="limpiarFormulario()">
+      <button class="btn-enviar" style="display:block; background:#7f8c8d; margin-top:10px;" onclick="limpiarFormularioConAviso()">
         &#128465;&#65039; Limpiar y Nueva Solicitud
       </button>
 
@@ -568,6 +551,15 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
   Correos Frecuentes &middot; Portal SAT &middot; Universidad Mayor<br>
   <span style="color:#bbb;">Desarrollado por Eduardo Ferrada &middot; Universidad Mayor &middot; Enero 2026</span>
 </footer>
+
+<div class="modal-overlay" id="modalExito">
+    <div class="modal-box">
+        <div style="font-size: 50px; margin-bottom: 5px;">✅</div>
+        <h3>¡Caso Registrado!</h3>
+        <p>El caso se ha guardado en la Base de Datos y tu Outlook se está abriendo.</p>
+        <p style="font-size: 11px; margin-top: 20px; color: #999;">Restableciendo formulario para la próxima solicitud...</p>
+    </div>
+</div>
 
 <script>
 function showTab(i) {
@@ -613,7 +605,7 @@ function limpiarRut(id) {
   var el = document.getElementById(id);
   if (el) el.value = el.value.replace(/[.\-]/g, '');
   actualizarAsunto();
-  sincronizarTI();
+  sincronizarDatos();
 }
 
 function actualizarAsunto() {
@@ -625,9 +617,9 @@ function actualizarAsunto() {
   var motivo = val('ic-motivo') || 'MOTIVO';
   
   if (v === 'escalamiento') {
-    texto = 'IC: ' + ic + ' RUT: ' + rut + ' ' + nombre + ' ' + motivo;
+    texto = 'IC: ' + ic + ' RUT: ' + rut + ' Nombre: ' + nombre + ' Motivo: ' + motivo;
   } else if (v === 'ti') {
-    texto = 'IC: ' + ic + ' RUT: ' + rut + ' ' + nombre + ' ' + motivo + ' [TI]';
+    texto = 'IC: ' + ic + ' RUT: ' + rut + ' Nombre: ' + nombre + ' Motivo: ' + motivo + ' [TI]';
   } else if (v === 'info') {
     texto = 'Solicitud de informacion interna';
   } else if (v === 'turno') {
@@ -648,13 +640,15 @@ function actualizarAsunto() {
   if (el) el.textContent = texto;
 }
 
-function sincronizarTI() {
-  var v = document.getElementById('asunto').value;
-  if (v !== 'ti') return;
-  var tiNombre = document.getElementById('ti-nombre');
-  var tiRut    = document.getElementById('ti-rut');
-  if (tiNombre) tiNombre.value = val('ic-nombre');
-  if (tiRut)    tiRut.value    = val('ic-rut');
+function sincronizarDatos() {
+  var nom = val('ic-nombre');
+  var rut = val('ic-rut');
+  
+  if (document.getElementById('ti-nombre')) document.getElementById('ti-nombre').value = nom;
+  if (document.getElementById('ti-rut'))    document.getElementById('ti-rut').value    = rut;
+  
+  if (document.getElementById('sol-nombre')) document.getElementById('sol-nombre').value = nom;
+  if (document.getElementById('sol-rut'))    document.getElementById('sol-rut').value    = rut;
 }
 
 function checkAlumno() {
@@ -668,19 +662,20 @@ function checkAlumno() {
 
 function marcarError(id) { var el = document.getElementById(id); if (el) el.classList.add('field-error'); }
 function limpiarErrores() { document.querySelectorAll('.field-error').forEach(function(el){ el.classList.remove('field-error'); }); }
+function validarTelefono(tel) { return /^\d{9}$/.test(tel.replace(/[\s\-]/g, '').replace(/^\+56/, '')); }
+function validarCorreo(correo) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo); }
 
-// --- NUEVAS FUNCIONES DE VALIDACIÓN ---
-function validarTelefono(tel) {
-  var limpio = tel.replace(/[\s\-]/g, '').replace(/^\+56/, '');
-  return /^\d{9}$/.test(limpio);
+function mostrarMensajeExito() {
+    const modal = document.getElementById('modalExito');
+    modal.style.display = 'flex';
+    setTimeout(() => {
+        modal.style.display = 'none';
+        limpiarFormularioSilencioso();
+    }, 3500);
 }
 
-function validarCorreo(correo) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
-}
-// --------------------------------------
-
-function validarYEnviar() {
+// ENVÍO DE SUPERVISOR / TI / TURNO //
+async function validarYEnviar() {
   limpiarErrores();
   hide('error-validacion');
   var v = document.getElementById('asunto').value;
@@ -697,11 +692,9 @@ function validarYEnviar() {
     if (!val('sol-nombre')) { marcarError('sol-nombre'); errores.push('Nombre solicitante'); }
     if (!val('sol-rut'))    { marcarError('sol-rut');    errores.push('RUT solicitante'); }
     
-    // Validación estricta Teléfono Solicitante
     if (!val('sol-tel')) { marcarError('sol-tel'); errores.push('Telefono solicitante'); }
     else if (!validarTelefono(val('sol-tel'))) { marcarError('sol-tel'); errores.push('Telefono solicitante (debe tener 9 digitos)'); }
     
-    // Validación estricta Correo Solicitante
     if (!val('sol-correo')) { marcarError('sol-correo'); errores.push('Correo solicitante'); }
     else if (!validarCorreo(val('sol-correo'))) { marcarError('sol-correo'); errores.push('Correo solicitante invalido (falta @)'); }
 
@@ -715,19 +708,15 @@ function validarYEnviar() {
   }
   
   if (v === 'ti') {
-    // Validación estricta Teléfono Contacto TI
     if (!val('ti-tel')) { marcarError('ti-tel'); errores.push('Telefono contacto'); }
     else if (!validarTelefono(val('ti-tel'))) { marcarError('ti-tel'); errores.push('Telefono contacto (debe tener 9 digitos)'); }
     
-    // Validación estricta Correo Contacto TI
     if (!val('ti-correo-per')) { marcarError('ti-correo-per'); errores.push('Correo personal'); }
     else if (!validarCorreo(val('ti-correo-per'))) { marcarError('ti-correo-per'); errores.push('Correo personal invalido'); }
   }
 
-  // Validaciones del formulario de Turnos
   if (v === 'turno') {
     if (!val('turno-fecha')) { marcarError('turno-fecha'); errores.push('Fecha del turno'); }
-    if (!val('turno-solicitante')) { marcarError('turno-solicitante'); errores.push('Ejecutivo que solicita'); }
     if (!val('turno-original-solicitante')) { marcarError('turno-original-solicitante'); errores.push('Tu turno original'); }
     if (!val('turno-reemplazo-nombre')) { marcarError('turno-reemplazo-nombre'); errores.push('Ejecutivo que reemplaza'); }
     if (!val('turno-original-reemplazo')) { marcarError('turno-original-reemplazo'); errores.push('Turno original reemplazo'); }
@@ -737,11 +726,21 @@ function validarYEnviar() {
     var conf = document.getElementById('turno-confirmacion');
     if (conf && !conf.checked) { errores.push('Confirmar coordinación de turno'); }
     
-    if (val('turno-solicitante') !== '' && val('turno-solicitante') === val('turno-reemplazo-nombre')) {
-      marcarError('turno-solicitante');
+    if (val('ejec-nombre') !== '' && val('ejec-nombre') === val('turno-reemplazo-nombre')) {
+      marcarError('ejec-nombre');
       marcarError('turno-reemplazo-nombre');
       errores.push('Solicitante y reemplazo no pueden ser la misma persona');
     }
+  }
+
+  // VALIDACIÓN OBLIGATORIA DEL EJECUTIVO (Nombre y RUT)
+  if (!val('ejec-nombre')) { 
+      marcarError('ejec-nombre'); 
+      errores.push('Tu nombre (Datos del ejecutivo)'); 
+  }
+  if (!val('ejec-rut')) { 
+      marcarError('ejec-rut'); 
+      errores.push('Tu RUT (Datos del ejecutivo)'); 
   }
 
   if (errores.length > 0) {
@@ -753,20 +752,23 @@ function validarYEnviar() {
   }
 
   var asuntoTexto = document.getElementById('asunto-generado').textContent;
-  var ejecutivo = val('ejec-nombre') ? 'Ejecutivo: ' + val('ejec-nombre') + (val('ejec-correo') ? ' (' + val('ejec-correo') + ')' : '') + '\n\n' : '';
+  var ejecutivoTextoAbajo = val('ejec-nombre') ? '\n\nEjecutivo que deriva: ' + val('ejec-nombre') + ' (RUT: ' + val('ejec-rut') + ')' + (val('ejec-correo') ? ' - ' + val('ejec-correo') : '') : '';
+  
   var cuerpo = '';
 
   if (v === 'escalamiento') {
-    cuerpo = 'Estimados,\n\n' + ejecutivo + 'Necesito su cooperacion con el siguiente caso:\n' + (val('resumen') || '[Resumen del requerimiento]') + '\n\n';
-    cuerpo += 'DATOS DEL SOLICITANTE\nNombre: ' + val('sol-nombre') + '\nRUT: ' + val('sol-rut') + '\nTelefono: ' + val('sol-tel') + '\nCorreo: ' + val('sol-correo') + '\nComentario: ' + (val('sol-comentario') || '-') + '\n\n';
+    cuerpo = 'Estimados,\n\nNecesito su cooperacion con el siguiente caso:\n' + (val('resumen') || '[Resumen del requerimiento]') + '\n\n';
+    cuerpo += 'DATOS DEL SOLICITANTE\nNombre: ' + val('sol-nombre') + '\nRUT: ' + val('sol-rut') + '\nTelefono: ' + val('sol-tel') + '\nCorreo: ' + val('sol-correo') + '\nComentario: ' + (val('sol-comentario') || '-');
     if (val('alu-nombre')) {
-      cuerpo += 'DATOS DEL ALUMNO\nNombre: ' + val('alu-nombre') + '\nRUT: ' + val('alu-rut') + '\nTelefono: ' + val('alu-tel') + '\nCorreo: ' + val('alu-correo') + '\nComentario: ' + (val('alu-comentario') || '-') + '\n\n';
+      cuerpo += '\n\nDATOS DEL ALUMNO\nNombre: ' + val('alu-nombre') + '\nRUT: ' + val('alu-rut') + '\nTelefono: ' + val('alu-tel') + '\nCorreo: ' + val('alu-correo') + '\nComentario: ' + (val('alu-comentario') || '-');
     }
-    cuerpo += 'Atte.\n\n[Insertar firma institucional]';
+    cuerpo += ejecutivoTextoAbajo;
+    cuerpo += '\n\nAtte.\n\n[Insertar firma institucional]';
   } else if (v === 'ti') {
-    cuerpo = 'Estimados,\n\n' + ejecutivo + 'Necesito apoyo con el siguiente caso TI:\n\nDATOS DE CONTACTO\nNombre: ' + val('ti-nombre') + '\nRUT: ' + val('ti-rut') + '\nTelefono: ' + val('ti-tel') + '\nCorreo personal: ' + val('ti-correo-per') + '\n\n';
-    cuerpo += 'CASO TI\nCorreo institucional: ' + (val('ti-correo-inst') || '-') + '\nTipo de contacto: ' + (val('ti-contacto') || '-') + '\nPerfil con error: ' + (val('ti-perfil') || '-') + '\nPlataforma con error: ' + (val('ti-plataforma') || '-') + '\nDescripcion del error: ' + (val('ti-desc') || '-') + '\nPruebas realizadas: ' + (val('ti-pruebas') || '-') + '\nIngreso con rut@mayor.cl confirmado: ' + (val('ti-ingreso') || '-') + '\nAcceso por intranet confirmado: ' + (val('ti-intranet') || '-') + '\n\n';
-    cuerpo += 'Atte.\n\n[Insertar firma institucional]';
+    cuerpo = 'Estimados,\n\nNecesito apoyo con el siguiente caso TI:\n\nDATOS DE CONTACTO\nNombre: ' + val('ti-nombre') + '\nRUT: ' + val('ti-rut') + '\nTelefono: ' + val('ti-tel') + '\nCorreo personal: ' + val('ti-correo-per') + '\n\n';
+    cuerpo += 'CASO TI\nCorreo institucional: ' + (val('ti-correo-inst') || '-') + '\nTipo de contacto: ' + (val('ti-contacto') || '-') + '\nPerfil con error: ' + (val('ti-perfil') || '-') + '\nPlataforma con error: ' + (val('ti-plataforma') || '-') + '\nDescripcion del error: ' + (val('ti-desc') || '-') + '\nPruebas realizadas: ' + (val('ti-pruebas') || '-') + '\nIngreso con rut@mayor.cl confirmado: ' + (val('ti-ingreso') || '-') + '\nAcceso por intranet confirmado: ' + (val('ti-intranet') || '-');
+    cuerpo += ejecutivoTextoAbajo;
+    cuerpo += '\n\nAtte.\n\n[Insertar firma institucional]';
   } else if (v === 'turno') {
     var fechaCruda = val('turno-fecha');
     var fechaLegible = fechaCruda;
@@ -774,27 +776,39 @@ function validarYEnviar() {
       var partes = fechaCruda.split('-');
       if (partes.length === 3) fechaLegible = partes[2] + '-' + partes[1] + '-' + partes[0];
     }
-    
-    cuerpo = 'Estimadas,\n\n' + ejecutivo + 
+    cuerpo = 'Estimadas,\n\n' + 
              'Les escribo para solicitar autorizacion de un cambio de turno el dia ' + fechaLegible + '.\n\n' +
-             '- Solicitante: ' + val('turno-solicitante') + ', actualmente asignado(a) al turno ' + val('turno-original-solicitante') + '.\n' +
+             '- Solicitante: ' + val('ejec-nombre') + ' (RUT: ' + val('ejec-rut') + '), actualmente asignado(a) al turno ' + val('turno-original-solicitante') + '.\n' +
              '- Reemplazo: ' + val('turno-reemplazo-nombre') + ', originalmente con turno ' + val('turno-original-reemplazo') + ', quien asumira el turno ' + val('turno-nuevo-reemplazo') + ' en mi lugar.\n\n' +
              'Motivo: ' + val('turno-motivo') + '.\n\n';
-             
     if (val('turno-comentarios')) {
       cuerpo += 'Comentarios adicionales:\n' + val('turno-comentarios') + '\n\n';
     }
-    
     cuerpo += 'Agradezco mucho su apoyo y quedo atenta(o) a la confirmacion.\n\nAtte.\n\n[Insertar firma institucional]';
   } else {
-    cuerpo = 'Estimados,\n\n' + ejecutivo + (val('resumen') || '[Completar descripcion de la solicitud]') + '\n\nAtte.\n\n[Insertar firma institucional]';
+    cuerpo = 'Estimados,\n\n' + (val('resumen') || '[Completar descripcion de la solicitud]') + ejecutivoTextoAbajo + '\n\nAtte.\n\n[Insertar firma institucional]';
   }
 
   var dest = 'johanna.escalona@umayor.cl;barbara.fernandez@umayor.cl';
   var cc   = 'eduardo.ferrada@umayor.cl';
+  
+  // LOGICA INTELIGENTE DE RUT PARA SUPABASE
+  var rutRegistro = '-';
+  if (['info', 'turno', 'feriado', 'otro'].includes(v)) {
+      // Si es interno, guarda el RUT del ejecutivo
+      rutRegistro = val('ejec-rut');
+  } else {
+      // Si es caso alumno/cliente, guarda el del alumno/cliente (y si falta, usa el del ejecutivo como respaldo)
+      rutRegistro = val('sol-rut') || val('ti-rut') || val('ic-rut') || val('ejec-rut');
+  }
+  
+  await registrarCasoSupabase('Supervisor/TI/Turno', asuntoTexto, rutRegistro, val('ejec-nombre'));
+  
   window.location.href = 'mailto:' + dest + '?cc=' + cc + '&subject=' + encodeURIComponent(asuntoTexto) + '&body=' + encodeURIComponent(cuerpo);
+  mostrarMensajeExito();
 }
 
+// ÁREA COMERCIAL //
 function mostrarFormComercial() {
   var v = document.getElementById('asunto-com').value;
   var b = document.getElementById('bloque-comercial');
@@ -818,26 +832,34 @@ function actualizarAsuntoComercial() {
   var carrera = val('com-carrera')       || 'CARRERA';
   var jornada = val('com-jornada')       || 'JORNADA';
   var el = document.getElementById('asunto-com-generado');
-  if (el) el.textContent = 'RUT: ' + rut + ' ' + nombre + ' Carrera de interes: ' + carrera + ' Jornada: ' + jornada;
+  if (el) el.textContent = 'RUT: ' + rut + ' Nombre: ' + nombre + ' Carrera de interes: ' + carrera + ' Jornada: ' + jornada;
 }
 
-function enviarComercial() {
+async function enviarComercial() {
   limpiarErrores();
   hide('error-com');
   var errores = [];
   
-  if (!val('com-rut-asunto'))    { marcarError('com-rut-asunto');    errores.push('RUT'); }
-  if (!val('com-nombre-asunto')) { marcarError('com-nombre-asunto'); errores.push('Nombre'); }
+  if (!val('com-rut-asunto'))    { marcarError('com-rut-asunto');    errores.push('RUT Prospecto'); }
+  if (!val('com-nombre-asunto')) { marcarError('com-nombre-asunto'); errores.push('Nombre Prospecto'); }
   if (!val('com-carrera'))       { marcarError('com-carrera');       errores.push('Carrera de interes'); }
   if (!val('com-jornada'))       { marcarError('com-jornada');       errores.push('Jornada'); }
   
-  // Validación estricta Teléfono Comercial
   if (!val('com-tel')) { marcarError('com-tel'); errores.push('Telefono'); }
   else if (!validarTelefono(val('com-tel'))) { marcarError('com-tel'); errores.push('Telefono (debe tener 9 digitos)'); }
   
-  // Validación estricta Correo Comercial
   if (!val('com-correo')) { marcarError('com-correo'); errores.push('Correo'); }
   else if (!validarCorreo(val('com-correo'))) { marcarError('com-correo'); errores.push('Correo invalido (falta @)'); }
+
+  // OBLIGATORIEDAD DEL EJECUTIVO EN COMERCIAL
+  if (!val('com-ejec-nombre')) { 
+      marcarError('com-ejec-nombre'); 
+      errores.push('Tu nombre (Datos del ejecutivo)'); 
+  }
+  if (!val('com-ejec-rut')) { 
+      marcarError('com-ejec-rut'); 
+      errores.push('Tu RUT (Datos del ejecutivo)'); 
+  }
 
   if (errores.length > 0) {
     var el = document.getElementById('error-com');
@@ -846,20 +868,27 @@ function enviarComercial() {
     show('error-com');
     return;
   }
+  
   var asunto = document.getElementById('asunto-com-generado').textContent;
-  var ejecutivo = val('com-ejec-nombre') ? 'Ejecutivo: ' + val('com-ejec-nombre') + (val('com-ejec-correo') ? ' (' + val('com-ejec-correo') + ')' : '') + '\n\n' : '';
+  
+  var ejecutivoTextoCom = val('com-ejec-nombre') ? '\n\nEjecutivo que deriva: ' + val('com-ejec-nombre') + ' (RUT: ' + val('com-ejec-rut') + ')' + (val('com-ejec-correo') ? ' - ' + val('com-ejec-correo') : '') : '';
+  
   var cuerpo =
-    'Estimados,\n\n' + ejecutivo +
-    'Por favor solicito su colaboracion con prospecto interesado en la carrera ' + val('com-carrera') + '.\nJornada: ' + val('com-jornada') + '\n\n' +
+    'Estimados,\n\nPor favor solicito su colaboracion con prospecto interesado en la carrera ' + val('com-carrera') + '.\nJornada: ' + val('com-jornada') + '\n\n' +
     'DATOS DE CONTACTO\nNombre: ' + val('com-nombre-asunto') + '\nRUT: ' + val('com-rut-asunto') + '\nTelefono: ' + val('com-tel') + '\nCorreo: ' + val('com-correo') + '\n\n' +
-    'Carrera de interes: ' + val('com-carrera') + '\nJornada: ' + val('com-jornada') + '\nTiene beneficios ministeriales: ' + (val('com-beneficios') || 'No indicado') + '\nComentarios: ' + (val('com-comentario') || '-') + '\n\n' +
-    'Atentamente.\n\n[Insertar firma institucional]';
+    'Carrera de interes: ' + val('com-carrera') + '\nJornada: ' + val('com-jornada') + '\nTiene beneficios ministeriales: ' + (val('com-beneficios') || 'No indicado') + '\nComentarios: ' + (val('com-comentario') || '-') + 
+    ejecutivoTextoCom + '\n\nAtentamente.\n\n[Insertar firma institucional]';
+    
   var dest = 'marcelo.sepulveda@umayor.cl;francisca.castillo@umayor.cl';
+  
+  // Comercial siempre guarda el RUT del prospecto
+  await registrarCasoSupabase('Comercial', asunto, val('com-rut-asunto'), val('com-ejec-nombre'));
+  
   window.location.href = 'mailto:' + dest + '?subject=' + encodeURIComponent(asunto) + '&body=' + encodeURIComponent(cuerpo);
+  mostrarMensajeExito();
 }
 
-function limpiarFormulario() {
-  if(confirm("¿Estás seguro de limpiar los datos para ingresar una nueva solicitud?")) {
+function limpiarFormularioSilencioso() {
     document.querySelectorAll('input, select, textarea').forEach(function(el) {
       if (el.type === 'checkbox') el.checked = false;
       else el.value = '';
@@ -867,42 +896,86 @@ function limpiarFormulario() {
     cambiarAsunto();
     mostrarFormComercial();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function limpiarFormularioConAviso() {
+  if(confirm("¿Estás seguro de limpiar los datos para ingresar una nueva solicitud?")) {
+      limpiarFormularioSilencioso();
   }
 }
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
-  // 2. Tus Credenciales (Ya puestas por mí para ahorrarte tiempo)
   const supabaseUrl = 'https://jxmrznqppddabuqtbufq.supabase.co';
   const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTA4MTcsImV4cCI6MjA4ODEyNjgxN30.pqT_PlAAn3oR6g_0Iaa2fs6qV8M3RQFzNOCAssyZZh4';
-  
-  // 3. Inicializamos el cliente
   const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-  // 4. Prueba de Fuego: Vamos a ver si logramos hablar con tu tabla de ejecutivos
-  async function verificarConexion() {
-      console.log("🚀 Iniciando sistema de propulsión... Conectando a Supabase.");
-      
-      const { data, error } = await _supabase
-          .from('ejecutivos')
-          .select('nombre')
-          .limit(1);
+  async function cargarEjecutivosDesdeBD() {
+      try {
+          const { data, error } = await _supabase.from('ejecutivos').select('nombre, rol').eq('activo', true).order('nombre');
+          
+          if (data && !error) {
+              const apoyos = data.filter(e => e.rol === 'apoyo');
+              const staffs = data.filter(e => e.rol === 'staff');
+              const supervisores = data.filter(e => e.rol === 'supervisor');
 
-      if (error) {
-          console.error("❌ Error de conexión:", error.message);
-      } else {
-          console.log("✅ ¡CONEXIÓN EXITOSA! Reactor Arc al 100%.");
-          console.log("Dato de prueba recibido:", data);
+              // Actualizado sin turno-solicitante
+              const idsSelect = ['turno-reemplazo-nombre', 'ejec-nombre', 'com-ejec-nombre'];
+              
+              idsSelect.forEach(id => {
+                  const selectEl = document.getElementById(id);
+                  if (selectEl) {
+                      selectEl.innerHTML = '<option value="">-- Selecciona de la lista --</option>';
+                      
+                      function agregarGrupo(titulo, lista) {
+                          if (lista.length > 0) {
+                              const grupo = document.createElement('optgroup');
+                              grupo.label = titulo;
+                              lista.forEach(e => {
+                                  const opt = document.createElement('option');
+                                  opt.value = e.nombre;
+                                  opt.textContent = e.nombre;
+                                  grupo.appendChild(opt);
+                              });
+                              selectEl.appendChild(grupo);
+                          }
+                      }
+
+                      agregarGrupo('=== SUPERVISORES ===', supervisores);
+                      agregarGrupo('=== STAFF ===', staffs);
+                      agregarGrupo('=== EQUIPO DE APOYO ===', apoyos);
+                  }
+              });
+          }
+      } catch (err) {
+          console.error("Error cargando antena Supabase:", err);
       }
   }
 
-  // Ejecutamos la prueba apenas cargue la página
-  verificarConexion();
+  async function registrarCasoSupabase(areaTexto, tipoSolicitud, identificador, nombreEjecutivo) {
+      try {
+          const { data, error } = await _supabase.from('registro_derivaciones').insert([{
+              ejecutivo: nombreEjecutivo || 'No especificado',
+              area: areaTexto,
+              tipo_de_solicitud: tipoSolicitud,
+              identificador: identificador || 'Sin RUT',
+              detalles_extras: 'Sin detalles'
+          }]);
+          
+          if (error) {
+              console.error("🔴 Supabase rechazó el envío:", error.message);
+          } else {
+              console.log("🟢 Caso registrado en BD exitosamente.");
+          }
+      } catch (err) {
+          console.error("🔴 Error de conexión:", err);
+      }
+  }
+
+  document.addEventListener('DOMContentLoaded', cargarEjecutivosDesdeBD);
 </script>
 
-  
 </body>
 </html>
 
