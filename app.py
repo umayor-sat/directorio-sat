@@ -190,6 +190,17 @@ def monitor_calidad():
 def reporteria():
     return render_template("reporteria_sat.html")
 
+
+# =========================
+# ADMINISTRACION
+# =========================
+
+@app.route('/administracion')
+def administracion():
+    # Esta ruta renderiza el nuevo panel unificado de control
+    return render_template('administracion.html')
+
+
 # =========================
 # EJECUCIÓN
 # =========================
