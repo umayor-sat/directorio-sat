@@ -16,241 +16,165 @@
 
   /* HEADER */
   .header { background: var(--amarillo); padding: 20px 30px; display: flex; align-items: center; gap: 25px; }
-  .header img { height: 90px; }
-  .header-text h1 { font-size: 26px; font-weight: 700; color: #002f6c; margin: 0; }
-  .header-text p { font-size: 13px; color: rgba(0,0,0,0.55); margin-top: 3px; }
-  .btn-volver { margin-left: auto; background: var(--azul); color: #fff; border: none; padding: 9px 18px; border-radius: 6px; font-size: 14px; cursor: pointer; text-decoration: none; display: inline-block; white-space: nowrap; }
-  .btn-volver:hover { background: var(--azul-dark); }
+  .header img { height: 90px; background: white; padding: 5px; border-radius: 4px; }
+  .header-text h1 { margin: 0; font-size: 24px; color: #002f6c; }
+  .header-text p { margin: 4px 0 0; font-size: 14px; color: #002f6c; font-weight: 500; }
 
-  /* CONTENEDOR */
-  .container { max-width: 700px; margin: 36px auto; padding: 0 16px 60px; }
+  .container { max-width: 1000px; margin: 30px auto; background: var(--white); padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
 
-  /* CARD */
-  .card { background: var(--white); border-radius: 12px; border: 1px solid var(--border); padding: 2rem 2.25rem; box-shadow: 0 0 20px rgba(0,0,0,0.08); }
+  /* ALERTAS Y BANNERS */
+  .banner-admin { background: #fff3cd; border: 1px solid #f0a500; border-radius: 8px; padding: 12px 20px; margin-bottom: 25px; font-size: 14px; color: #856404; display: none; align-items: center; justify-content: space-between; }
+  .banner-admin.visible { display: flex; }
+  .banner-admin button { background: none; border: 1px solid #856404; border-radius: 4px; padding: 4px 8px; cursor: pointer; color: #856404; font-size: 12px; }
 
-  .section-title { font-size: 11px; font-weight: 700; color: var(--negro); text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 1.25rem; padding-bottom: 8px; border-bottom: 3px solid var(--amarillo); display: inline-block; }
+  .section-title { font-size: 18px; font-weight: 700; color: var(--azul); margin-bottom: 20px; padding-bottom: 8px; border-bottom: 2px solid var(--amarillo); display: flex; align-items: center; gap: 10px; }
 
-  .field { margin-bottom: 1.25rem; }
-  .field-label { display: block; font-size: 11px; font-weight: 600; color: var(--gris-mid); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 7px; }
+  /* FORMULARIO */
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  label { font-size: 13px; font-weight: 600; color: var(--gris-mid); text-transform: uppercase; }
+  input[type="text"], textarea, select { padding: 10px 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 15px; font-family: inherit; transition: border-color 0.2s; }
+  input:focus, textarea:focus { outline: none; border-color: var(--azul); }
 
-  select, input[type=text], textarea { width: 100%; font-family: inherit; font-size: 14px; color: var(--gris-dark); background: var(--gris-pale); border: 1.5px solid var(--border); border-radius: 8px; padding: 9px 12px; outline: none; transition: border-color 0.15s, box-shadow 0.15s; appearance: none; -webkit-appearance: none; }
-  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6b6b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; cursor: pointer; }
-  select:focus, input[type=text]:focus, textarea:focus { border-color: var(--azul); background: var(--white); box-shadow: 0 0 0 3px rgba(0,91,170,0.12); }
-  input[type=text].rut-input { max-width: 220px; }
-  textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
-  #transcripcion { min-height: 160px; }
-  .hint { font-size: 11px; color: #b0b0b0; margin-top: 5px; }
+  /* RADIO BUTTONS */
+  .radio-group { display: flex; gap: 15px; background: var(--gris-pale); padding: 10px; border-radius: 6px; }
+  .radio-item { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 14px; }
+  .radio-item input { cursor: pointer; width: 18px; height: 18px; }
 
-  /* RADIO */
-  .radio-group { display: flex; gap: 8px; flex-wrap: wrap; }
-  .radio-group label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--gris-dark); cursor: pointer; padding: 6px 16px; border: 1.5px solid var(--border); border-radius: 8px; background: var(--gris-pale); transition: background 0.1s, border-color 0.1s; user-select: none; }
-  .radio-group input[type=radio] { display: none; }
-  .radio-group label.selected { background: #eef4fb; border-color: var(--azul); color: var(--azul); font-weight: 600; }
-  .radio-group label:hover:not(.selected) { background: var(--gris-light); }
-
-  .divider { border: none; border-top: 1px solid var(--gris-light); margin: 1.75rem 0; }
+  textarea { min-height: 100px; resize: vertical; }
 
   /* BOTONES */
-  .btn-row { display: flex; gap: 10px; margin-top: 1.75rem; align-items: center; flex-wrap: wrap; }
-  .btn { padding: 10px 22px; border-radius: 8px; font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--gris-dark); transition: background 0.12s, transform 0.08s; }
-  .btn:hover { background: var(--gris-light); }
-  .btn:active { transform: scale(0.98); }
-  .btn.primary { background: var(--azul); color: var(--white); border-color: var(--azul-dark); font-weight: 700; }
-  .btn.primary:hover { background: var(--azul-dark); }
-  .btn.danger { color: #a32d2d; border-color: #f09595; }
-  .btn.danger:hover { background: #fcebeb; }
+  .actions { display: flex; gap: 12px; margin-top: 20px; }
+  .btn { padding: 12px 24px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+  .btn-primary { background: var(--azul); color: white; }
+  .btn-primary:hover { background: var(--azul-dark); transform: translateY(-1px); }
+  .btn-secondary { background: var(--gris-light); color: var(--gris-dark); }
+  .btn-secondary:hover { background: #d0d0d0; }
+  .btn-home { background: var(--azul); color: white; margin-left: auto; }
 
-  .toast { display: none; font-size: 13px; color: #1a5c38; padding: 7px 14px; background: #e8f5e9; border-radius: 8px; align-items: center; border: 1px solid #a5d6a7; }
-  .toast.show { display: flex; }
-
-  /* LOGIN OVERLAY */
-  .overlay-login { display: flex; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 500; align-items: center; justify-content: center; }
-  .overlay-login.oculto { display: none; }
-  .login-box { background: #fff; border-radius: 14px; padding: 40px 36px; width: 100%; max-width: 380px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); border-top: 8px solid var(--amarillo); text-align: center; }
-  .login-box h2 { font-size: 1.1rem; color: var(--azul); margin-bottom: 6px; }
-  .login-box p { font-size: 0.85rem; color: #888; margin-bottom: 24px; }
-  .login-box input[type=password] { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 1rem; text-align: center; letter-spacing: 4px; font-family: inherit; outline: none; margin-bottom: 14px; }
-  .login-box input[type=password]:focus { border-color: var(--azul); box-shadow: 0 0 0 3px rgba(0,91,170,0.12); }
-  .btn-ingresar { width: 100%; background: var(--azul); color: #fff; border: none; padding: 12px; border-radius: 8px; font-size: 0.95rem; font-weight: 700; cursor: pointer; font-family: inherit; }
-  .btn-ingresar:hover { background: var(--azul-dark); }
-  .login-error { color: #c62828; font-size: 0.85rem; margin-top: 10px; display: none; }
+  /* TOAST */
+  #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 25px; border-radius: 50px; font-size: 14px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1000; }
+  #toast.show { opacity: 1; }
 
   /* BOTÓN REPORTE */
-  .btn-reporte-flotante { position: fixed; bottom: 24px; left: 24px; background: #cc0000; color: white; border: none; width: 52px; height: 52px; border-radius: 50%; font-size: 1.3rem; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); z-index: 300; display: flex; align-items: center; justify-content: center; text-decoration: none; }
+  .btn-reporte-flotante { position: fixed; bottom: 24px; left: 24px; background: #cc0000; color: white; width: 52px; height: 52px; border-radius: 50%; font-size: 1.3rem; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); z-index: 300; display: flex; align-items: center; justify-content: center; text-decoration: none; }
   .btn-reporte-flotante:hover { background: #aa0000; }
-  .btn-reporte-flotante::after { content: "Reportar error"; position: absolute; left: 62px; background: #333; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 12px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
-  .btn-reporte-flotante:hover::after { opacity: 1; }
-
-  @media (max-width: 480px) {
-    .card { padding: 1.5rem 1.25rem; }
-    .btn-row { flex-direction: column; align-items: stretch; }
-    .btn { text-align: center; }
-    .header { padding: 14px 20px; }
-    .header img { height: 60px; }
-  }
 </style>
 </head>
 <body>
 
-<!-- LOGIN OVERLAY -->
-<div class="overlay-login" id="overlayLogin">
-  <div class="login-box">
-    <h2>🔐 Acceso restringido</h2>
-    <p>Esta sección es de uso exclusivo del Monitor de Calidad SAT.</p>
-    <input type="password" id="inputPassword" placeholder="••••••••"
-           onkeydown="if(event.key==='Enter') verificarAcceso()"/>
-    <button class="btn-ingresar" onclick="verificarAcceso()">Ingresar</button>
-    <div class="login-error" id="loginError">Contraseña incorrecta. Intenta nuevamente.</div>
-  </div>
-</div>
-
-<!-- HEADER -->
 <div class="header">
   <img src="{{ url_for('static', filename='img/logoum.jpg') }}" alt="Universidad Mayor">
   <div class="header-text">
     <h1>Monitor de Calidad</h1>
-    <p>Servicio de Atención al Estudiante — Evaluación de llamada</p>
+    <p>SAT – Sistema de Atención Telefónica</p>
   </div>
-  <a href="/" class="btn-volver">← Volver</a>
 </div>
 
-<!-- CONTENIDO -->
 <div class="container">
-  <div class="card">
-
-    <div class="section-title">Datos de la llamada</div>
-
-    <div class="field">
-      <span class="field-label">Nombre ejecutivo/a</span>
-      <select id="ejecutivo">
-        <option value="">— Seleccionar —</option>
-        <option>Ana María Goycolea</option>
-        <option>Camila Macarena Espinoza Núñez</option>
-        <option>Claudia Acevedo Díaz</option>
-        <option>Francisca Lizama</option>
-        <option>Francisca Valenzuela</option>
-        <option>Sebastián Moraga Cavieres</option>
-        <option>Camila Fernanda Navarrete Navarrete</option>
-        <option>Silvia González</option>
-      </select>
-    </div>
-
-    <div class="field">
-      <span class="field-label">Nombre solicitante</span>
-      <input type="text" id="nombre_solicitante" placeholder="Nombre de quien realiza la llamada">
-    </div>
-
-    <div class="field">
-      <span class="field-label">RUT solicitante</span>
-      <input type="text" id="rut" class="rut-input" placeholder="Ej: 12345678-9">
-      <p class="hint">Solo si quien llama es un tercero (no el alumno/a)</p>
-    </div>
-
-    <div class="field">
-      <span class="field-label">Saludo institucional</span>
-      <div class="radio-group" id="rg-saludo">
-        <label><input type="radio" name="saludo" value="Sí"><span>Sí</span></label>
-        <label><input type="radio" name="saludo" value="No"><span>No</span></label>
-      </div>
-    </div>
-
-    <div class="field">
-      <span class="field-label">Resumen de la llamada</span>
-      <textarea id="resumen" placeholder="Describe brevemente el contenido de la llamada..."></textarea>
-    </div>
-
-    <div class="field">
-      <span class="field-label">Asegura llamada</span>
-      <div class="radio-group" id="rg-asegura">
-        <label><input type="radio" name="asegura" value="Sí"><span>Sí</span></label>
-        <label><input type="radio" name="asegura" value="No"><span>No</span></label>
-        <label><input type="radio" name="asegura" value="Parcial"><span>Parcial</span></label>
-      </div>
-    </div>
-
-    <div class="field">
-      <span class="field-label">Despedida institucional</span>
-      <div class="radio-group" id="rg-despedida">
-        <label><input type="radio" name="despedida" value="Sí"><span>Sí</span></label>
-        <label><input type="radio" name="despedida" value="No"><span>No</span></label>
-        <label><input type="radio" name="despedida" value="Parcial"><span>Parcial</span></label>
-      </div>
-    </div>
-
-    <hr class="divider">
-
-    <div class="section-title">Transcripción</div>
-
-    <div class="field">
-      <textarea id="transcripcion" placeholder="Pega aquí la transcripción completa de la llamada..."></textarea>
-    </div>
-
-    <div class="btn-row">
-      <button class="btn primary" onclick="copiar()">📋 Copiar al portapapeles</button>
-      <button class="btn danger" onclick="limpiar()">Limpiar todo</button>
-      <div class="toast" id="toast">✅ Copiado al portapapeles</div>
-    </div>
-
+  
+  <div class="banner-admin {% if session.get('rol') == 'supervisor' %}visible{% endif %}" id="bannerAdmin">
+    📊 <strong>Modo Supervisor activo</strong> — Estás visualizando la herramienta de monitoreo.
   </div>
+
+  <div class="section-title">👤 Información de la Llamada</div>
+  <div class="grid">
+    <div class="field">
+      <label>Ejecutivo/a Evaluado</label>
+      <input type="text" id="ejecutivo" placeholder="Nombre del ejecutivo">
+    </div>
+    <div class="field">
+      <label>Nombre Solicitante (Opcional)</label>
+      <input type="text" id="nombre_solicitante" placeholder="Quien llama">
+    </div>
+    <div class="field">
+      <label>RUT Solicitante (Opcional)</label>
+      <input type="text" id="rut" placeholder="12.345.678-9">
+    </div>
+    <div class="field">
+      <label>Fecha de Evaluación</label>
+      <input type="text" id="fecha_actual" readonly style="background:#eee;">
+    </div>
+  </div>
+
+  <div class="section-title">📝 Protocolos Institucionales</div>
+  <div class="grid">
+    <div class="field">
+      <label>Saludo Institucional</label>
+      <div class="radio-group">
+        <label class="radio-item"><input type="radio" name="saludo" value="Correcto" checked> Correcto</label>
+        <label class="radio-item"><input type="radio" name="saludo" value="Incorrecto/Incompleto"> Incompleto</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>Asegura la Llamada</label>
+      <div class="radio-group">
+        <label class="radio-item"><input type="radio" name="asegura" value="Sí" checked> Sí</label>
+        <label class="radio-item"><input type="radio" name="asegura" value="No"> No</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>Despedida Institucional</label>
+      <div class="radio-group">
+        <label class="radio-item"><input type="radio" name="despedida" value="Correcta" checked> Correcta</label>
+        <label class="radio-item"><input type="radio" name="despedida" value="Incorrecta/Incompleta"> Incompleta</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">💬 Resumen y Transcripción</div>
+  <div class="field" style="margin-bottom: 20px;">
+    <label>Resumen de la Llamada</label>
+    <textarea id="resumen" placeholder="Ej: Solicita certificado de alumno regular..."></textarea>
+  </div>
+  <div class="field">
+    <label>Transcripción o Notas del Monitoreo</label>
+    <textarea id="transcripcion" style="min-height: 150px;" placeholder="Detalle de la interacción..."></textarea>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-primary" onclick="copiarTodo()">📋 Copiar Evaluación</button>
+    <button class="btn btn-secondary" onclick="limpiar()">🧹 Limpiar</button>
+    <a href="/" class="btn btn-home">Volver al Inicio</a>
+  </div>
+
 </div>
 
-<!-- BOTÓN REPORTE -->
-<a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de error – Directorio SAT&body=Página donde ocurrió el error:%0A%0ADescripción del problema:%0A%0A(Agrega aquí cualquier detalle adicional)" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
+<a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de error – Monitor Calidad&body=Error detectado:" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
+
+<div id="toast">✅ Evaluación copiada al portapapeles</div>
 
 <script>
-  const PASSWORD_MONITOR = "monitor@um2026";
+  // Establecer fecha de hoy
+  const hoy = new Date();
+  document.getElementById('fecha_actual').value = hoy.toLocaleDateString('es-CL');
 
-  function verificarAcceso() {
-    const val = document.getElementById("inputPassword").value;
-    if (val === PASSWORD_MONITOR) {
-      document.getElementById("overlayLogin").classList.add("oculto");
-    } else {
-      document.getElementById("loginError").style.display = "block";
-      document.getElementById("inputPassword").value = "";
-      document.getElementById("inputPassword").focus();
-    }
-  }
+  function copiarTodo() {
+    var ej = document.getElementById('ejecutivo').value.trim() || '—';
+    var nom = document.getElementById('nombre_solicitante').value.trim();
+    var rut = document.getElementById('rut').value.trim();
+    var sal = document.querySelector('input[name="saludo"]:checked').value;
+    var aseg = document.querySelector('input[name="asegura"]:checked').value;
+    var desp = document.querySelector('input[name="despedida"]:checked').value;
+    var res = document.getElementById('resumen').value.trim() || '—';
+    var trans = document.getElementById('transcripcion').value.trim() || '—';
 
-  window.onload = () => {
-    document.getElementById("overlayLogin").classList.remove("oculto");
-    setTimeout(() => document.getElementById("inputPassword").focus(), 100);
-  };
-
-  document.querySelectorAll('.radio-group').forEach(function(group) {
-    group.querySelectorAll('label').forEach(function(lbl) {
-      lbl.addEventListener('click', function() {
-        group.querySelectorAll('label').forEach(function(l) { l.classList.remove('selected'); });
-        lbl.classList.add('selected');
-      });
-    });
-  });
-
-  function getRadio(name) {
-    var el = document.querySelector('input[name="' + name + '"]:checked');
-    return el ? el.value : '—';
-  }
-
-  function copiar() {
-    var ej    = document.getElementById('ejecutivo').value.trim()           || '—';
-    var nom   = document.getElementById('nombre_solicitante').value.trim();
-    var rut   = document.getElementById('rut').value.trim();
-    var sal   = getRadio('saludo');
-    var res   = document.getElementById('resumen').value.trim()             || '—';
-    var aseg  = getRadio('asegura');
-    var desp  = getRadio('despedida');
-    var trans = document.getElementById('transcripcion').value.trim()       || '—';
     var nomLinea = nom ? 'Nombre solicitante: ' + nom + '\n' : '';
-    var rutLinea = rut ? 'RUT solicitante (tercero): ' + rut + '\n' : '';
-    var texto =
+    var rutLinea = rut ? 'RUT solicitante: ' + rut + '\n' : '';
+
+    var texto = 
       'EVALUACIÓN DE LLAMADA — SAT / Universidad Mayor\n' +
       '================================================\n' +
+      'Fecha: ' + document.getElementById('fecha_actual').value + '\n' +
       'Ejecutivo/a: ' + ej + '\n' +
       nomLinea + rutLinea +
+      '------------------------------------------------\n' +
       'Saludo institucional: ' + sal + '\n' +
       'Asegura llamada: ' + aseg + '\n' +
       'Despedida institucional: ' + desp + '\n\n' +
-      'Resumen de la llamada:\n' + res + '\n\n' +
-      'Transcripción:\n' + trans;
+      'RESUMEN SOLICITUD:\n' + res + '\n\n' +
+      'NOTAS DE MONITOREO:\n' + trans;
+
     navigator.clipboard.writeText(texto).then(function() {
       var t = document.getElementById('toast');
       t.classList.add('show');
@@ -259,14 +183,20 @@
   }
 
   function limpiar() {
-    if (!confirm('¿Limpiar todos los campos?')) return;
+    if (!confirm('¿Limpiar todos los campos y volver al inicio?')) return;
+    
+    // Limpieza de campos
     document.getElementById('ejecutivo').value = '';
     document.getElementById('nombre_solicitante').value = '';
     document.getElementById('rut').value = '';
     document.getElementById('resumen').value = '';
     document.getElementById('transcripcion').value = '';
-    document.querySelectorAll('input[type=radio]').forEach(function(r) { r.checked = false; });
-    document.querySelectorAll('.radio-group label').forEach(function(l) { l.classList.remove('selected'); });
+    
+    document.querySelectorAll('input[type=radio]').forEach(function(r) { 
+      if(r.value === 'Correcto' || r.value === 'Sí' || r.value === 'Correcta') r.checked = true;
+    });
+
+    // VOLVER AL TOP DE LA PÁGINA (No al Home)
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 </script>
