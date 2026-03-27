@@ -62,7 +62,6 @@ body { background-color: var(--fondo); color: var(--texto); line-height: 1.5; mi
 .login-title { font-size: 1.3rem; font-weight: bold; color: var(--texto); text-align: center; margin-bottom: 6px; }
 .login-subtitle { font-size: 0.9rem; color: var(--texto-suave); text-align: center; margin-bottom: 32px; text-transform: uppercase; letter-spacing: 1px;}
 
-/* Diseño del contenedor para la contraseña con el ojito */
 .password-container { position: relative; width: 100%; margin-bottom: 24px; }
 .password-container .login-input { margin-bottom: 0; padding-right: 45px; width: 100%; padding: 16px; border: 2px solid var(--borde); border-radius: 8px; font-size: 1rem; text-align: center; outline: none; background: var(--fondo); color: var(--texto); transition: border-color 0.3s; }
 .password-container .login-input:focus { border-color: var(--um-amarillo); }
@@ -79,13 +78,13 @@ body { background-color: var(--fondo); color: var(--texto); line-height: 1.5; mi
 
 
 /* ========================================================================== */
-/* ⏳ 3. DISEÑO PANTALLA DE CARGA (LOADER)                                    */
+/* ⏳ 3. DISEÑO PANTALLA DE CARGA (LOADER DINÁMICO)                           */
 /* ========================================================================== */
 #loader-overlay { position: fixed; inset: 0; background: var(--fondo); z-index: 9998; display: none; flex-direction: column; justify-content: center; align-items: center; }
 .spinner { width: 60px; height: 60px; border: 5px solid var(--borde); border-top: 5px solid var(--um-amarillo); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 24px; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 .loader-msg { font-size: 1.2rem; font-weight: bold; color: var(--texto); margin-bottom: 8px; text-align: center;}
-.loader-submsg { font-size: 0.95rem; color: var(--texto-suave); margin-bottom: 24px; text-align: center;}
+.loader-submsg { font-size: 0.95rem; color: var(--texto-suave); margin-bottom: 24px; text-align: center; height: 20px; transition: opacity 0.3s;}
 .progress-wrap { width: 300px; height: 8px; background: var(--borde); border-radius: 4px; overflow: hidden; margin-bottom: 12px;}
 .progress-bar { height: 100%; background: var(--um-amarillo); width: 0%; transition: width 0.3s; }
 #loading-text { font-size: 0.85rem; font-weight: bold; color: var(--texto); }
@@ -163,9 +162,8 @@ input:checked + .slider:before { transform: translateX(20px); }
 .data-list .label { flex: 1; font-weight: bold; color: var(--texto); padding-right: 16px;}
 .data-list .val { font-weight: bold; color: #111; background: var(--um-amarillo); padding: 4px 14px; border-radius: 20px; font-size: 0.95rem;}
 
-
 /* ========================================================================== */
-/* 🔎 6. DISEÑO DEL MODAL DE DESGLOSE (VENTANA EMERGENTE)                     */
+/* 🔎 6. DISEÑO DEL MODAL DE DESGLOSE                                         */
 /* ========================================================================== */
 #modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 10000; display: none; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(3px);}
 .modal-container { background: var(--card-bg); width: 100%; max-width: 900px; max-height: 90vh; border-radius: 12px; display: flex; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.3); animation: scaleUp 0.3s ease;}
@@ -182,7 +180,6 @@ input:checked + .slider:before { transform: translateX(20px); }
 .table-preview th { background: var(--fondo); padding: 12px 24px; font-size: 0.85rem; color: var(--texto-suave); text-transform: uppercase; position: sticky; top: 0; border-bottom: 1px solid var(--borde); z-index: 1;}
 .table-preview td { padding: 12px 24px; border-bottom: 1px solid var(--borde); font-size: 0.9rem; color: var(--texto); }
 .table-preview tr:hover td { background: var(--card-hover); }
-
 
 /* ========================================================================== */
 /* 🔘 7. BOTONES FLOTANTES Y PIE DE PÁGINA                                    */
@@ -231,8 +228,8 @@ input:checked + .slider:before { transform: translateX(20px); }
 
 <div id="loader-overlay">
   <div class="spinner"></div>
-  <div class="loader-msg">Por favor espere, cargando información...</div>
-  <div class="loader-submsg">Extrayendo datos corporativos.</div>
+  <div class="loader-msg">Procesando información...</div>
+  <div class="loader-submsg" id="dynamic-loader-msg">Recopilando los datos de la base...</div>
   <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
   <div id="loading-text">Conectando...</div>
 </div>
@@ -374,7 +371,16 @@ const REGLAS = {
 let memData = [];
 let modalDataActiva = []; 
 let catActiva = "";
-let anioActivo = 2026; // Para saber qué año descargar en el Excel
+let anioActivo = 2026; 
+
+// ARREGLO DE MENSAJES ROTATORIOS ACORDADOS
+const mensajesRotatorios = [
+  "Recopilando los datos de la base...",
+  "Armando los gráficos. Por favor, espere.",
+  "Asegurando que los números cuadren...",
+  "Finalizando la visualización. Si el proceso demora más de lo habitual o presenta un error de carga, presione F5 para actualizar."
+];
+let intervaloMensajes;
 
 /* ========================================================================== */
 /* 2. FUNCIONES DE SEGURIDAD E INTERFAZ (LOGIN Y BOTONES)                     */
@@ -383,7 +389,6 @@ function validarBoton() {
   document.getElementById("btn-login").disabled = !document.getElementById("chk-responsabilidad").checked; 
 }
 
-// Función para mostrar/ocultar contraseña con el ojito
 function togglePassword() {
   const input = document.getElementById("pass-input");
   const icon = document.getElementById("eye-icon");
@@ -400,8 +405,17 @@ function togglePassword() {
 
 window.onload = () => {
   if(localStorage.getItem('sat_theme') === 'dark') { document.body.classList.add('dark-mode'); document.getElementById('theme-switch').checked = true; }
-  if(sessionStorage.getItem("sat_secure") === "auth_ok") { document.getElementById("login-overlay").style.display = "none"; cargarDatosBD(); } 
-  else { setTimeout(() => document.getElementById("pass-input").focus(), 100); }
+  
+  // MAGIA JINJA: Validamos si la persona ya está logueada en el sistema general
+  let accesoSeguro = {% if session.get('rol') in ['supervisor', 'admin'] %}true{% else %}false{% endif %};
+  
+  if(accesoSeguro || sessionStorage.getItem("sat_secure") === "auth_ok") { 
+      document.getElementById("login-overlay").style.display = "none"; 
+      cargarDatosBD(); 
+  } 
+  else { 
+      setTimeout(() => document.getElementById("pass-input").focus(), 100); 
+  }
 };
 
 function verificarAcceso() {
@@ -430,24 +444,39 @@ function switchTab(tabId) {
 }
 
 /* ========================================================================== */
-/* 3. DESCARGA DE DATOS DESDE SUPABASE (LA MAGIA DE LOS NÚMEROS)              */
+/* 3. DESCARGA DE DATOS DESDE SUPABASE Y ROTACIÓN DE MENSAJES                 */
 /* ========================================================================== */
 async function cargarDatosBD() {
   document.getElementById("loader-overlay").style.display = "flex";
   document.getElementById("progressBar").style.width = "0%";
+  
+  // INICIAMOS LOS MENSAJES ROTATORIOS
+  let msgIndex = 0;
+  const submsgElement = document.getElementById("dynamic-loader-msg");
+  submsgElement.innerText = mensajesRotatorios[msgIndex];
+  
+  intervaloMensajes = setInterval(() => {
+    msgIndex++;
+    if (msgIndex < mensajesRotatorios.length) {
+      submsgElement.style.opacity = 0; // Efecto visual suave
+      setTimeout(() => {
+        submsgElement.innerText = mensajesRotatorios[msgIndex];
+        submsgElement.style.opacity = 1;
+      }, 300);
+    } else {
+      clearInterval(intervaloMensajes);
+    }
+  }, 4500); // Cambia cada 4.5 segundos
   
   const limite = 1000;
   let arr = [];
   let offset = 0;
   let buscar = true;
   
-  // SOLICITUD DE COLUMNAS (Incluye numero_caso y rut_contacto)
   const querySelect = "select=fecha_creacion_ts,tipo_caso,tema,subtema,contacto,numero_caso,rut_contacto";
 
   try {
     while (buscar) {
-      // AQUÍ ESTÁ EL FIX MAESTRO DE LOS NÚMEROS: 
-      // Se agregó "&order=fecha_creacion_ts.asc" para evitar que Supabase envíe filas repetidas.
       const url = `${SUPABASE_URL}/rest/v1/${TABLA}?${querySelect}&order=fecha_creacion_ts.asc&limit=${limite}&offset=${offset}`;
       const response = await fetch(url, { headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Accept": "application/json" } });
       
@@ -484,7 +513,6 @@ async function cargarDatosBD() {
               fecha: fechaPura
           };
       }).filter(r => r.fecha !== null && !isNaN(r.fecha.getTime())); 
-      // Nota: Ya NO borramos la categoría "Otro" aquí. Todos los casos válidos suman al Gran Total.
 
       arr = arr.concat(limpios);
       document.getElementById("loading-text").innerText = `Procesando: ${arr.length.toLocaleString("es-CL")} registros...`;
@@ -498,12 +526,14 @@ async function cargarDatosBD() {
     memData = arr; 
     
     setTimeout(() => {
+        clearInterval(intervaloMensajes); // Detener rotación al terminar
         construirDashboard();
         document.getElementById("loader-overlay").style.display = "none";
         document.getElementById("main-content").style.display = "block";
     }, 500);
 
   } catch(error) {
+    clearInterval(intervaloMensajes); // Detener rotación si hay error
     document.getElementById("loading-text").innerHTML = `<span style="color:var(--bad-text); font-size:1rem;">Error de conexión. Actualice la página e intente de nuevo.</span>`;
   }
 }
@@ -533,7 +563,6 @@ function construirDashboard() {
   const pad = (n) => n.toString().padStart(2, '0');
   document.getElementById("ui-fecha-act").innerHTML = `<i class="far fa-clock"></i> ${pad(fechaMax26.getDate())}-${pad(fechaMax26.getMonth()+1)}-${fechaMax26.getFullYear()}`;
   
-  // Imprimir Totales Generales 2026 vs 2025 (Estos incluyen TODO, dando los 26.430 que esperas)
   document.getElementById("g-total-26").innerText = fmt.format(ytd26.length);
   document.getElementById("g-total-25").innerText = fmt.format(ytd25.length);
   document.getElementById("hist-total-25-num").innerText = fmt.format(d25.length);
@@ -547,7 +576,6 @@ function construirDashboard() {
     else { gt.className="pill neutral"; gt.innerText = `= 0%`; }
   } else { gt.className="pill neutral"; gt.innerText = `S/D`; }
 
-  // Función constructora para las tarjetas de 2026
   const buildCard = (catName, currentData, prevData) => {
     const config = REGLAS[catName] || { inverse: false };
     const cAct = currentData.filter(r => r.tipo === catName).length;
@@ -577,7 +605,6 @@ function construirDashboard() {
     `;
   };
 
-  // Función constructora para las tarjetas del Histórico 2025
   const buildCardHist = (catName, currentData) => {
     const cAct = currentData.filter(r => r.tipo === catName).length;
     return `
@@ -594,15 +621,12 @@ function construirDashboard() {
   const catsL1 = Object.keys(REGLAS).filter(k => REGLAS[k].nivel === 1);
   const catsL2 = Object.keys(REGLAS).filter(k => REGLAS[k].nivel === 2);
 
-  // Inyectamos las tarjetas en la Pestaña 1 (2026)
   document.getElementById("grid-lvl-1").innerHTML = catsL1.map(c => buildCard(c, ytd26, ytd25)).join("");
   document.getElementById("grid-lvl-2").innerHTML = catsL2.map(c => buildCard(c, ytd26, ytd25)).join("");
 
-  // Inyectamos las tarjetas en la Pestaña 3 (Histórico 2025)
   document.getElementById("grid-lvl-1-hist").innerHTML = catsL1.map(c => buildCardHist(c, d25)).join("");
   document.getElementById("grid-lvl-2-hist").innerHTML = catsL2.map(c => buildCardHist(c, d25)).join("");
 
-  // Generamos el Top 5
   let htmlTop = "";
   Object.keys(REGLAS).forEach(cat => {
     const items = ytd26.filter(r => r.tipo === cat);
@@ -624,7 +648,6 @@ function abrirModal(categoria, anio = 2026) {
   anioActivo = anio;
   document.getElementById("modal-cat-name").innerText = `${categoria} (${anio})`;
   
-  // Filtramos los datos por el año y la categoría que se clickeó
   modalDataActiva = memData.filter(r => r.fecha.getFullYear() === anio && r.tipo === categoria);
   
   const limitVisual = 100; 
@@ -633,12 +656,10 @@ function abrirModal(categoria, anio = 2026) {
   let rowsHtml = "";
   for(let i=0; i<Math.min(modalDataActiva.length, limitVisual); i++) {
       const c = modalDataActiva[i];
-      // Inyección de Número de caso y RUT en la tabla visible
       rowsHtml += `<tr><td>${c.fechaRaw || "-"}</td><td>${c.numero_caso}</td><td>${c.tema}</td><td>${c.subtema}</td><td>${c.contacto}</td><td>${c.rut_contacto}</td></tr>`;
   }
   tbody.innerHTML = rowsHtml;
   
-  // Texto indicativo dinámico
   document.getElementById("modal-info-text").innerText = `Mostrando previsualización (máx. 100 filas por espacio). Descargue el Excel para ver los ${modalDataActiva.length} registros completos.`;
   document.getElementById("modal-overlay").style.display = "flex";
 }
@@ -647,9 +668,7 @@ function cerrarModal() {
   document.getElementById("modal-overlay").style.display = "none";
 }
 
-// MOTOR SHEETJS: CREACIÓN DEL EXCEL .XLSX REAL
 function exportarExcel() {
-  // Orden exacto solicitado para el Excel: Fecha, N° Caso, Tema, Subtema, Contacto, RUT
   const datosExcel = modalDataActiva.map(c => ({
       "Fecha": c.fechaRaw || "-",
       "N° Caso": c.numero_caso,
@@ -663,7 +682,6 @@ function exportarExcel() {
   const libro = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(libro, hoja, "Desglose");
   
-  // El archivo se nombra dinámicamente según la categoría y el año elegido
   XLSX.writeFile(libro, `Desglose_${catActiva}_${anioActivo}.xlsx`);
 }
 </script>
