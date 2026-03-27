@@ -113,13 +113,12 @@ th { background: #005baa; color: white; text-align: left; }
 
 <div class="footer">Desarrollado por <strong>Eduardo Ferrada</strong> · Universidad Mayor · 2026</div>
 
-<!-- BOTÓN ADMIN -->
-<button class="btn-admin-flotante" onclick="abrirLogin()" title="Administración">✏️</button>
+{% if session.get('rol') == 'supervisor' %}
+<button class="btn-admin-flotante" onclick="abrirAgregar()" title="Agregar nuevo registro">➕</button>
+{% endif %}
 
-<!-- BOTÓN REPORTE -->
 <a href="/cdn-cgi/l/email-protection#98fdfcedf9eafcf7b6fefdeaeaf9fcf9d8edf5f9e1f7eab6fbf4a7ebedfaf2fdfbeca568070803b8cafde8f7eaecfdb8fcfdb8fdeaeaf7eab87a180bb8dcf1eafdfbecf7eaf1f7b8cbd9ccbefaf7fce1a5c85b39fff1f6f9b8fcf7f6fcfdb8f7fbedeaeaf15b2bb8fdf4b8fdeaeaf7eaa2bda8d9bda8d9dcfdebfbeaf1e8fbf15b2bf6b8fcfdf4b8e8eaf7faf4fdf5f9a2bda8d9bda8d9b0d9ffeafdfff9b8f9e9ed5b35b8fbedf9f4e9edf1fdeab8fcfdecf9f4f4fdb8f9fcf1fbf1f7f6f9f4b1" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
 
-<!-- MODAL AYUDA -->
 <div id="modalAyuda" class="modal">
   <div class="modal-content">
     <h3>¿Cómo usar el buscador?</h3>
@@ -135,7 +134,7 @@ th { background: #005baa; color: white; text-align: left; }
   </div>
 </div>
 
-<!-- MODAL LOGIN -->
+{% if session.get('rol') == 'supervisor' %}
 <div class="modal" id="modalLogin">
   <div class="modal-content" style="width:360px; text-align:center;">
     <h3>🔐 Acceso Administración</h3>
@@ -151,7 +150,6 @@ th { background: #005baa; color: white; text-align: left; }
   </div>
 </div>
 
-<!-- MODAL AGREGAR / EDITAR -->
 <div class="modal" id="modalAgregar">
   <div class="modal-content">
     <h3 id="tituloFormulario">➕ Agregar registro</h3>
@@ -260,12 +258,17 @@ th { background: #005baa; color: white; text-align: left; }
     <div class="modal-close"><button onclick="cerrarAgregar()">Cerrar</button></div>
   </div>
 </div>
+{% endif %}
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script>
 const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_3Shj63dB3uBAL_TVvqfBRw_3RyTRZ1U";
 const PASSWORD_ADMIN = "SAT@UM2026";
-let modoAdmin = false;
+
+// MAGIA JINJA: Define automáticamente el modoAdmin según la sesión del usuario
+let modoAdmin = {% if session.get('rol') == 'supervisor' %}true{% else %}false{% endif %};
+
 let ultimaBusqueda = "";
 let editandoId = null;
 
