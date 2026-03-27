@@ -3,207 +3,264 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Ejecutivo SAT · Universidad Mayor</title>
+<title>Reportería SAT · Universidad Mayor</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
 <style>
-/* =======================================================
-   SISTEMA DE DISEÑO, VARIABLES Y MODO OSCURO
-   ======================================================= */
+/* ========================================================================== */
+/* 🎨 1. VARIABLES Y SISTEMA DE COLORES INSTITUCIONALES                       */
+/* ========================================================================== */
 :root {
-  --um-azul: #005aa9;
   --um-amarillo: #f2b705;
-  
-  /* Modo Claro (Por defecto) */
-  --bg-color: #f4f7f9;
+  --um-amarillo-hover: #d9a404;
+  --um-azul: #005aa9;
+  --um-verde: #1a5c38;
+  --fondo: #f4f7f9;
+  --texto: #222222;
+  --texto-suave: #666666;
+  --borde: #dde4ee;
   --card-bg: #ffffff;
-  --text-main: #0f172a;
-  --text-muted: #64748b;
-  --border-color: #e2e8f0;
-  --tab-inactive: #f1f5f9;
+  --card-hover: #f9fafb;
   
-  /* Semáforo Inteligente (Claro) */
-  --good-bg: #dcfce7;
-  --good-text: #166534;
-  --bad-bg: #fee2e2;
-  --bad-text: #991b1b;
+  --good-bg: #e8f5e9;
+  --good-text: #2e7d32;
+  --bad-bg: #fdecea;
+  --bad-text: #c62828;
   --neutral-bg: #f1f5f9;
   --neutral-text: #475569;
 }
 
-[data-theme="dark"] {
-  --bg-color: #0f172a;
-  --card-bg: #1e293b;
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --border-color: #334155;
-  --tab-inactive: #0f172a;
+body.dark-mode {
+  --fondo: #121212;
+  --texto: #e0e0e0;
+  --texto-suave: #aaaaaa;
+  --borde: #333333;
+  --card-bg: #1e1e1e;
+  --card-hover: #252525;
 
-  /* Semáforo Inteligente (Oscuro) */
-  --good-bg: rgba(22, 101, 52, 0.4);
-  --good-text: #4ade80;
-  --bad-bg: rgba(153, 27, 27, 0.4);
-  --bad-text: #f87171;
-  --neutral-bg: rgba(71, 85, 105, 0.4);
-  --neutral-text: #cbd5e1;
+  --good-bg: rgba(46, 125, 50, 0.2);
+  --good-text: #81c784;
+  --bad-bg: rgba(198, 40, 40, 0.2);
+  --bad-text: #e57373;
+  --neutral-bg: rgba(255, 255, 255, 0.05);
+  --neutral-text: #aaaaaa;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background-color: var(--bg-color); color: var(--text-main); line-height: 1.5; display: flex; flex-direction: column; min-height: 100vh; transition: background-color 0.3s;}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; }
+body { background-color: var(--fondo); color: var(--texto); line-height: 1.5; min-height: 100vh; display: flex; flex-direction: column; transition: background-color 0.3s, color 0.3s; overflow-x: hidden;}
 
-/* =======================================================
-   PANTALLAS SUPERPUESTAS (LOGIN Y CARGA)
-   ======================================================= */
-.overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.95); z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: opacity 0.3s; }
-.box-center { background: var(--card-bg); padding: 40px; border-radius: 12px; width: 100%; max-width: 380px; text-align: center; border-top: 6px solid var(--um-amarillo); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); }
-.box-title { font-size: 1.25rem; font-weight: 800; color: var(--um-azul); margin-bottom: 8px; }
 
-/* Login */
-.login-input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; text-align: center; margin-bottom: 16px; outline: none; font-family: monospace; letter-spacing: 2px; background: var(--bg-color); color: var(--text-main);}
-.login-btn { width: 100%; background: var(--um-azul); color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; }
-#login-error { color: #ef4444; font-size: 0.85rem; margin-top: 12px; display: none; font-weight: 600;}
+/* ========================================================================== */
+/* 🔐 2. DISEÑO PANTALLA DE SEGURIDAD (LOGIN)                                 */
+/* ========================================================================== */
+#login-overlay { position: fixed; inset: 0; background: var(--fondo); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; transition: opacity 0.4s; }
+.login-brand { text-align: center; margin-bottom: 32px; }
+.login-brand h1 { font-size: 2.2rem; font-weight: 900; color: var(--texto); letter-spacing: -1px; margin-bottom: 4px; text-transform: uppercase;}
+.login-brand p { font-size: 1.1rem; color: var(--texto-suave); font-style: italic; font-family: Georgia, serif;}
+.login-card { background: var(--card-bg); width: 100%; max-width: 420px; border-radius: 12px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); border-top: 6px solid var(--um-amarillo); transform: translateY(10px); }
+.login-title { font-size: 1.3rem; font-weight: bold; color: var(--texto); text-align: center; margin-bottom: 6px; }
+.login-subtitle { font-size: 0.9rem; color: var(--texto-suave); text-align: center; margin-bottom: 32px; text-transform: uppercase; letter-spacing: 1px;}
 
-/* Loader */
-#loader-overlay { background: var(--bg-color); z-index: 9998; display: none; }
-.spinner { width: 50px; height: 50px; border: 4px solid var(--border-color); border-top: 4px solid var(--um-azul); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 24px; }
+/* Diseño del contenedor para la contraseña con el ojito */
+.password-container { position: relative; width: 100%; margin-bottom: 24px; }
+.password-container .login-input { margin-bottom: 0; padding-right: 45px; width: 100%; padding: 16px; border: 2px solid var(--borde); border-radius: 8px; font-size: 1rem; text-align: center; outline: none; background: var(--fondo); color: var(--texto); transition: border-color 0.3s; }
+.password-container .login-input:focus { border-color: var(--um-amarillo); }
+.toggle-password { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--texto-suave); font-size: 1.2rem; transition: color 0.2s; }
+.toggle-password:hover { color: var(--um-azul); }
+
+.login-check-wrap { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 32px; cursor: pointer; }
+.login-check-wrap input[type="checkbox"] { margin-top: 4px; transform: scale(1.3); cursor: pointer; accent-color: var(--um-amarillo); }
+.login-check-wrap span { font-size: 0.85rem; color: var(--texto-suave); line-height: 1.4; }
+.login-btn { width: 100%; background: var(--um-amarillo); color: #111; border: none; padding: 16px; border-radius: 8px; font-size: 1.05rem; font-weight: bold; cursor: pointer; transition: all 0.2s; text-transform: uppercase; box-shadow: 0 4px 10px rgba(242, 183, 5, 0.3);}
+.login-btn:hover:not(:disabled) { background: var(--um-amarillo-hover); transform: translateY(-2px); }
+.login-btn:disabled { background: var(--borde); color: var(--texto-suave); cursor: not-allowed; box-shadow: none; }
+#login-error { color: var(--bad-text); font-size: 0.9rem; margin-top: 16px; display: none; font-weight: bold; text-align: center; background: var(--bad-bg); padding: 10px; border-radius: 6px;}
+
+
+/* ========================================================================== */
+/* ⏳ 3. DISEÑO PANTALLA DE CARGA (LOADER)                                    */
+/* ========================================================================== */
+#loader-overlay { position: fixed; inset: 0; background: var(--fondo); z-index: 9998; display: none; flex-direction: column; justify-content: center; align-items: center; }
+.spinner { width: 60px; height: 60px; border: 5px solid var(--borde); border-top: 5px solid var(--um-amarillo); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 24px; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-.progress-container { width: 100%; height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden; margin-bottom: 16px; }
-.progress-bar { height: 100%; background: var(--um-amarillo); width: 0%; transition: width 0.3s ease; }
-.loading-msg { font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;}
-.loading-sub { font-size: 0.8rem; color: var(--text-muted); }
+.loader-msg { font-size: 1.2rem; font-weight: bold; color: var(--texto); margin-bottom: 8px; text-align: center;}
+.loader-submsg { font-size: 0.95rem; color: var(--texto-suave); margin-bottom: 24px; text-align: center;}
+.progress-wrap { width: 300px; height: 8px; background: var(--borde); border-radius: 4px; overflow: hidden; margin-bottom: 12px;}
+.progress-bar { height: 100%; background: var(--um-amarillo); width: 0%; transition: width 0.3s; }
+#loading-text { font-size: 0.85rem; font-weight: bold; color: var(--texto); }
 
-/* =======================================================
-   HEADER INSTITUCIONAL Y NAVEGACIÓN
-   ======================================================= */
-.header { background-color: var(--card-bg); border-bottom: 1px solid var(--border-color); padding: 20px 32px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-.header-brand h1 { font-size: 1.4rem; font-weight: 800; color: var(--um-azul); letter-spacing: -0.5px; line-height: 1.2;}
-.header-brand p { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;}
 
-.header-actions { display: flex; align-items: center; gap: 16px; }
-.date-badge { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-align: right;}
-.date-badge strong { color: var(--text-main); display: block; font-size: 0.9rem;}
+/* ========================================================================== */
+/* 🏛️ 4. DISEÑO DEL ENCABEZADO Y PESTAÑAS (HEADER & TABS)                     */
+/* ========================================================================== */
+.header { background-color: var(--um-amarillo); color: #111; padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+.header-brand h1 { font-size: 1.6rem; font-weight: 900; margin: 0; letter-spacing: -0.5px;}
+.header-brand p { font-size: 0.85rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin: 0; opacity: 0.8; }
 
-.btn-action { background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); font-size: 0.8rem; font-weight: 700; padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;}
-.btn-action:hover { border-color: var(--um-azul); color: var(--um-azul); }
-.theme-switch { cursor: pointer; font-size: 1.2rem; background: none; border: none; padding: 4px; color: var(--text-main);}
+.switch-container { display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 0.9rem; }
+.switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.2); transition: .4s; border-radius: 34px; }
+.slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: #111; }
+input:checked + .slider:before { transform: translateX(20px); }
 
-.tabs { display: flex; background: var(--card-bg); padding: 0 32px; border-bottom: 1px solid var(--border-color); gap: 8px;}
-.tab-btn { padding: 16px 24px; border: none; background: transparent; font-size: 0.9rem; font-weight: 700; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.5px;}
-.tab-btn:hover { color: var(--text-main); }
-.tab-btn.active { color: var(--um-azul); border-bottom-color: var(--um-azul); }
+.topbar-info { background: var(--card-bg); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--borde); }
+.last-update { font-size: 0.95rem; font-weight: bold; color: var(--texto-suave); }
+.last-update span { color: var(--texto); display: inline-flex; align-items: center; gap: 6px; background: var(--fondo); padding: 6px 12px; border-radius: 6px; border: 1px solid var(--borde); margin-left: 8px;}
 
-/* =======================================================
-   CONTENEDOR Y VISTAS (TABS)
-   ======================================================= */
-.main-content { flex: 1; max-width: 1400px; width: 100%; margin: 0 auto; padding: 32px; display: none; }
-.view-section { display: none; animation: fadeIn 0.3s ease; }
+.tabs-container { background: var(--card-bg); border-bottom: 1px solid var(--borde); padding: 0 32px; display: flex; overflow-x: auto; scrollbar-width: none; }
+.tab-btn { background: none; border: none; padding: 18px 24px; font-size: 1rem; font-weight: bold; color: var(--texto-suave); cursor: pointer; border-bottom: 4px solid transparent; transition: all 0.2s; white-space: nowrap; }
+.tab-btn:hover { color: var(--texto); }
+.tab-btn.active { color: var(--texto); border-bottom-color: var(--um-amarillo); }
+
+
+/* ========================================================================== */
+/* 📊 5. DISEÑO DE CONTENIDO, TARJETAS Y TABLAS                               */
+/* ========================================================================== */
+.main-content { flex: 1; width: 100%; max-width: 1400px; margin: 0 auto; padding: 32px; display: none; }
+.view-section { display: none; animation: fadeIn 0.4s ease; }
 .view-section.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-/* =======================================================
-   COMPONENTES VISUALES (KPIS Y SEMÁFOROS)
-   ======================================================= */
-/* Panel Global */
-.global-panel { background: var(--um-azul); border-radius: 12px; padding: 32px 40px; color: #fff; margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center; border-left: 8px solid var(--um-amarillo); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-.global-info h2 { font-size: 1rem; font-weight: 600; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 1px; }
-.global-info .number { font-size: 3.5rem; font-weight: 800; line-height: 1; margin: 4px 0 8px; }
-.global-info .context { font-size: 0.9rem; font-weight: 500; background: rgba(0,0,0,0.2); padding: 4px 12px; border-radius: 20px; display: inline-block;}
-.global-comp { text-align: right; background: rgba(255,255,255,0.1); padding: 20px 24px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); }
-.global-comp .label { font-size: 0.8rem; text-transform: uppercase; font-weight: 600; color: rgba(255,255,255,0.8);}
-.global-comp .num { font-size: 1.8rem; font-weight: 700; margin: 4px 0 8px;}
+.section-title { font-size: 1.25rem; font-weight: bold; color: var(--texto); margin-bottom: 24px; text-transform: uppercase; border-left: 6px solid var(--um-amarillo); padding-left: 12px; letter-spacing: 0.5px;}
 
-/* Píldoras */
-.pill { display: inline-flex; align-items: center; padding: 6px 12px; border-radius: 20px; font-weight: 800; font-size: 0.85rem; }
-.pill.bg-white { background: #fff; color: var(--text-main); }
-.pill.good { background-color: var(--good-bg); color: var(--good-text); }
-.pill.bad { background-color: var(--bad-bg); color: var(--bad-text); }
-.pill.neutral { background-color: var(--neutral-bg); color: var(--neutral-text); }
+.global-panel { background: var(--card-bg); border: 1px solid var(--borde); border-radius: 12px; padding: 32px; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); position: relative; overflow: hidden;}
+.global-panel::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 8px; background: var(--um-amarillo); }
 
-/* Grillas de Tarjetas */
-.section-title { font-size: 1.1rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--border-color); padding-bottom: 8px; margin-top: 32px;}
-.section-title:first-child { margin-top: 0; }
+.global-info h2 { font-size: 1.1rem; color: var(--texto-suave); text-transform: uppercase; margin-bottom: 8px;}
+.global-info .number { font-size: 4.5rem; font-weight: bold; color: var(--texto); line-height: 1; margin-bottom: 12px; letter-spacing: -1px;}
+.global-info .context { font-size: 0.9rem; font-weight: bold; background: var(--fondo); padding: 8px 14px; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px; color: var(--texto); border: 1px solid var(--borde);}
 
-.grid-lvl-1 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 16px; }
-.grid-lvl-2 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.global-comp { text-align: right; background: var(--fondo); padding: 24px 32px; border-radius: 12px; border: 1px solid var(--borde);}
+.global-comp .label { font-size: 0.9rem; text-transform: uppercase; font-weight: bold; color: var(--texto-suave); margin-bottom: 8px;}
+.global-comp .num { font-size: 2.2rem; font-weight: bold; color: var(--texto); margin-bottom: 12px; line-height: 1;}
 
-.kpi-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-.lvl-2-card { padding: 16px 20px; } /* Más pequeñas para nivel 2 */
+.pill { display: inline-flex; align-items: center; padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 0.95rem; gap: 6px;}
+.pill.good { background-color: var(--good-bg); color: var(--good-text); border: 1px solid currentColor;}
+.pill.bad { background-color: var(--bad-bg); color: var(--bad-text); border: 1px solid currentColor;}
+.pill.neutral { background-color: var(--neutral-bg); color: var(--neutral-text); border: 1px solid currentColor;}
 
-.kpi-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-.kpi-title { font-size: 0.9rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
-.lvl-2-card .kpi-title { font-size: 0.8rem; }
+.grid-lvl-1 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
+.grid-lvl-2 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
 
-.kpi-body { font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1; margin-bottom: 16px; letter-spacing: -1px;}
-.lvl-2-card .kpi-body { font-size: 1.8rem; margin-bottom: 12px;}
+.kpi-card { background: var(--card-bg); border: 1px solid var(--borde); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02); cursor: pointer;}
+.kpi-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-color: var(--um-amarillo);}
+.kpi-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--borde); padding-bottom: 12px;}
+.kpi-title { font-size: 1.1rem; font-weight: bold; color: var(--texto); text-transform: uppercase; }
+.kpi-icon { color: var(--texto-suave); opacity: 0.5; font-size: 1.2rem; transition: all 0.2s; }
+.kpi-card:hover .kpi-icon { color: var(--um-azul); opacity: 1; transform: scale(1.1); }
+.kpi-body { font-size: 3rem; font-weight: bold; color: var(--texto); line-height: 1; margin-bottom: 20px; letter-spacing: -1px;}
+.kpi-footer { display: flex; justify-content: space-between; align-items: center; background: var(--fondo); padding: 14px; border-radius: 8px; border: 1px solid var(--borde);}
+.prev-text { font-size: 0.85rem; color: var(--texto-suave); font-weight: normal; text-transform: uppercase;}
+.prev-text strong { color: var(--texto); font-size: 1.1rem; display: block; margin-top: 2px; font-weight: bold;}
 
-.kpi-footer { border-top: 1px solid var(--border-color); padding-top: 16px; display: flex; justify-content: space-between; align-items: center; }
-.lvl-2-card .kpi-footer { padding-top: 12px; }
-.prev-text { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
-.prev-text strong { color: var(--text-main); }
+.data-list { list-style: none; background: var(--card-bg); border: 1px solid var(--borde); border-radius: 12px; overflow: hidden;}
+.data-list li { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--borde); }
+.data-list li:last-child { border-bottom: none; }
+.data-list .rank { font-weight: bold; color: var(--texto-suave); width: 30px; font-size: 1.1rem;}
+.data-list .label { flex: 1; font-weight: bold; color: var(--texto); padding-right: 16px;}
+.data-list .val { font-weight: bold; color: #111; background: var(--um-amarillo); padding: 4px 14px; border-radius: 20px; font-size: 0.95rem;}
 
-/* Tablas Top 5 */
-.top-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
-.top-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
-.top-header { background: var(--bg-color); padding: 16px 20px; border-bottom: 1px solid var(--border-color); font-weight: 800; font-size: 0.9rem; color: var(--text-main); text-transform: uppercase;}
-.top-list { list-style: none; }
-.top-list li { display: flex; justify-content: space-between; padding: 12px 20px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
-.top-list li:last-child { border-bottom: none; }
-.top-list .rank { font-weight: 800; color: var(--text-muted); width: 24px; }
-.top-list .tema { flex: 1; font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 16px;}
-.top-list .val { font-weight: 800; color: var(--um-azul); }
 
-/* =======================================================
-   FOOTER INSTITUCIONAL
-   ======================================================= */
-.footer { text-align: center; padding: 24px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; background: var(--card-bg); border-top: 1px solid var(--border-color); margin-top: auto; }
-.footer strong { color: var(--text-main); }
+/* ========================================================================== */
+/* 🔎 6. DISEÑO DEL MODAL DE DESGLOSE (VENTANA EMERGENTE)                     */
+/* ========================================================================== */
+#modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 10000; display: none; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(3px);}
+.modal-container { background: var(--card-bg); width: 100%; max-width: 900px; max-height: 90vh; border-radius: 12px; display: flex; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.3); animation: scaleUp 0.3s ease;}
+@keyframes scaleUp { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal-header { padding: 24px; border-bottom: 1px solid var(--borde); display: flex; justify-content: space-between; align-items: center; background: var(--fondo); border-radius: 12px 12px 0 0;}
+.modal-title { font-size: 1.25rem; font-weight: bold; color: var(--texto); text-transform: uppercase; }
+.modal-close { background: none; border: none; font-size: 1.5rem; color: var(--texto-suave); cursor: pointer; transition: color 0.2s; }
+.modal-close:hover { color: var(--bad-text); }
+.modal-actions { padding: 16px 24px; background: var(--card-bg); border-bottom: 1px solid var(--borde); display: flex; justify-content: space-between; align-items: center;}
+.btn-excel { background: #107c41; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.2s;}
+.btn-excel:hover { background: #0c5e31; }
+.modal-body { padding: 0; overflow-y: auto; flex: 1; }
+.table-preview { width: 100%; border-collapse: collapse; text-align: left; }
+.table-preview th { background: var(--fondo); padding: 12px 24px; font-size: 0.85rem; color: var(--texto-suave); text-transform: uppercase; position: sticky; top: 0; border-bottom: 1px solid var(--borde); z-index: 1;}
+.table-preview td { padding: 12px 24px; border-bottom: 1px solid var(--borde); font-size: 0.9rem; color: var(--texto); }
+.table-preview tr:hover td { background: var(--card-hover); }
 
-@media (max-width: 1024px) { .grid-lvl-1, .grid-lvl-2, .top-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* ========================================================================== */
+/* 🔘 7. BOTONES FLOTANTES Y PIE DE PÁGINA                                    */
+/* ========================================================================== */
+.btn-floating { position: fixed; right: 24px; background: var(--card-bg); color: var(--texto); border: 2px solid var(--borde); border-radius: 30px; padding: 12px 24px; font-weight: bold; font-size: 0.9rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.2s; display: flex; align-items: center; gap: 10px; z-index: 100;}
+.btn-floating:hover { border-color: var(--um-amarillo); transform: translateY(-3px); }
+.btn-home { bottom: 84px; }
+.btn-up { bottom: 24px; padding: 12px 18px; }
+
+.footer { text-align: center; padding: 24px; font-size: 0.85rem; color: var(--texto-suave); background: var(--card-bg); border-top: 1px solid var(--borde); margin-top: auto;}
+.footer strong { color: var(--texto); }
+
+/* Adaptación a celulares */
+@media (max-width: 1024px) { .grid-lvl-1, .grid-lvl-2 { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 768px) {
-  .header { flex-direction: column; align-items: flex-start; gap: 16px; }
-  .header-actions { width: 100%; justify-content: space-between; }
-  .date-badge { text-align: left; }
-  .global-panel { flex-direction: column; align-items: flex-start; gap: 24px; padding: 24px; }
+  .header, .topbar-info, .global-panel { flex-direction: column; align-items: flex-start; gap: 16px; }
   .global-comp { width: 100%; text-align: left; }
-  .grid-lvl-1, .grid-lvl-2, .top-grid { grid-template-columns: 1fr; }
-  .tabs { overflow-x: auto; white-space: nowrap; padding: 0 16px; }
+  .grid-lvl-1, .grid-lvl-2 { grid-template-columns: 1fr; }
+  .modal-actions { flex-direction: column; gap: 12px; align-items: stretch; text-align: center;}
 }
 </style>
 </head>
 <body>
 
-<div id="login-overlay" class="overlay">
-  <div class="box-center">
-    <div class="box-title">📊 DASHBOARD EJECUTIVO</div>
-    <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:24px; font-weight:600;">Acceso restringido — Nivel Directivo</p>
-    <input type="password" id="pass-input" class="login-input" placeholder="••••••••" onkeydown="if(event.key==='Enter') verificarLogin()">
-    <button class="login-btn" onclick="verificarLogin()">INGRESAR AL SISTEMA</button>
-    <div id="login-error">Clave incorrecta. Intente nuevamente.</div>
+<div id="login-overlay">
+  <div class="login-brand">
+    <h1>UNIVERSIDAD MAYOR</h1>
+    <p>para espíritus emprendedores</p>
+  </div>
+  <div class="login-card">
+    <div class="login-title">Acceso a Reportería SAT</div>
+    <div class="login-subtitle">Uso exclusivo – Nivel interno</div>
+    
+    <div class="password-container">
+      <input type="password" id="pass-input" class="login-input" placeholder="Ingrese su contraseña" onkeydown="if(event.key==='Enter') verificarAcceso()">
+      <i class="fas fa-eye toggle-password" onclick="togglePassword()" id="eye-icon"></i>
+    </div>
+
+    <label class="login-check-wrap">
+      <input type="checkbox" id="chk-responsabilidad" onchange="validarBoton()">
+      <span>He leído y acepto el uso responsable de la información contenida en este dashboard.</span>
+    </label>
+    <button class="login-btn" id="btn-login" onclick="verificarAcceso()" disabled>Acceder</button>
+    <div id="login-error"><i class="fas fa-exclamation-triangle"></i> Contraseña incorrecta.</div>
   </div>
 </div>
 
-<div id="loader-overlay" class="overlay">
-  <div class="box-center" style="background:transparent; box-shadow:none; border:none;">
-    <div class="spinner"></div>
-    <div class="loading-msg">Cargando información por favor espere...</div>
-    <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
-    <div class="loading-sub" id="loadingText">Conectando con base de datos maestra</div>
-  </div>
+<div id="loader-overlay">
+  <div class="spinner"></div>
+  <div class="loader-msg">Por favor espere, cargando información...</div>
+  <div class="loader-submsg">Extrayendo datos corporativos.</div>
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+  <div id="loading-text">Conectando...</div>
 </div>
 
 <header class="header">
   <div class="header-brand">
     <h1>Universidad Mayor</h1>
-    <p>Dashboard Ejecutivo SAT</p>
+    <p>Reportería SAT · Consolidado Ejecutivo</p>
   </div>
-  <div class="header-actions">
-    <div class="date-badge">Datos actualizados al<strong id="ui-fecha-act">--/--/----</strong></div>
-    <button class="btn-action" onclick="cargarDatos()">🔄 Actualizar datos</button>
-    <button class="theme-switch" onclick="toggleTheme()" title="Cambiar tema">🌙</button>
+  <div class="header-controls">
+    <label class="switch-container">
+      Modo oscuro
+      <div class="switch">
+        <input type="checkbox" id="theme-switch" onchange="toggleTheme()">
+        <span class="slider"></span>
+      </div>
+    </label>
   </div>
 </header>
 
-<div class="tabs">
+<div class="topbar-info">
+  <div class="last-update">Datos actualizados al: <span id="ui-fecha-act"><i class="far fa-clock"></i> --/--/---- --:--</span></div>
+</div>
+
+<div class="tabs-container">
   <button class="tab-btn active" onclick="switchTab('resumen')">Resumen Ejecutivo</button>
-  <button class="tab-btn" onclick="switchTab('top')">Análisis de Áreas</button>
+  <button class="tab-btn" onclick="switchTab('top')">Top 5 por Tema</button>
   <button class="tab-btn" onclick="switchTab('historico')">Histórico 2025</button>
 </div>
 
@@ -214,242 +271,288 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial
       <div class="global-info">
         <h2>Total Casos Registrados (2026)</h2>
         <div class="number" id="g-total-26">0</div>
-        <div class="context" id="g-context">Acumulado: -- al --</div>
+        <div class="context">
+          <i class="fas fa-info-circle" style="color:var(--um-amarillo);"></i> Acumulado desde el 1 de enero hasta la fecha
+        </div>
       </div>
       <div class="global-comp">
         <div class="label">Mismo período 2025</div>
         <div class="num" id="g-total-25">0</div>
-        <div class="pill bg-white" id="g-trend">0%</div>
+        <div class="pill neutral" id="g-trend">0%</div>
       </div>
     </div>
-
-    <div class="section-title">Nivel 1: Categorías Principales</div>
+    <div class="section-title">Nivel 1: Indicadores Principales</div>
     <div class="grid-lvl-1" id="grid-lvl-1"></div>
-
-    <div class="section-title">Nivel 2: Gestión Secundaria</div>
+    <div class="section-title">Nivel 2: Indicadores Secundarios</div>
     <div class="grid-lvl-2" id="grid-lvl-2"></div>
   </div>
 
   <div id="view-top" class="view-section">
-    <div class="section-title">Top 5 Áreas con Mayor Volumen de Contactos (2026)</div>
-    <div class="top-grid" id="top-grid-container">
-      </div>
+    <div class="section-title">Top 5 Temas Más Frecuentes por Categoría (2026)</div>
+    <div class="grid-lvl-2" id="grid-top-temas"></div>
   </div>
 
   <div id="view-historico" class="view-section">
-    <div class="global-panel" style="background:var(--text-muted); border-left-color:var(--text-main);">
+    <div class="global-panel" style="border-left-color: var(--texto-suave);">
       <div class="global-info">
-        <h2>Cierre Total Año 2025</h2>
-        <div class="number" id="h-total-25">0</div>
-        <div class="context">Periodo completo (01-Enero a 31-Diciembre)</div>
+        <h2>Cierre Total Año 2025 (Fijo)</h2>
+        <div class="number" id="hist-total-25-num">79.108</div>
+        <div class="context" style="background:transparent; border:none; padding:0; margin-top:10px;"><i class="far fa-calendar-check" style="margin-right:6px;"></i> Periodo completo</div>
+      </div>
+      <div class="global-comp">
+        <div class="label">Estado del registro</div>
+        <div class="num" style="color: var(--um-verde); font-size:1.8rem;"><i class="fas fa-lock"></i> Cerrado</div>
       </div>
     </div>
-    <div class="section-title">Distribución Anual 2025</div>
-    <div class="grid-lvl-1" id="grid-hist-25"></div>
+    <div class="section-title">Nivel 1: Indicadores Principales (2025)</div>
+    <div class="grid-lvl-1" id="grid-lvl-1-hist"></div>
+    <div class="section-title">Nivel 2: Indicadores Secundarios (2025)</div>
+    <div class="grid-lvl-2" id="grid-lvl-2-hist"></div>
   </div>
 
 </main>
 
+<div id="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-header">
+      <div class="modal-title">Desglose: <span id="modal-cat-name"></span></div>
+      <button class="modal-close" onclick="cerrarModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-actions">
+      <span id="modal-info-text" style="font-size:0.9rem; color:var(--texto-suave);"></span>
+      <button class="btn-excel" onclick="exportarExcel()"><i class="fas fa-file-excel"></i> Descargar Excel Completo</button>
+    </div>
+    <div class="modal-body">
+      <table class="table-preview">
+        <thead><tr><th>Fecha</th><th>N° Caso</th><th>Tema</th><th>Subtema</th><th>Contacto</th><th>RUT</th></tr></thead>
+        <tbody id="modal-table-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<button class="btn-floating btn-home" onclick="window.location.href='/'"><i class="fas fa-home"></i> Volver al portal</button>
+<button class="btn-floating btn-up" onclick="window.scrollTo({top:0, behavior:'smooth'})"><i class="fas fa-arrow-up"></i></button>
+
 <footer class="footer">
-  Desarrollado por <strong>Eduardo Ferrada</strong><br>
-  Universidad Mayor · Enero 2026
+  Desarrollado por <strong>Eduardo Ferrada</strong><br>Universidad Mayor · Enero 2026
 </footer>
 
 <script>
-// =======================================================
-// CONFIGURACIÓN ESTRICTA
-// =======================================================
-const PASSWORD = "reporteria@um2026";
+/* ========================================================================== */
+/* 1. CONFIGURACIÓN INICIAL (Variables y Claves)                              */
+/* ========================================================================== */
+const PASSWORD_CORRECTA = "reporteria@um2026";
 const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTA4MTcsImV4cCI6MjA4ODEyNjgxN30.pqT_PlAAn3oR6g_0Iaa2fs6qV8M3RQFzNOCAssyZZh4";
+const SUPABASE_KEY = "sb_publishable_3Shj63dB3uBAL_TVvqfBRw_3RyTRZ1U";
 const TABLA = "BBDD_MAESTRO";
 
-// Jerarquía estricta exigida
-const NIVEL_1 = ["Reclamo", "Queja", "Consulta"];
-const NIVEL_2 = ["Riesgo", "Agradecimiento", "Felicitaciones"];
-// NOTA: Casos de "Riesgo" en la base actual pueden venir como "Riesgo" o similar. 
-// Las reglas de Inverso: Reclamo, Queja, Riesgo -> Subir es Malo (true).
 const REGLAS = {
-  "Reclamo": { inverse: true, label: "Reclamos" },
-  "Queja": { inverse: true, label: "Quejas" },
-  "Consulta": { inverse: false, label: "Consultas" },
-  "Riesgo": { inverse: true, label: "Casos de Riesgo" },
-  "Agradecimiento": { inverse: false, label: "Agradecimientos" },
-  "Felicitaciones": { inverse: false, label: "Felicitaciones" }
+  "Reclamo": { inverse: true, nivel: 1 },
+  "Queja": { inverse: true, nivel: 1 },
+  "Consulta": { inverse: false, nivel: 1 },
+  "Riesgo": { inverse: true, nivel: 2 },
+  "Agradecimiento": { inverse: false, nivel: 2 },
+  "Felicitaciones": { inverse: false, nivel: 2 }
 };
 
-let rawData = []; // Memoria global para no re-procesar al cambiar tabs
+let memData = [];
+let modalDataActiva = []; 
+let catActiva = "";
+let anioActivo = 2026; // Para saber qué año descargar en el Excel
 
-// =======================================================
-// UI CONTROLS (TABS & THEME)
-// =======================================================
+/* ========================================================================== */
+/* 2. FUNCIONES DE SEGURIDAD E INTERFAZ (LOGIN Y BOTONES)                     */
+/* ========================================================================== */
+function validarBoton() { 
+  document.getElementById("btn-login").disabled = !document.getElementById("chk-responsabilidad").checked; 
+}
+
+// Función para mostrar/ocultar contraseña con el ojito
+function togglePassword() {
+  const input = document.getElementById("pass-input");
+  const icon = document.getElementById("eye-icon");
+  if (input.type === "password") {
+    input.type = "text";
+    icon.classList.remove("fa-eye");
+    icon.classList.add("fa-eye-slash");
+  } else {
+    input.type = "password";
+    icon.classList.remove("fa-eye-slash");
+    icon.classList.add("fa-eye");
+  }
+}
+
+window.onload = () => {
+  if(localStorage.getItem('sat_theme') === 'dark') { document.body.classList.add('dark-mode'); document.getElementById('theme-switch').checked = true; }
+  if(sessionStorage.getItem("sat_secure") === "auth_ok") { document.getElementById("login-overlay").style.display = "none"; cargarDatosBD(); } 
+  else { setTimeout(() => document.getElementById("pass-input").focus(), 100); }
+};
+
+function verificarAcceso() {
+  if(!document.getElementById("chk-responsabilidad").checked) return;
+  if(document.getElementById("pass-input").value === PASSWORD_CORRECTA) {
+    sessionStorage.setItem("sat_secure", "auth_ok");
+    document.getElementById("login-overlay").style.opacity = "0";
+    setTimeout(() => { document.getElementById("login-overlay").style.display = "none"; cargarDatosBD(); }, 400);
+  } else {
+    document.getElementById("login-error").style.display = "block";
+    document.getElementById("pass-input").value = ""; document.getElementById("pass-input").focus();
+  }
+}
+
+function toggleTheme() {
+  const isDark = document.getElementById("theme-switch").checked;
+  if(isDark) { document.body.classList.add('dark-mode'); localStorage.setItem('sat_theme', 'dark'); } 
+  else { document.body.classList.remove('dark-mode'); localStorage.setItem('sat_theme', 'light'); }
+}
+
 function switchTab(tabId) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-  
   event.currentTarget.classList.add('active');
   document.getElementById(`view-${tabId}`).classList.add('active');
 }
 
-function toggleTheme() {
-  const body = document.body;
-  const isDark = body.getAttribute('data-theme') === 'dark';
-  if(isDark) { body.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); }
-  else { body.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
-}
-if(localStorage.getItem('theme') === 'dark') document.body.setAttribute('data-theme', 'dark');
-
-// =======================================================
-// LOGIN LOGIC
-// =======================================================
-window.onload = () => {
-  if(sessionStorage.getItem("sat_logged") === "yes") {
-    document.getElementById("login-overlay").style.display = "none";
-    cargarDatos();
-  } else {
-    setTimeout(() => document.getElementById("pass-input").focus(), 100);
-  }
-};
-
-function verificarLogin() {
-  if(document.getElementById("pass-input").value === PASSWORD) {
-    sessionStorage.setItem("sat_logged", "yes");
-    document.getElementById("login-overlay").style.display = "none";
-    cargarDatos();
-  } else {
-    document.getElementById("login-error").style.display = "block";
-    document.getElementById("pass-input").value = "";
-    document.getElementById("pass-input").focus();
-  }
-}
-
-// =======================================================
-// DATA FETCHING & PARSING
-// =======================================================
-function parsearFecha(str) {
-  if (!str) return null;
-  let s = str.replace(" ", "T");
-  if (s.includes("T") || s.match(/^\d{4}-\d{2}-\d{2}/)) {
-    const d = new Date(s); return isNaN(d.getTime()) ? null : d;
-  }
-  const parts = str.trim().split(" ");
-  const g = parts[0].split("-");
-  if (g.length === 3 && g[2].length === 4) return new Date(parseInt(g[2]), parseInt(g[1])-1, parseInt(g[0]));
-  return new Date(str); 
-}
-
-async function cargarDatos() {
+/* ========================================================================== */
+/* 3. DESCARGA DE DATOS DESDE SUPABASE (LA MAGIA DE LOS NÚMEROS)              */
+/* ========================================================================== */
+async function cargarDatosBD() {
   document.getElementById("loader-overlay").style.display = "flex";
   document.getElementById("progressBar").style.width = "0%";
-  document.getElementById("main-content").style.display = "none";
   
   const limite = 1000;
-  let datos = [];
+  let arr = [];
   let offset = 0;
-  let buscando = true;
-  const cols = encodeURIComponent('"Fecha de creación","Tipo de caso","Tema"');
+  let buscar = true;
   
+  // SOLICITUD DE COLUMNAS (Incluye numero_caso y rut_contacto)
+  const querySelect = "select=fecha_creacion_ts,tipo_caso,tema,subtema,contacto,numero_caso,rut_contacto";
+
   try {
-    while (buscando) {
-      const url = `${SUPABASE_URL}/rest/v1/${TABLA}?select=${cols}&limit=${limite}&offset=${offset}`;
-      const res = await fetch(url, { headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Accept": "application/json" }, cache: "no-store" });
+    while (buscar) {
+      // AQUÍ ESTÁ EL FIX MAESTRO DE LOS NÚMEROS: 
+      // Se agregó "&order=fecha_creacion_ts.asc" para evitar que Supabase envíe filas repetidas.
+      const url = `${SUPABASE_URL}/rest/v1/${TABLA}?${querySelect}&order=fecha_creacion_ts.asc&limit=${limite}&offset=${offset}`;
+      const response = await fetch(url, { headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Accept": "application/json" } });
       
-      if (!res.ok) throw new Error(`Error BD: ${res.status}`);
-      const chunk = await res.json();
+      if (response.status === 406) {
+          buscar = false; 
+          break;
+      }
+      if (!response.ok) throw new Error(`Error BD: ${response.status}`);
       
-      const limpios = chunk.map(r => ({
-          tipo: r["Tipo de caso"],
-          tema: r["Tema"] || "Sin clasificación",
-          fecha: parsearFecha(r["Fecha de creación"])
-      })).filter(r => r.fecha !== null);
+      const chunk = await response.json();
+      if (chunk.length === 0) { buscar = false; break; }
 
-      datos = datos.concat(limpios);
-      
-      document.getElementById("loadingText").innerText = `Cargando ${datos.length.toLocaleString("es-CL")} registros...`;
-      document.getElementById("progressBar").style.width = Math.min(95, (datos.length / 105000) * 100) + "%";
+      const limpios = chunk.map(r => {
+          let tipoFinal = "Otro";
+          if (r.tipo_caso) {
+              const upper = r.tipo_caso.trim().toUpperCase();
+              if (upper.includes("RECLAMO")) tipoFinal = "Reclamo";
+              else if (upper.includes("QUEJA")) tipoFinal = "Queja";
+              else if (upper.includes("CONSULTA")) tipoFinal = "Consulta";
+              else if (upper.includes("RIESGO")) tipoFinal = "Riesgo";
+              else if (upper.includes("AGRADECIMIENTO")) tipoFinal = "Agradecimiento";
+              else if (upper.includes("FELICITACI")) tipoFinal = "Felicitaciones";
+          }
+          let fechaPura = r.fecha_creacion_ts ? new Date(r.fecha_creacion_ts.replace(" ", "T")) : null;
 
-      if (chunk.length < limite) buscando = false;
+          return {
+              tipo: tipoFinal,
+              tema: r.tema ? r.tema.trim() : "Sin tema",
+              subtema: r.subtema ? r.subtema.trim() : "Sin subtema",
+              contacto: r.contacto ? r.contacto.trim() : "Sin contacto",
+              numero_caso: r.numero_caso ? r.numero_caso.trim() : "Sin ID",
+              rut_contacto: r.rut_contacto ? r.rut_contacto.trim() : "Sin RUT",
+              fechaRaw: r.fecha_creacion_ts,
+              fecha: fechaPura
+          };
+      }).filter(r => r.fecha !== null && !isNaN(r.fecha.getTime())); 
+      // Nota: Ya NO borramos la categoría "Otro" aquí. Todos los casos válidos suman al Gran Total.
+
+      arr = arr.concat(limpios);
+      document.getElementById("loading-text").innerText = `Procesando: ${arr.length.toLocaleString("es-CL")} registros...`;
+      document.getElementById("progressBar").style.width = Math.min(95, (arr.length / 105500) * 100) + "%";
+      
+      if (chunk.length < limite) buscar = false;
       else offset += limite;
     }
     
     document.getElementById("progressBar").style.width = "100%";
-    rawData = datos; // Guardar en memoria
+    memData = arr; 
     
     setTimeout(() => {
-        procesarDashboard();
+        construirDashboard();
         document.getElementById("loader-overlay").style.display = "none";
         document.getElementById("main-content").style.display = "block";
     }, 500);
 
-  } catch(e) {
-    console.error(e);
-    document.getElementById("loadingText").innerHTML = `<span style="color:#ef4444;">Fallo de conexión: ${e.message}</span>`;
+  } catch(error) {
+    document.getElementById("loading-text").innerHTML = `<span style="color:var(--bad-text); font-size:1rem;">Error de conexión. Actualice la página e intente de nuevo.</span>`;
   }
 }
 
-// =======================================================
-// LÓGICA DE NEGOCIO Y RENDERIZADO
-// =======================================================
-function procesarDashboard() {
-  const d26 = rawData.filter(r => r.fecha.getFullYear() === 2026);
-  const d25 = rawData.filter(r => r.fecha.getFullYear() === 2025);
+/* ========================================================================== */
+/* 4. CONSTRUCTOR DEL DASHBOARD (CALCULOS MATEMÁTICOS Y DIBUJO)               */
+/* ========================================================================== */
+function construirDashboard() {
+  const d26 = memData.filter(r => r.fecha.getFullYear() === 2026);
+  const d25 = memData.filter(r => r.fecha.getFullYear() === 2025);
 
-  // 1. Determinar Fecha de Corte Exacta
-  const fechaMax = d26.length > 0 ? new Date(Math.max(...d26.map(r => r.fecha))) : new Date();
-  const mesCorte = fechaMax.getMonth();
-  const diaCorte = fechaMax.getDate();
-
-  // 2. Filtro YTD estricto
-  const esYTD = (fecha) => {
-    const m = fecha.getMonth();
-    const d = fecha.getDate();
-    return m < mesCorte || (m === mesCorte && d <= diaCorte);
+  const fechaMax26 = d26.length > 0 ? new Date(Math.max(...d26.map(r => r.fecha))) : new Date();
+  
+  const esMismoRango = (fechaEval, fechaRefMax) => {
+      const mEval = fechaEval.getMonth(); const dEval = fechaEval.getDate();
+      const mMax = fechaRefMax.getMonth(); const dMax = fechaRefMax.getDate();
+      if(mEval < mMax) return true;
+      if(mEval === mMax && dEval <= dMax) return true;
+      return false;
   };
 
-  const ytd26 = d26.filter(r => esYTD(r.fecha));
-  const ytd25 = d25.filter(r => esYTD(r.fecha));
+  const ytd26 = d26.filter(r => esMismoRango(r.fecha, fechaMax26));
+  const ytd25 = d25.filter(r => esMismoRango(r.fecha, fechaMax26));
 
   const fmt = new Intl.NumberFormat("es-CL");
-
-  // --- HEADER: Fecha Actualización ---
-  const txtFecha = fechaMax.toLocaleDateString("es-CL", { day: '2-digit', month: 'long', year: 'numeric' });
-  document.getElementById("ui-fecha-act").innerText = txtFecha;
-
-  // --- VISTA 1: RESUMEN GLOBAL ---
+  
+  const pad = (n) => n.toString().padStart(2, '0');
+  document.getElementById("ui-fecha-act").innerHTML = `<i class="far fa-clock"></i> ${pad(fechaMax26.getDate())}-${pad(fechaMax26.getMonth()+1)}-${fechaMax26.getFullYear()}`;
+  
+  // Imprimir Totales Generales 2026 vs 2025 (Estos incluyen TODO, dando los 26.430 que esperas)
   document.getElementById("g-total-26").innerText = fmt.format(ytd26.length);
   document.getElementById("g-total-25").innerText = fmt.format(ytd25.length);
-  document.getElementById("g-context").innerText = `Acumulado: 01-Ene al ${txtFecha.split(" de ")[0]}-${txtFecha.split(" de ")[1].substring(0,3).toUpperCase()}`;
+  document.getElementById("hist-total-25-num").innerText = fmt.format(d25.length);
 
   const gt = document.getElementById("g-trend");
   if(ytd25.length > 0) {
-    const pct = ((ytd26.length - ytd25.length) / ytd25.length) * 100;
-    const abs = Math.abs(pct).toFixed(1) + "%";
-    if(pct > 0) { gt.className="pill bad"; gt.innerText = `↑ ${abs}`; }
-    else if(pct < 0) { gt.className="pill good"; gt.innerText = `↓ ${abs}`; }
+    const p = ((ytd26.length - ytd25.length) / ytd25.length) * 100;
+    const abs = Math.abs(p).toFixed(1) + "%";
+    if(p > 0) { gt.className="pill bad"; gt.innerHTML = `<i class="fas fa-arrow-up"></i> ${abs}`; }
+    else if(p < 0) { gt.className="pill good"; gt.innerHTML = `<i class="fas fa-arrow-down"></i> ${abs}`; }
     else { gt.className="pill neutral"; gt.innerText = `= 0%`; }
-  }
+  } else { gt.className="pill neutral"; gt.innerText = `S/D`; }
 
-  // --- RENDERIZADOR DE TARJETAS ---
-  const generarCard = (idCat, dataActual, dataPrev, esNivel2) => {
-    const config = REGLAS[idCat] || { inverse: false, label: idCat };
-    const cAct = dataActual.filter(r => r.tipo === idCat).length;
-    const cPrev = dataPrev.filter(r => r.tipo === idCat).length;
+  // Función constructora para las tarjetas de 2026
+  const buildCard = (catName, currentData, prevData) => {
+    const config = REGLAS[catName] || { inverse: false };
+    const cAct = currentData.filter(r => r.tipo === catName).length;
+    const cPrev = prevData.filter(r => r.tipo === catName).length;
     
     let badge = `<div class="pill neutral">= 0%</div>`;
     if(cPrev > 0) {
-      const pct = ((cAct - cPrev) / cPrev) * 100;
-      if(pct > 0) {
+      const p = ((cAct - cPrev) / cPrev) * 100;
+      if(p > 0) {
         const cls = config.inverse ? "bad" : "good";
-        badge = `<div class="pill ${cls}">↑ ${Math.abs(pct).toFixed(1)}%</div>`;
-      } else if(pct < 0) {
+        badge = `<div class="pill ${cls}"><i class="fas fa-arrow-up"></i> ${Math.abs(p).toFixed(1)}%</div>`;
+      } else if(p < 0) {
         const cls = config.inverse ? "good" : "bad";
-        badge = `<div class="pill ${cls}">↓ ${Math.abs(pct).toFixed(1)}%</div>`;
+        badge = `<div class="pill ${cls}"><i class="fas fa-arrow-down"></i> ${Math.abs(p).toFixed(1)}%</div>`;
       }
     } else if(cAct > 0) badge = `<div class="pill neutral">S/D</div>`;
 
     return `
-      <div class="kpi-card ${esNivel2 ? 'lvl-2-card' : ''}">
-        <div class="kpi-header"><div class="kpi-title">${config.label}</div></div>
+      <div class="kpi-card" onclick="abrirModal('${catName}', 2026)" title="Clic para ver desglose y descargar Excel">
+        <div class="kpi-header"><div class="kpi-title">${catName}</div><i class="fas fa-external-link-alt kpi-icon"></i></div>
         <div class="kpi-body">${fmt.format(cAct)}</div>
         <div class="kpi-footer">
           <div class="prev-text">2025: <strong>${fmt.format(cPrev)}</strong></div>
@@ -459,46 +562,94 @@ function procesarDashboard() {
     `;
   };
 
-  // Llenar Nivel 1 y 2
-  document.getElementById("grid-lvl-1").innerHTML = NIVEL_1.map(cat => generarCard(cat, ytd26, ytd25, false)).join("");
-  document.getElementById("grid-lvl-2").innerHTML = NIVEL_2.map(cat => generarCard(cat, ytd26, ytd25, true)).join("");
-
-  // --- VISTA 2: TOP TEMAS ---
-  let topHtml = "";
-  [...NIVEL_1, ...NIVEL_2].forEach(cat => {
-    const items = ytd26.filter(r => r.tipo === cat);
-    if(items.length === 0) return;
-    
-    const conteo = {};
-    items.forEach(r => conteo[r.tema] = (conteo[r.tema] || 0) + 1);
-    
-    const sorted = Object.entries(conteo).sort((a,b) => b[1] - a[1]).slice(0,5);
-    const listHtml = sorted.map((s, i) => `<li><span class="rank">${i+1}</span><span class="tema" title="${s[0]}">${s[0]}</span><span class="val">${fmt.format(s[1])}</span></li>`).join("");
-    
-    topHtml += `
-      <div class="top-card">
-        <div class="top-header">${REGLAS[cat].label}</div>
-        <ul class="top-list">${listHtml}</ul>
-      </div>
-    `;
-  });
-  document.getElementById("top-grid-container").innerHTML = topHtml;
-
-  // --- VISTA 3: HISTÓRICO 2025 ---
-  document.getElementById("h-total-25").innerText = fmt.format(d25.length);
-  
-  const genCardHist = (idCat) => {
-    const config = REGLAS[idCat] || { label: idCat };
-    const total = d25.filter(r => r.tipo === idCat).length;
+  // Función constructora para las tarjetas del Histórico 2025
+  const buildCardHist = (catName, currentData) => {
+    const cAct = currentData.filter(r => r.tipo === catName).length;
     return `
-      <div class="kpi-card">
-        <div class="kpi-header"><div class="kpi-title">${config.label}</div></div>
-        <div class="kpi-body" style="margin-bottom:0;">${fmt.format(total)}</div>
+      <div class="kpi-card" onclick="abrirModal('${catName}', 2025)" title="Clic para ver desglose y descargar Excel">
+        <div class="kpi-header"><div class="kpi-title">${catName}</div><i class="fas fa-external-link-alt kpi-icon"></i></div>
+        <div class="kpi-body">${fmt.format(cAct)}</div>
+        <div class="kpi-footer">
+          <div class="prev-text">Total Anual Cierre 2025</div>
+        </div>
       </div>
     `;
   };
+
+  const catsL1 = Object.keys(REGLAS).filter(k => REGLAS[k].nivel === 1);
+  const catsL2 = Object.keys(REGLAS).filter(k => REGLAS[k].nivel === 2);
+
+  // Inyectamos las tarjetas en la Pestaña 1 (2026)
+  document.getElementById("grid-lvl-1").innerHTML = catsL1.map(c => buildCard(c, ytd26, ytd25)).join("");
+  document.getElementById("grid-lvl-2").innerHTML = catsL2.map(c => buildCard(c, ytd26, ytd25)).join("");
+
+  // Inyectamos las tarjetas en la Pestaña 3 (Histórico 2025)
+  document.getElementById("grid-lvl-1-hist").innerHTML = catsL1.map(c => buildCardHist(c, d25)).join("");
+  document.getElementById("grid-lvl-2-hist").innerHTML = catsL2.map(c => buildCardHist(c, d25)).join("");
+
+  // Generamos el Top 5
+  let htmlTop = "";
+  Object.keys(REGLAS).forEach(cat => {
+    const items = ytd26.filter(r => r.tipo === cat);
+    if(items.length === 0) return;
+    const countTema = {};
+    items.forEach(r => countTema[r.tema] = (countTema[r.tema] || 0) + 1);
+    const top5 = Object.entries(countTema).sort((a,b) => b[1]-a[1]).slice(0,5);
+    const lis = top5.map((t, i) => `<li><span class="rank">${i+1}</span><span class="label" title="${t[0]}">${t[0].substring(0,40)}</span><span class="val">${fmt.format(t[1])}</span></li>`).join("");
+    htmlTop += `<div class="kpi-card" style="padding:0; cursor:default; border:1px solid var(--borde);"><div class="kpi-header" style="background:var(--fondo); padding:16px 24px; margin:0; border-bottom:1px solid var(--borde); border-radius:12px 12px 0 0;"><div class="kpi-title">${cat}</div></div><ul class="data-list" style="border:none; border-radius:0 0 12px 12px;">${lis}</ul></div>`;
+  });
+  document.getElementById("grid-top-temas").innerHTML = htmlTop;
+}
+
+/* ========================================================================== */
+/* 5. LÓGICA DEL MODAL Y EXPORTACIÓN A EXCEL                                  */
+/* ========================================================================== */
+function abrirModal(categoria, anio = 2026) {
+  catActiva = categoria;
+  anioActivo = anio;
+  document.getElementById("modal-cat-name").innerText = `${categoria} (${anio})`;
   
-  document.getElementById("grid-hist-25").innerHTML = [...NIVEL_1, ...NIVEL_2].map(cat => genCardHist(cat)).join("");
+  // Filtramos los datos por el año y la categoría que se clickeó
+  modalDataActiva = memData.filter(r => r.fecha.getFullYear() === anio && r.tipo === categoria);
+  
+  const limitVisual = 100; 
+  const tbody = document.getElementById("modal-table-body");
+  
+  let rowsHtml = "";
+  for(let i=0; i<Math.min(modalDataActiva.length, limitVisual); i++) {
+      const c = modalDataActiva[i];
+      // Inyección de Número de caso y RUT en la tabla visible
+      rowsHtml += `<tr><td>${c.fechaRaw || "-"}</td><td>${c.numero_caso}</td><td>${c.tema}</td><td>${c.subtema}</td><td>${c.contacto}</td><td>${c.rut_contacto}</td></tr>`;
+  }
+  tbody.innerHTML = rowsHtml;
+  
+  // Texto indicativo dinámico
+  document.getElementById("modal-info-text").innerText = `Mostrando previsualización (máx. 100 filas por espacio). Descargue el Excel para ver los ${modalDataActiva.length} registros completos.`;
+  document.getElementById("modal-overlay").style.display = "flex";
+}
+
+function cerrarModal() {
+  document.getElementById("modal-overlay").style.display = "none";
+}
+
+// MOTOR SHEETJS: CREACIÓN DEL EXCEL .XLSX REAL
+function exportarExcel() {
+  // Orden exacto solicitado para el Excel: Fecha, N° Caso, Tema, Subtema, Contacto, RUT
+  const datosExcel = modalDataActiva.map(c => ({
+      "Fecha": c.fechaRaw || "-",
+      "N° Caso": c.numero_caso,
+      "Tema": c.tema,
+      "Subtema": c.subtema,
+      "Contacto": c.contacto,
+      "RUT": c.rut_contacto
+  }));
+
+  const hoja = XLSX.utils.json_to_sheet(datosExcel);
+  const libro = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(libro, hoja, "Desglose");
+  
+  // El archivo se nombra dinámicamente según la categoría y el año elegido
+  XLSX.writeFile(libro, `Desglose_${catActiva}_${anioActivo}.xlsx`);
 }
 </script>
 </body>
