@@ -37,27 +37,6 @@ body.dark-mode {
 body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--fondo); color: var(--texto); transition: background 0.2s, color 0.2s; }
 
 /* -------------------------------------------
-   LOGIN OVERLAY & DOBLE VALIDACIÓN
-------------------------------------------- */
-.login-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 900; align-items: center; justify-content: center; }
-.login-overlay.visible { display: flex; }
-.login-box { background: var(--fondo); width: 90%; max-width: 420px; border-radius: 14px; border-top: 10px solid var(--um-amarillo); padding: 36px 32px; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.35); }
-.login-box .logo-texto { font-size: 18px; font-weight: 700; color: var(--texto); margin-bottom: 4px; }
-.login-box .logo-lema { font-size: 11px; color: var(--texto-suave); letter-spacing: 1.5px; margin-bottom: 24px; }
-.login-box h2 { font-size: 20px; color: var(--um-azul); margin: 0 0 6px; }
-.login-box .subtitulo { font-size: 13px; color: var(--texto-suave); margin-bottom: 24px; }
-.login-box input[type="password"] { width: 100%; padding: 12px 14px; border: 1.5px solid var(--borde); border-radius: 8px; font-size: 14px; margin-bottom: 12px; background: var(--fondo); color: var(--texto); transition: border-color .15s; }
-.login-box input[type="password"]:focus { border-color: var(--um-azul); outline: none; }
-
-.check-confidencial { display: flex; align-items: flex-start; gap: 10px; text-align: left; margin-bottom: 20px; font-size: 12px; color: var(--texto-suave); line-height: 1.4; cursor: pointer; }
-.check-confidencial input { margin-top: 2px; cursor: pointer; width: 16px; height: 16px; }
-
-.login-box button { width: 100%; background: var(--um-azul); color: #fff; border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity .15s; margin-bottom: 16px; }
-.login-box button:hover { opacity: .9; }
-.login-error { display: none; background: #fdecea; border-left: 3px solid #c0392b; border-radius: 0 6px 6px 0; padding: 8px 12px; font-size: 12px; color: #8b1a1a; text-align: left; margin-bottom: 12px; font-weight: bold; }
-.login-disclaimer { font-size: 11px; color: var(--texto-suave); border-top: 1px solid var(--borde); padding-top: 14px; margin-top: 4px; line-height: 1.5; }
-
-/* -------------------------------------------
    MODAL AVISO EXTENDIDO (10s)
 ------------------------------------------- */
 .modal-aviso { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 800; align-items: center; justify-content: center; opacity: 1; transition: opacity 0.4s ease-out; }
@@ -69,7 +48,7 @@ body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--f
 @keyframes shrink { from { width: 100%; } to { width: 0%; } }
 
 /* -------------------------------------------
-   TOP BAR (ENLACES ORIGINALES) Y BIENVENIDA
+   TOP BAR Y BIENVENIDA
 ------------------------------------------- */
 .top-bar { background: var(--um-amarillo); padding: 0 30px; display: flex; align-items: center; justify-content: space-between; font-size: 13.5px; height: 50px; z-index: 200; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
 .links-container { display: flex; gap: 25px; height: 100%; align-items: center; }
@@ -92,7 +71,7 @@ body.dark-mode .btn-dark-mode { background: #333; color: #fff; }
 .recordatorios { font-size: 13.5px; color: var(--texto-suave); font-weight: 500; }
 
 /* -------------------------------------------
-   HERO ORIGINAL (INTACTO)
+   HERO 
 ------------------------------------------- */
 .hero { text-align: center; padding: 40px 20px 32px; max-width: 1100px; margin: 0 auto; }
 .identidad { display: inline-block; margin-bottom: 24px; }
@@ -121,12 +100,10 @@ body.dark-mode .btn-dark-mode { background: #333; color: #fff; }
 /* -------------------------------------------
    HERRAMIENTAS OPERATIVAS (CALC, POST-IT, SOPORTE)
 ------------------------------------------- */
-/* Calculadora - Original mantenida */
 #calcBtn { position: fixed; bottom: 88px; right: 24px; background: #1a6fc4; color: #fff; border: none; width: 52px; height: 52px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); z-index: 400; display: flex; align-items: center; justify-content: center; transition: transform .15s ease; }
 #calcBtn:hover { transform: translateY(-2px); }
 #calcOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 600; align-items: center; justify-content: center; }
 
-/* Soporte SAT - Original mantenida */
 .support-container { position: fixed; bottom: 24px; right: 24px; z-index: 400; }
 .support-main { background: #005aa9; color: #fff; border: none; border-radius: 28px; padding: 12px 18px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); display: flex; align-items: center; gap: 6px; transition: transform .15s; }
 .support-main:hover { transform: translateY(-2px); }
@@ -134,7 +111,6 @@ body.dark-mode .btn-dark-mode { background: #333; color: #fff; }
 .support-menu a { display: flex; align-items: center; gap: 6px; background: var(--card-bg); padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--texto); font-size: 13px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); border: 1px solid var(--borde); }
 .support-menu a:hover { background: var(--card-hover); }
 
-/* Block de Notas Persistente */
 .post-it-widget { position: fixed; bottom: 24px; left: 24px; z-index: 400; }
 .post-it-btn { background: #f1c40f; color: #333; border: none; width: 52px; height: 52px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; transition: transform 0.15s; }
 .post-it-btn:hover { transform: translateY(-2px); }
@@ -221,29 +197,6 @@ footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin:
     <div class="recordatorios">
         ¿Ya marcaste tu entrada en Geovictoria? Recuerda también revisar tu conexión en Genesys.
     </div>
-</div>
-
-<div id="loginOverlay" class="login-overlay">
-  <div class="login-box">
-    <div class="logo-texto">UNIVERSIDAD MAYOR</div>
-    <div class="logo-lema">para espíritus emprendedores</div>
-    <h2>Portal SAT</h2>
-    <p class="subtitulo">Uso exclusivo Servicio de Atención</p>
-    
-    <input type="password" id="loginInput" placeholder="Ingresa la clave de acceso" onkeydown="if(event.key==='Enter') verificarClave()">
-    
-    <label class="check-confidencial">
-        <input type="checkbox" id="checkConfidencial">
-        Declaro conocer y respetar el carácter confidencial de la información contenida en esta plataforma.
-    </label>
-
-    <div id="loginError" class="login-error"></div>
-    <button onclick="verificarClave()">Ingresar a la Operación</button>
-    
-    <div class="login-disclaimer">
-      <strong>Recuerda que no debes compartir la clave de acceso</strong> con personas fuera del equipo SAT ni utilizarla fuera del ámbito institucional.
-    </div>
-  </div>
 </div>
 
 <div id="modalAviso" class="modal-aviso">
@@ -347,6 +300,8 @@ footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin:
 <footer>
   Desarrollado por <strong>Eduardo Ferrada</strong><br>
   Universidad Mayor · Enero 2026
+  
+  {% if session.get('rol') == 'supervisor' %}
   <div class="footer-links">
     <a href="/monitor-calidad"><i class="fa-solid fa-chart-line"></i> Monitor de Calidad</a>
     <span>|</span>
@@ -354,48 +309,16 @@ footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin:
     <span>|</span>
     <a href="/reporteria-sat"><i class="fa-solid fa-chart-pie"></i> Reportería SAT</a>
   </div>
+  {% endif %}
+  
 </footer>
 
-
 <script>
-// --- 1. LÓGICA DE LOGIN CON DOBLE VALIDACIÓN ---
-var CLAVE_SAT = 'um@sat032026';
-var STORAGE_KEY = 'portalSAT_acceso';
-
+// --- 1. INICIALIZACIÓN DEL PORTAL (Aviso 10s) ---
 document.addEventListener('DOMContentLoaded', function() {
-  var acceso = localStorage.getItem(STORAGE_KEY);
-  if (acceso !== 'ok') {
-    document.getElementById('loginOverlay').classList.add('visible');
-  } else {
-    iniciarPortal();
-  }
+  iniciarPortal();
 });
 
-function verificarClave() {
-  var input = document.getElementById('loginInput').value;
-  var check = document.getElementById('checkConfidencial').checked;
-  var error = document.getElementById('loginError');
-  
-  if (!check) {
-      error.textContent = "Debes aceptar la declaración de confidencialidad para ingresar.";
-      error.style.display = 'block';
-      return;
-  }
-
-  if (input === CLAVE_SAT) {
-    localStorage.setItem(STORAGE_KEY, 'ok');
-    document.getElementById('loginOverlay').classList.remove('visible');
-    error.style.display = 'none';
-    iniciarPortal();
-  } else {
-    error.textContent = "Clave incorrecta. Intenta nuevamente.";
-    error.style.display = 'block';
-    document.getElementById('loginInput').value = '';
-    document.getElementById('loginInput').focus();
-  }
-}
-
-// --- 2. MODAL AVISO EXTENDIDO (10s auto-cierre o clic fuera) ---
 function iniciarPortal() {
   if (!sessionStorage.getItem('avisoSATVisto')) {
     var modal = document.getElementById('modalAviso');
@@ -422,7 +345,7 @@ function iniciarPortal() {
   }
 }
 
-// --- 3. MODO OSCURO ---
+// --- 2. MODO OSCURO ---
 function toggleDarkMode() {
     const body = document.body;
     body.classList.toggle('dark-mode');
@@ -435,7 +358,7 @@ if (localStorage.getItem('sat_darkmode') === 'yes') {
     document.getElementById('iconoDark').className = 'fa-solid fa-sun';
 }
 
-// --- 4. RELOJ Y SALUDO ---
+// --- 3. RELOJ Y SALUDO ---
 function actualizarReloj() {
     const ahora = new Date();
     const h = ahora.getHours();
@@ -453,7 +376,7 @@ function actualizarReloj() {
 setInterval(actualizarReloj, 1000);
 actualizarReloj();
 
-// --- 5. BLOCK DE NOTAS PERSISTENTE ---
+// --- 4. BLOCK DE NOTAS PERSISTENTE ---
 const txtPostIt = document.getElementById('textoPostIt');
 txtPostIt.value = localStorage.getItem('sat_postit') || '';
 txtPostIt.addEventListener('input', function() {
@@ -464,7 +387,7 @@ function togglePostIt() {
     panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
 }
 
-// --- 6. SOPORTE SAT (Original) ---
+// --- 5. SOPORTE SAT ---
 var btn = document.getElementById('supportBtn');
 var menu = document.getElementById('supportMenu');
 btn.addEventListener('click', function(e) {
@@ -477,7 +400,7 @@ document.addEventListener('click', function(event) {
   }
 });
 
-// --- 7. CALCULADORA DE DÍAS HÁBILES (Original) ---
+// --- 6. CALCULADORA DE DÍAS HÁBILES ---
 var FERIADOS_CL = ["2024-01-01","2024-03-29","2024-03-30","2024-04-01","2024-05-01","2024-05-21","2024-06-20","2024-06-29","2024-07-16","2024-08-15","2024-09-18","2024-09-19","2024-09-20","2024-10-12","2024-10-31","2024-11-01","2024-11-16","2024-12-08","2024-12-25","2025-01-01","2025-04-18","2025-04-19","2025-04-21","2025-05-01","2025-05-21","2025-06-20","2025-06-29","2025-07-16","2025-08-15","2025-09-18","2025-09-19","2025-10-12","2025-10-31","2025-11-01","2025-11-16","2025-12-08","2025-12-25","2026-01-01","2026-04-03","2026-04-04","2026-04-06","2026-05-01","2026-05-21","2026-06-20","2026-06-29","2026-07-16","2026-08-15","2026-09-18","2026-09-19","2026-10-12","2026-10-31","2026-11-01","2026-11-16","2026-12-08","2026-12-25","2027-01-01","2027-03-26","2027-03-27","2027-03-29","2027-05-01","2027-05-21","2027-06-20","2027-06-29","2027-07-16","2027-08-15","2027-09-18","2027-09-19","2027-10-12","2027-10-31","2027-11-01","2027-11-16","2027-12-08","2027-12-25"];
 
 function esHabil(fecha) {
