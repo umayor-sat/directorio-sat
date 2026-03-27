@@ -98,7 +98,7 @@
 
 <div class="container">
 
-  <div class="banner-admin" id="bannerAdmin">
+  <div class="banner-admin {% if session.get('rol') == 'supervisor' %}visible{% endif %}" id="bannerAdmin">
     ✏️ <strong>Modo jefatura activo</strong> — puedes publicar y eliminar comunicados.
     <button onclick="salirJefatura()">Salir</button>
   </div>
@@ -143,11 +143,13 @@
   <div class="comunicados" id="listaComunicados"></div>
 </div>
 
-<button class="btn-jefatura" onclick="abrirLogin()" title="Acceso jefatura">✏️</button>
+{% if session.get('rol') == 'supervisor' %}
+<button class="btn-jefatura" onclick="abrirFormulario()" title="Publicar comunicado">➕</button>
+{% endif %}
 
 <a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de error – Directorio SAT&body=Página donde ocurrió el error:%0A%0ADescripción del problema:%0A%0A(Agrega aquí cualquier detalle adicional)" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
 
-<!-- OVERLAY LOGIN -->
+{% if session.get('rol') == 'supervisor' %}
 <div class="overlay" id="overlayLogin">
   <div class="modal modal-login">
     <h2>🔐 Acceso Jefatura</h2>
@@ -163,7 +165,6 @@
   </div>
 </div>
 
-<!-- OVERLAY FORMULARIO -->
 <div class="overlay" id="overlayFormulario">
   <div class="modal">
     <h2>📋 Publicar comunicado</h2>
@@ -192,13 +193,15 @@
     <div class="msg-err" id="msgErr">❌ Error al publicar. Intenta nuevamente.</div>
   </div>
 </div>
+{% endif %}
 
 <script>
     const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
     const SUPABASE_KEY = "sb_publishable_3Shj63dB3uBAL_TVvqfBRw_3RyTRZ1U";
     const MESES = ["","Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
 
-    let modoJefatura = false;
+    // MAGIA JINJA: Define dinámicamente el rol
+    let modoJefatura = {% if session.get('rol') == 'supervisor' %}true{% else %}false{% endif %};
     let debounceTimer = null;
 
     async function cargarComunicados() {
@@ -241,51 +244,44 @@
       cargarComunicados();
     }
 
-      function renderComunicados(lista) {
-    const contenedor = document.getElementById("listaComunicados");
-    const contador   = document.getElementById("contador");
+    function renderComunicados(lista) {
+      const contenedor = document.getElementById("listaComunicados");
+      const contador   = document.getElementById("contador");
 
-    contador.textContent = `${lista.length} comunicado${lista.length !== 1 ? "s" : ""} encontrado${lista.length !== 1 ? "s" : ""}`;
+      contador.textContent = `${lista.length} comunicado${lista.length !== 1 ? "s" : ""} encontrado${lista.length !== 1 ? "s" : ""}`;
 
-    if (!lista.length) {
-      contenedor.innerHTML = `<div class="sin-resultados">No se encontraron comunicados para los filtros seleccionados.</div>`;
-      return;
-    }
+      if (!lista.length) {
+        contenedor.innerHTML = `<div class="sin-resultados">No se encontraron comunicados para los filtros seleccionados.</div>`;
+        return;
+      }
 
-    contenedor.innerHTML = lista.map(c => {
-      const partes  = (c.fecha || "").split("-");
-      const anio    = partes[0] || "";
-      const mesNum  = parseInt(partes[1]) || 0;
-      const dia     = partes[2] || "";
-      const mes     = MESES[mesNum] || "";
-      const pub     = c.publicado_por || "";
-      const esHist  = pub === "Registro histórico";
+      contenedor.innerHTML = lista.map(c => {
+        const partes  = (c.fecha || "").split("-");
+        const anio    = partes[0] || "";
+        const mesNum  = parseInt(partes[1]) || 0;
+        const dia     = partes[2] || "";
+        const mes     = MESES[mesNum] || "";
+        const pub     = c.publicado_por || "";
+        const esHist  = pub === "Registro histórico";
 
-      return `
-        <div class="comunicado" id="com-${c.id}">
-          <div class="comunicado-fecha">
-            <div class="fecha-dia">${dia}</div>
-            <div class="fecha-mes">${mes}</div>
-            <div class="fecha-anio">${anio}</div>
-          </div>
-          <div class="comunicado-body">
-            <div class="comunicado-texto">${c.evento || ""}</div>
-            <div class="comunicado-meta">
-              <span class="badge-publicado ${esHist ? 'historico' : ''}">${pub}</span>
-              <button class="btn-eliminar-com ${modoJefatura ? 'visible' : ''}"
-                onclick="eliminarComunicado(${c.id}, this)">🗑️ Eliminar</button>
+        return `
+          <div class="comunicado" id="com-${c.id}">
+            <div class="comunicado-fecha">
+              <div class="fecha-dia">${dia}</div>
+              <div class="fecha-mes">${mes}</div>
+              <div class="fecha-anio">${anio}</div>
             </div>
-          </div>
-        </div>`;
-    }).join("");
-  }
-
-  function limpiarFiltros() {
-    document.getElementById("filtroAnio").value  = "";
-    document.getElementById("filtroMes").value   = "";
-    document.getElementById("filtroBuscar").value = "";
-    aplicarFiltros();
-  }
+            <div class="comunicado-body">
+              <div class="comunicado-texto">${c.evento || ""}</div>
+              <div class="comunicado-meta">
+                <span class="badge-publicado ${esHist ? 'historico' : ''}">${pub}</span>
+                <button class="btn-eliminar-com ${modoJefatura ? 'visible' : ''}"
+                  onclick="eliminarComunicado(${c.id}, this)">🗑️ Eliminar</button>
+              </div>
+            </div>
+          </div>`;
+      }).join("");
+    }
 
   // ── ELIMINAR ──
   async function eliminarComunicado(id, btn) {
@@ -296,10 +292,8 @@
     });
     if (res.ok) {
       document.getElementById(`com-${id}`)?.remove();
-      todosLosComunicados = todosLosComunicados.filter(c => c.id !== id);
-      const contador = document.getElementById("contador");
-      const restantes = document.querySelectorAll(".comunicado").length;
-      contador.textContent = `${restantes} comunicado${restantes !== 1 ? "s" : ""} encontrado${restantes !== 1 ? "s" : ""}`;
+      // Opcional: recargar para actualizar contador
+      cargarComunicados();
     } else {
       alert("Error al eliminar. Intenta nuevamente.");
     }
@@ -308,14 +302,17 @@
   // ── LOGIN ──
   function abrirLogin() {
     if (modoJefatura) { abrirFormulario(); return; }
-    document.getElementById("overlayLogin").classList.add("active");
-    document.getElementById("inputPassword").value = "";
-    document.getElementById("errorLogin").style.display = "none";
-    setTimeout(() => document.getElementById("inputPassword").focus(), 100);
+    const modal = document.getElementById("overlayLogin");
+    if(modal){
+        modal.classList.add("active");
+        document.getElementById("inputPassword").value = "";
+        document.getElementById("errorLogin").style.display = "none";
+        setTimeout(() => document.getElementById("inputPassword").focus(), 100);
+    }
   }
 
   function cerrarLogin() {
-    document.getElementById("overlayLogin").classList.remove("active");
+    document.getElementById("overlayLogin")?.classList.remove("active");
   }
 
   async function verificarPassword() {
@@ -349,15 +346,18 @@
 
   // ── FORMULARIO ──
   function abrirFormulario() {
-    document.getElementById("overlayFormulario").classList.add("active");
-    document.getElementById("msgOk").style.display = "none";
-    document.getElementById("msgErr").style.display = "none";
-    document.getElementById("inputFecha").value  = new Date().toISOString().split("T")[0];
-    document.getElementById("inputEvento").value = "";
+    const overlay = document.getElementById("overlayFormulario");
+    if(overlay){
+        overlay.classList.add("active");
+        document.getElementById("msgOk").style.display = "none";
+        document.getElementById("msgErr").style.display = "none";
+        document.getElementById("inputFecha").value  = new Date().toISOString().split("T")[0];
+        document.getElementById("inputEvento").value = "";
+    }
   }
 
   function cerrarFormulario() {
-    document.getElementById("overlayFormulario").classList.remove("active");
+    document.getElementById("overlayFormulario")?.classList.remove("active");
   }
 
   async function publicarComunicado() {
@@ -393,10 +393,11 @@
     }
   }
 
-  document.getElementById("overlayLogin").addEventListener("click", function(e) {
+  // Los event listeners protegidos con ?. para evitar errores si no existe el HTML
+  document.getElementById("overlayLogin")?.addEventListener("click", function(e) {
     if (e.target === this) cerrarLogin();
   });
-  document.getElementById("overlayFormulario").addEventListener("click", function(e) {
+  document.getElementById("overlayFormulario")?.addEventListener("click", function(e) {
     if (e.target === this) cerrarFormulario();
   });
 
@@ -416,4 +417,3 @@
 
 </body>
 </html>
-
