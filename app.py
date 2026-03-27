@@ -183,12 +183,17 @@ def soporte():
 def monitor_calidad():
     return render_template("monitor_calidad.html")
 
-# =========================
-# REPORTERÍA SAT
-# =========================
-@app.route("/reporteria")
-def reporteria():
-    return render_template("reporteria_sat.html")
+# ==========================================================
+# REPORTERÍA SAT (DASHBOARD EJECUTIVO)
+# ==========================================================
+
+@app.route('/reporteria-sat')
+def reporteria_sat():
+    """
+    Ruta para el Dashboard de Reportería SAT.
+    IMPORTANTE: El archivo físico debe ser reporteria_sat.html
+    """
+    return render_template('reporteria_sat.html')
 
 
 # =========================
