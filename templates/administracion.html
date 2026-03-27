@@ -23,15 +23,6 @@
         }
         * { box-sizing:border-box; }
         body { font-family:Arial,Helvetica,sans-serif; margin:0; background:#f4f7f9; color:var(--texto); }
-        
-        /* PANTALLA DE LOGIN SECRETA */
-        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--um-azul); display: flex; justify-content: center; align-items: center; z-index: 9999; flex-direction: column; }
-        .login-box { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; width: 350px; border-top: 6px solid var(--um-amarillo); }
-        .login-box h2 { color: var(--um-azul); margin-top: 0; font-size: 20px; border:none; padding:0;}
-        .login-box input { width: 100%; padding: 12px; margin: 20px 0; border: 1px solid var(--borde); border-radius: 6px; font-size: 16px; text-align: center; }
-        .login-box button { width: 100%; background: var(--um-amarillo); color: #222; border: none; padding: 12px; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; transition: opacity 0.2s;}
-        .login-box button:hover { opacity: 0.9; }
-        #login-error { color: var(--rojo); font-size: 13px; display: none; margin-bottom: 10px; font-weight: bold;}
 
         /* CABECERA Y PESTAÑAS */
         .header { background:var(--um-amarillo); padding:20px 30px; display:flex; align-items:center; gap:25px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
@@ -96,23 +87,9 @@
 </head>
 <body>
 
-<div id="login-overlay">
-    <div style="color:white; margin-bottom: 20px; text-align: center;">
-        <i class="fa-solid fa-shield-halved" style="font-size: 40px; color: var(--um-amarillo);"></i>
-        <h1 style="margin: 10px 0 5px;">Acceso Restringido</h1>
-        <p style="margin: 0; font-size: 14px; opacity: 0.8;">Portal SAT · Administrador</p>
-    </div>
-    <div class="login-box">
-        <h2>Ingresa tu contraseña</h2>
-        <div id="login-error">Contraseña incorrecta. Inténtalo de nuevo.</div>
-        <input type="password" id="pwd" placeholder="••••••••••" onkeyup="if(event.key === 'Enter') checkLogin()">
-        <button onclick="checkLogin()">Desbloquear Panel</button>
-    </div>
-</div>
-
 <a href="/" class="btn-volver"><i class="fa-solid fa-arrow-left"></i> Volver al Portal</a>
 
-<div id="main-system" style="display:none;">
+<div id="main-system">
     <div class="header">
       <div class="header-text">
         <h1>Centro de Comando SAT</h1>
@@ -257,20 +234,6 @@
 
 
 <script>
-    // --- 1. LÓGICA DE SEGURIDAD (LOGIN) ---
-    function checkLogin() {
-        const pwd = document.getElementById('pwd').value;
-        if (pwd === 'SAT@UM2026') {
-            document.getElementById('login-overlay').style.display = 'none';
-            document.getElementById('main-system').style.display = 'block';
-            cargarRegistros();
-            cargarEjecutivos();
-        } else {
-            document.getElementById('login-error').style.display = 'block';
-            document.getElementById('pwd').value = '';
-        }
-    }
-
     function switchTab(tabId, btnElement) {
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
@@ -451,6 +414,13 @@
             cargarEjecutivos();
         }
     }
+
+    // Inicializar la carga automática de datos al entrar
+    document.addEventListener("DOMContentLoaded", () => {
+        cargarRegistros();
+        cargarEjecutivos();
+    });
+
 </script>
 
 </body>
