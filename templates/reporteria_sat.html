@@ -189,7 +189,6 @@ input:checked + .slider:before { transform: translateX(20px); }
 /* ========================================================================== */
 .btn-floating { position: fixed; right: 24px; background: var(--card-bg); color: var(--texto); border: 2px solid var(--borde); border-radius: 30px; padding: 12px 24px; font-weight: bold; font-size: 0.9rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.2s; display: flex; align-items: center; gap: 10px; z-index: 100;}
 .btn-floating:hover { border-color: var(--um-amarillo); transform: translateY(-3px); }
-.btn-home { bottom: 84px; }
 .btn-up { bottom: 24px; padding: 12px 18px; }
 
 .footer { text-align: center; padding: 24px; font-size: 0.85rem; color: var(--texto-suave); background: var(--card-bg); border-top: 1px solid var(--borde); margin-top: auto;}
@@ -258,6 +257,23 @@ input:checked + .slider:before { transform: translateX(20px); }
   <div class="last-update">Datos actualizados al: <span id="ui-fecha-act"><i class="far fa-clock"></i> --/--/---- --:--</span></div>
 </div>
 
+<style>
+  .control-bar { padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; background: var(--fondo); border-bottom: 1px solid var(--borde); }
+  .btn-static { border-radius: 8px; padding: 10px 20px; font-weight: bold; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+  .btn-static-home { background: var(--card-bg); color: var(--texto); border: 2px solid var(--borde); }
+  .btn-static-home:hover { border-color: var(--um-amarillo); transform: translateY(-2px); }
+  .btn-static-refresh { background: var(--um-amarillo); color: #111; border: none; box-shadow: 0 4px 10px rgba(242, 183, 5, 0.2); }
+  .btn-static-refresh:hover { background: var(--um-amarillo-hover); transform: translateY(-2px); }
+  @media (max-width: 768px) { .control-bar { flex-direction: column; gap: 12px; align-items: stretch; } .btn-static { justify-content: center; } }
+</style>
+<div class="control-bar">
+    <button onclick="window.location.href='/'" class="btn-static btn-static-home">
+        <i class="fas fa-arrow-left"></i> Volver al Menú Principal
+    </button>
+    <button onclick="location.reload();" class="btn-static btn-static-refresh">
+        <i class="fas fa-sync-alt"></i> Actualizar Gráficos
+    </button>
+</div>
 <div class="tabs-container">
   <button class="tab-btn active" onclick="switchTab('resumen')">Resumen Ejecutivo</button>
   <button class="tab-btn" onclick="switchTab('top')">Top 5 por Tema</button>
@@ -331,7 +347,6 @@ input:checked + .slider:before { transform: translateX(20px); }
   </div>
 </div>
 
-<button class="btn-floating btn-home" onclick="window.location.href='/'"><i class="fas fa-home"></i> Volver al portal</button>
 <button class="btn-floating btn-up" onclick="window.scrollTo({top:0, behavior:'smooth'})"><i class="fas fa-arrow-up"></i></button>
 
 <footer class="footer">
