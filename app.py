@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, jsonify, session
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+from functools import wraps
 from supabase import create_client
 import os
 
@@ -19,7 +20,50 @@ PASSWORD_ADMIN    = os.environ.get("PASSWORD_ADMIN",    "SAT@UM2026")
 PASSWORD_JEFATURA = os.environ.get("PASSWORD_JEFATURA", "SAT@UM2026")
 
 # =========================
-# LOGIN / LOGOUT
+# DECORADOR DE SEGURIDAD
+# =========================
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get("username"):
+            # Si es una petición API, devolver JSON de error
+            if request.path.startswith('/api/'):
+                return jsonify({"error": "No autorizado"}), 401
+            # Si es una página web, redirigir al login
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+# =========================
+# LOGIN UNIFICADO (NUEVO)
+# =========================
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        checkbox = request.form.get('terminos')
+
+        # Validación explícita del checkbox (los checkboxes en HTML envían 'on' si están marcados)
+        if not checkbox or checkbox != 'on':
+            return render_template('login.html', error="Es obligatorio aceptar la declaración de responsabilidad.")
+
+        # Simulación de Login (Pendiente conexión a BD)
+        if password == PASSWORD_ADMIN or password == PASSWORD_JEFATURA:
+            session['username'] = username
+            session['rol'] = 'supervisor'
+            return redirect(url_for('home'))
+        elif password == "ejecutivo":  # Contraseña simulada para rol ejecutivo
+            session['username'] = username
+            session['rol'] = 'ejecutivo'
+            return redirect(url_for('home'))
+        else:
+            return render_template('login.html', error="Credenciales inválidas.")
+
+    return render_template('login.html')
+
+# =========================
+# LOGIN / LOGOUT (EXISTENTES)
 # =========================
 @app.route("/api/login-admin", methods=["POST"])
 def login_admin():
@@ -46,6 +90,7 @@ def logout():
 # HOME
 # =========================
 @app.route("/")
+@login_required
 def home():
     return render_template("home.html")
 
@@ -53,10 +98,12 @@ def home():
 # ESCUELAS
 # =========================
 @app.route("/escuelas")
+@login_required
 def escuelas():
     return render_template("escuelas.html")
 
 @app.route("/api/escuelas")
+@login_required
 def api_escuelas():
     q = request.args.get("q", "").strip().lower()
     sede = request.args.get("sede", "").strip().lower()
@@ -77,10 +124,12 @@ def api_escuelas():
 # ACADÉMICOS
 # =========================
 @app.route("/academicos")
+@login_required
 def academicos():
     return render_template("academicos.html")
 
 @app.route("/api/academicos")
+@login_required
 def api_academicos():
     q = request.args.get("q", "").strip().lower()
     if len(q) < 2:
@@ -101,10 +150,12 @@ def api_academicos():
 # CONTACTOS ADMINISTRATIVOS
 # =========================
 @app.route("/contactos-administrativos")
+@login_required
 def contactos_administrativos():
     return render_template("contactos_administrativos.html")
 
 @app.route("/api/contactos-administrativos")
+@login_required
 def api_contactos_administrativos():
     q = request.args.get("q", "").strip()
     if len(q) < 2:
@@ -125,10 +176,12 @@ def api_contactos_administrativos():
 # BITÁCORA
 # =========================
 @app.route("/bitacora")
+@login_required
 def bitacora():
     return render_template("bitacora.html")
 
 @app.route("/api/bitacora")
+@login_required
 def api_bitacora():
     anio = request.args.get("anio", "").strip()
     mes  = request.args.get("mes",  "").strip()
@@ -152,6 +205,7 @@ def api_bitacora():
 # ÁRBOL DE TEMAS CRM
 # =========================
 @app.route("/temas-crm")
+@login_required
 def temas_crm():
     return render_template("temas_crm.html")
 
@@ -159,6 +213,7 @@ def temas_crm():
 # PAUTA PMCC
 # =========================
 @app.route("/pauta-pmcc")
+@login_required
 def pauta_pmcc():
     return render_template("pmcc.html")
 
@@ -166,6 +221,7 @@ def pauta_pmcc():
 # CORREOS FRECUENTES
 # =========================
 @app.route("/correos-frecuentes")
+@login_required
 def correos_frecuentes():
     return render_template("correos_frecuentes.html")
 
@@ -173,6 +229,7 @@ def correos_frecuentes():
 # SOPORTE SAT
 # =========================
 @app.route("/soporte")
+@login_required
 def soporte():
     return render_template("soporte.html")
 
@@ -180,6 +237,7 @@ def soporte():
 # MONITOR DE CALIDAD
 # =========================
 @app.route("/monitor-calidad")
+@login_required
 def monitor_calidad():
     return render_template("monitor_calidad.html")
 
@@ -188,6 +246,7 @@ def monitor_calidad():
 # ==========================================================
 
 @app.route('/reporteria-sat')
+@login_required
 def reporteria_sat():
     """
     Ruta para el Dashboard de Reportería SAT.
@@ -201,6 +260,7 @@ def reporteria_sat():
 # =========================
 
 @app.route('/administracion')
+@login_required
 def administracion():
     # Esta ruta renderiza el nuevo panel unificado de control
     return render_template('administracion.html')
@@ -212,4 +272,3 @@ def administracion():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
-
