@@ -11,7 +11,9 @@
             --um-azul: #005aa9;
             --um-gris: #f5f7fa;
             --texto: #333;
+            --texto-suave: #888;
             --rojo: #e74c3c;
+            --borde: #ccc;
         }
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -20,7 +22,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            position: relative; /* Necesario para el footer absoluto */
         }
         .login-container {
             background: white;
@@ -31,10 +34,15 @@
             max-width: 400px;
             text-align: center;
             border-top: 6px solid var(--um-amarillo);
+            margin-bottom: 60px; /* Espacio para el footer */
         }
         .logo-um {
-            max-width: 160px;
+            max-width: 180px; /* Aumentado ligeramente para resaltar el escudo */
+            height: auto;
             margin-bottom: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
         h1 {
             color: var(--um-azul);
@@ -51,6 +59,7 @@
         .form-group {
             margin-bottom: 20px;
             text-align: left;
+            position: relative; /* Para posicionar el ojo dentro del input */
         }
         label.input-label {
             display: block;
@@ -63,16 +72,31 @@
         input[type="text"], input[type="password"] {
             width: 100%;
             padding: 12px;
-            border: 1px solid #ccc;
+            padding-right: 40px; /* Espacio para el icono del ojo */
+            border: 1px solid var(--borde);
             border-radius: 6px;
             box-sizing: border-box;
             font-size: 15px;
-            transition: border 0.3s;
+            transition: border-color 0.3s;
         }
         input:focus {
             border-color: var(--um-azul);
             outline: none;
         }
+        /* Estilos específicos para el conmutador de contraseña */
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            bottom: 12px; /* Alineado con el centro del input */
+            cursor: pointer;
+            color: #aaa;
+            transition: color 0.3s;
+            z-index: 10;
+        }
+        .toggle-password:hover {
+            color: var(--um-azul);
+        }
+
         .checkbox-group {
             display: flex;
             align-items: flex-start;
@@ -126,6 +150,16 @@
             gap: 10px;
             text-align: left;
         }
+        /* Estilos del Footer discreto */
+        .login-footer {
+            position: absolute;
+            bottom: 15px;
+            width: 100%;
+            text-align: center;
+            font-size: 11px;
+            color: var(--texto-suave);
+            font-weight: 300;
+        }
     </style>
 </head>
 <body>
@@ -146,12 +180,13 @@
         <form action="{{ url_for('login') }}" method="POST">
             <div class="form-group">
                 <label for="username" class="input-label">Usuario</label>
-                <input type="text" id="username" name="username" placeholder="ej: juan.perez" required>
+                <input type="text" id="username" name="username" placeholder="ej: juan.perez" required autocomplete="username">
             </div>
             
             <div class="form-group">
                 <label for="password" class="input-label">Contraseña</label>
-                <input type="password" id="password" name="password" placeholder="••••••••" required>
+                <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+                <i class="fa-solid fa-eye toggle-password" id="togglePasswordIcon"></i>
             </div>
 
             <div class="checkbox-group">
@@ -162,6 +197,25 @@
             <button type="submit">Ingresar al Portal</button>
         </form>
     </div>
+
+    <footer class="login-footer">
+     Desarrollado por Eduardo Ferrada | Universidad Mayor &copy; Enero 2026
+    </footer>
+
+    <script>
+        const togglePasswordIcon = document.querySelector('#togglePasswordIcon');
+        const passwordInput = document.querySelector('#password');
+
+        togglePasswordIcon.addEventListener('click', function (e) {
+            // Alternar el tipo de input entre password y text
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Alternar el icono (ojo abierto / ojo cerrado)
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    </script>
 
 </body>
 </html>
