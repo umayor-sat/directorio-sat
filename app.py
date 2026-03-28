@@ -20,10 +20,8 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not session.get("username"):
-            # Si es una petición API, devolver JSON de error
             if request.path.startswith('/api/'):
                 return jsonify({"error": "No autorizado"}), 401
-            # Si es una página web, redirigir al login
             return redirect(url_for('login'))
         return f(*args, **kwargs)
     return decorated_function
@@ -38,44 +36,49 @@ def login():
         password = request.form.get('password', '').strip()
         checkbox = request.form.get('terminos')
 
-        # 1. Validación del checkbox
         if not checkbox or checkbox != 'on':
             return render_template('login.html', error="Es obligatorio aceptar la declaración de responsabilidad.")
 
         try:
-            # 2. Consultar a Supabase si existe el usuario
             response = supabase.table('ejecutivos').select('*').eq('login_user', username).execute()
             usuarios = response.data
 
-            # 3. Si el usuario no existe en la BD
             if not usuarios:
                 return render_template('login.html', error="Usuario o contraseña incorrectos.")
 
             usuario = usuarios[0]
+            
+            # --- EL "CHISMOSO" PARA LA CONSOLA DE RENDER ---
+            print("========================================")
+            print(f"DATOS LEÍDOS DE SUPABASE PARA: {username}")
+            print(usuario) 
+            print("========================================")
 
-            # 4. Verificar si la cuenta está inactiva (Checkbox "Activo" en Administración)
             if not usuario.get('activo'):
                 return render_template('login.html', error="Su cuenta está inactiva. Contacte al administrador.")
 
-            # 5. Verificar la contraseña
             if usuario.get('login_password') == password:
                 
-                # Limpiamos los textos (pasamos a minúscula y quitamos espacios)
-                # para que "Admin", "ADMIN " o "admin" funcionen exactamente igual.
+                # Buscamos el rol y lo pasamos a minúscula
                 rol_db = str(usuario.get('rol', '')).lower().strip()
-                nivel_db = str(usuario.get('nivel_acceso', '')).lower().strip()
+                
+                # Buscamos el nivel de acceso en todas sus formas posibles y lo pasamos a minúscula
+                nivel_crudo = usuario.get('nivel_acceso') or usuario.get('nivel de acceso') or usuario.get('Nivel_acceso') or usuario.get('Nivel de acceso') or ''
+                nivel_db = str(nivel_crudo).lower().strip()
 
-                # ¡ÉXITO! Guardamos los datos del ejecutivo en la sesión
                 session['username'] = usuario.get('login_user')
                 session['nombre'] = usuario.get('nombre')
                 session['rol'] = rol_db 
                 session['nivel_acceso'] = nivel_db 
                 
-                # Regla de oro para Reportería y Administración:
-                # Si en el panel le pusiste nivel "admin", forzamos el rol a admin para 
-                # que Jinja y Python le den paso libre a todas las pantallas.
+                # Forzamos los permisos si es administrador o supervisor
                 if session['nivel_acceso'] == 'admin':
                     session['rol'] = 'admin'
+                elif session['nivel_acceso'] == 'supervisor':
+                    session['rol'] = 'supervisor'
+
+                # --- OTRO CHISMOSO PARA VER CÓMO QUEDÓ LA SESIÓN ---
+                print(f"SESIÓN CREADA -> ROL: {session['rol']} | NIVEL: {session['nivel_acceso']}")
 
                 return redirect(url_for('home'))
             else:
@@ -92,20 +95,17 @@ def login():
 # =========================
 @app.route("/logout")
 def logout():
-    session.clear() # Borramos todos los datos de sesión por seguridad
+    session.clear() 
     return redirect(url_for('login'))
 
 # =========================
-# HOME
+# HOME Y DEMÁS RUTAS
 # =========================
 @app.route("/")
 @login_required
 def home():
     return render_template("home.html")
 
-# =========================
-# ESCUELAS
-# =========================
 @app.route("/escuelas")
 @login_required
 def escuelas():
@@ -116,22 +116,12 @@ def escuelas():
 def api_escuelas():
     q = request.args.get("q", "").strip().lower()
     sede = request.args.get("sede", "").strip().lower()
-    if len(q) < 2:
-        return jsonify([])
-    query = (
-        supabase
-        .table("directorio_escuelas_umayor")
-        .select("*")
-        .or_(f"nombre.ilike.%{q}%,cargo.ilike.%{q}%,escuela_busqueda.ilike.%{q}%")
-    )
-    if sede:
-        query = query.ilike("sede", f"%{sede}%")
+    if len(q) < 2: return jsonify([])
+    query = supabase.table("directorio_escuelas_umayor").select("*").or_(f"nombre.ilike.%{q}%,cargo.ilike.%{q}%,escuela_busqueda.ilike.%{q}%")
+    if sede: query = query.ilike("sede", f"%{sede}%")
     result = query.execute()
     return jsonify(result.data or [])
 
-# =========================
-# ACADÉMICOS
-# =========================
 @app.route("/academicos")
 @login_required
 def academicos():
@@ -141,23 +131,13 @@ def academicos():
 @login_required
 def api_academicos():
     q = request.args.get("q", "").strip().lower()
-    if len(q) < 2:
-        return jsonify([])
+    if len(q) < 2: return jsonify([])
     try:
-        query = (
-            supabase
-            .table("otros_contactos_academicos")
-            .select("*")
-            .ilike("departamento_busqueda", f"%{q}%")
-        )
+        query = supabase.table("otros_contactos_academicos").select("*").ilike("departamento_busqueda", f"%{q}%")
         result = query.execute()
         return jsonify(result.data or [])
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    except Exception as e: return jsonify({"error": str(e)}), 500
 
-# =========================
-# CONTACTOS ADMINISTRATIVOS
-# =========================
 @app.route("/contactos-administrativos")
 @login_required
 def contactos_administrativos():
@@ -167,23 +147,13 @@ def contactos_administrativos():
 @login_required
 def api_contactos_administrativos():
     q = request.args.get("q", "").strip()
-    if len(q) < 2:
-        return jsonify([])
+    if len(q) < 2: return jsonify([])
     try:
-        query = (
-            supabase
-            .table("contactos_administrativos")
-            .select("*")
-            .ilike("area_busqueda", q)
-        )
+        query = supabase.table("contactos_administrativos").select("*").ilike("area_busqueda", q)
         result = query.execute()
         return jsonify(result.data or [])
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    except Exception as e: return jsonify({"error": str(e)}), 500
 
-# =========================
-# BITÁCORA
-# =========================
 @app.route("/bitacora")
 @login_required
 def bitacora():
@@ -197,81 +167,51 @@ def api_bitacora():
     q    = request.args.get("q",    "").strip()
     try:
         query = supabase.table("Bitacora").select("*").order("fecha", desc=True)
-        if anio and mes:
-            query = query.gte("fecha", f"{anio}-{mes}-01").lte("fecha", f"{anio}-{mes}-31")
-        elif anio:
-            query = query.gte("fecha", f"{anio}-01-01").lte("fecha", f"{anio}-12-31")
-        elif mes:
-            query = query.filter("fecha", "like", f"%-{mes}-%")
-        if q:
-            query = query.ilike("evento", f"%{q}%")
+        if anio and mes: query = query.gte("fecha", f"{anio}-{mes}-01").lte("fecha", f"{anio}-{mes}-31")
+        elif anio: query = query.gte("fecha", f"{anio}-01-01").lte("fecha", f"{anio}-12-31")
+        elif mes: query = query.filter("fecha", "like", f"%-{mes}-%")
+        if q: query = query.ilike("evento", f"%{q}%")
         result = query.execute()
         return jsonify(result.data or [])
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    except Exception as e: return jsonify({"error": str(e)}), 500
 
-# =========================
-# ÁRBOL DE TEMAS CRM
-# =========================
 @app.route("/temas-crm")
 @login_required
 def temas_crm():
     return render_template("temas_crm.html")
 
-# =========================
-# PAUTA PMCC
-# =========================
 @app.route("/pauta-pmcc")
 @login_required
 def pauta_pmcc():
     return render_template("pmcc.html")
 
-# =========================
-# CORREOS FRECUENTES
-# =========================
 @app.route("/correos-frecuentes")
 @login_required
 def correos_frecuentes():
     return render_template("correos_frecuentes.html")
 
-# =========================
-# SOPORTE SAT
-# =========================
 @app.route("/soporte")
 @login_required
 def soporte():
     return render_template("soporte.html")
 
-# =========================
-# MONITOR DE CALIDAD
-# =========================
 @app.route("/monitor-calidad")
 @login_required
 def monitor_calidad():
     return render_template("monitor_calidad.html")
 
-# ==========================================================
-# REPORTERÍA SAT (DASHBOARD EJECUTIVO)
-# ==========================================================
 @app.route('/reporteria-sat')
 @login_required
 def reporteria_sat():
     return render_template('reporteria_sat.html')
 
-# =========================
-# ADMINISTRACION
-# =========================
 @app.route('/administracion')
 @login_required
 def administracion():
-    # Validamos que solo los administradores o supervisores puedan ver esta vista 
     if session.get('nivel_acceso') != 'admin' and session.get('rol') not in ['admin', 'supervisor']:
         return redirect(url_for('home'))
     return render_template('administracion.html')
 
-# =========================
-# EJECUCIÓN
-# =========================
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
