@@ -59,11 +59,17 @@ def login():
 
             # 5. Verificar la contraseña
             if usuario.get('login_password') == password:
+                
+                # Limpiamos los textos (pasamos a minúscula y quitamos espacios)
+                # para que "Admin", "ADMIN " o "admin" funcionen exactamente igual.
+                rol_db = str(usuario.get('rol', '')).lower().strip()
+                nivel_db = str(usuario.get('nivel_acceso', '')).lower().strip()
+
                 # ¡ÉXITO! Guardamos los datos del ejecutivo en la sesión
                 session['username'] = usuario.get('login_user')
                 session['nombre'] = usuario.get('nombre')
-                session['rol'] = usuario.get('rol') # apoyo, staff, supervisor
-                session['nivel_acceso'] = usuario.get('nivel_acceso') # usuario, admin
+                session['rol'] = rol_db 
+                session['nivel_acceso'] = nivel_db 
                 
                 # Regla de oro para Reportería y Administración:
                 # Si en el panel le pusiste nivel "admin", forzamos el rol a admin para 
