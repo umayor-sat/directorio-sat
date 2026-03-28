@@ -14,12 +14,6 @@ SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "sb_publishable_3Shj63dB3uBAL_TVvq
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # =========================
-# CONTRASEÑAS (desde entorno)
-# =========================
-PASSWORD_ADMIN    = os.environ.get("PASSWORD_ADMIN",    "SAT@UM2026")
-PASSWORD_JEFATURA = os.environ.get("PASSWORD_JEFATURA", "SAT@UM2026")
-
-# =========================
 # DECORADOR DE SEGURIDAD
 # =========================
 def login_required(f):
@@ -35,56 +29,65 @@ def login_required(f):
     return decorated_function
 
 # =========================
-# LOGIN UNIFICADO (NUEVO)
+# LOGIN UNIFICADO (REAL BD)
 # =========================
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '').strip()
         checkbox = request.form.get('terminos')
 
-        # Validación explícita del checkbox (los checkboxes en HTML envían 'on' si están marcados)
+        # 1. Validación del checkbox
         if not checkbox or checkbox != 'on':
             return render_template('login.html', error="Es obligatorio aceptar la declaración de responsabilidad.")
 
-        # Simulación de Login (Pendiente conexión a BD)
-        if password == PASSWORD_ADMIN or password == PASSWORD_JEFATURA:
-            session['username'] = username
-            session['rol'] = 'supervisor'
-            return redirect(url_for('home'))
-        elif password == "ejecutivo":  # Contraseña simulada para rol ejecutivo
-            session['username'] = username
-            session['rol'] = 'ejecutivo'
-            return redirect(url_for('home'))
-        else:
-            return render_template('login.html', error="Credenciales inválidas.")
+        try:
+            # 2. Consultar a Supabase si existe el usuario
+            response = supabase.table('ejecutivos').select('*').eq('login_user', username).execute()
+            usuarios = response.data
+
+            # 3. Si el usuario no existe en la BD
+            if not usuarios:
+                return render_template('login.html', error="Usuario o contraseña incorrectos.")
+
+            usuario = usuarios[0]
+
+            # 4. Verificar si la cuenta está inactiva (Checkbox "Activo" en Administración)
+            if not usuario.get('activo'):
+                return render_template('login.html', error="Su cuenta está inactiva. Contacte al administrador.")
+
+            # 5. Verificar la contraseña
+            if usuario.get('login_password') == password:
+                # ¡ÉXITO! Guardamos los datos del ejecutivo en la sesión
+                session['username'] = usuario.get('login_user')
+                session['nombre'] = usuario.get('nombre')
+                session['rol'] = usuario.get('rol') # apoyo, staff, supervisor
+                session['nivel_acceso'] = usuario.get('nivel_acceso') # usuario, admin
+                
+                # Regla de oro para Reportería y Administración:
+                # Si en el panel le pusiste nivel "admin", forzamos el rol a admin para 
+                # que Jinja y Python le den paso libre a todas las pantallas.
+                if session['nivel_acceso'] == 'admin':
+                    session['rol'] = 'admin'
+
+                return redirect(url_for('home'))
+            else:
+                return render_template('login.html', error="Usuario o contraseña incorrectos.")
+
+        except Exception as e:
+            print(f"Error BD Login: {e}")
+            return render_template('login.html', error="Error de conexión con el servidor.")
 
     return render_template('login.html')
 
 # =========================
-# LOGIN / LOGOUT (EXISTENTES)
+# LOGOUT DEL PORTAL
 # =========================
-@app.route("/api/login-admin", methods=["POST"])
-def login_admin():
-    data = request.get_json(silent=True) or {}
-    if data.get("password") == PASSWORD_ADMIN:
-        session["admin"] = True
-        return jsonify({"ok": True})
-    return jsonify({"ok": False}), 401
-
-@app.route("/api/login-jefatura", methods=["POST"])
-def login_jefatura():
-    data = request.get_json(silent=True) or {}
-    if data.get("password") == PASSWORD_JEFATURA:
-        session["jefatura"] = True
-        return jsonify({"ok": True})
-    return jsonify({"ok": False}), 401
-
-@app.route("/api/logout", methods=["POST"])
+@app.route("/logout")
 def logout():
-    session.clear()
-    return jsonify({"ok": True})
+    session.clear() # Borramos todos los datos de sesión por seguridad
+    return redirect(url_for('login'))
 
 # =========================
 # HOME
@@ -165,7 +168,7 @@ def api_contactos_administrativos():
             supabase
             .table("contactos_administrativos")
             .select("*")
-            .ilike("area_busqueda", q)  # ← coincidencia exacta, sin %
+            .ilike("area_busqueda", q)
         )
         result = query.execute()
         return jsonify(result.data or [])
@@ -244,27 +247,21 @@ def monitor_calidad():
 # ==========================================================
 # REPORTERÍA SAT (DASHBOARD EJECUTIVO)
 # ==========================================================
-
 @app.route('/reporteria-sat')
 @login_required
 def reporteria_sat():
-    """
-    Ruta para el Dashboard de Reportería SAT.
-    IMPORTANTE: El archivo físico debe ser reporteria_sat.html
-    """
     return render_template('reporteria_sat.html')
-
 
 # =========================
 # ADMINISTRACION
 # =========================
-
 @app.route('/administracion')
 @login_required
 def administracion():
-    # Esta ruta renderiza el nuevo panel unificado de control
+    # Validamos que solo los administradores o supervisores puedan ver esta vista 
+    if session.get('nivel_acceso') != 'admin' and session.get('rol') not in ['admin', 'supervisor']:
+        return redirect(url_for('home'))
     return render_template('administracion.html')
-
 
 # =========================
 # EJECUCIÓN
