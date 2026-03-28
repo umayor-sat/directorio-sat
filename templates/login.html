@@ -23,7 +23,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            position: relative; /* Necesario para el footer absoluto */
+            position: relative;
         }
         .login-container {
             background: white;
@@ -34,7 +34,7 @@
             max-width: 400px;
             text-align: center;
             border-top: 6px solid var(--um-amarillo);
-            margin-bottom: 60px; /* Espacio para el footer */
+            margin-bottom: 60px;
         }
         .logo-um {
             max-width: 180px; 
@@ -43,7 +43,6 @@
             display: block;
             margin-left: auto;
             margin-right: auto;
-            /* Si tu logo tiene fondo blanco, esto lo funde con el fondo de la tarjeta */
             mix-blend-mode: multiply; 
         }
         h1 {
@@ -61,7 +60,7 @@
         .form-group {
             margin-bottom: 20px;
             text-align: left;
-            position: relative; /* Para posicionar el ojo dentro del input */
+            position: relative;
         }
         label.input-label {
             display: block;
@@ -71,32 +70,26 @@
             margin-bottom: 8px;
             text-transform: uppercase;
         }
-        input[type="text"], input[type="password"] {
+        input[type="text"], input[type="password"], .modal-content input, .modal-content select {
             width: 100%;
             padding: 12px;
-            padding-right: 40px; /* Espacio para el icono del ojo */
             border: 1px solid var(--borde);
             border-radius: 6px;
             box-sizing: border-box;
             font-size: 15px;
             transition: border-color 0.3s;
         }
-        input:focus {
+        input:focus, select:focus {
             border-color: var(--um-azul);
             outline: none;
         }
-        /* Estilos específicos para el conmutador de contraseña */
         .toggle-password {
             position: absolute;
             right: 12px;
-            bottom: 12px; /* Alineado con el centro del input */
+            bottom: 12px;
             cursor: pointer;
             color: #aaa;
-            transition: color 0.3s;
             z-index: 10;
-        }
-        .toggle-password:hover {
-            color: var(--um-azul);
         }
 
         .checkbox-group {
@@ -110,17 +103,9 @@
             border-radius: 6px;
             margin-bottom: 25px;
         }
-        .checkbox-group input {
-            margin-top: 2px;
-            cursor: pointer;
-            width: 16px;
-            height: 16px;
-        }
         .checkbox-group label {
             font-size: 12px;
-            font-weight: normal;
             color: #555;
-            margin: 0;
             cursor: pointer;
             line-height: 1.5;
         }
@@ -134,25 +119,52 @@
             font-size: 15px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.3s;
         }
-        .btn-ingresar:hover {
-            background: #004482;
-        }
-        .error-message {
-            background: #ffebee;
-            color: var(--rojo);
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            margin-bottom: 20px;
-            border: 1px solid #ffcdd2;
-            display: flex;
+        .btn-ingresar:hover { background: #004482; }
+
+        /* --- ESTILOS MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
             align-items: center;
-            gap: 10px;
-            text-align: left;
+            z-index: 1000;
         }
-        /* Estilos del Footer discreto */
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 380px;
+            width: 90%;
+            text-align: center;
+            border-top: 6px solid var(--um-azul);
+        }
+        .modal-content i.main-icon {
+            font-size: 3rem;
+            color: var(--um-amarillo);
+            margin-bottom: 10px;
+        }
+        .btn-mail {
+            display: block;
+            background: var(--um-azul);
+            color: white;
+            text-decoration: none;
+            padding: 14px;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .btn-cerrar {
+            margin-top: 15px;
+            background: none;
+            border: none;
+            color: #888;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
         .login-footer {
             position: absolute;
             bottom: 15px;
@@ -160,12 +172,6 @@
             text-align: center;
             font-size: 11px;
             color: var(--texto-suave);
-            font-weight: 300;
-        }
-        
-        /* Boton de Geovictoria hover */
-        .btn-geo:hover {
-            background-color: #e2eaf3 !important;
         }
     </style>
 </head>
@@ -178,7 +184,7 @@
         <p class="subtitle"><i class="fa-solid fa-lock"></i> Acceso Seguro</p>
 
         {% if error %}
-        <div class="error-message">
+        <div style="background: #ffebee; color: var(--rojo); padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 20px; border: 1px solid #ffcdd2; display: flex; align-items: center; gap: 10px; text-align: left;">
             <i class="fa-solid fa-triangle-exclamation"></i>
             <span>{{ error }}</span>
         </div>
@@ -187,13 +193,17 @@
         <form action="{{ url_for('login') }}" method="POST">
             <div class="form-group">
                 <label for="username" class="input-label">Usuario</label>
-                <input type="text" id="username" name="username" placeholder="ej: juan.perez" required autocomplete="username">
+                <input type="text" id="username" name="username" placeholder="ej: juan.perez" required>
             </div>
             
             <div class="form-group">
                 <label for="password" class="input-label">Contraseña</label>
-                <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+                <input type="password" id="password" name="password" placeholder="••••••••" required>
                 <i class="fa-solid fa-eye toggle-password" id="togglePasswordIcon"></i>
+            </div>
+
+            <div style="text-align: right; margin-bottom: 20px; margin-top: -10px;">
+                <a href="#" id="forgotPassword" style="font-size: 12px; color: var(--um-azul); text-decoration: none;">¿Olvidaste tu contraseña o no puedes acceder?</a>
             </div>
 
             <div class="checkbox-group">
@@ -206,12 +216,40 @@
 
         <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #dde4ee;">
             <p style="font-size: 0.85rem; color: #666666; margin-bottom: 10px;">¿Tu primer acceso del día?</p>
-            <a href="https://clients.geovictoria.com/account/login?idiom=es" target="_blank" class="btn-geo"
-               style="display: inline-flex; align-items: center; gap: 8px; background-color: #f0f4f8; color: var(--um-azul); padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 0.9rem; border: 1px solid #dde4ee; transition: all 0.2s;">
+            <a href="https://clients.geovictoria.com/account/login?idiom=es" target="_blank" 
+               style="display: inline-flex; align-items: center; gap: 8px; background-color: #f0f4f8; color: var(--um-azul); padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 0.9rem; border: 1px solid #dde4ee;">
                 <i class="fas fa-clock"></i> Recuerda marcar entrada en GeoVictoria
             </a>
         </div>
-        
+    </div>
+
+    <div class="modal-overlay" id="modalRecuperar">
+        <div class="modal-content">
+            <i class="fa-solid fa-lock-open main-icon"></i>
+            <h2 style="color: var(--um-azul); margin-bottom: 10px;">¿Problemas para acceder?</h2>
+            <p style="font-size: 0.9rem; color: #555; margin-bottom: 20px;">Completa tus datos para enviar la solicitud de restauración a supervisión.</p>
+            
+            <div style="text-align: left; margin-bottom: 20px;">
+                <label class="input-label">Nombre Completo</label>
+                <input type="text" id="rec_nombre" placeholder="Tu nombre" style="margin-bottom: 15px;">
+                
+                <label class="input-label">Usuario Portal</label>
+                <input type="text" id="rec_user" placeholder="ej: j.perez" style="margin-bottom: 15px;">
+
+                <label class="input-label">Motivo</label>
+                <select id="rec_motivo">
+                    <option value="Olvido de Contraseña">Olvido de Contraseña</option>
+                    <option value="Cuenta Inactiva">Cuenta Inactiva</option>
+                    <option value="Reactivación por Reingreso">Reactivación por Reingreso</option>
+                </select>
+            </div>
+            
+            <a href="#" id="btnEnviarMail" class="btn-mail">
+                <i class="fa-solid fa-envelope"></i> Generar Correo de Solicitud
+            </a>
+            
+            <button class="btn-cerrar" id="btnCerrarModal">Volver al login</button>
+        </div>
     </div>
 
     <footer class="login-footer">
@@ -219,19 +257,35 @@
     </footer>
 
     <script>
+        // Ojo de contraseña
         const togglePasswordIcon = document.querySelector('#togglePasswordIcon');
         const passwordInput = document.querySelector('#password');
-
-        togglePasswordIcon.addEventListener('click', function (e) {
-            // Alternar el tipo de input entre password y text
+        togglePasswordIcon.addEventListener('click', function () {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
-            
-            // Alternar el icono (ojo abierto / ojo cerrado)
             this.classList.toggle('fa-eye');
             this.classList.toggle('fa-eye-slash');
         });
-    </script>
 
+        // Lógica del Modal
+        const modal = document.getElementById('modalRecuperar');
+        const btnOlvido = document.getElementById('forgotPassword');
+        const btnCerrar = document.getElementById('btnCerrarModal');
+        const btnMail = document.getElementById('btnEnviarMail');
+
+        btnOlvido.addEventListener('click', (e) => { e.preventDefault(); modal.style.display = 'flex'; });
+        btnCerrar.addEventListener('click', () => { modal.style.display = 'none'; });
+
+        // Botón Mailto con autollenado
+        btnMail.addEventListener('click', function(e) {
+            const nombre = document.getElementById('rec_nombre').value || "No especificado";
+            const user = document.getElementById('rec_user').value || "No especificado";
+            const motivo = document.getElementById('rec_motivo').value;
+            const destinatarios = "johanna.escalona@umayor.cl;barbara.fernandez@umayor.cl;eduardo.ferrada@umayor.cl";
+            const asunto = encodeURIComponent(`PORTAL SAT: Solicitud de ${motivo}`);
+            const cuerpo = encodeURIComponent(`Estimados,\n\nSolicito apoyo con mis credenciales para el portal SAT.\n\nDetalles:\n- Motivo: ${motivo}\n- Nombre: ${nombre}\n- Usuario: ${user}\n\nSaludos.`);
+            this.href = `mailto:${destinatarios}?subject=${asunto}&body=${cuerpo}`;
+        });
+    </script>
 </body>
 </html>
