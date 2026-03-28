@@ -89,8 +89,17 @@ def login():
 # =========================
 @app.route("/logout")
 def logout():
+    # 1. Guardamos el nombre en el bolsillo antes de borrar todo
+    nombre_completo = session.get('nombre', '')
+    
+    # 2. Extraemos solo el primer nombre (para que sea más cercano)
+    primer_nombre = nombre_completo.split()[0] if nombre_completo else 'Equipo'
+    
+    # 3. Destruimos la sesión por seguridad
     session.clear() 
-    return render_template('despedida.html')
+    
+    # 4. Le enviamos el nombre a tu diseño de despedida
+    return render_template('despedida.html', nombre=primer_nombre)
 
 # =========================
 # HOME Y DEMÁS RUTAS
