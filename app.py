@@ -10,7 +10,7 @@ app.secret_key = os.environ.get("FLASK_SECRET_KEY", "directorio-sat-clave-2026")
 # CONFIGURACIÓN SUPABASE
 # =========================
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://jxmrznqppddabuqtbufq.supabase.co")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "sb_publishable_3Shj63dB3uBAL_TVvqfBRw_3RyTRZ1U")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjU1MDgxNywiZXhwIjoyMDg4MTI2ODE3fQ.EopCzL9iTQ0ujKFWNi4aqVUhTDeYp4_0nt8wcdk67Mo")
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # =========================
