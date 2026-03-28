@@ -70,12 +70,6 @@ def login():
                 session['nombre'] = usuario.get('nombre')
                 session['rol'] = rol_db 
                 session['nivel_acceso'] = nivel_db 
-                
-                # Forzamos los permisos si es administrador o supervisor
-                if session['nivel_acceso'] == 'admin':
-                    session['rol'] = 'admin'
-                elif session['nivel_acceso'] == 'supervisor':
-                    session['rol'] = 'supervisor'
 
                 # --- OTRO CHISMOSO PARA VER CÓMO QUEDÓ LA SESIÓN ---
                 print(f"SESIÓN CREADA -> ROL: {session['rol']} | NIVEL: {session['nivel_acceso']}")
@@ -91,12 +85,12 @@ def login():
     return render_template('login.html')
 
 # =========================
-# LOGOUT DEL PORTAL
+# LOGOUT DEL PORTAL (ACTUALIZADO PARA DESPEDIDA HUMANA)
 # =========================
 @app.route("/logout")
 def logout():
     session.clear() 
-    return redirect(url_for('login'))
+    return render_template('despedida.html')
 
 # =========================
 # HOME Y DEMÁS RUTAS
@@ -198,17 +192,21 @@ def soporte():
 @app.route("/monitor-calidad")
 @login_required
 def monitor_calidad():
+    if session.get('nivel_acceso') != 'admin':
+        return redirect(url_for('home'))
     return render_template("monitor_calidad.html")
 
 @app.route('/reporteria-sat')
 @login_required
 def reporteria_sat():
+    if session.get('nivel_acceso') != 'admin':
+        return redirect(url_for('home'))
     return render_template('reporteria_sat.html')
 
 @app.route('/administracion')
 @login_required
 def administracion():
-    if session.get('nivel_acceso') != 'admin' and session.get('rol') not in ['admin', 'supervisor']:
+    if session.get('nivel_acceso') != 'admin':
         return redirect(url_for('home'))
     return render_template('administracion.html')
 
