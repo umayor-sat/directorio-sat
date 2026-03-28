@@ -99,7 +99,7 @@ def logout():
     session.clear() 
     
     # 4. Le enviamos el nombre a tu diseño de despedida
-    return render_template('despedida.html', nombre=primer_nombre)
+    return render_template('logout.html', nombre=primer_nombre)
 
 # =========================
 # HOME Y DEMÁS RUTAS
