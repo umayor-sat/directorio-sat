@@ -534,7 +534,7 @@ async function cargarDatosBD() {
 
   } catch(error) {
     clearInterval(intervaloMensajes); // Detener rotación si hay error
-    document.getElementById("loading-text").innerHTML = `<span style="color:var(--bad-text); font-size:1rem;">Error de conexión. Actualice la página e intente de nuevo.</span>`;
+    document.getElementById("loading-text").innerHTML = `<span style="color:var(--bad-text); font-size:1rem;"><i class="fas fa-exclamation-circle"></i> Error de conexión. Por favor, presione <b>F5</b> o el botón de actualizar de su navegador e intente de nuevo.</span>`;
   }
 }
 
