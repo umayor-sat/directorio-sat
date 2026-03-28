@@ -61,7 +61,6 @@ body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--f
 .links-hover ul li a:hover { background: var(--card-hover); color: var(--um-azul); font-weight: bold; }
 .links-hover ul li:last-child a { border-bottom: none; }
 
-/* INYECCIÓN: Clases para los nuevos botones del Top Bar (Recuperadas) */
 .top-actions-container { display: flex; align-items: center; gap: 12px; }
 .user-name-display { font-weight: 700; color: #222; font-size: 14px; margin-right: 5px; text-transform: uppercase; }
 body.dark-mode .user-name-display { color: #222; }
@@ -119,16 +118,15 @@ body.dark-mode .btn-dark-mode { background: #333; color: #fff; }
 .support-menu a { display: flex; align-items: center; gap: 6px; background: var(--card-bg); padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--texto); font-size: 13px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); border: 1px solid var(--borde); }
 .support-menu a:hover { background: var(--card-hover); }
 
-/* --- BLOCK DE NOTAS (Actualizado con Descripción y Botones Invertidos) --- */
+/* --- BLOCK DE NOTAS --- */
 .post-it-widget { position: fixed; bottom: 24px; left: 24px; z-index: 400; }
 .post-it-btn { background: #f1c40f; color: #333; border: none; width: 52px; height: 52px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; transition: transform 0.15s; }
 .post-it-btn:hover { transform: translateY(-2px); }
 .post-it-panel { display: none; position: absolute; bottom: 65px; left: 0; background: var(--nota-bg); width: 340px; padding: 15px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.25); border-top: 10px solid #f39c12; }
 .post-it-panel h4 { margin: 0 0 8px 0; font-size: 14px; color: #333; display: flex; justify-content: space-between; align-items: center; }
-.post-it-desc { font-size: 11px; color: #555; margin: 0 0 10px 0; line-height: 1.3; } /* Estilo para la nueva descripción */
+.post-it-desc { font-size: 11px; color: #555; margin: 0 0 10px 0; line-height: 1.3; } 
 .post-it-panel textarea { width: 100%; height: 260px; background: transparent; border: none; resize: none; font-family: monospace; font-size: 13px; color: var(--texto); padding: 5px; outline: none; border-left: 2px solid rgba(0,0,0,0.05); }
 
-/* Estilos para los botones (Reiniciar y Copiar) */
 .post-it-actions { display: flex; gap: 8px; margin-top: 10px; }
 .btn-nota { flex: 1; padding: 8px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; transition: opacity 0.2s;}
 .btn-nota:hover { opacity: 0.8; }
@@ -142,6 +140,100 @@ footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin:
 .footer-links { margin-top: 12px; display: flex; justify-content: center; align-items: center; gap: 15px; font-weight: bold; }
 .footer-links a { color: var(--texto-suave); text-decoration: none; transition: color 0.2s; }
 .footer-links a:hover { color: var(--um-azul); }
+
+/* --- WIDGET CAMINO A CASA --- */
+.camino-casa-widget {
+    margin: 15px auto 0;
+    max-width: 500px;
+    background: var(--card-bg);
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+    padding: 12px 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.camino-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--texto-suave);
+}
+.camino-input {
+    border: 1px solid var(--borde);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    color: var(--um-azul);
+    background: var(--fondo);
+    outline: none;
+    cursor: pointer;
+}
+.camino-track-container { margin-top: 22px; position: relative; }
+.camino-track {
+    height: 6px;
+    background: rgba(0,0,0,0.1);
+    border-radius: 4px;
+    position: relative;
+    margin: 0 15px 10px;
+}
+body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
+.camino-progress {
+    height: 100%;
+    background: var(--um-azul);
+    border-radius: 4px;
+    width: 0%;
+    transition: width 1s linear, background-color 0.5s;
+}
+.camino-monito {
+    position: absolute;
+    top: -18px;
+    left: 0%;
+    transform: translateX(-50%); 
+    color: var(--um-azul);
+    font-size: 20px;
+    transition: left 1s linear, color 0.5s;
+}
+.camino-casa {
+    position: absolute;
+    top: -18px;
+    right: -12px;
+    color: var(--texto-suave);
+    font-size: 20px;
+    transition: color 0.5s, transform 0.5s;
+}
+.camino-mensaje-final {
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--um-verde);
+    display: none;
+    animation: latido 2s infinite;
+}
+.btn-salir-final {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 10px;
+    background: #e74c3c;
+    color: white;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    transition: background 0.2s;
+}
+.btn-salir-final:hover { background: #c0392b; }
+@keyframes latido { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+
+/* Estados dinámicos (5 minutos y Finalizado) */
+.estado-alerta .camino-progress { background: var(--um-amarillo); }
+.estado-alerta .camino-monito { color: var(--um-amarillo); }
+.estado-ok .camino-progress { background: var(--um-verde); }
+.estado-ok .camino-monito { display: none; }
+.estado-ok .camino-casa { color: var(--um-verde); font-size: 24px; transform: scale(1.2); }
 </style>
 </head>
 <body>
@@ -222,6 +314,25 @@ footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin:
     <div class="recordatorios">
         ¿Ya marcaste tu entrada en <a href="https://clients.geovictoria.com/account/login?idiom=es" target="_blank" style="color: var(--um-azul); font-weight: bold; text-decoration: none; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">GeoVictoria <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 11px;"></i></a>? Recuerda también revisar tu conexión en Genesys.
     </div>
+    
+    <div class="camino-casa-widget" id="caminoCasaWidget">
+        <div class="camino-header">
+            <span id="caminoTexto">¿A qué hora termina tu turno hoy?</span>
+            <input type="time" id="horaSalidaInput" class="camino-input" title="Ingresa tu hora de salida">
+        </div>
+        
+        <div class="camino-track-container" id="caminoTrackContainer" style="display: none;">
+            <div class="camino-track" id="pistaCamino">
+                <div class="camino-progress" id="caminoProgress"></div>
+                <i class="fa-solid fa-person-walking camino-monito" id="caminoMonito"></i>
+                <i class="fa-solid fa-house camino-casa" id="caminoCasa"></i>
+            </div>
+            <div class="camino-mensaje-final" id="caminoMensajeFinal">
+                🎉 ¡Turno finalizado! Buen descanso. <a href="/logout" class="btn-salir-final"><i class="fa-solid fa-power-off"></i> Cerrar Sesión</a>
+            </div>
+        </div>
+    </div>
+    
 </div>
 
 <div id="modalAviso" class="modal-aviso">
@@ -557,6 +668,94 @@ function calcularDias() {
 document.getElementById("calcOverlay").addEventListener("click", function(e) {
   if (e.target === this) cerrarCalc();
 });
+
+
+// --- 7. MINIJUEGO: CAMINO A CASA (COUNTDOWN) ---
+// Guardamos la hora de inicio de sesión de forma transparente
+if (!sessionStorage.getItem('horaInicioTurno')) {
+    sessionStorage.setItem('horaInicioTurno', new Date().getTime());
+}
+
+const inputSalida = document.getElementById('horaSalidaInput');
+const trackContainer = document.getElementById('caminoTrackContainer');
+const progreso = document.getElementById('caminoProgress');
+const monito = document.getElementById('caminoMonito');
+const textoWidget = document.getElementById('caminoTexto');
+const widgetCasa = document.getElementById('caminoCasaWidget');
+const msjFinal = document.getElementById('caminoMensajeFinal');
+const pistaCamino = document.getElementById('pistaCamino');
+let intervaloCamino;
+
+// Si el ejecutivo ya había puesto una hora hoy, se la recordamos
+if (localStorage.getItem('horaSalidaGuardada')) {
+    inputSalida.value = localStorage.getItem('horaSalidaGuardada');
+    iniciarCamino();
+}
+
+// Magia: sin botones, al cambiar la hora y hacer clic fuera, arranca solo.
+inputSalida.addEventListener('change', iniciarCamino);
+
+function iniciarCamino() {
+    if (!inputSalida.value) return;
+    
+    localStorage.setItem('horaSalidaGuardada', inputSalida.value);
+    trackContainer.style.display = 'block';
+    msjFinal.style.display = 'none';
+    pistaCamino.style.display = 'block';
+    monito.style.display = 'block';
+    widgetCasa.classList.remove('estado-alerta', 'estado-ok');
+    
+    clearInterval(intervaloCamino);
+    actualizarCamino(); // Ejecuta el primer cálculo de inmediato
+    intervaloCamino = setInterval(actualizarCamino, 10000); // Se actualiza cada 10 segundos para no saturar
+}
+
+function actualizarCamino() {
+    if (!inputSalida.value) return;
+    const ahora = new Date();
+    const horaInicio = parseInt(sessionStorage.getItem('horaInicioTurno'));
+    
+    const [horas, minutos] = inputSalida.value.split(':');
+    const fechaSalida = new Date();
+    fechaSalida.setHours(horas, minutos, 0, 0);
+
+    const totalMs = fechaSalida.getTime() - horaInicio;
+    const transcurridoMs = ahora.getTime() - horaInicio;
+    const faltanteMs = fechaSalida.getTime() - ahora.getTime();
+    const faltanteMinutos = Math.ceil(faltanteMs / 60000);
+
+    // Evitar errores si pone una hora anterior a la actual
+    let porcentaje = (transcurridoMs / totalMs) * 100;
+    if (porcentaje < 0 || totalMs < 0) porcentaje = 0;
+    if (porcentaje > 100) porcentaje = 100;
+
+    progreso.style.width = porcentaje + '%';
+    monito.style.left = porcentaje + '%';
+
+    // Lógica de los 3 estados
+    if (faltanteMinutos <= 0) {
+        // 1. Llegó a casa (0 minutos)
+        widgetCasa.classList.add('estado-ok');
+        widgetCasa.classList.remove('estado-alerta');
+        textoWidget.innerHTML = "¡Misión Cumplida!";
+        pistaCamino.style.display = 'none'; // Escondemos la pista
+        msjFinal.style.display = 'block'; // Mostramos el botón de salir
+        clearInterval(intervaloCamino);
+        
+    } else if (faltanteMinutos <= 5) {
+        // 2. Faltan 5 minutos o menos (Naranjo/Amarillo)
+        widgetCasa.classList.add('estado-alerta');
+        textoWidget.innerHTML = "⏳ ¡Último estirón! Preparando el cierre...";
+        
+    } else {
+        // 3. Estado normal (Azul)
+        widgetCasa.classList.remove('estado-alerta');
+        const horasFaltan = Math.floor(faltanteMinutos / 60);
+        const minFaltan = faltanteMinutos % 60;
+        let textoFalta = horasFaltan > 0 ? `${horasFaltan}h ${minFaltan}m` : `${minFaltan} min`;
+        textoWidget.innerHTML = `Te quedan <b>${textoFalta}</b> para terminar tu turno.`;
+    }
+}
 </script>
 
 </body>
