@@ -152,16 +152,21 @@ def api_contactos_administrativos():
     q = request.args.get("q", "").strip()
     if len(q) < 2: return jsonify([])
     try:
-        # Buscamos: Nombre que CONTENGA 'q' O Área que sea IGUAL a 'q'
-        # Esto permite que "Roberto" funcione y que "ore" sea exacto.
-        query = supabase.table("contactos_administrativos") \
-            .select("*") \
-            .or_(f"nombre.ilike.%{q}%,area_busqueda.ieq.{q}")
+        # Intentamos primero búsqueda EXACTA por área (para casos como ORE)
+        res_exacto = supabase.table("contactos_administrativos").select("*").ieq("area_busqueda", q).execute()
         
-        result = query.execute()
-        return jsonify(result.data or [])
+        if res_exacto.data:
+            return jsonify(res_exacto.data)
+        
+        # Si no hay match exacto, buscamos de forma FLEXIBLE por nombre
+        res_flexible = supabase.table("contactos_administrativos").select("*").ilike("nombre", f"%{q}%").execute()
+        
+        return jsonify(res_flexible.data or [])
+        
     except Exception as e: 
+        print(f"Error: {e}")
         return jsonify({"error": str(e)}), 500
+
 
 @app.route("/bitacora")
 @login_required
