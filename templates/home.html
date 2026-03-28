@@ -61,13 +61,21 @@ body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--f
 .links-hover ul li a:hover { background: var(--card-hover); color: var(--um-azul); font-weight: bold; }
 .links-hover ul li:last-child a { border-bottom: none; }
 
+/* INYECCIÓN: Clases para los nuevos botones del Top Bar (Recuperadas) */
+.top-actions-container { display: flex; align-items: center; gap: 12px; }
+.user-name-display { font-weight: 700; color: #222; font-size: 14px; margin-right: 5px; text-transform: uppercase; }
+body.dark-mode .user-name-display { color: #222; }
+
 .btn-dark-mode { background: rgba(0,0,0,0.1); color: #222; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: background 0.2s; }
 .btn-dark-mode:hover { background: rgba(0,0,0,0.2); }
 body.dark-mode .btn-dark-mode { background: #333; color: #fff; }
 
+.btn-salir { background-color: #e74c3c; color: white; text-decoration: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+.btn-salir:hover { background-color: #c0392b; }
+
 .welcome-bar { background: var(--um-gris); border-bottom: 1px solid var(--borde); padding: 14px 20px; text-align: center; }
 .welcome-bar h2 { margin: 0 0 5px 0; color: var(--um-azul); font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-.reloj-destacado { background: var(--um-azul); color: white; padding: 2px 10px; border-radius: 12px; font-size: 14px; letter-spacing: 1px; font-weight: bold;}
+.reloj-destacado { background: var(--um-azul); color: white; padding: 4px 12px; border-radius: 12px; font-size: 16px; letter-spacing: 1px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 .recordatorios { font-size: 13.5px; color: var(--texto-suave); font-weight: 500; }
 
 /* -------------------------------------------
@@ -111,12 +119,23 @@ body.dark-mode .btn-dark-mode { background: #333; color: #fff; }
 .support-menu a { display: flex; align-items: center; gap: 6px; background: var(--card-bg); padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--texto); font-size: 13px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); border: 1px solid var(--borde); }
 .support-menu a:hover { background: var(--card-hover); }
 
+/* --- BLOCK DE NOTAS (Actualizado con Descripción y Botones Invertidos) --- */
 .post-it-widget { position: fixed; bottom: 24px; left: 24px; z-index: 400; }
 .post-it-btn { background: #f1c40f; color: #333; border: none; width: 52px; height: 52px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; transition: transform 0.15s; }
 .post-it-btn:hover { transform: translateY(-2px); }
-.post-it-panel { display: none; position: absolute; bottom: 65px; left: 0; background: var(--nota-bg); width: 260px; padding: 15px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.25); border-top: 10px solid #f39c12; }
-.post-it-panel h4 { margin: 0 0 10px 0; font-size: 13px; color: #333; display: flex; justify-content: space-between; align-items: center; }
-.post-it-panel textarea { width: 100%; height: 180px; background: transparent; border: none; resize: none; font-family: monospace; font-size: 13px; color: var(--texto); padding: 5px; outline: none; border-left: 2px solid rgba(0,0,0,0.05); }
+.post-it-panel { display: none; position: absolute; bottom: 65px; left: 0; background: var(--nota-bg); width: 340px; padding: 15px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.25); border-top: 10px solid #f39c12; }
+.post-it-panel h4 { margin: 0 0 8px 0; font-size: 14px; color: #333; display: flex; justify-content: space-between; align-items: center; }
+.post-it-desc { font-size: 11px; color: #555; margin: 0 0 10px 0; line-height: 1.3; } /* Estilo para la nueva descripción */
+.post-it-panel textarea { width: 100%; height: 260px; background: transparent; border: none; resize: none; font-family: monospace; font-size: 13px; color: var(--texto); padding: 5px; outline: none; border-left: 2px solid rgba(0,0,0,0.05); }
+
+/* Estilos para los botones (Reiniciar y Copiar) */
+.post-it-actions { display: flex; gap: 8px; margin-top: 10px; }
+.btn-nota { flex: 1; padding: 8px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; transition: opacity 0.2s;}
+.btn-nota:hover { opacity: 0.8; }
+.btn-copiar { background: var(--um-azul); color: white; }
+.btn-limpiar { background: rgba(0,0,0,0.08); color: #333; }
+body.dark-mode .btn-limpiar { background: rgba(255,255,255,0.1); color: #ddd; }
+body.dark-mode .post-it-desc { color: #aaa; }
 
 /* FOOTER */
 footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin: 48px 0 20px; border-top: 1px solid var(--borde); padding-top: 20px; }
@@ -184,9 +203,15 @@ footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin:
     </div>
   </div>
   
-  <button class="btn-dark-mode" onclick="toggleDarkMode()" title="Cambiar contraste">
-      <i class="fa-solid fa-moon" id="iconoDark"></i> Modo Oscuro
-  </button>
+  <div class="top-actions-container">
+    <span class="user-name-display"><i class="fa-solid fa-circle-user"></i> {{ session.get('nombre', 'Equipo SAT') }}</span>
+    <button class="btn-dark-mode" onclick="toggleDarkMode()" title="Cambiar contraste">
+        <i class="fa-solid fa-moon" id="iconoDark"></i>
+    </button>
+    <a href="/logout" class="btn-salir" title="Finalizar sesión">
+        <i class="fa-solid fa-power-off"></i> Salir
+    </a>
+  </div>
 </div>
 
 <div class="welcome-bar">
@@ -195,7 +220,7 @@ footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin:
         <span class="reloj-destacado" id="relojHora">00:00:00</span>
     </h2>
     <div class="recordatorios">
-        ¿Ya marcaste tu entrada en Geovictoria? Recuerda también revisar tu conexión en Genesys.
+        ¿Ya marcaste tu entrada en <a href="https://clients.geovictoria.com/account/login?idiom=es" target="_blank" style="color: var(--um-azul); font-weight: bold; text-decoration: none; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">GeoVictoria <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 11px;"></i></a>? Recuerda también revisar tu conexión en Genesys.
     </div>
 </div>
 
@@ -258,11 +283,16 @@ footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin:
   </div>
 </div>
 
-<div class="post-it-widget">
+<div class="post-it-widget" id="postItWidget">
     <button class="post-it-btn" onclick="togglePostIt()" title="Block de Notas Rápido"><i class="fa-regular fa-note-sticky"></i></button>
     <div class="post-it-panel" id="postItPanel">
         <h4>Apuntes Operativos <button onclick="togglePostIt()" style="background:none; border:none; cursor:pointer; color:var(--texto-suave);"><i class="fa-solid fa-xmark"></i></button></h4>
+        <p class="post-it-desc">Completa ambos bloques en caso de que llame una tercera persona en representación de un alumno.</p>
         <textarea id="textoPostIt" placeholder="Anota RUTs, teléfonos o datos rápidos aquí. No se borrarán si cambias de pestaña..."></textarea>
+        <div class="post-it-actions">
+            <button onclick="limpiarPostIt()" class="btn-nota btn-limpiar" title="Borrar datos y cargar plantilla limpia"><i class="fa-solid fa-rotate-right"></i> Reiniciar</button>
+            <button onclick="copiarPostIt()" class="btn-nota btn-copiar" id="btnCopiarPostIt" title="Copia todo el texto al portapapeles"><i class="fa-regular fa-copy"></i> Copiar todo</button>
+        </div>
     </div>
 </div>
 
@@ -376,27 +406,79 @@ function actualizarReloj() {
 setInterval(actualizarReloj, 1000);
 actualizarReloj();
 
-// --- 4. BLOCK DE NOTAS PERSISTENTE ---
+// --- 4. BLOCK DE NOTAS PERSISTENTE E INTELIGENTE ---
 const txtPostIt = document.getElementById('textoPostIt');
-txtPostIt.value = localStorage.getItem('sat_postit') || '';
+// La Plantilla con 2 bloques (Solicitante y Alumno)
+const plantillaMultiple = "Nombre solicitante:\nRUT: (sin puntos ni guión) \nCorreo:\nTeléfono:\nComentario:\n\n----------------------\nNombre Alumno:\nRUT alumno: (sin puntos ni guión) \nCorreo institucional:\nComentarios adicionales:\n";
+
+// Cargar lo guardado, o inyectar los 2 bloques si está vacío
+let savedPostIt = localStorage.getItem('sat_postit');
+if (!savedPostIt || savedPostIt.trim() === '') {
+    txtPostIt.value = plantillaMultiple;
+} else {
+    txtPostIt.value = savedPostIt;
+}
+
+// Guardar mientras se escribe
 txtPostIt.addEventListener('input', function() {
     localStorage.setItem('sat_postit', this.value);
 });
+
+// Mostrar/Ocultar
 function togglePostIt() {
     const panel = document.getElementById('postItPanel');
     panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
 }
 
+// Botón Copiar Todo
+function copiarPostIt() {
+    txtPostIt.select();
+    document.execCommand('copy');
+    // Deseleccionar texto visualmente
+    window.getSelection().removeAllRanges();
+    
+    // Cambiar el botón temporalmente para dar feedback visual
+    const btn = document.getElementById('btnCopiarPostIt');
+    const originalHTML = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!';
+    btn.style.background = 'var(--um-verde)';
+    
+    setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.style.background = 'var(--um-azul)';
+    }, 2000);
+}
+
+// Botón Reiniciar
+function limpiarPostIt() {
+    if(confirm("¿Estás seguro que quieres borrar tus apuntes y volver a la plantilla en blanco?")) {
+        txtPostIt.value = plantillaMultiple;
+        localStorage.setItem('sat_postit', plantillaMultiple);
+    }
+}
+
+// Cerrar al hacer clic afuera
+document.addEventListener('click', function(event) {
+    const widget = document.getElementById('postItWidget');
+    const panel = document.getElementById('postItPanel');
+    
+    // Si el panel está abierto, y el clic NO fue dentro del widget entero...
+    if (panel.style.display === 'block' && !widget.contains(event.target)) {
+        panel.style.display = 'none';
+    }
+});
+
+
 // --- 5. SOPORTE SAT ---
-var btn = document.getElementById('supportBtn');
-var menu = document.getElementById('supportMenu');
-btn.addEventListener('click', function(e) {
+var btnSoporte = document.getElementById('supportBtn');
+var menuSoporte = document.getElementById('supportMenu');
+btnSoporte.addEventListener('click', function(e) {
   e.stopPropagation();
-  menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+  menuSoporte.style.display = menuSoporte.style.display === 'flex' ? 'none' : 'flex';
 });
 document.addEventListener('click', function(event) {
-  if (!menu.contains(event.target) && !btn.contains(event.target)) {
-    menu.style.display = 'none';
+  if (!menuSoporte.contains(event.target) && !btnSoporte.contains(event.target)) {
+    menuSoporte.style.display = 'none';
   }
 });
 
@@ -479,4 +561,3 @@ document.getElementById("calcOverlay").addEventListener("click", function(e) {
 
 </body>
 </html>
-
