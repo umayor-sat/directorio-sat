@@ -192,6 +192,7 @@ footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin:
 <div class="welcome-bar">
     <h2>
         <span id="saludoTexto">Buenos días, equipo.</span> 
+        <strong>{{ session.get('nombre', 'Usuario') }}</strong>
         <span class="reloj-destacado" id="relojHora">00:00:00</span>
     </h2>
     <div class="recordatorios">
@@ -255,6 +256,24 @@ footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin:
       <div class="icono">📋</div>
       <div class="titulo">Bitácora SAT</div>
     </a>
+    
+    {% if session['rol'] in ['admin', 'supervisor'] or session['nivel_acceso'] in ['admin', 'supervisor'] %}
+    <a href="/monitor-calidad" class="btn-secondary-item" style="background: var(--um-verde); border-color: var(--um-verde);">
+      <div class="icono" style="color: #fff;">📊</div>
+      <div class="titulo" style="color: #fff;">Monitor de Calidad</div>
+    </a>
+    {% endif %}
+
+    {% if session['rol'] == 'admin' or session['nivel_acceso'] == 'admin' %}
+    <a href="/reporteria-sat" class="btn-secondary-item" style="background: var(--um-amarillo); border-color: var(--um-amarillo);">
+      <div class="icono">📈</div>
+      <div class="titulo">Reportería SAT</div>
+    </a>
+    <a href="/administracion" class="btn-secondary-item" style="background: var(--um-amarillo); border-color: var(--um-amarillo);">
+      <div class="icono">⚙️</div>
+      <div class="titulo">Administración</div>
+    </a>
+    {% endif %}
   </div>
 </div>
 
@@ -301,13 +320,15 @@ footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin:
   Desarrollado por <strong>Eduardo Ferrada</strong><br>
   Universidad Mayor · Enero 2026
   
-  {% if session.get('rol') == 'supervisor' %}
+  {% if session['rol'] in ['admin', 'supervisor'] or session['nivel_acceso'] in ['admin', 'supervisor'] %}
   <div class="footer-links">
     <a href="/monitor-calidad"><i class="fa-solid fa-chart-line"></i> Monitor de Calidad</a>
+    {% if session['rol'] == 'admin' or session['nivel_acceso'] == 'admin' %}
     <span>|</span>
     <a href="/administracion"><i class="fa-solid fa-lock"></i> Administración SAT</a>
     <span>|</span>
     <a href="/reporteria-sat"><i class="fa-solid fa-chart-pie"></i> Reportería SAT</a>
+    {% endif %}
   </div>
   {% endif %}
   
