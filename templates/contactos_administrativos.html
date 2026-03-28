@@ -361,9 +361,21 @@ function ejecutarBusqueda(termino) {
     return;
   }
 
-  // Construimos la URL directa a Supabase buscando por área O por nombre
-  const termEncoded = encodeURIComponent(`*${termino}*`);
-  const url = `${SUPABASE_URL}/rest/v1/contactos_administrativos?or=(area_busqueda.ilike.${termEncoded},nombre.ilike.${termEncoded})`;
+  // LÓGICA INTELIGENTE DE BÚSQUEDA
+  const termEncodedFlex = encodeURIComponent(`*${termino}*`);
+  const termExact = encodeURIComponent(termino);
+  
+  // Verificamos si el término corresponde exactamente al "value" de un área oficial de nuestra lista
+  const esAreaExacta = sugerenciasBase.some(s => s.value.toLowerCase() === termino.toLowerCase());
+  
+  let url = "";
+  if (esAreaExacta) {
+    // Si es un área oficial (ej. "Ore"), exige área exacta O busca coincidencia en el nombre
+    url = `${SUPABASE_URL}/rest/v1/contactos_administrativos?or=(area_busqueda.eq.${termExact},nombre.ilike.${termEncodedFlex})`;
+  } else {
+    // Si es texto libre (ej. "Roberto", "serey"), busca de forma flexible en área y en nombre
+    url = `${SUPABASE_URL}/rest/v1/contactos_administrativos?or=(area_busqueda.ilike.${termEncodedFlex},nombre.ilike.${termEncodedFlex})`;
+  }
 
   fetch(url, {
     method: "GET",
