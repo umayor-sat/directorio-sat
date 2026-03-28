@@ -370,10 +370,11 @@ function ejecutarBusqueda(termino) {
   
   let url = "";
   if (esAreaExacta) {
-    // Si es un área oficial (ej. "Ore"), exige área exacta O busca coincidencia en el nombre
-    url = `${SUPABASE_URL}/rest/v1/contactos_administrativos?or=(area_busqueda.eq.${termExact},nombre.ilike.${termEncodedFlex})`;
+    // SI ES UN ÁREA OFICIAL (ej. "Ore"): 
+    // Solo buscamos por área_busqueda exacta. 
+    url = `${SUPABASE_URL}/rest/v1/contactos_administrativos?area_busqueda=eq.${termExact}`;
   } else {
-    // Si es texto libre (ej. "Roberto", "serey"), busca de forma flexible en área y en nombre
+    // BÚSQUEDA NORMAL: Para nombres (como "Roberto") y otras palabras libres
     url = `${SUPABASE_URL}/rest/v1/contactos_administrativos?or=(area_busqueda.ilike.${termEncodedFlex},nombre.ilike.${termEncodedFlex})`;
   }
 
