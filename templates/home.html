@@ -60,8 +60,10 @@ body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--f
 .links-hover ul { list-style: none; margin: 0; padding: 10px 0; position: absolute; top: 100%; left: 0; background: var(--fondo); min-width: 280px; box-shadow: 0 8px 20px rgba(0,0,0,.15); border-radius: 0 0 8px 8px; border: 1px solid var(--borde); border-top: none; display: none; z-index: 9999; }
 .links-hover:hover ul, .links-hover.activo ul { display: block; }
 .links-hover ul li { padding: 0; }
-.links-hover ul li a { text-decoration: none; color: var(--texto); display: block; padding: 10px 16px; border-bottom: 1px solid var(--borde); transition: background 0.15s, color 0.15s; font-weight: normal; }
+.links-hover ul li a { text-decoration: none; color: var(--texto); display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-bottom: 1px solid var(--borde); transition: background 0.15s, color 0.15s; font-weight: normal; }
+.links-hover ul li a i { font-size: 12px; color: var(--texto-suave); transition: color 0.15s; }
 .links-hover ul li a:hover { background: var(--card-hover); color: var(--um-azul); font-weight: bold; }
+.links-hover ul li a:hover i { color: var(--um-azul); }
 .links-hover ul li:last-child a { border-bottom: none; }
 
 .top-actions-container { display: flex; align-items: center; gap: 12px; }
@@ -133,7 +135,7 @@ body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
 .estado-alerta .camino-monito { color: var(--um-amarillo); }
 .estado-ok .camino-progress { background: var(--um-verde); }
 .estado-ok .camino-monito { display: none; }
-.estado-ok .camino-casa { color: var(--um-amarillo); font-size: 26px; transform: scale(1.2); } /* Medalla en amarillo */
+.estado-ok .camino-casa { color: var(--um-amarillo); font-size: 26px; transform: scale(1.2); } 
 @keyframes latido { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
 /* -------------------------------------------
@@ -217,60 +219,10 @@ footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin:
 <body>
 
 <div class="top-bar">
-  <div class="links-container">
-    <div class="links-hover">
-      <span title="Herramientas y plataformas recurrentes"><i class="fa-solid fa-link"></i> Links de uso frecuente ▾</span>
-      <ul>
-        <li><a href="https://mayorcl.sharepoint.com/sites/IntranetServiciodeAtencin" target="_blank">Intranet SAT</a></li>
-        <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Registro-Estudiantes" target="_blank">Registro Estudiantil</a></li>
-        <li><a href="https://www.umayor.cl/um/matricula-renovante/certificaciones#Disposiciones" target="_blank">Detalles sobre certificados</a></li>
-        <li><a href="https://sso.umayor.cl/authentication/SignIn?SID=13&app_url=certificadosalumnos.umayor.cl" target="_blank">Portal de Certificados</a></li>
-        <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Gratuidad-Becas-y-ayudas-estudiantiles" target="_blank">Becas y Créditos</a></li>
-        <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Gestion-Financiera" target="_blank">Gestión Financiera</a></li>
-        <li><a href="https://plataformadepagos.umayor.cl/webapp/index.html" target="_blank">Portal Financiero</a></li>
-        <li><a href="https://www.umayor.cl/dae-umayor/actividades-estudiantiles.php" target="_blank">DAE</a></li>
-        <li><a href="https://sibum.umayor.cl/client/es_ES/sibum" target="_blank">Biblioteca</a></li>
-        <li><a href="https://passwordreset.microsoftonline.com/" target="_blank">Recupera tu cuenta</a></li>
-        <li><a href="https://www.youtube.com/watch?v=4JNleAcO3dM" target="_blank">Video recuperación de cuenta</a></li>
-        <li><a href="https://www.umayor.cl/um/oferta-academica" target="_blank">Oferta Académica</a></li>
-        <li><a href="https://www.admisionmayor.cl/preguntas-frecuentes" target="_blank">Preguntas Frecuentes Admisión</a></li>
-        <li><a href="https://www.umayor.cl/um/santiago-portales" target="_blank">Portales</a></li>
-        <li><a href="https://www.umayor.cl/buses" target="_blank">Buses</a></li>
-        <li><a href="https://www.umayor.cl/um/servicios-estudiantiles/Pase-Escolar" target="_blank">Pase Escolar</a></li>
-        <li><a href="https://umayor.hiringroomcampus.com/jobs/create-company/bfSbYevlWIXvZUZfPdp5sqYS" target="_blank">Registra tu Empresa</a></li>
-      </ul>
-    </div>
-    
-    <div class="links-hover">
-      <span title="Programación operativa del equipo"><i class="fa-solid fa-calendar-days"></i> Turnos SAT ▾</span>
-      <ul>
-        <li><a href="https://mayorcl.sharepoint.com/:x:/r/sites/IntranetServiciodeAtencin/_layouts/15/Doc.aspx?sourcedoc=%7BC1513845-3E62-40FB-8B23-5CD6F5DF03F3%7D&file=programacion-de-turnos-SAT.xlsx&action=default&mobileredirect=true" target="_blank">📅 Programación de turnos</a></li>
-        <li><a href="https://mayorcl.sharepoint.com/:x:/r/sites/IntranetServiciodeAtencin/_layouts/15/Doc.aspx?sourcedoc=%7B36F8803B-77FC-4A42-8E4D-A27093D8445D%7D&file=descansos-SAT.xlsx&action=default&mobileredirect=true" target="_blank">🍵 Descansos semanales</a></li>
-      </ul>
-    </div>
-    
-    <div class="links-hover">
-      <span title="Mineduc, Junaeb, CAE, TNE"><i class="fa-solid fa-landmark"></i> Beneficios Ministeriales ▾</span>
-      <ul>
-        <li><a href="https://portal.beneficiosestudiantiles.cl/" target="_blank">Portal Beneficios</a></li>
-        <li><a href="https://resultados.beneficiosestudiantiles.cl/login" target="_blank">Resultados Beneficios</a></li>
-        <li><a href="https://postulacion.beneficiosestudiantiles.cl/fuas/" target="_blank">Fuas</a></li>
-        <li><a href="https://www.tne.cl/" target="_blank">Tarjeta Nacional Estudiantil</a></li>
-        <li><a href="https://sistema.tne.cl/reposiciones/estado_tarjeta_alumno" target="_blank">Estado Tarjeta TNE</a></li>
-        <li><a href="https://portal.ingresa.cl/" target="_blank">Ingresa</a></li>
-        <li><a href="https://resultadopostulacioncae.ingresa.cl/" target="_blank">Resultado Postulaciones CAE</a></li>
-        <li><a href="https://www.junaeb.cl/" target="_blank">Junaeb</a></li>
-        <li><a href="https://www.junaeb.cl/preguntas-frecuentes-usuarios-baes" target="_blank">Preguntas BAES</a></li>
-      </ul>
-    </div>
-    
-    <div class="links-hover">
-      <span title="Plantillas de derivación"><i class="fa-solid fa-envelope-open-text"></i> Correos Frecuentes ▾</span>
-      <ul>
-        <li><a href="/correos-frecuentes#supervisor">👨‍💼 Derivar a Supervisor</a></li>
-        <li><a href="/correos-frecuentes#comercial">💼 Derivar a Área Comercial</a></li>
-      </ul>
-    </div>
+  <div class="links-container" id="megaMenuContainer">
+      <span style="color: #222; font-weight: bold; font-size: 13px; opacity: 0.8;">
+          <i class="fa-solid fa-spinner fa-spin"></i> Cargando mega-menú...
+      </span>
   </div>
   
   <div class="top-actions-container">
@@ -488,10 +440,95 @@ footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin:
 </footer>
 
 <script>
-// --- 1. INICIALIZACIÓN DEL PORTAL (Aviso 10s) ---
+// --- 1. INICIALIZACIÓN DEL PORTAL Y MEGA-MENÚ DINÁMICO ---
 document.addEventListener('DOMContentLoaded', function() {
   iniciarPortal();
+  cargarMegaMenuDinámico(); // <--- LA MAGIA OCURRE AQUÍ
 });
+
+// Diccionario visual para inyectar íconos a las categorías principales
+const infoCategorias = {
+    "Links Frecuentes": { icono: "fa-link", tituloHover: "Herramientas y plataformas recurrentes" },
+    "Turnos SAT": { icono: "fa-calendar-days", tituloHover: "Programación operativa del equipo" },
+    "Beneficios Ministeriales": { icono: "fa-landmark", tituloHover: "Mineduc, Junaeb, CAE, TNE" },
+    "Correos Frecuentes": { icono: "fa-envelope-open-text", tituloHover: "Plantillas de derivación" },
+    "Mesa TI": { icono: "fa-headset", tituloHover: "Soporte Técnico" },
+    "Otros Recursos": { icono: "fa-box-open", tituloHover: "Recursos adicionales" }
+};
+
+async function cargarMegaMenuDinámico() {
+    const contenedor = document.getElementById('megaMenuContainer');
+    try {
+        const respuesta = await fetch('/api/enlaces');
+        const enlaces = await respuesta.json();
+
+        if (enlaces.error) {
+            contenedor.innerHTML = '<span style="color:#e74c3c;">Error al cargar menú</span>';
+            return;
+        }
+
+        // EL FILTRO VITAL: Solo dejamos pasar a los que están activos = true
+        const activos = enlaces.filter(link => link.activo === true);
+
+        // Agrupamos por categoría
+        const grupos = {};
+        activos.forEach(link => {
+            if (!grupos[link.categoria]) grupos[link.categoria] = [];
+            grupos[link.categoria].push(link);
+        });
+
+        // Construimos el HTML
+        let htmlMegaMenu = '';
+        
+        for (const [categoria, linksArray] of Object.entries(grupos)) {
+            // Ordenamos internamente por el número asignado en el admin
+            linksArray.sort((a, b) => a.orden - b.orden);
+
+            // Buscamos si la categoría tiene un ícono asignado, sino le ponemos una carpeta genérica
+            const infoVisual = infoCategorias[categoria] || { icono: "fa-folder", tituloHover: `Opciones de ${categoria}` };
+
+            htmlMegaMenu += `
+            <div class="links-hover">
+                <span title="${infoVisual.tituloHover}">
+                    <i class="fa-solid ${infoVisual.icono}"></i> ${categoria} ▾
+                </span>
+                <ul>
+                    ${linksArray.map(l => `
+                        <li>
+                            <a href="${l.url}" target="_blank">
+                                <i class="fa-solid ${l.icono || 'fa-link'}"></i> ${l.nombre_link}
+                            </a>
+                        </li>
+                    `).join('')}
+                </ul>
+            </div>`;
+        }
+
+        // Si por casualidad apagaste absolutamente todo...
+        if (htmlMegaMenu === '') {
+            contenedor.innerHTML = '<span style="color:#666; font-size:12px;">Sin enlaces activos</span>';
+        } else {
+            contenedor.innerHTML = htmlMegaMenu;
+            // Volvemos a atar los eventos de clic para que el menú funcione en pantallas táctiles
+            atarEventosTouchMenu();
+        }
+
+    } catch (error) {
+        console.error("Error cargando mega menú:", error);
+        contenedor.innerHTML = '<span style="color:#e74c3c;">Error de conexión</span>';
+    }
+}
+
+function atarEventosTouchMenu() {
+    document.querySelectorAll('.links-hover').forEach(item => {
+        item.addEventListener('click', function(e) {
+            // Si hacen clic en el enlace mismo, dejamos que abra la URL. Si tocan la cabecera, se abre el dropdown.
+            if(e.target.tagName !== 'A' && e.target.parentElement.tagName !== 'A') {
+                this.classList.toggle('activo');
+            }
+        });
+    });
+}
 
 function iniciarPortal() {
   if (!sessionStorage.getItem('avisoSATVisto')) {
@@ -502,7 +539,7 @@ function iniciarPortal() {
     const cerrarModal = () => {
         if(modal.style.display !== 'none') {
             modal.style.opacity = '0'; 
-            modal.classList.add('oculto'); // Seguro anti-bloqueo de clics añadido aquí
+            modal.classList.add('oculto');
             setTimeout(() => {
                 modal.style.display = 'none';
                 sessionStorage.setItem('avisoSATVisto', 'true');
@@ -520,15 +557,7 @@ function iniciarPortal() {
   }
 }
 
-// --- Soporte extra para Dropdowns (Touch/Móviles/Seguridad) ---
-document.querySelectorAll('.links-hover').forEach(item => {
-    item.addEventListener('click', function(e) {
-        // Prevenir que cierre inmediatamente si tocamos dentro del menú
-        if(e.target.tagName !== 'A') {
-            this.classList.toggle('activo');
-        }
-    });
-});
+// Cierre automático del menú si tocan afuera
 document.addEventListener('click', function(e) {
     document.querySelectorAll('.links-hover').forEach(item => {
         if (!item.contains(e.target)) {
@@ -614,13 +643,11 @@ actualizarReloj();
 
 // --- 4. MINIJUEGO 3.0: MEMORIA FUERTE CON FECHA EXACTA MATEMÁTICA ---
 const hoyDate = new Date();
-// Formato estricto AAAA-MM-DD a prueba de balas para entornos locales y servidores
 const fechaDeHoyStr = hoyDate.getFullYear() + "-" + String(hoyDate.getMonth() + 1).padStart(2, '0') + "-" + String(hoyDate.getDate()).padStart(2, '0');
 
-// Si cambia el día, limpiamos TODA la memoria del juego anterior
 if (localStorage.getItem('fecha_ultimo_juego') !== fechaDeHoyStr) {
     sessionStorage.removeItem('horaInicioTurno');
-    localStorage.removeItem('horaSalidaGuardada'); // Limpia la cajita de hora para el nuevo día
+    localStorage.removeItem('horaSalidaGuardada'); 
     localStorage.setItem('fecha_ultimo_juego', fechaDeHoyStr);
 }
 if (!sessionStorage.getItem('horaInicioTurno')) {
@@ -637,7 +664,6 @@ const pistaCamino = document.getElementById('pistaCamino');
 const btnCerrarSesion = document.getElementById('btnCerrarSesionJuego');
 let intervaloCamino;
 
-// Inicialización automática si ya hay hora guardada
 if (localStorage.getItem('horaSalidaGuardada')) {
     inputSalida.value = localStorage.getItem('horaSalidaGuardada');
     iniciarCamino();
@@ -646,15 +672,13 @@ if (localStorage.getItem('horaSalidaGuardada')) {
 function iniciarCamino() {
     if (!inputSalida.value) return;
     
-    // Guardamos la hora de salida
     localStorage.setItem('horaSalidaGuardada', inputSalida.value);
     
-    // Reseteamos visuales y ocultamos el botón premio por si están editando horas
     msjFinal.style.display = 'none';
     pistaCamino.style.display = 'block';
     monito.style.display = 'block';
     btnCerrarSesion.style.display = 'none';
-    document.getElementById('caminoCasa').className = "fa-solid fa-flag-checkered camino-casa"; // Bandera por defecto
+    document.getElementById('caminoCasa').className = "fa-solid fa-flag-checkered camino-casa"; 
     widgetCasa.classList.remove('estado-alerta', 'estado-ok');
     
     clearInterval(intervaloCamino);
@@ -694,13 +718,12 @@ function actualizarCamino() {
         widgetCasa.classList.add('estado-ok');
         widgetCasa.classList.remove('estado-alerta');
         
-        // Cambio de Bandera a Medalla al llegar al 100%
         document.getElementById('caminoCasa').className = "fa-solid fa-medal camino-casa"; 
         
         porcentajeTexto.textContent = "100%";
         pistaCamino.style.display = 'none'; 
         msjFinal.style.display = 'block'; 
-        btnCerrarSesion.style.display = 'block'; // Aparece el botón de premio
+        btnCerrarSesion.style.display = 'block'; 
         
         clearInterval(intervaloCamino);
     } else if (pctInt >= 90) {
