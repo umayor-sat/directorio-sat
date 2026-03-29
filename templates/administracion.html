@@ -47,7 +47,7 @@
         .filtros { display:flex; flex-wrap:wrap; gap:15px; margin-bottom:25px; background:var(--um-gris); padding:18px 20px; border-radius:8px; align-items:flex-end; border:1px solid var(--borde); }
         .campo { display:flex; flex-direction:column; gap:6px; flex:1; min-width:150px; }
         label { font-size:11px; color:var(--texto-suave); font-weight:700; text-transform:uppercase; }
-        input[type="text"], input[type="date"], input[type="email"], select, input[type="password"] { padding:9px 12px; border:1px solid var(--borde); border-radius:6px; font-size:13px; font-family:inherit; background:#fff; }
+        input[type="text"], input[type="date"], input[type="email"], select, input[type="password"], input[type="url"], input[type="number"] { padding:9px 12px; border:1px solid var(--borde); border-radius:6px; font-size:13px; font-family:inherit; background:#fff; }
         input:focus, select:focus { border-color:var(--um-azul); outline:none; }
         
         /* BOTONES */
@@ -69,7 +69,7 @@
         .btn-editar { background:#f39c12; color:white; }
         .btn-editar:hover { background:#d68910; }
 
-        /* ESTILOS ESPECÍFICOS DE STAFF */
+        /* ESTILOS ESPECÍFICOS DE FORMULARIOS */
         .panel-formulario { background:var(--um-gris); padding:20px; border-radius:8px; border:1px solid var(--borde); margin-bottom:25px; transition: border 0.3s; }
         .panel-formulario h3 { margin-top:0; font-size:14px; color:var(--um-azul); display:flex; justify-content:space-between;}
         .grid-formulario { display:grid; grid-template-columns: 2fr 2fr 1.5fr 1fr; gap:15px; align-items:end; }
@@ -100,6 +100,7 @@
     <div class="tabs-nav">
       <button class="tab-btn active" onclick="switchTab('casos', this)"><i class="fa-solid fa-clipboard-list"></i> Reporte de Casos</button>
       <button class="tab-btn" onclick="switchTab('staff', this)"><i class="fa-solid fa-users-gear"></i> Gestión de Staff</button>
+      <button class="tab-btn" onclick="switchTab('enlaces', this)"><i class="fa-solid fa-link"></i> Gestión de Enlaces</button>
     </div>
 
     <div class="content">
@@ -145,7 +146,6 @@
                 </table>
             </div>
         </div>
-
 
         <div id="tab-staff" class="tab-panel">
             <h2>Añadir o Editar Ejecutivos</h2>
@@ -228,12 +228,79 @@
             </div>
         </div>
 
-    </div>
+        <div id="tab-enlaces" class="tab-panel">
+            <h2>Añadir Enlace (Mega-Menú)</h2>
+
+            <div class="panel-formulario" id="panelFormularioEnlace">
+                <h3 id="tituloFormularioEnlace"><span><i class="fa-solid fa-link"></i> Registrar Nuevo Link</span></h3>
+
+                <div class="grid-formulario">
+                    <div class="campo">
+                        <label>Nombre del Link *</label>
+                        <input type="text" id="linkNombre" placeholder="Ej: Intranet SAT">
+                    </div>
+                    <div class="campo">
+                        <label>URL de destino *</label>
+                        <input type="url" id="linkUrl" placeholder="https://...">
+                    </div>
+                    <div class="campo">
+                        <label>Categoría *</label>
+                        <select id="linkCategoria">
+                            <option value="Links Frecuentes">Links Frecuentes</option>
+                            <option value="Beneficios Ministeriales">Beneficios Ministeriales</option>
+                            <option value="Turnos SAT">Turnos SAT</option>
+                            <option value="Mesa TI">Mesa TI</option>
+                            <option value="Otros Recursos">Otros Recursos</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label>Ícono (Ej: fa-link)</label>
+                        <input type="text" id="linkIcono" value="fa-link">
+                    </div>
+                </div>
+                
+                <div class="grid-formulario" style="grid-template-columns: 1fr 3fr; margin-top:15px; border-top:1px dashed #ccc; padding-top:15px;">
+                    <div class="campo">
+                        <label>Orden (Prioridad)</label>
+                        <input type="number" id="linkOrden" value="1" min="1">
+                    </div>
+                    <div class="acciones-form" style="margin-top:0; align-items:flex-end; justify-content:flex-end;">
+                        <button class="btn-accion btn-limpiar" onclick="limpiarFormularioEnlace()"><i class="fa-solid fa-eraser"></i> Limpiar</button>
+                        <button class="btn-accion btn-filtrar" onclick="guardarEnlace()"><i class="fa-solid fa-floppy-disk"></i> Guardar Enlace</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filtros" style="justify-content: space-between; align-items: center; padding: 10px 20px; margin-bottom: 10px;">
+                <h3 style="margin:0; font-size:15px; color:var(--um-azul);"><i class="fa-solid fa-list"></i> Enlaces Activos en la Base de Datos</h3>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ord</th>
+                            <th style="text-align:center;">Icono</th>
+                            <th>Nombre y URL</th>
+                            <th>Categoría</th>
+                            <th style="text-align:center;">Estado</th>
+                            <th style="text-align:center;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-enlaces">
+                        <tr><td colspan="6" style="text-align:center; padding:30px; color:#888;">Cargando enlaces...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </div>
     <footer>Portal SAT &middot; Universidad Mayor &middot; 2026</footer>
 </div>
 
-
 <script>
+    // ==========================================
+    // SISTEMA DE PESTAÑAS Y SETUP
+    // ==========================================
     function switchTab(tabId, btnElement) {
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
@@ -246,6 +313,9 @@
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTA4MTcsImV4cCI6MjA4ODEyNjgxN30.pqT_PlAAn3oR6g_0Iaa2fs6qV8M3RQFzNOCAssyZZh4';
     const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
+    // ==========================================
+    // LÓGICA: REPORTE DE CASOS
+    // ==========================================
     let datosParaExcel = [];
 
     function limpiarFiltrosCasos() {
@@ -299,7 +369,7 @@
     }
 
     // ==========================================
-    // LÓGICA: PESTAÑA STAFF (Actualizada)
+    // LÓGICA: PESTAÑA STAFF
     // ==========================================
     async function cargarEjecutivos() {
         const cuerpo = document.getElementById('tablaStaff');
@@ -313,7 +383,6 @@
             const mailSeguro = e.mail ? e.mail.replace(/'/g, "\\'") : '';
             const rolSeguro = e.rol ? e.rol.replace(/'/g, "\\'").toLowerCase() : 'apoyo';
             
-            // Inserción de las 8 columnas visuales tal cual estaban en adm.html
             cuerpo.innerHTML += `
                 <tr class="fila-staff">
                     <td style="font-weight:bold; color:var(--um-azul);">${e.nombre || '-'}</td>
@@ -340,9 +409,7 @@
         }
     }
 
-    // Función de edición con la instrucción de subir pantalla
     function subirFormStaff(id, nombre, mail, rol, activo, user, pass, nivel) {
-        // LÍNEA AÑADIDA: Sube la pantalla suavemente al presionar editar
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
         document.getElementById('ejecutivoId').value = id;
@@ -351,7 +418,6 @@
         document.getElementById('formRol').value = (['apoyo', 'staff', 'supervisor'].includes(rol)) ? rol : 'apoyo';
         document.getElementById('formActivo').checked = activo;
         
-        // Carga de campos de credenciales
         document.getElementById('formLoginUser').value = user;
         document.getElementById('formLoginPass').value = pass;
         document.getElementById('formNivelAcceso').value = nivel || 'usuario';
@@ -390,15 +456,7 @@
 
         if (!nombre) return alert("El nombre es obligatorio.");
         
-        const paquete = { 
-            nombre, 
-            mail, 
-            rol, 
-            activo, 
-            login_user, 
-            login_password, 
-            nivel_acceso 
-        };
+        const paquete = { nombre, mail, rol, activo, login_user, login_password, nivel_acceso };
 
         if (id) await _supabase.from('ejecutivos').update(paquete).eq('id', id);
         else await _supabase.from('ejecutivos').insert([paquete]);
@@ -415,10 +473,114 @@
         }
     }
 
-    // Inicializar la carga automática de datos al entrar
+    // ==========================================
+    // LÓGICA: PESTAÑA ENLACES (NUEVA - Vía API)
+    // ==========================================
+    async function cargarEnlaces() {
+        try {
+            const res = await fetch('/api/enlaces');
+            const data = await res.json();
+            const tbody = document.getElementById('tbody-enlaces');
+            tbody.innerHTML = '';
+            
+            if(data.error) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px; color:#888;">Error cargando enlaces.</td></tr>`;
+                return; 
+            }
+            
+            if(data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px; color:#888;">No hay enlaces registrados.</td></tr>`;
+                return;
+            }
+
+            data.forEach(link => {
+                const badge = link.activo 
+                    ? `<span class="badge activo">Activo</span>`
+                    : `<span class="badge inactivo" style="background:gray;">Inactivo</span>`;
+                
+                const urlCorta = link.url.length > 55 ? link.url.substring(0,55) + '...' : link.url;
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight:bold; color:#777;">${link.orden}</td>
+                        <td style="color:var(--um-azul); font-size:16px; text-align:center;"><i class="fa-solid ${link.icono || 'fa-link'}"></i></td>
+                        <td>
+                            <strong>${link.nombre_link}</strong><br>
+                            <a href="${link.url}" target="_blank" style="font-size:11px; color:#666; text-decoration:none;">${urlCorta}</a>
+                        </td>
+                        <td>${link.categoria}</td>
+                        <td style="text-align:center;">${badge}</td>
+                        <td style="text-align:center;">
+                            <button class="btn-tabla ${link.activo ? 'btn-borrar' : 'btn-exportar'}" 
+                                style="color:${link.activo ? 'var(--rojo)' : 'white'}; border:1px solid ${link.activo ? 'var(--rojo)' : 'transparent'}; background:${link.activo ? 'transparent' : 'var(--verde-palta)'}" 
+                                onclick="toggleEnlace(${link.id})" title="${link.activo ? 'Desactivar Link' : 'Activar Link'}">
+                                <i class="fa-solid ${link.activo ? 'fa-toggle-off' : 'fa-toggle-on'}"></i>
+                            </button>
+                            <button class="btn-tabla btn-borrar" onclick="borrarEnlace(${link.id}, '${link.nombre_link}')" title="Eliminar definitivamente">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        } catch (error) { 
+            console.error("Error cargando enlaces:", error); 
+        }
+    }
+
+    async function guardarEnlace() {
+        const nombre_link = document.getElementById('linkNombre').value.trim();
+        const url = document.getElementById('linkUrl').value.trim();
+        const categoria = document.getElementById('linkCategoria').value;
+        const icono = document.getElementById('linkIcono').value.trim() || 'fa-link';
+        const orden = document.getElementById('linkOrden').value;
+        
+        if (!nombre_link || !url) return alert("El nombre y la URL son obligatorios.");
+        
+        const payload = { nombre_link, url, categoria, icono, orden };
+        
+        try {
+            const res = await fetch('/api/enlaces/nuevo', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const result = await res.json();
+            
+            if (result.status === 'success') {
+                limpiarFormularioEnlace();
+                cargarEnlaces();
+            } else alert("Error al guardar: " + result.error);
+        } catch (error) { console.error("Error guardando:", error); }
+    }
+
+    async function toggleEnlace(id) {
+        await fetch(`/api/enlaces/toggle/${id}`, { method: 'POST' });
+        cargarEnlaces();
+    }
+
+    async function borrarEnlace(id, nombre) {
+        if (confirm(`¿Estás seguro de eliminar el enlace "${nombre}"? Esta acción no se puede deshacer.`)) {
+            await fetch(`/api/enlaces/eliminar/${id}`, { method: 'DELETE' });
+            cargarEnlaces();
+        }
+    }
+
+    function limpiarFormularioEnlace() {
+        document.getElementById('linkNombre').value = '';
+        document.getElementById('linkUrl').value = '';
+        document.getElementById('linkIcono').value = 'fa-link';
+        document.getElementById('linkOrden').value = '1';
+        document.getElementById('linkCategoria').selectedIndex = 0;
+    }
+
+    // ==========================================
+    // CARGA INICIAL
+    // ==========================================
     document.addEventListener("DOMContentLoaded", () => {
         cargarRegistros();
         cargarEjecutivos();
+        cargarEnlaces(); // <-- Carga de links inicializada
     });
 
 </script>
