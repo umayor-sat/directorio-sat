@@ -65,17 +65,69 @@ body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--f
 .user-name-display { font-weight: 700; color: #222; font-size: 14px; margin-right: 5px; text-transform: uppercase; }
 body.dark-mode .user-name-display { color: #222; }
 
-.btn-dark-mode { background: rgba(0,0,0,0.1); color: #222; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: background 0.2s; }
+.btn-dark-mode { background: rgba(0,0,0,0.1); color: #222; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: background 0.2s; display:flex; align-items:center; gap:6px;}
 .btn-dark-mode:hover { background: rgba(0,0,0,0.2); }
 body.dark-mode .btn-dark-mode { background: #333; color: #fff; }
 
 .btn-salir { background-color: #e74c3c; color: white; text-decoration: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px; }
 .btn-salir:hover { background-color: #c0392b; }
 
-.welcome-bar { background: var(--um-gris); border-bottom: 1px solid var(--borde); padding: 14px 20px; text-align: center; }
-.welcome-bar h2 { margin: 0 0 5px 0; color: var(--um-azul); font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-.reloj-destacado { background: var(--um-azul); color: white; padding: 4px 12px; border-radius: 12px; font-size: 16px; letter-spacing: 1px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-.recordatorios { font-size: 13.5px; color: var(--texto-suave); font-weight: 500; }
+/* -------------------------------------------
+   NUEVO CENTRO DE CONTROL (WELCOME BAR)
+------------------------------------------- */
+.welcome-bar { 
+    background: var(--um-gris); border-bottom: 1px solid var(--borde); 
+    padding: 16px 30px; 
+    display: grid; 
+    grid-template-columns: minmax(200px, 1fr) 2fr minmax(280px, 1fr); 
+    gap: 20px; 
+    align-items: center; 
+}
+@media (max-width: 950px) {
+    .welcome-bar { grid-template-columns: 1fr; text-align: center; justify-items: center; }
+}
+
+/* Bloque Izquierdo: Tiempo y Contexto */
+.wb-left { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+@media (max-width: 950px) { .wb-left { align-items: center; } }
+.reloj-destacado { background: var(--um-azul); color: white; padding: 6px 14px; border-radius: 8px; font-size: 26px; font-family: monospace; font-weight: bold; letter-spacing: 2px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.fecha-tarjeta { background: var(--fondo); border: 1px solid var(--borde); border-radius: 6px; padding: 6px 10px; font-size: 13px; font-weight: bold; color: var(--texto); display: inline-flex; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.santoral-texto { font-size: 11px; color: var(--texto-suave); font-style: italic; margin-left: 4px; }
+
+/* Bloque Central: Empatía */
+.wb-center { text-align: center; display: flex; flex-direction: column; gap: 6px; }
+.wb-center h2 { margin: 0; color: var(--um-azul); font-size: 18px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.mensaje-dia { font-size: 15px; font-weight: 600; color: var(--texto); margin-bottom: 2px; }
+.recordatorios { font-size: 13px; color: var(--texto-suave); font-weight: 500; }
+
+/* Bloque Derecho: Gamificación */
+.wb-right { display: flex; justify-content: flex-end; width: 100%; }
+.camino-casa-widget { width: 100%; max-width: 320px; background: var(--card-bg); border: 1px solid var(--borde); border-radius: 12px; padding: 12px 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+.camino-header { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 600; color: var(--texto-suave); }
+.camino-porcentaje { font-size: 16px; font-weight: 800; color: var(--um-azul); }
+
+.camino-track-container { margin-top: 15px; position: relative; }
+.camino-track { height: 8px; background: rgba(0,0,0,0.1); border-radius: 4px; position: relative; margin: 0 10px 10px; cursor: help; }
+body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
+.camino-progress { height: 100%; background: var(--um-azul); border-radius: 4px; width: 0%; transition: width 1s linear, background-color 0.5s; }
+.camino-monito { position: absolute; top: -16px; left: 0%; transform: translateX(-50%); color: var(--um-azul); font-size: 18px; transition: left 1s linear, color 0.5s; }
+.camino-casa { position: absolute; top: -16px; right: -12px; color: var(--texto-suave); font-size: 18px; transition: color 0.5s, transform 0.5s; }
+.camino-mensaje-final { text-align: center; font-size: 14px; font-weight: bold; color: var(--um-verde); display: none; margin-bottom: 10px; animation: latido 2s infinite; }
+
+/* Controles de la hora siempre visibles */
+.camino-controles { margin-top: 15px; background: var(--fondo); border: 1px solid var(--borde); border-radius: 6px; padding: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; color: var(--texto-suave); box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
+.camino-controles input[type="time"] { border: 1px solid var(--borde); border-radius: 4px; padding: 4px 6px; font-family: monospace; font-size: 14px; color: var(--um-azul); font-weight: bold; background: var(--card-bg); outline: none; cursor: pointer; transition: border-color 0.2s; }
+.camino-controles input[type="time"]:focus { border-color: var(--um-azul); }
+.btn-editar-hora { background: none; border: none; font-size: 12px; color: var(--um-azul); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 4px; transition: opacity 0.2s; }
+.btn-editar-hora:hover { opacity: 0.7; }
+
+/* Estados dinámicos de la barra */
+.estado-alerta .camino-progress { background: var(--um-amarillo); }
+.estado-alerta .camino-monito { color: var(--um-amarillo); }
+.estado-ok .camino-progress { background: var(--um-verde); }
+.estado-ok .camino-monito { display: none; }
+.estado-ok .camino-casa { color: var(--um-verde); font-size: 22px; transform: scale(1.2); }
+@keyframes latido { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
 /* -------------------------------------------
    HERO 
@@ -85,7 +137,9 @@ body.dark-mode .btn-dark-mode { background: #333; color: #fff; }
 .identidad .nombre { font-size: 20px; font-weight: 700; color: var(--texto); letter-spacing: 0.5px; }
 .identidad .lema { font-size: 11px; color: var(--texto-suave); letter-spacing: 2px; margin-top: 3px; }
 .divider { width: 50px; height: 3px; background: var(--um-amarillo); margin: 0 auto 20px; border-radius: 2px; }
-.hero h1 { font-size: 32px; font-weight: 700; margin: 0 0 8px; color: var(--texto); }
+
+/* Letra gruesa e institucional para el Título */
+.hero h1 { font-family: 'Arial Black', Impact, sans-serif; text-transform: uppercase; font-size: 40px; font-weight: 900; margin: 0 0 8px; color: var(--texto); letter-spacing: -1px; }
 .hero .tagline { font-size: 15px; color: var(--texto-suave); margin: 0 0 40px; }
 
 .buttons-primary { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 700px; margin: 0 auto 16px; }
@@ -141,99 +195,6 @@ footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin:
 .footer-links a { color: var(--texto-suave); text-decoration: none; transition: color 0.2s; }
 .footer-links a:hover { color: var(--um-azul); }
 
-/* --- WIDGET CAMINO A CASA --- */
-.camino-casa-widget {
-    margin: 15px auto 0;
-    max-width: 500px;
-    background: var(--card-bg);
-    border: 1px solid var(--borde);
-    border-radius: 12px;
-    padding: 12px 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-}
-.camino-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    font-size: 13.5px;
-    font-weight: 600;
-    color: var(--texto-suave);
-}
-.camino-input {
-    border: 1px solid var(--borde);
-    border-radius: 6px;
-    padding: 4px 8px;
-    font-family: 'Courier New', monospace;
-    font-weight: bold;
-    color: var(--um-azul);
-    background: var(--fondo);
-    outline: none;
-    cursor: pointer;
-}
-.camino-track-container { margin-top: 22px; position: relative; }
-.camino-track {
-    height: 6px;
-    background: rgba(0,0,0,0.1);
-    border-radius: 4px;
-    position: relative;
-    margin: 0 15px 10px;
-}
-body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
-.camino-progress {
-    height: 100%;
-    background: var(--um-azul);
-    border-radius: 4px;
-    width: 0%;
-    transition: width 1s linear, background-color 0.5s;
-}
-.camino-monito {
-    position: absolute;
-    top: -18px;
-    left: 0%;
-    transform: translateX(-50%); 
-    color: var(--um-azul);
-    font-size: 20px;
-    transition: left 1s linear, color 0.5s;
-}
-.camino-casa {
-    position: absolute;
-    top: -18px;
-    right: -12px;
-    color: var(--texto-suave);
-    font-size: 20px;
-    transition: color 0.5s, transform 0.5s;
-}
-.camino-mensaje-final {
-    text-align: center;
-    font-size: 15px;
-    font-weight: bold;
-    color: var(--um-verde);
-    display: none;
-    animation: latido 2s infinite;
-}
-.btn-salir-final {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-left: 10px;
-    background: #e74c3c;
-    color: white;
-    text-decoration: none;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 13px;
-    transition: background 0.2s;
-}
-.btn-salir-final:hover { background: #c0392b; }
-@keyframes latido { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
-
-/* Estados dinámicos (5 minutos y Finalizado) */
-.estado-alerta .camino-progress { background: var(--um-amarillo); }
-.estado-alerta .camino-monito { color: var(--um-amarillo); }
-.estado-ok .camino-progress { background: var(--um-verde); }
-.estado-ok .camino-monito { display: none; }
-.estado-ok .camino-casa { color: var(--um-verde); font-size: 24px; transform: scale(1.2); }
 </style>
 </head>
 <body>
@@ -298,7 +259,7 @@ body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
   <div class="top-actions-container">
     <span class="user-name-display"><i class="fa-solid fa-circle-user"></i> {{ session.get('nombre', 'Equipo SAT') }}</span>
     <button class="btn-dark-mode" onclick="toggleDarkMode()" title="Cambiar contraste">
-        <i class="fa-solid fa-moon" id="iconoDark"></i>
+        <i class="fa-solid fa-moon" id="iconoDark"></i> <span id="textoDarkMode">Modo Oscuro</span>
     </button>
     <a href="/logout" class="btn-salir" title="Finalizar sesión">
         <i class="fa-solid fa-power-off"></i> Salir
@@ -307,28 +268,52 @@ body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
 </div>
 
 <div class="welcome-bar">
-    <h2>
-        <span id="saludoTexto">Buenos días, equipo.</span> 
-        <span class="reloj-destacado" id="relojHora">00:00:00</span>
-    </h2>
-    <div class="recordatorios">
-        ¿Ya marcaste tu entrada en <a href="https://clients.geovictoria.com/account/login?idiom=es" target="_blank" style="color: var(--um-azul); font-weight: bold; text-decoration: none; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">GeoVictoria <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 11px;"></i></a>? Recuerda también revisar tu conexión en Genesys.
+    
+    <div class="wb-left">
+        <div class="reloj-destacado" id="relojHora">00:00:00</div>
+        <div class="fecha-tarjeta">
+            <i class="fa-regular fa-calendar" style="margin-right:6px; color:var(--um-azul);"></i> 
+            <span id="fechaTexto">Cargando...</span>
+            <span id="climaTexto" style="display:none; margin-left:8px; border-left: 1px solid var(--borde); padding-left:8px; font-weight:normal;"></span>
+        </div>
+        <div class="santoral-texto" id="santoralTexto"></div>
+    </div>
+
+    <div class="wb-center">
+        <h2>
+            <span id="saludoHora">Buenos días,</span> {{ session.get('nombre', 'Equipo') }}.
+        </h2>
+        <div class="mensaje-dia" id="mensajeDia">Cargando mensaje...</div>
+        <div class="recordatorios">
+            No olvides marcar tu entrada en <a href="https://clients.geovictoria.com/account/login?idiom=es" target="_blank" style="color: var(--um-azul); font-weight: bold; text-decoration: none; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">GeoVictoria <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 11px;"></i></a>
+        </div>
     </div>
     
-    <div class="camino-casa-widget" id="caminoCasaWidget">
-        <div class="camino-header">
-            <span id="caminoTexto">¿A qué hora termina tu turno hoy?</span>
-            <input type="time" id="horaSalidaInput" class="camino-input" title="Ingresa tu hora de salida">
-        </div>
-        
-        <div class="camino-track-container" id="caminoTrackContainer" style="display: none;">
-            <div class="camino-track" id="pistaCamino">
-                <div class="camino-progress" id="caminoProgress"></div>
-                <i class="fa-solid fa-person-walking camino-monito" id="caminoMonito"></i>
-                <i class="fa-solid fa-house camino-casa" id="caminoCasa"></i>
+    <div class="wb-right">
+        <div class="camino-casa-widget" id="caminoCasaWidget">
+            <div class="camino-header">
+                <span id="caminoTexto">Avance del Turno</span>
+                <div class="camino-porcentaje" id="caminoPorcentaje">0%</div>
             </div>
-            <div class="camino-mensaje-final" id="caminoMensajeFinal">
-                🎉 ¡Turno finalizado! Buen descanso. <a href="/logout" class="btn-salir-final"><i class="fa-solid fa-power-off"></i> Cerrar Sesión</a>
+            
+            <div class="camino-track-container" id="caminoTrackContainer">
+                <div class="camino-track" id="pistaCamino" title="Calculando...">
+                    <div class="camino-progress" id="caminoProgress"></div>
+                    <i class="fa-solid fa-person-walking camino-monito" id="caminoMonito"></i>
+                    <i class="fa-solid fa-house camino-casa" id="caminoCasa"></i>
+                </div>
+                
+                <div class="camino-mensaje-final" id="caminoMensajeFinal">
+                    🎉 ¡Turno finalizado! Misión cumplida. 
+                </div>
+
+                <div class="camino-controles">
+                    <label for="horaSalidaInput" style="font-weight: 600;">Salida:</label>
+                    <input type="time" id="horaSalidaInput" onchange="iniciarCamino()" title="Ingresa o modifica tu hora de salida">
+                    <button class="btn-editar-hora" onclick="document.getElementById('horaSalidaInput').focus()" title="Modificar hora de salida (incluye horas extras)">
+                        <i class="fa-solid fa-pencil"></i> Editar
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -465,23 +450,20 @@ function iniciarPortal() {
     var modal = document.getElementById('modalAviso');
     modal.style.display = 'flex';
     
-    // Función centralizada para cerrar
     const cerrarModal = () => {
         if(modal.style.display !== 'none') {
-            modal.style.opacity = '0'; // Efecto Fade Out
+            modal.style.opacity = '0'; 
             setTimeout(() => {
                 modal.style.display = 'none';
                 sessionStorage.setItem('avisoSATVisto', 'true');
-            }, 400); // 400ms después del fade
+            }, 400); 
         }
     };
 
-    // Cerrar haciendo clic fuera
     modal.addEventListener('click', function(e) {
         if(e.target === modal) cerrarModal();
     });
 
-    // Auto cierre a los 10 segundos
     setTimeout(cerrarModal, 10000);
   }
 }
@@ -492,14 +474,90 @@ function toggleDarkMode() {
     body.classList.toggle('dark-mode');
     const isDark = body.classList.contains('dark-mode');
     localStorage.setItem('sat_darkmode', isDark ? 'yes' : 'no');
+    
     document.getElementById('iconoDark').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+    document.getElementById('textoDarkMode').textContent = isDark ? 'Modo Claro' : 'Modo Oscuro';
 }
 if (localStorage.getItem('sat_darkmode') === 'yes') {
     document.body.classList.add('dark-mode');
     document.getElementById('iconoDark').className = 'fa-solid fa-sun';
+    document.getElementById('textoDarkMode').textContent = 'Modo Claro';
+} else {
+    document.getElementById('textoDarkMode').textContent = 'Modo Oscuro';
 }
 
-// --- 3. RELOJ Y SALUDO ---
+
+// --- 3. RELOJ, FECHA Y EFEMÉRIDES (SANTORAL) ---
+const diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+const mesesAno = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+// Diccionario exacto en formato "DD-MM"
+const efemeridesChilenas = {
+    "01-01": "Día de Año Nuevo",
+    "08-03": "Día Internacional de la Mujer",
+    "24-04": "Día del Ejecutivo de Atención al Cliente",
+    "01-05": "Día del Trabajador",
+    "10-05": "Día de la Madre",
+    "21-05": "Día de las Glorias Navales",
+    "19-06": "Día del Padre",
+    "29-06": "San Pedro y San Pablo",
+    "16-07": "Día de la Virgen del Carmen",
+    "15-08": "Asunción de la Virgen",
+    "18-09": "Fiestas Patrias",
+    "19-09": "Día de las Glorias del Ejército",
+    "12-10": "Día del Encuentro de Dos Mundos",
+    "31-10": "Día de las Iglesias Evangélicas",
+    "01-11": "Día de Todos los Santos",
+    "03-12": "Día de la Secretaria",
+    "08-12": "Inmaculada Concepción",
+    "25-12": "Navidad",
+    "31-12": "Víspera de Año Nuevo"
+};
+
+function inicializarFechaYContexto() {
+    const hoy = new Date();
+    const diaNum = hoy.getDate();
+    const mesNum = hoy.getMonth();
+    const diaSemana = hoy.getDay();
+    
+    document.getElementById('fechaTexto').textContent = `${diasSemana[diaSemana]} ${diaNum} de ${mesesAno[mesNum]}`;
+    
+    // Búsqueda exacta de Efeméride (Día-Mes)
+    const diaNumStr = String(diaNum).padStart(2, '0');
+    const mesNumStr = String(mesNum + 1).padStart(2, '0');
+    const claveEfemeride = diaNumStr + "-" + mesNumStr;
+    
+    if (efemeridesChilenas[claveEfemeride]) {
+        document.getElementById('santoralTexto').textContent = efemeridesChilenas[claveEfemeride];
+    } else {
+        document.getElementById('santoralTexto').textContent = "Sin información";
+    }
+
+    let msj = "";
+    if (diaSemana === 1) msj = "¡Excelente inicio de semana! A darlo todo.";
+    else if (diaSemana >= 2 && diaSemana <= 4) msj = "¡La semana avanza, buen turno!";
+    else if (diaSemana === 5) msj = "¡Último esfuerzo, ya es Viernes!";
+    else msj = "Gracias por tu compromiso trabajando este fin de semana.";
+    document.getElementById('mensajeDia').textContent = msj;
+
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=-33.4372&longitude=-70.6506&current_weather=true')
+    .then(r => r.json())
+    .then(data => {
+        const t = Math.round(data.current_weather.temperature);
+        const code = data.current_weather.weathercode;
+        let icon = '🌤️'; 
+        if(code === 0) icon = '☀️';
+        else if(code <= 3) icon = '⛅';
+        else if(code <= 48) icon = '🌫️';
+        else icon = '🌧️'; 
+        
+        const climaDiv = document.getElementById('climaTexto');
+        climaDiv.innerHTML = `${icon} ${t}°C`;
+        climaDiv.style.display = 'inline';
+    }).catch(e => { /* Modo silencioso */ });
+}
+inicializarFechaYContexto();
+
 function actualizarReloj() {
     const ahora = new Date();
     const h = ahora.getHours();
@@ -508,79 +566,141 @@ function actualizarReloj() {
     
     document.getElementById('relojHora').textContent = `${String(h).padStart(2,'0')}:${m}:${s}`;
     
-    let saludo = "Buenas noches, equipo.";
-    if (h >= 6 && h < 12) saludo = "Buenos días, equipo.";
-    else if (h >= 12 && h < 20) saludo = "Buenas tardes, equipo.";
+    let saludo = "Buenas noches,";
+    if (h >= 6 && h < 12) saludo = "Buenos días,";
+    else if (h >= 12 && h < 20) saludo = "Buenas tardes,";
     
-    document.getElementById('saludoTexto').textContent = saludo;
+    document.getElementById('saludoHora').textContent = saludo;
 }
 setInterval(actualizarReloj, 1000);
 actualizarReloj();
 
-// --- 4. BLOCK DE NOTAS PERSISTENTE E INTELIGENTE ---
-const txtPostIt = document.getElementById('textoPostIt');
-// La Plantilla con 2 bloques (Solicitante y Alumno)
-const plantillaMultiple = "Nombre solicitante:\nRUT: (sin puntos ni guión) \nCorreo:\nTeléfono:\nComentario:\n\n----------------------\nNombre Alumno:\nRUT alumno: (sin puntos ni guión) \nCorreo institucional:\nComentarios adicionales:\n";
 
-// Cargar lo guardado, o inyectar los 2 bloques si está vacío
+// --- 4. MINIJUEGO 3.0: CAJA DE HORA SIEMPRE VISIBLE ---
+const fechaDeHoyStr = new Date().toLocaleDateString();
+if (localStorage.getItem('fecha_ultimo_juego') !== fechaDeHoyStr) {
+    sessionStorage.removeItem('horaInicioTurno');
+    localStorage.setItem('fecha_ultimo_juego', fechaDeHoyStr);
+}
+if (!sessionStorage.getItem('horaInicioTurno')) {
+    sessionStorage.setItem('horaInicioTurno', new Date().getTime());
+}
+
+const inputSalida = document.getElementById('horaSalidaInput');
+const progreso = document.getElementById('caminoProgress');
+const monito = document.getElementById('caminoMonito');
+const porcentajeTexto = document.getElementById('caminoPorcentaje');
+const widgetCasa = document.getElementById('caminoCasaWidget');
+const msjFinal = document.getElementById('caminoMensajeFinal');
+const pistaCamino = document.getElementById('pistaCamino');
+let intervaloCamino;
+
+// Inicialización automática si ya hay hora guardada
+if (localStorage.getItem('horaSalidaGuardada')) {
+    inputSalida.value = localStorage.getItem('horaSalidaGuardada');
+    iniciarCamino();
+}
+
+function iniciarCamino() {
+    if (!inputSalida.value) return;
+    
+    // Guardamos la hora, ya sea la normal o la modificada por horas extras
+    localStorage.setItem('horaSalidaGuardada', inputSalida.value);
+    
+    // Reseteamos visuales por si están agregando horas extras tras haber llegado al 100%
+    msjFinal.style.display = 'none';
+    pistaCamino.style.display = 'block';
+    monito.style.display = 'block';
+    document.getElementById('caminoCasa').className = "fa-solid fa-house camino-casa";
+    widgetCasa.classList.remove('estado-alerta', 'estado-ok');
+    
+    clearInterval(intervaloCamino);
+    actualizarCamino(); 
+    intervaloCamino = setInterval(actualizarCamino, 30000); 
+}
+
+function actualizarCamino() {
+    if (!inputSalida.value) return;
+    const ahora = new Date();
+    const horaInicio = parseInt(sessionStorage.getItem('horaInicioTurno'));
+    
+    const [horas, minutos] = inputSalida.value.split(':');
+    const fechaSalida = new Date();
+    fechaSalida.setHours(horas, minutos, 0, 0);
+
+    const totalMs = fechaSalida.getTime() - horaInicio;
+    const transcurridoMs = ahora.getTime() - horaInicio;
+
+    let porcentaje = (transcurridoMs / totalMs) * 100;
+    if (porcentaje < 0 || totalMs < 0) porcentaje = 0;
+    if (porcentaje > 100) porcentaje = 100;
+    
+    const pctInt = Math.floor(porcentaje);
+    progreso.style.width = pctInt + '%';
+    monito.style.left = pctInt + '%';
+    porcentajeTexto.textContent = pctInt + '%';
+    pistaCamino.title = "Salida estimada: " + inputSalida.value;
+
+    if (pctInt < 50) {
+        monito.className = "fa-solid fa-person-walking camino-monito";
+    } else if (pctInt >= 50 && pctInt < 100) {
+        monito.className = "fa-solid fa-person-running camino-monito";
+    }
+
+    if (pctInt >= 100) {
+        widgetCasa.classList.add('estado-ok');
+        widgetCasa.classList.remove('estado-alerta');
+        document.getElementById('caminoCasa').className = "fa-solid fa-champagne-glasses camino-casa"; 
+        porcentajeTexto.textContent = "100%";
+        pistaCamino.style.display = 'none'; 
+        msjFinal.style.display = 'block'; 
+        clearInterval(intervaloCamino);
+    } else if (pctInt >= 90) {
+        widgetCasa.classList.add('estado-alerta');
+    } else {
+        widgetCasa.classList.remove('estado-alerta');
+    }
+}
+
+// --- 5. BLOCK DE NOTAS Y HERRAMIENTAS ANTIGUAS ---
+const txtPostIt = document.getElementById('textoPostIt');
+const plantillaMultiple = "Nombre solicitante:\nRUT: (sin puntos ni guión) \nCorreo:\nTeléfono:\nComentario:\n\n----------------------\nNombre Alumno:\nRUT alumno: (sin puntos ni guión) \nCorreo institucional:\nComentarios adicionales:\n";
 let savedPostIt = localStorage.getItem('sat_postit');
 if (!savedPostIt || savedPostIt.trim() === '') {
     txtPostIt.value = plantillaMultiple;
 } else {
     txtPostIt.value = savedPostIt;
 }
-
-// Guardar mientras se escribe
-txtPostIt.addEventListener('input', function() {
-    localStorage.setItem('sat_postit', this.value);
-});
-
-// Mostrar/Ocultar
+txtPostIt.addEventListener('input', function() { localStorage.setItem('sat_postit', this.value); });
 function togglePostIt() {
     const panel = document.getElementById('postItPanel');
     panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
 }
-
-// Botón Copiar Todo
 function copiarPostIt() {
     txtPostIt.select();
     document.execCommand('copy');
-    // Deseleccionar texto visualmente
     window.getSelection().removeAllRanges();
-    
-    // Cambiar el botón temporalmente para dar feedback visual
     const btn = document.getElementById('btnCopiarPostIt');
     const originalHTML = btn.innerHTML;
     btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!';
     btn.style.background = 'var(--um-verde)';
-    
-    setTimeout(() => {
-        btn.innerHTML = originalHTML;
-        btn.style.background = 'var(--um-azul)';
-    }, 2000);
+    setTimeout(() => { btn.innerHTML = originalHTML; btn.style.background = 'var(--um-azul)'; }, 2000);
 }
-
-// Botón Reiniciar
 function limpiarPostIt() {
     if(confirm("¿Estás seguro que quieres borrar tus apuntes y volver a la plantilla en blanco?")) {
         txtPostIt.value = plantillaMultiple;
         localStorage.setItem('sat_postit', plantillaMultiple);
     }
 }
-
-// Cerrar al hacer clic afuera
 document.addEventListener('click', function(event) {
     const widget = document.getElementById('postItWidget');
     const panel = document.getElementById('postItPanel');
-    
-    // Si el panel está abierto, y el clic NO fue dentro del widget entero...
     if (panel.style.display === 'block' && !widget.contains(event.target)) {
         panel.style.display = 'none';
     }
 });
 
-
-// --- 5. SOPORTE SAT ---
+// Soporte SAT
 var btnSoporte = document.getElementById('supportBtn');
 var menuSoporte = document.getElementById('supportMenu');
 btnSoporte.addEventListener('click', function(e) {
@@ -593,9 +713,8 @@ document.addEventListener('click', function(event) {
   }
 });
 
-// --- 6. CALCULADORA DE DÍAS HÁBILES ---
-var FERIADOS_CL = ["2024-01-01","2024-03-29","2024-03-30","2024-04-01","2024-05-01","2024-05-21","2024-06-20","2024-06-29","2024-07-16","2024-08-15","2024-09-18","2024-09-19","2024-09-20","2024-10-12","2024-10-31","2024-11-01","2024-11-16","2024-12-08","2024-12-25","2025-01-01","2025-04-18","2025-04-19","2025-04-21","2025-05-01","2025-05-21","2025-06-20","2025-06-29","2025-07-16","2025-08-15","2025-09-18","2025-09-19","2025-10-12","2025-10-31","2025-11-01","2025-11-16","2025-12-08","2025-12-25","2026-01-01","2026-04-03","2026-04-04","2026-04-06","2026-05-01","2026-05-21","2026-06-20","2026-06-29","2026-07-16","2026-08-15","2026-09-18","2026-09-19","2026-10-12","2026-10-31","2026-11-01","2026-11-16","2026-12-08","2026-12-25","2027-01-01","2027-03-26","2027-03-27","2027-03-29","2027-05-01","2027-05-21","2027-06-20","2027-06-29","2027-07-16","2027-08-15","2027-09-18","2027-09-19","2027-10-12","2027-10-31","2027-11-01","2027-11-16","2027-12-08","2027-12-25"];
-
+// Calculadora
+var FERIADOS_CL = ["2024-01-01","2024-03-29","2024-03-30","2024-04-01","2024-05-01","2024-05-21","2024-06-20","2024-06-29","2024-07-16","2024-08-15","2024-09-18","2024-09-19","2024-09-20","2024-10-12","2024-10-31","2024-11-01","2024-11-16","2024-12-08","2024-12-25","2025-01-01","2025-04-18","2025-04-19","2025-04-21","2025-05-01","2025-05-21","2025-06-20","2025-06-29","2025-07-16","2025-08-15","2025-09-18","2025-09-19","2025-10-12","2025-10-31","2025-11-01","2025-11-16","2025-12-08","2025-12-25","2026-01-01","2026-04-03","2026-04-04","2026-04-06","2026-05-01","2026-05-21","2026-06-20","2026-06-29","2026-07-16","2026-08-15","2026-09-18","2026-09-19","2026-10-12","2026-10-31","2026-11-01","2026-11-16","2026-12-08","2026-12-25"];
 function esHabil(fecha) {
   var d = fecha.getDay();
   if (d === 0 || d === 6) return false;
@@ -621,9 +740,7 @@ function abrirCalc() {
   document.getElementById("calcFechaInicio").value = "";
   document.getElementById("calcResultado").style.display = "none";
 }
-function cerrarCalc() {
-  document.getElementById("calcOverlay").style.display = "none";
-}
+function cerrarCalc() { document.getElementById("calcOverlay").style.display = "none"; }
 function calcularDias() {
   var ini = document.getElementById("calcFechaInicio").value;
   var fin = document.getElementById("calcFechaFin").value;
@@ -669,93 +786,6 @@ document.getElementById("calcOverlay").addEventListener("click", function(e) {
   if (e.target === this) cerrarCalc();
 });
 
-
-// --- 7. MINIJUEGO: CAMINO A CASA (COUNTDOWN) ---
-// Guardamos la hora de inicio de sesión de forma transparente
-if (!sessionStorage.getItem('horaInicioTurno')) {
-    sessionStorage.setItem('horaInicioTurno', new Date().getTime());
-}
-
-const inputSalida = document.getElementById('horaSalidaInput');
-const trackContainer = document.getElementById('caminoTrackContainer');
-const progreso = document.getElementById('caminoProgress');
-const monito = document.getElementById('caminoMonito');
-const textoWidget = document.getElementById('caminoTexto');
-const widgetCasa = document.getElementById('caminoCasaWidget');
-const msjFinal = document.getElementById('caminoMensajeFinal');
-const pistaCamino = document.getElementById('pistaCamino');
-let intervaloCamino;
-
-// Si el ejecutivo ya había puesto una hora hoy, se la recordamos
-if (localStorage.getItem('horaSalidaGuardada')) {
-    inputSalida.value = localStorage.getItem('horaSalidaGuardada');
-    iniciarCamino();
-}
-
-// Magia: sin botones, al cambiar la hora y hacer clic fuera, arranca solo.
-inputSalida.addEventListener('change', iniciarCamino);
-
-function iniciarCamino() {
-    if (!inputSalida.value) return;
-    
-    localStorage.setItem('horaSalidaGuardada', inputSalida.value);
-    trackContainer.style.display = 'block';
-    msjFinal.style.display = 'none';
-    pistaCamino.style.display = 'block';
-    monito.style.display = 'block';
-    widgetCasa.classList.remove('estado-alerta', 'estado-ok');
-    
-    clearInterval(intervaloCamino);
-    actualizarCamino(); // Ejecuta el primer cálculo de inmediato
-    intervaloCamino = setInterval(actualizarCamino, 10000); // Se actualiza cada 10 segundos para no saturar
-}
-
-function actualizarCamino() {
-    if (!inputSalida.value) return;
-    const ahora = new Date();
-    const horaInicio = parseInt(sessionStorage.getItem('horaInicioTurno'));
-    
-    const [horas, minutos] = inputSalida.value.split(':');
-    const fechaSalida = new Date();
-    fechaSalida.setHours(horas, minutos, 0, 0);
-
-    const totalMs = fechaSalida.getTime() - horaInicio;
-    const transcurridoMs = ahora.getTime() - horaInicio;
-    const faltanteMs = fechaSalida.getTime() - ahora.getTime();
-    const faltanteMinutos = Math.ceil(faltanteMs / 60000);
-
-    // Evitar errores si pone una hora anterior a la actual
-    let porcentaje = (transcurridoMs / totalMs) * 100;
-    if (porcentaje < 0 || totalMs < 0) porcentaje = 0;
-    if (porcentaje > 100) porcentaje = 100;
-
-    progreso.style.width = porcentaje + '%';
-    monito.style.left = porcentaje + '%';
-
-    // Lógica de los 3 estados
-    if (faltanteMinutos <= 0) {
-        // 1. Llegó a casa (0 minutos)
-        widgetCasa.classList.add('estado-ok');
-        widgetCasa.classList.remove('estado-alerta');
-        textoWidget.innerHTML = "¡Misión Cumplida!";
-        pistaCamino.style.display = 'none'; // Escondemos la pista
-        msjFinal.style.display = 'block'; // Mostramos el botón de salir
-        clearInterval(intervaloCamino);
-        
-    } else if (faltanteMinutos <= 5) {
-        // 2. Faltan 5 minutos o menos (Naranjo/Amarillo)
-        widgetCasa.classList.add('estado-alerta');
-        textoWidget.innerHTML = "⏳ ¡Último estirón! Preparando el cierre...";
-        
-    } else {
-        // 3. Estado normal (Azul)
-        widgetCasa.classList.remove('estado-alerta');
-        const horasFaltan = Math.floor(faltanteMinutos / 60);
-        const minFaltan = faltanteMinutos % 60;
-        let textoFalta = horasFaltan > 0 ? `${horasFaltan}h ${minFaltan}m` : `${minFaltan} min`;
-        textoWidget.innerHTML = `Te quedan <b>${textoFalta}</b> para terminar tu turno.`;
-    }
-}
 </script>
 
 </body>
