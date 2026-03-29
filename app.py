@@ -222,6 +222,62 @@ def reporteria_sat():
     if session.get('nivel_acceso') != 'admin':
         return redirect(url_for('home'))
     return render_template('reporteria_sat.html')
+    
+# --- INICIO DE INYECCIÓN: GESTIÓN DE LINKS ---
+@app.route('/api/enlaces', methods=['GET'])
+@login_required
+def get_enlaces():
+    if session.get('nivel_acceso') != 'admin':
+        return jsonify({"error": "No autorizado"}), 403
+    try:
+        res = supabase.table("LINKS").select("*").order("categoria").order("orden").execute()
+        return jsonify(res.data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/enlaces/nuevo', methods=['POST'])
+@login_required
+def nuevo_enlace():
+    if session.get('nivel_acceso') != 'admin':
+        return jsonify({"error": "No autorizado"}), 403
+    try:
+        datos = request.json
+        res = supabase.table("LINKS").insert({
+            "nombre_link": datos.get('nombre_link'),
+            "url": datos.get('url'),
+            "categoria": datos.get('categoria'),
+            "orden": int(datos.get('orden', 0)),
+            "icono": datos.get('icono', 'fa-link'),
+            "activo": True
+        }).execute()
+        return jsonify({"status": "success", "data": res.data})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/enlaces/toggle/<int:id>', methods=['POST'])
+@login_required
+def toggle_enlace(id):
+    if session.get('nivel_acceso') != 'admin':
+        return jsonify({"error": "No autorizado"}), 403
+    try:
+        current = supabase.table("LINKS").select("activo").eq("id", id).single().execute()
+        nuevo_estado = not current.data['activo']
+        supabase.table("LINKS").update({"activo": nuevo_estado}).eq("id", id).execute()
+        return jsonify({"status": "success", "nuevo_estado": nuevo_estado})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/enlaces/eliminar/<int:id>', methods=['DELETE'])
+@login_required
+def eliminar_enlace(id):
+    if session.get('nivel_acceso') != 'admin':
+        return jsonify({"error": "No autorizado"}), 403
+    try:
+        supabase.table("LINKS").delete().eq("id", id).execute()
+        return jsonify({"status": "success"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+# --- FIN DE INYECCIÓN ---
 
 @app.route('/administracion')
 @login_required
