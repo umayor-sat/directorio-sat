@@ -229,12 +229,11 @@
         </div>
 
         <div id="tab-enlaces" class="tab-panel">
-            <h2>Añadir Enlace (Mega-Menú)</h2>
+            <h2>Añadir o Editar Enlace (Mega-Menú)</h2>
 
             <div class="panel-formulario" id="panelFormularioEnlace">
                 <h3 id="tituloFormularioEnlace"><span><i class="fa-solid fa-link"></i> Registrar Nuevo Link</span></h3>
-
-                <div class="grid-formulario">
+                <input type="hidden" id="linkId" value=""> <div class="grid-formulario">
                     <div class="campo">
                         <label>Nombre del Link *</label>
                         <input type="text" id="linkNombre" placeholder="Ej: Intranet SAT">
@@ -265,6 +264,7 @@
                         <input type="number" id="linkOrden" value="1" min="1">
                     </div>
                     <div class="acciones-form" style="margin-top:0; align-items:flex-end; justify-content:flex-end;">
+                        <button class="btn-accion btn-limpiar" id="btnCancelarEnlace" style="display:none;" onclick="limpiarFormularioEnlace()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
                         <button class="btn-accion btn-limpiar" onclick="limpiarFormularioEnlace()"><i class="fa-solid fa-eraser"></i> Limpiar</button>
                         <button class="btn-accion btn-filtrar" onclick="guardarEnlace()"><i class="fa-solid fa-floppy-disk"></i> Guardar Enlace</button>
                     </div>
@@ -273,6 +273,7 @@
 
             <div class="filtros" style="justify-content: space-between; align-items: center; padding: 10px 20px; margin-bottom: 10px;">
                 <h3 style="margin:0; font-size:15px; color:var(--um-azul);"><i class="fa-solid fa-list"></i> Enlaces Activos en la Base de Datos</h3>
+                <input type="text" id="buscadorEnlaces" placeholder="🔍 Buscar por nombre o URL..." onkeyup="filtrarEnlaces()" style="width: 300px;">
             </div>
 
             <div class="table-container">
@@ -499,9 +500,11 @@
                     : `<span class="badge inactivo" style="background:gray;">Inactivo</span>`;
                 
                 const urlCorta = link.url.length > 55 ? link.url.substring(0,55) + '...' : link.url;
+                const nomSeguro = link.nombre_link ? link.nombre_link.replace(/'/g, "\\'") : '';
                 
+                // NOTA: Se agregaron los botones estandarizados de Editar y Eliminar
                 tbody.innerHTML += `
-                    <tr>
+                    <tr class="fila-enlace">
                         <td style="font-weight:bold; color:#777;">${link.orden}</td>
                         <td style="color:var(--um-azul); font-size:16px; text-align:center;"><i class="fa-solid ${link.icono || 'fa-link'}"></i></td>
                         <td>
@@ -510,13 +513,16 @@
                         </td>
                         <td>${link.categoria}</td>
                         <td style="text-align:center;">${badge}</td>
-                        <td style="text-align:center;">
+                        <td style="text-align:center; white-space:nowrap;">
+                            <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormEnlace(${link.id}, '${nomSeguro}', '${link.url}', '${link.categoria}', '${link.icono || ''}', ${link.orden})"><i class="fa-solid fa-pen"></i></button>
+                            
                             <button class="btn-tabla ${link.activo ? 'btn-borrar' : 'btn-exportar'}" 
                                 style="color:${link.activo ? 'var(--rojo)' : 'white'}; border:1px solid ${link.activo ? 'var(--rojo)' : 'transparent'}; background:${link.activo ? 'transparent' : 'var(--verde-palta)'}" 
                                 onclick="toggleEnlace(${link.id})" title="${link.activo ? 'Desactivar Link' : 'Activar Link'}">
                                 <i class="fa-solid ${link.activo ? 'fa-toggle-off' : 'fa-toggle-on'}"></i>
                             </button>
-                            <button class="btn-tabla btn-borrar" onclick="borrarEnlace(${link.id}, '${link.nombre_link}')" title="Eliminar definitivamente">
+                            
+                            <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarEnlace(${link.id}, '${nomSeguro}')">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </td>
@@ -528,11 +534,38 @@
         }
     }
 
+    // NUEVA FUNCIÓN: Buscador de enlaces
+    function filtrarEnlaces() {
+        const input = document.getElementById("buscadorEnlaces").value.toLowerCase();
+        const filas = document.getElementsByClassName("fila-enlace");
+        for (let i = 0; i < filas.length; i++) {
+            filas[i].style.display = (filas[i].textContent.toLowerCase().indexOf(input) > -1) ? "" : "none";
+        }
+    }
+
+    // NUEVA FUNCIÓN: Subir form y preparar edición de enlaces
+    function subirFormEnlace(id, nombre, url, categoria, icono, orden) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        document.getElementById('linkId').value = id;
+        document.getElementById('linkNombre').value = nombre;
+        document.getElementById('linkUrl').value = url;
+        document.getElementById('linkCategoria').value = categoria;
+        document.getElementById('linkIcono').value = icono;
+        document.getElementById('linkOrden').value = orden;
+
+        document.getElementById('tituloFormularioEnlace').innerHTML = `<span><i class="fa-solid fa-pen"></i> Editando Enlace: ${nombre}</span>`;
+        document.getElementById('panelFormularioEnlace').style.border = "2px solid #f39c12";
+        document.getElementById('btnCancelarEnlace').style.display = "inline-block";
+    }
+
+    // Lógica inteligente de guardado (Insertar o Actualizar)
     async function guardarEnlace() {
+        const id = document.getElementById('linkId').value;
         const nombre_link = document.getElementById('linkNombre').value.trim();
         const url = document.getElementById('linkUrl').value.trim();
         const categoria = document.getElementById('linkCategoria').value;
-        const icono = document.getElementById('linkIcono').value.trim() || 'fa-link';
+        const icono = document.getElementById('linkIcono').value.trim();
         const orden = document.getElementById('linkOrden').value;
         
         if (!nombre_link || !url) return alert("El nombre y la URL son obligatorios.");
@@ -540,8 +573,17 @@
         const payload = { nombre_link, url, categoria, icono, orden };
         
         try {
-            const res = await fetch('/api/enlaces/nuevo', {
-                method: 'POST',
+            // Decide si crear o editar basado en si existe el id
+            let endpoint = '/api/enlaces/nuevo';
+            let method = 'POST';
+
+            if (id) {
+                endpoint = `/api/enlaces/editar/${id}`;
+                method = 'PUT';
+            }
+
+            const res = await fetch(endpoint, {
+                method: method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
@@ -562,16 +604,23 @@
     async function borrarEnlace(id, nombre) {
         if (confirm(`¿Estás seguro de eliminar el enlace "${nombre}"? Esta acción no se puede deshacer.`)) {
             await fetch(`/api/enlaces/eliminar/${id}`, { method: 'DELETE' });
+            if (document.getElementById('linkId').value == id) limpiarFormularioEnlace();
             cargarEnlaces();
         }
     }
 
+    // Actualizada para resetear modo edición
     function limpiarFormularioEnlace() {
+        document.getElementById('linkId').value = '';
         document.getElementById('linkNombre').value = '';
         document.getElementById('linkUrl').value = '';
         document.getElementById('linkIcono').value = 'fa-link';
         document.getElementById('linkOrden').value = '1';
         document.getElementById('linkCategoria').selectedIndex = 0;
+
+        document.getElementById('tituloFormularioEnlace').innerHTML = `<span><i class="fa-solid fa-link"></i> Registrar Nuevo Link</span>`;
+        document.getElementById('panelFormularioEnlace').style.border = "1px solid var(--borde)";
+        document.getElementById('btnCancelarEnlace').style.display = "none";
     }
 
     // ==========================================
@@ -580,7 +629,7 @@
     document.addEventListener("DOMContentLoaded", () => {
         cargarRegistros();
         cargarEjecutivos();
-        cargarEnlaces(); // <-- Carga de links inicializada
+        cargarEnlaces();
     });
 
 </script>
