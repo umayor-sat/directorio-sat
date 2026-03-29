@@ -277,6 +277,25 @@ def eliminar_enlace(id):
         return jsonify({"status": "success"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@app.route('/api/enlaces/editar/<int:id>', methods=['PUT'])
+@login_required
+def editar_enlace(id):
+    if session.get('nivel_acceso') != 'admin':
+        return jsonify({"error": "No autorizado"}), 403
+    try:
+        datos = request.json
+        res = supabase.table("LINKS").update({
+            "nombre_link": datos.get('nombre_link'),
+            "url": datos.get('url'),
+            "categoria": datos.get('categoria'),
+            "orden": int(datos.get('orden', 0)),
+            "icono": datos.get('icono', '')
+        }).eq("id", id).execute()
+        return jsonify({"status": "success", "data": res.data})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 # --- FIN DE INYECCIÓN ---
 
 @app.route('/administracion')
