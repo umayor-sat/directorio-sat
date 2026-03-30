@@ -393,6 +393,103 @@ def api_alertas_operativas():
         return jsonify({"error": str(e)}), 500
 # ==========================================
 
+# ==========================================
+# RUTAS ADMIN: GESTIÓN DE ALERTAS
+# ==========================================
+@app.route('/api/alertas-operativas/nuevo', methods=['POST'])
+@login_required
+def nueva_alerta():
+    if session.get('nivel_acceso') != 'admin':
+        return jsonify({"error": "No autorizado"}), 403
+    try:
+        datos = request.json
+        # Mapeamos 'activo' del JS a 'estado' en la BD
+        res = supabase.table("alertas_operativas").insert({
+            "categoria": datos.get('categoria'),
+            "mensaje": datos.get('mensaje'),
+            "estado": datos.get('activo', True),
+            "es_default": datos.get('es_default', False)
+        }).execute()
+        return jsonify({"status": "success", "data": res.data})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/alertas-operativas/editar/<int:id>', methods=['PUT'])
+@login_required
+def editar_alerta(id):
+    if session.get('nivel_acceso') != 'admin':
+        return jsonify({"error": "No autorizado"}), 403
+    try:
+        datos = request.json
+        res = supabase.table("alertas_operativas").update({
+            "categoria": datos.get('categoria'),
+            "mensaje": datos.get('mensaje'),
+            "estado": datos.get('activo', True)
+        }).eq("id", id).execute()
+        return jsonify({"status": "success", "data": res.data})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/alertas-operativas/eliminar/<int:id>', methods=['DELETE'])
+@login_required
+def eliminar_alerta(id):
+    if session.get('nivel_acceso') != 'admin':
+        return jsonify({"error": "No autorizado"}), 403
+    try:
+        supabase.table("alertas_operativas").delete().eq("id", id).execute()
+        return jsonify({"status": "success"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# ==========================================
+# RUTAS ADMIN: MENSAJES ROTATIVOS
+# ==========================================
+@app.route('/api/mensajes-rotativos/nuevo', methods=['POST'])
+@login_required
+def nuevo_mensaje():
+    if session.get('nivel_acceso') != 'admin':
+        return jsonify({"error": "No autorizado"}), 403
+    try:
+        datos = request.json
+        res = supabase.table("mensajes_rotativos").insert({
+            "mensaje": datos.get('mensaje'),
+            "duracion_min": int(datos.get('duracion_min', 3)),
+            "estado": datos.get('activo', True)
+        }).execute()
+        return jsonify({"status": "success", "data": res.data})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/mensajes-rotativos/editar/<int:id>', methods=['PUT'])
+@login_required
+def editar_mensaje(id):
+    if session.get('nivel_acceso') != 'admin':
+        return jsonify({"error": "No autorizado"}), 403
+    try:
+        datos = request.json
+        res = supabase.table("mensajes_rotativos").update({
+            "mensaje": datos.get('mensaje'),
+            "duracion_min": int(datos.get('duracion_min', 3)),
+            "estado": datos.get('activo', True)
+        }).eq("id", id).execute()
+        return jsonify({"status": "success", "data": res.data})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/mensajes-rotativos/eliminar/<int:id>', methods=['DELETE'])
+@login_required
+def eliminar_mensaje(id):
+    if session.get('nivel_acceso') != 'admin':
+        return jsonify({"error": "No autorizado"}), 403
+    try:
+        supabase.table("mensajes_rotativos").delete().eq("id", id).execute()
+        return jsonify({"status": "success"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+
 @app.route('/administracion')
 @login_required
 def administracion():
