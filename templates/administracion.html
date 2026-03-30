@@ -80,7 +80,7 @@
         .campo-check input[type="checkbox"] { width:18px; height:18px; cursor:pointer; }
         .acciones-form { display:flex; gap:10px; margin-top:15px; justify-content:flex-end; }
         .badge { padding:4px 8px; border-radius:12px; font-size:11px; font-weight:bold; color:white; display:inline-block; text-align:center;}
-        .badge.activo { background:#27ae60; } .badge.inactivo { background:var(--rojo); }
+        .badge.activo { background:#27ae60; } .badge.inactivo { background:var(--texto-suave); } /* Modificado UX */
         .col-rol { text-transform: capitalize; }
         
         footer { text-align:center; font-size:12px; color:#999; margin:40px 0 20px; padding-top:16px; }
@@ -104,7 +104,7 @@
 
     <div class="tabs-nav">
       <button class="tab-btn active" onclick="switchTab('staff', this)"><i class="fa-solid fa-users-gear"></i> 1. Gestión de Staff</button>
-      <button class="tab-btn" onclick="switchTab('mensajes', this)"><i class="fa-solid fa-message"></i> 2. Gestión de Mensajes</button>
+      <button class="tab-btn" onclick="switchTab('mensajes', this)"><i class="fa-solid fa-message"></i> 2. Catálogo de Alertas y Mensajes</button>
       <button class="tab-btn" onclick="switchTab('enlaces', this)"><i class="fa-solid fa-link"></i> 3. Gestión de Enlaces</button>
       <button class="tab-btn" onclick="switchTab('casos', this)"><i class="fa-solid fa-clipboard-list"></i> 4. Reporte de Casos</button>
     </div>
@@ -197,78 +197,77 @@
 
         <div id="tab-mensajes" class="tab-panel">
             
+            <p style="color:var(--texto-suave); margin-bottom:30px; font-size: 14px; line-height: 1.5; background: #fff; padding: 15px; border-radius: 8px; border-left: 4px solid var(--um-amarillo);">
+                <strong>ℹ️ ¿Cómo funciona este catálogo?</strong> Aquí construyes tu "arsenal" de alertas y mensajes. Por seguridad, todos se guardan <b>inactivos (apagados)</b> por defecto.<br>
+                Cuando ocurra una emergencia, busca tu alerta en la tabla y usa el interruptor (<i class="fa-solid fa-toggle-off"></i>) para <b>encenderla</b>. El sistema te preguntará por cuánto tiempo quieres que esté visible en el Home.
+            </p>
+
             <h2 style="color:var(--rojo); border-bottom-color: var(--rojo);">
-                <span><i class="fa-solid fa-triangle-exclamation"></i> Alertas Operativas (Urgentes)</span>
+                <span><i class="fa-solid fa-triangle-exclamation"></i> Catálogo de Alertas Operativas</span>
             </h2>
             <div class="admin-grid" style="margin-bottom: 40px;">
                 
                 <div class="panel-formulario" id="panelFormularioAlerta" style="margin-bottom: 0;">
-                    <h3 id="tituloFormularioAlerta" style="color:var(--rojo);"><span><i class="fa-solid fa-bell"></i> Nueva Alerta</span></h3>
+                    <h3 id="tituloFormularioAlerta" style="color:var(--rojo);"><span><i class="fa-solid fa-folder-plus"></i> Agregar al Catálogo</span></h3>
                     <input type="hidden" id="alertaId" value="">
                     
                     <div class="grid-formulario" style="grid-template-columns: 1fr; gap:12px; margin-bottom:12px;">
                         <div class="campo">
-                            <label>Categoría / Título</label>
-                            <input type="text" id="alertaCategoria" list="listaCategorias" placeholder="Selecciona o escribe una nueva...">
-                            <datalist id="listaCategorias">
-                                <option value="Falla General de Sistemas">
-                                <option value="Intermitencia Portal Financiero">
-                                <option value="Lentitud en CRM">
-                                <option value="Aviso TI / Mantenimiento">
-                                <option value="Caída de Telefonía">
-                            </datalist>
+                            <label>Sistema Afectado (Categoría)</label>
+                            <select id="alertaCategoria">
+                                <option value="" disabled selected>Selecciona el sistema afectado...</option>
+                                <option value="Falla General de Sistemas">Falla General de Sistemas</option>
+                                <option value="Portal Financiero">Portal Financiero</option>
+                                <option value="CRM Genesys">CRM Genesys</option>
+                                <option value="Correo Institucional">Correo Institucional</option>
+                                <option value="Telefonía / Call Center">Telefonía / Call Center</option>
+                                <option value="Campus Virtual">Campus Virtual</option>
+                                <option value="Aviso TI / Mantenimiento">Aviso TI / Mantenimiento</option>
+                            </select>
                         </div>
                     </div>
 
-                    <div class="grid-formulario" style="grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
+                    <div class="grid-formulario" style="grid-template-columns: 1fr; gap:12px; margin-bottom:12px;">
                         <div class="campo">
-                            <label>Nivel (Semáforo)</label>
+                            <label>Nivel de Gravedad (Semáforo)</label>
                             <select id="alertaColor">
-                                <option value="rojo">🔴 Crítico (Rojo)</option>
-                                <option value="amarillo">🟡 Intermitencia (Amarillo)</option>
-                                <option value="verde">🟢 Informativo (Verde)</option>
+                                <option value="rojo">🔴 Crítico (Rojo) - Sistema Caído</option>
+                                <option value="amarillo">🟡 Intermitencia (Amarillo) - Lento/Inestable</option>
+                                <option value="verde">🟢 Informativo (Verde) - Resuelto/Aviso</option>
                             </select>
                         </div>
-                        <div class="campo">
-                            <label>Duración (Horas)</label>
-                            <input type="number" id="alertaDuracion" value="24" min="1" placeholder="Ej: 12">
-                        </div>
                     </div>
                     
                     <div class="campo" style="margin-bottom:12px;">
-                        <label>Mensaje Detallado</label>
-                        <textarea id="alertaMensaje" rows="3" placeholder="Ingresa el detalle del aviso para los ejecutivos..."></textarea>
+                        <label>Mensaje Detallado a los Ejecutivos</label>
+                        <textarea id="alertaMensaje" rows="3" placeholder="Ej: Estamos experimentando intermitencias. El equipo de TI ya está trabajando en ello..."></textarea>
                     </div>
-                    
-                    <div class="campo" style="margin-bottom:12px;">
-                        <label class="campo-check" style="color:var(--texto);">
-                            <input type="checkbox" id="alertaActivo" checked> Alerta visible en el Home
-                        </label>
-                    </div>
+
+                    <input type="hidden" id="alertaActivo" value="false">
 
                     <div class="acciones-form" style="margin-top:20px;">
                         <button class="btn-accion btn-limpiar" id="btnCancelarAlerta" style="display:none;" onclick="limpiarFormularioAlerta()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
-                        <button class="btn-accion" style="background:var(--rojo);" onclick="guardarAlerta()"><i class="fa-solid fa-floppy-disk"></i> Guardar Alerta</button>
+                        <button class="btn-accion" style="background:#555;" onclick="guardarAlerta()"><i class="fa-solid fa-save"></i> Guardar en Catálogo (Apagada)</button>
                     </div>
                 </div>
 
                 <div class="lista">
                     <div class="filtros" style="justify-content: space-between; align-items: center; padding: 10px 20px; margin-bottom: 10px; border-left: 4px solid var(--rojo);">
-                        <h3 style="margin:0; font-size:14px; color:var(--texto);"><i class="fa-solid fa-list"></i> Historial de Alertas</h3>
-                        <button class="btn-accion btn-exportar" style="height:30px; font-size:11px;" onclick="exportarTablaLimpia('tablaAlertas', 'Historial_Alertas_SAT')"><i class="fa-solid fa-file-excel"></i> Exportar</button>
+                        <h3 style="margin:0; font-size:14px; color:var(--texto);"><i class="fa-solid fa-list"></i> Alertas Disponibles</h3>
+                        <button class="btn-accion btn-exportar" style="height:30px; font-size:11px;" onclick="exportarTablaLimpia('tablaAlertas', 'Catalogo_Alertas_SAT')"><i class="fa-solid fa-file-excel"></i> Exportar</button>
                     </div>
                     <div class="table-container" style="max-height: 480px; overflow-y: auto; border: 1px solid var(--borde); border-radius: 8px;">
                         <table id="tablaAlertas" style="margin-top:0;">
                             <thead>
                                 <tr>
-                                    <th>Semáforo / Categoría</th>
+                                    <th>Semáforo / Sistema</th>
                                     <th>Mensaje</th>
-                                    <th style="text-align:center;">Estado</th>
+                                    <th style="text-align:center;">Estado en Home</th>
                                     <th style="text-align:center;" class="columna-acciones">Acción</th>
                                 </tr>
                             </thead>
                             <tbody id="tbodyAlertas">
-                                <tr><td colspan="4" style="text-align:center; padding:30px; color:#888;">Cargando alertas...</td></tr>
+                                <tr><td colspan="4" style="text-align:center; padding:30px; color:#888;">Cargando catálogo...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -276,12 +275,12 @@
             </div>
 
             <h2 style="color:var(--um-verde); border-bottom-color: var(--um-verde); margin-top: 40px;">
-                <span><i class="fa-solid fa-lightbulb"></i> Mensajes "Para tener en cuenta"</span>
+                <span><i class="fa-solid fa-lightbulb"></i> Catálogo: Mensajes "Para tener en cuenta"</span>
             </h2>
             <div class="admin-grid">
                 
                 <div class="panel-formulario" id="panelFormularioMotiv" style="margin-bottom: 0;">
-                    <h3 id="tituloFormularioMotiv" style="color:var(--um-verde);"><span><i class="fa-solid fa-pen"></i> Nuevo Mensaje</span></h3>
+                    <h3 id="tituloFormularioMotiv" style="color:var(--um-verde);"><span><i class="fa-solid fa-folder-plus"></i> Nueva Frase o Efeméride</span></h3>
                     <input type="hidden" id="motivId" value="">
                     
                     <div class="campo" style="margin-bottom:12px;">
@@ -289,56 +288,49 @@
                         <textarea id="motivMensaje" rows="3" placeholder="Ej: Recuerda sonreír en cada llamada..."></textarea>
                     </div>
                     
-                    <div class="grid-formulario" style="grid-template-columns: 1fr 1fr 1fr; gap:12px; margin-bottom:12px;">
+                    <div class="grid-formulario" style="grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
                         <div class="campo">
-                            <label>Prioridad</label>
+                            <label>Prioridad (Orden)</label>
                             <input type="number" id="motivPrioridad" value="1" min="1" title="Orden de aparición (1 es el primero)">
                         </div>
                         <div class="campo">
-                            <label>Categoría</label>
+                            <label>Categoría (Opcional)</label>
                             <input type="text" id="motivCategoria" placeholder="Ej: Motivacional">
-                        </div>
-                        <div class="campo">
-                            <label>Fecha Especial</label>
-                            <input type="text" id="motivFecha" placeholder="MM-DD (Ej: 12-25)">
                         </div>
                     </div>
 
-                    <div class="grid-formulario" style="grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px; align-items: center;">
-                        <div class="campo">
-                            <label>Duración (Mins)</label>
-                            <input type="number" id="motivDuracion" value="3" min="1" title="Tiempo que permanecerá visible antes de rotar">
-                        </div>
-                        <div class="campo">
-                            <label class="campo-check" style="color:var(--texto);">
-                                <input type="checkbox" id="motivActivo" checked> Activo
-                            </label>
+                    <div class="grid-formulario" style="grid-template-columns: 1fr; gap:12px; margin-bottom:12px;">
+                        <div class="campo" style="background: #eef5ea; padding: 10px; border-radius: 6px; border: 1px dashed var(--um-verde);">
+                            <label style="color:var(--um-verde);">📅 Programar Fecha Especial (Opcional)</label>
+                            <input type="text" id="motivFecha" placeholder="MM-DD (Ej: 12-25 para Navidad)" style="margin-top:5px;">
+                            <small style="color:#555; margin-top:5px; font-size:10px;">Si agregas una fecha, el Home encenderá este mensaje automáticamente ese día.</small>
                         </div>
                     </div>
+
+                    <input type="hidden" id="motivActivo" value="false">
 
                     <div class="acciones-form" style="margin-top:20px;">
                         <button class="btn-accion btn-limpiar" id="btnCancelarMotiv" style="display:none;" onclick="limpiarFormularioMotiv()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
-                        <button class="btn-accion" style="background:var(--um-verde);" onclick="guardarMotivacional()"><i class="fa-solid fa-floppy-disk"></i> Guardar Mensaje</button>
+                        <button class="btn-accion" style="background:#555;" onclick="guardarMotivacional()"><i class="fa-solid fa-save"></i> Guardar en Catálogo (Apagado)</button>
                     </div>
                 </div>
 
                 <div class="lista">
                     <div class="filtros" style="justify-content: space-between; align-items: center; padding: 10px 20px; margin-bottom: 10px; border-left: 4px solid var(--um-verde);">
-                        <h3 style="margin:0; font-size:14px; color:var(--texto);"><i class="fa-solid fa-list"></i> Mensajes Rotativos</h3>
-                        <button class="btn-accion btn-exportar" style="height:30px; font-size:11px;" onclick="exportarTablaLimpia('tablaMotivacionales', 'Mensajes_SAT')"><i class="fa-solid fa-file-excel"></i> Exportar</button>
+                        <h3 style="margin:0; font-size:14px; color:var(--texto);"><i class="fa-solid fa-list"></i> Frases Disponibles</h3>
+                        <button class="btn-accion btn-exportar" style="height:30px; font-size:11px;" onclick="exportarTablaLimpia('tablaMotivacionales', 'Catalogo_Mensajes_SAT')"><i class="fa-solid fa-file-excel"></i> Exportar</button>
                     </div>
                     <div class="table-container" style="max-height: 480px; overflow-y: auto; border: 1px solid var(--borde); border-radius: 8px;">
                         <table id="tablaMotivacionales" style="margin-top:0;">
                             <thead>
                                 <tr>
-                                    <th>Mensaje</th>
-                                    <th style="text-align:center;">Pri/Min</th>
-                                    <th style="text-align:center;">Estado</th>
+                                    <th>Mensaje y Fechas</th>
+                                    <th style="text-align:center;">Estado en Home</th>
                                     <th style="text-align:center;" class="columna-acciones">Acción</th>
                                 </tr>
                             </thead>
                             <tbody id="tbodyMotivacionales">
-                                <tr><td colspan="4" style="text-align:center; padding:30px; color:#888;">Cargando mensajes...</td></tr>
+                                <tr><td colspan="3" style="text-align:center; padding:30px; color:#888;">Cargando mensajes...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -655,8 +647,8 @@
         }
     }
 
-   // ==========================================
-    // LÓGICA: PESTAÑA MENSAJES Y ALERTAS (USANDO COLUMNAS REALES)
+    // ==========================================
+    // LÓGICA: PESTAÑA MENSAJES Y ALERTAS (MODO CATÁLOGO UX)
     // ==========================================
     
     // --- ALERTAS ---
@@ -666,13 +658,14 @@
             const tbody = document.getElementById('tbodyAlertas');
             tbody.innerHTML = '';
             
-            if(error) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Error cargando alertas: ${error.message}</td></tr>`;
-            if(!data || data.length === 0) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No hay alertas registradas.</td></tr>`;
+            if(error) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red;">Error cargando catálogo: ${error.message}</td></tr>`;
+            if(!data || data.length === 0) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No hay alertas en tu catálogo.</td></tr>`;
 
             data.forEach(a => {
                 if(a.es_default) return; 
                 
-                const badge = a.estado ? `<span class="badge activo">Activa</span>` : `<span class="badge inactivo" style="background:var(--rojo);">Inactiva</span>`;
+                // UX: Badge Encendido/Apagado
+                const badge = a.estado ? `<span class="badge activo" style="animation: pulse 2s infinite;">🔥 ENCENDIDA EN HOME</span>` : `<span class="badge inactivo">Apagada</span>`;
                 const catSegura = a.categoria ? a.categoria.replace(/'/g, "\\'") : '';
                 const msjSeguro = a.mensaje ? a.mensaje.replace(/'/g, "\\'") : '';
                 
@@ -680,15 +673,15 @@
                 if(a.color === 'verde') iconoSem = '🟢';
                 if(a.color === 'amarillo') iconoSem = '🟡';
 
-                // NUEVO: Botón Switch (Toggle)
-                const btnSwitch = `<button class="btn-tabla ${a.estado ? 'btn-borrar' : 'btn-exportar'}" 
-                                style="color:${a.estado ? 'var(--rojo)' : 'white'}; border:1px solid ${a.estado ? 'var(--rojo)' : 'transparent'}; background:${a.estado ? 'transparent' : 'var(--verde-palta)'}" 
-                                onclick="toggleAlerta('${a.id}', ${a.estado})" title="${a.estado ? 'Desactivar Alerta' : 'Activar Alerta'}">
-                                <i class="fa-solid ${a.estado ? 'fa-toggle-off' : 'fa-toggle-on'}"></i>
+                // SWITCH INTELIGENTE
+                const btnSwitch = `<button class="btn-tabla" 
+                                style="color:${a.estado ? 'white' : 'var(--texto-suave)'}; border:1px solid ${a.estado ? 'var(--rojo)' : 'var(--borde)'}; background:${a.estado ? 'var(--rojo)' : '#f9f9f9'}; font-size:14px; padding: 6px 12px;" 
+                                onclick="toggleAlerta('${a.id}', ${a.estado})" title="${a.estado ? 'Apagar Alerta' : 'Encender Alerta'}">
+                                <i class="fa-solid ${a.estado ? 'fa-toggle-on' : 'fa-toggle-off'}"></i>
                             </button>`;
 
                 tbody.innerHTML += `
-                    <tr>
+                    <tr style="background-color: ${a.estado ? '#fff5f5' : 'transparent'};">
                         <td style="font-weight:bold; color:#444;">${iconoSem} ${a.categoria || 'Sin Categoría'}</td>
                         <td style="font-size:12px;">${a.mensaje}</td>
                         <td style="text-align:center;">${badge}</td>
@@ -703,22 +696,43 @@
         } catch (e) { console.error(e); }
     }
 
-    // NUEVO: Función para el Switch
     async function toggleAlerta(id, estadoActual) {
-        const { error } = await _supabase.from('alertas_operativas').update({ estado: !estadoActual }).eq('id', id);
-        if (error) alert("Error al cambiar estado: " + error.message);
-        else cargarAlertas();
+        try {
+            if (!estadoActual) { 
+                // Va a encender
+                let horas = prompt("🚨 ESTÁS ENCENDIENDO UNA ALERTA EN EL HOME.\n\n¿Por cuántas HORAS quieres que se mantenga visible antes de apagarse automáticamente?", "24");
+                if (horas === null) return; 
+                horas = parseInt(horas) || 24;
+
+                const ahora = new Date();
+                const fin = new Date(ahora.getTime() + (horas * 60 * 60 * 1000));
+
+                const { error } = await _supabase.from('alertas_operativas').update({ 
+                    estado: true,
+                    fecha_hora_inicio: ahora.toISOString(),
+                    fecha_hora_fin: fin.toISOString()
+                }).eq('id', id);
+
+                if (error) throw error;
+            } else { 
+                // Va a apagar
+                const { error } = await _supabase.from('alertas_operativas').update({ estado: false }).eq('id', id);
+                if (error) throw error;
+            }
+            cargarAlertas();
+        } catch (err) {
+            alert("⚠️ Error al comunicarse con la base de datos:\n" + err.message);
+        }
     }
 
     function subirFormAlerta(id, categoria, mensaje, activo, color) {
         document.getElementById('alertaId').value = id;
         document.getElementById('alertaCategoria').value = categoria;
         document.getElementById('alertaMensaje').value = mensaje;
-        document.getElementById('alertaActivo').checked = activo;
+        document.getElementById('alertaActivo').value = activo; // hidden
         document.getElementById('alertaColor').value = color;
-        document.getElementById('alertaDuracion').value = 24;
 
-        document.getElementById('tituloFormularioAlerta').innerHTML = `<span><i class="fa-solid fa-pen"></i> Editando Alerta</span>`;
+        document.getElementById('tituloFormularioAlerta').innerHTML = `<span><i class="fa-solid fa-pen"></i> Editando Catálogo</span>`;
         document.getElementById('panelFormularioAlerta').style.border = "2px solid #f39c12";
         document.getElementById('btnCancelarAlerta').style.display = "inline-block";
     }
@@ -727,54 +741,58 @@
         document.getElementById('alertaId').value = '';
         document.getElementById('alertaCategoria').value = '';
         document.getElementById('alertaMensaje').value = '';
-        document.getElementById('alertaActivo').checked = true;
+        document.getElementById('alertaActivo').value = 'false'; 
         document.getElementById('alertaColor').value = 'rojo';
-        document.getElementById('alertaDuracion').value = '24';
 
-        document.getElementById('tituloFormularioAlerta').innerHTML = `<span><i class="fa-solid fa-bell"></i> Nueva Alerta</span>`;
+        document.getElementById('tituloFormularioAlerta').innerHTML = `<span><i class="fa-solid fa-folder-plus"></i> Agregar al Catálogo</span>`;
         document.getElementById('panelFormularioAlerta').style.border = "1px solid var(--borde)";
         document.getElementById('btnCancelarAlerta').style.display = "none";
     }
 
     async function guardarAlerta() {
-        const id = document.getElementById('alertaId').value;
-        const categoria = document.getElementById('alertaCategoria').value.trim();
-        const mensaje = document.getElementById('alertaMensaje').value.trim();
-        const estado = document.getElementById('alertaActivo').checked;
-        const color = document.getElementById('alertaColor').value;
-        const duracion = parseInt(document.getElementById('alertaDuracion').value) || 24;
-        
-        if (!categoria || !mensaje) return alert("Categoría y Mensaje son obligatorios.");
-        
-        const ahora = new Date();
-        const fin = new Date(ahora.getTime() + (duracion * 60 * 60 * 1000));
-
-        // Añadida "prioridad" y "tipo_alerta" por si tu tabla los exige por defecto
-        const paquete = { 
-            categoria, 
-            mensaje, 
-            estado, 
-            color,
-            fecha_hora_inicio: ahora.toISOString(),
-            fecha_hora_fin: fin.toISOString(),
-            prioridad: 1,
-            tipo_alerta: 'Operativa'
-        };
-
         try {
+            const id = document.getElementById('alertaId').value;
+            const categoria = document.getElementById('alertaCategoria').value;
+            const mensaje = document.getElementById('alertaMensaje').value.trim();
+            const estado = document.getElementById('alertaActivo').value === 'true'; // Mantiene su estado al editar
+            const color = document.getElementById('alertaColor').value;
+            
+            if (!categoria || !mensaje) return alert("Debes seleccionar una categoría y escribir un mensaje.");
+            
+            const paquete = { 
+                categoria, 
+                mensaje, 
+                estado, 
+                color,
+                prioridad: 1,
+                tipo_alerta: 'Operativa'
+            };
+
+            // Solo si es NUEVA le ponemos fechas fake para que no moleste a la BD
+            if (!id) {
+                const ahora = new Date();
+                paquete.fecha_hora_inicio = ahora.toISOString();
+                paquete.fecha_hora_fin = ahora.toISOString();
+                paquete.es_default = false;
+            }
+
             let res;
             if (id) {
                 res = await _supabase.from('alertas_operativas').update(paquete).eq('id', id);
             } else {
-                paquete.es_default = false;
                 res = await _supabase.from('alertas_operativas').insert([paquete]);
             }
             
-            // NUEVO: Capturador de errores explícito
-            if (res.error) throw res.error;
+            if (res && res.error) throw res.error;
             
             limpiarFormularioAlerta();
             cargarAlertas();
+            // Notificación discreta
+            const btn = document.getElementById('tituloFormularioAlerta');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = `<span style="color:var(--um-verde);"><i class="fa-solid fa-check"></i> ¡Guardado en el catálogo!</span>`;
+            setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
+
         } catch (err) {
             console.error(err);
             alert("⚠️ La Base de Datos rechazó la carga:\n" + err.message);
@@ -782,7 +800,7 @@
     }
 
     async function borrarAlerta(id) {
-        if (confirm("¿Eliminar esta alerta permanentemente?")) {
+        if (confirm("¿Estás seguro de ELIMINAR esta alerta del catálogo? (Ya no podrás volver a encenderla)")) {
             await _supabase.from('alertas_operativas').delete().eq('id', id);
             limpiarFormularioAlerta();
             cargarAlertas();
@@ -796,32 +814,31 @@
             const tbody = document.getElementById('tbodyMotivacionales');
             tbody.innerHTML = '';
             
-            if(error) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Error cargando mensajes.</td></tr>`;
-            if(!data || data.length === 0) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No hay mensajes registrados.</td></tr>`;
+            if(error) return tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:red;">Error cargando mensajes: ${error.message}</td></tr>`;
+            if(!data || data.length === 0) return tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">No hay mensajes en el catálogo.</td></tr>`;
 
             data.forEach(m => {
-                const badge = m.estado ? `<span class="badge activo">Activo</span>` : `<span class="badge inactivo" style="background:var(--rojo);">Inactivo</span>`;
+                const badge = m.estado ? `<span class="badge activo">ENCENDIDO</span>` : `<span class="badge inactivo">Apagado</span>`;
                 const msjSeguro = m.mensaje ? m.mensaje.replace(/'/g, "\\'") : '';
                 const catSegura = m.categoria ? m.categoria.replace(/'/g, "\\'") : '';
                 const fechaSegura = m.fecha_mmdd ? m.fecha_mmdd.replace(/'/g, "\\'") : '';
                 
-                // NUEVO: Botón Switch (Toggle)
-                const btnSwitch = `<button class="btn-tabla ${m.estado ? 'btn-borrar' : 'btn-exportar'}" 
-                                style="color:${m.estado ? 'var(--rojo)' : 'white'}; border:1px solid ${m.estado ? 'var(--rojo)' : 'transparent'}; background:${m.estado ? 'transparent' : 'var(--verde-palta)'}" 
+                // SWITCH INTELIGENTE
+                const btnSwitch = `<button class="btn-tabla" 
+                                style="color:${m.estado ? 'white' : 'var(--texto-suave)'}; border:1px solid ${m.estado ? 'var(--um-verde)' : 'var(--borde)'}; background:${m.estado ? 'var(--um-verde)' : '#f9f9f9'}; font-size:14px; padding: 6px 12px;" 
                                 onclick="toggleMotiv('${m.id}', ${m.estado})" title="${m.estado ? 'Desactivar Mensaje' : 'Activar Mensaje'}">
-                                <i class="fa-solid ${m.estado ? 'fa-toggle-off' : 'fa-toggle-on'}"></i>
+                                <i class="fa-solid ${m.estado ? 'fa-toggle-on' : 'fa-toggle-off'}"></i>
                             </button>`;
 
                 tbody.innerHTML += `
-                    <tr>
+                    <tr style="background-color: ${m.estado ? '#f0f9f0' : 'transparent'};">
                         <td style="font-size:12px;">
                             <strong>${m.mensaje}</strong>
-                            ${m.fecha_mmdd ? `<br><span style="color:var(--um-azul); font-size:10px;">📅 Especial: ${m.fecha_mmdd}</span>` : ''}
+                            ${m.fecha_mmdd ? `<br><span style="color:var(--um-azul); font-size:10px; background:#eef5ea; padding:2px 4px; border-radius:3px;">📅 Se activa solo el: ${m.fecha_mmdd}</span>` : ''}
                         </td>
-                        <td style="text-align:center;">${m.prioridad || 1} / ${m.duracion_min || 3}m</td>
                         <td style="text-align:center;">${badge}</td>
                         <td style="text-align:center; white-space:nowrap;">
-                            <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormMotiv('${m.id}', '${msjSeguro}', ${m.duracion_min || 3}, ${m.estado}, ${m.prioridad || 1}, '${catSegura}', '${fechaSegura}')"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormMotiv('${m.id}', '${msjSeguro}', ${m.estado}, ${m.prioridad || 1}, '${catSegura}', '${fechaSegura}')"><i class="fa-solid fa-pen"></i></button>
                             ${btnSwitch}
                             <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarMotiv('${m.id}')"><i class="fa-solid fa-trash"></i></button>
                         </td>
@@ -831,23 +848,34 @@
         } catch (e) { console.error(e); }
     }
 
-    // NUEVO: Función para el Switch
     async function toggleMotiv(id, estadoActual) {
-        const { error } = await _supabase.from('mensajes_rotativos').update({ estado: !estadoActual }).eq('id', id);
-        if (error) alert("Error al cambiar estado: " + error.message);
-        else cargarMotivacionales();
+        try {
+            if (!estadoActual) { 
+                let mins = prompt("💡 ESTÁS ENCENDIENDO UN MENSAJE EN EL HOME.\n\n¿Por cuántos MINUTOS deseas que se mantenga en el carrusel antes de rotar y apagarse?", "15");
+                if (mins === null) return; 
+                mins = parseInt(mins) || 15;
+
+                const { error } = await _supabase.from('mensajes_rotativos').update({ estado: true, duracion_min: mins }).eq('id', id);
+                if (error) throw error;
+            } else { 
+                const { error } = await _supabase.from('mensajes_rotativos').update({ estado: false }).eq('id', id);
+                if (error) throw error;
+            }
+            cargarMotivacionales();
+        } catch (err) {
+            alert("⚠️ Error al cambiar estado:\n" + err.message);
+        }
     }
 
-    function subirFormMotiv(id, mensaje, duracion, estado, prioridad, categoria, fecha_mmdd) {
+    function subirFormMotiv(id, mensaje, estado, prioridad, categoria, fecha_mmdd) {
         document.getElementById('motivId').value = id;
         document.getElementById('motivMensaje').value = mensaje;
-        document.getElementById('motivDuracion').value = duracion;
-        document.getElementById('motivActivo').checked = estado;
+        document.getElementById('motivActivo').value = estado;
         document.getElementById('motivPrioridad').value = prioridad;
         document.getElementById('motivCategoria').value = categoria;
         document.getElementById('motivFecha').value = fecha_mmdd;
 
-        document.getElementById('tituloFormularioMotiv').innerHTML = `<span><i class="fa-solid fa-pen"></i> Editando Mensaje</span>`;
+        document.getElementById('tituloFormularioMotiv').innerHTML = `<span><i class="fa-solid fa-pen"></i> Editando Frase</span>`;
         document.getElementById('panelFormularioMotiv').style.border = "2px solid #f39c12";
         document.getElementById('btnCancelarMotiv').style.display = "inline-block";
     }
@@ -855,31 +883,32 @@
     function limpiarFormularioMotiv() {
         document.getElementById('motivId').value = '';
         document.getElementById('motivMensaje').value = '';
-        document.getElementById('motivDuracion').value = '3';
-        document.getElementById('motivActivo').checked = true;
+        document.getElementById('motivActivo').value = 'false';
         document.getElementById('motivPrioridad').value = '1';
         document.getElementById('motivCategoria').value = '';
         document.getElementById('motivFecha').value = '';
 
-        document.getElementById('tituloFormularioMotiv').innerHTML = `<span><i class="fa-solid fa-pen"></i> Nuevo Mensaje</span>`;
+        document.getElementById('tituloFormularioMotiv').innerHTML = `<span><i class="fa-solid fa-folder-plus"></i> Nueva Frase o Efeméride</span>`;
         document.getElementById('panelFormularioMotiv').style.border = "1px solid var(--borde)";
         document.getElementById('btnCancelarMotiv').style.display = "none";
     }
 
     async function guardarMotivacional() {
-        const id = document.getElementById('motivId').value;
-        const mensaje = document.getElementById('motivMensaje').value.trim();
-        const duracion_min = parseInt(document.getElementById('motivDuracion').value) || 3;
-        const estado = document.getElementById('motivActivo').checked;
-        const prioridad = parseInt(document.getElementById('motivPrioridad').value) || 1;
-        const categoria = document.getElementById('motivCategoria').value.trim() || null;
-        const fecha_mmdd = document.getElementById('motivFecha').value.trim() || null;
-        
-        if (!mensaje) return alert("El texto del mensaje es obligatorio.");
-        
-        const paquete = { mensaje, duracion_min, estado, prioridad, categoria, fecha_mmdd };
-
         try {
+            const id = document.getElementById('motivId').value;
+            const mensaje = document.getElementById('motivMensaje').value.trim();
+            const estado = document.getElementById('motivActivo').value === 'true';
+            const prioridad = parseInt(document.getElementById('motivPrioridad').value) || 1;
+            const categoria = document.getElementById('motivCategoria').value.trim() || null;
+            const fecha_mmdd = document.getElementById('motivFecha').value.trim() || null;
+            
+            if (!mensaje) return alert("Debes escribir el texto del mensaje.");
+            
+            const paquete = { mensaje, estado, prioridad, categoria, fecha_mmdd };
+
+            // Fake duracion inicial
+            if(!id) paquete.duracion_min = 15;
+
             let res;
             if (id) {
                 res = await _supabase.from('mensajes_rotativos').update(paquete).eq('id', id);
@@ -887,11 +916,16 @@
                 res = await _supabase.from('mensajes_rotativos').insert([paquete]);
             }
             
-            // NUEVO: Capturador de errores explícito
-            if (res.error) throw res.error;
+            if (res && res.error) throw res.error;
 
             limpiarFormularioMotiv();
             cargarMotivacionales();
+            
+            const btn = document.getElementById('tituloFormularioMotiv');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = `<span style="color:var(--um-verde);"><i class="fa-solid fa-check"></i> ¡Frase guardada!</span>`;
+            setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
+
         } catch (err) {
             console.error(err);
             alert("⚠️ La Base de Datos rechazó la carga:\n" + err.message);
@@ -899,7 +933,7 @@
     }
 
     async function borrarMotiv(id) {
-        if (confirm("¿Eliminar este mensaje permanentemente?")) {
+        if (confirm("¿Eliminar este mensaje permanentemente del catálogo?")) {
             await _supabase.from('mensajes_rotativos').delete().eq('id', id);
             limpiarFormularioMotiv();
             cargarMotivacionales();
@@ -1051,6 +1085,14 @@
     });
 
 </script>
+
+<style>
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.7); }
+  50% { transform: scale(1.05); box-shadow: 0 0 0 5px rgba(192, 57, 43, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(192, 57, 43, 0); }
+}
+</style>
 
 </body>
 </html>
