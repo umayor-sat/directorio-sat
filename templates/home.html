@@ -104,10 +104,10 @@ body.dark-mode .btn-dark-mode { background: #333; color: #fff; }
 ------------------------------------------- */
 .welcome-bar { 
     background: var(--card-bg); border-bottom: 1px solid var(--borde); 
-    padding: 14px 25px; /* Compactado verticalmente */
+    padding: 14px 25px;
     display: grid; 
     grid-template-columns: minmax(200px, 1fr) 2fr minmax(300px, 1fr); 
-    gap: 15px; /* Espacio reducido */
+    gap: 15px;
     align-items: center; 
     position: relative;
     z-index: 100;
@@ -150,28 +150,28 @@ body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
 /* -------------------------------------------
    ESTRUCTURA PRINCIPAL Y LAYOUT - COMPACTADO
 ------------------------------------------- */
-.main-content { padding: 20px 15px; /* Compactado verticalmente */ max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; }
+.main-content { padding: 20px 15px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; }
 
 .layout-principal {  
   display: grid;  
   grid-template-columns: 1fr 1fr;  
   grid-template-rows: auto auto;  
-  gap: 12px; /* Espacio reducido entre bloques principales */
+  gap: 12px; 
   margin-bottom: 18px;
 }
-.col-accesos { display: flex; flex-direction: column; gap: 12px; /* Reducido */ }
-.col-contexto { display: flex; flex-direction: column; gap: 12px; /* Reducido */ }
+.col-accesos { display: flex; flex-direction: column; gap: 12px; }
+.col-contexto { display: flex; flex-direction: column; gap: 12px; }
 
 @media (max-width: 768px) { .layout-principal { grid-template-columns: 1fr; gap: 10px;} }
 
-.widget-box { background: var(--card-bg); border: 1px solid var(--borde); border-radius: 10px; padding: 15px 18px; /* Compactado */ box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: border-color 0.5s; }
+.widget-box { background: var(--card-bg); border: 1px solid var(--borde); border-radius: 10px; padding: 15px 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: border-color 0.5s; }
 
-/* --- BOTONES PRIMARIOS (CON COLOR GRAFITO Y COMPACTADOS) --- */
+/* --- BOTONES PRIMARIOS --- */
 .btn-primary-item { 
     background: var(--btn-grafito); 
     border: 1px solid rgba(255,255,255,0.05); 
     border-radius: 10px; 
-    padding: 15px 12px; /* Compactado verticalmente */
+    padding: 15px 12px;
     text-align: center; 
     text-decoration: none; 
     display: flex; 
@@ -183,19 +183,19 @@ body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
     z-index: 10;
 }
 .btn-primary-item:hover { transform: translateY(-2px); background: var(--btn-grafito-hover); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
-.btn-primary-item .icono { font-size: 22px; /* Reducido */ margin-bottom: 6px; color: var(--um-amarillo); }
-.btn-primary-item .titulo { color: #ffffff; font-size: 14px; /* Reducido */ font-weight: 700; letter-spacing: 0.3px;}
-.btn-primary-item .desc { color: rgba(255,255,255,0.7); font-size: 11px; /* Reducido */ margin-top: 3px; }
+.btn-primary-item .icono { font-size: 22px; margin-bottom: 6px; color: var(--um-amarillo); }
+.btn-primary-item .titulo { color: #ffffff; font-size: 14px; font-weight: 700; letter-spacing: 0.3px;}
+.btn-primary-item .desc { color: rgba(255,255,255,0.7); font-size: 11px; margin-top: 3px; }
 
-/* --- BOTONES DE CORREOS FRECUENTES - COMPACTADOS --- */
-.grid-derivaciones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; /* Espacio reducido */ }
+/* --- BOTONES DE CORREOS FRECUENTES --- */
+.grid-derivaciones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 @media (max-width: 768px) { .grid-derivaciones { grid-template-columns: 1fr; gap: 6px; } }
 
 .btn-correo-frecuente {
     background: var(--btn-grafito);
     border: 1px solid rgba(255,255,255,0.05);
     border-radius: 10px;
-    padding: 12px 8px; /* Compactado verticalmente */
+    padding: 12px 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -204,51 +204,51 @@ body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
     gap: 6px;
     text-decoration: none;
     color: #ffffff;
-    font-size: 12px; /* Reducido */
+    font-size: 12px;
     font-weight: 700;
     line-height: 1.2;
     transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 .btn-correo-frecuente:hover { transform: translateY(-2px); background: var(--btn-grafito-hover); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
-.btn-correo-frecuente .icono { color: var(--um-amarillo); font-size: 20px; /* Reducido */ }
+.btn-correo-frecuente .icono { color: var(--um-amarillo); font-size: 20px; }
 
-/* --- NIVEL 3: ZONA VIP CORE - COMPACTADA --- */
-.buttons-vip { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Min-width reducido */ gap: 10px; /* Reducido */ margin-bottom: 24px; }
-.btn-vip-item { background: linear-gradient(135deg, var(--um-azul), #004080); border-radius: 10px; padding: 14px 10px; /* Compactado */ text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform .15s, box-shadow .15s; box-shadow: 0 4px 12px rgba(0,90,169,0.2); border: 1px solid rgba(255,255,255,0.1); position: relative; z-index: 10;}
+/* --- ZONA VIP CORE --- */
+.buttons-vip { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 24px; }
+.btn-vip-item { background: linear-gradient(135deg, var(--um-azul), #004080); border-radius: 10px; padding: 14px 10px; text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform .15s, box-shadow .15s; box-shadow: 0 4px 12px rgba(0,90,169,0.2); border: 1px solid rgba(255,255,255,0.1); position: relative; z-index: 10;}
 .btn-vip-item:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(0,90,169,0.3); }
-.btn-vip-item .icono { font-size: 24px; /* Reducido */ margin-bottom: 6px; color: var(--um-amarillo); }
-.btn-vip-item .titulo { color: #fff; font-size: 12px; /* Reducido */ font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; }
+.btn-vip-item .icono { font-size: 24px; margin-bottom: 6px; color: var(--um-amarillo); }
+.btn-vip-item .titulo { color: #fff; font-size: 12px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; word-break: break-word; }
 
-/* --- NIVEL 4: HERRAMIENTAS SECUNDARIAS - COMPACTADAS --- */
-.buttons-secondary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Min-width reducido */ gap: 10px; /* Reducido */ margin-bottom: 30px; }
-.btn-secondary-item { background: var(--card-bg); border: 1px solid var(--borde); border-radius: 8px; padding: 12px 6px; /* Compactado */ text-align: center; text-decoration: none; display: block; transition: background .15s, box-shadow .15s; position: relative; z-index: 10;}
+/* --- HERRAMIENTAS SECUNDARIAS --- */
+.buttons-secondary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 30px; }
+.btn-secondary-item { background: var(--card-bg); border: 1px solid var(--borde); border-radius: 8px; padding: 12px 6px; text-align: center; text-decoration: none; display: block; transition: background .15s, box-shadow .15s; position: relative; z-index: 10;}
 .btn-secondary-item:hover { background: var(--card-hover); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
-.btn-secondary-item .icono { font-size: 16px; /* Reducido */ margin-bottom: 4px; color: var(--texto-suave); }
-.btn-secondary-item .titulo { font-size: 12px; /* Reducido */ font-weight: 600; color: var(--texto); }
+.btn-secondary-item .icono { font-size: 16px; margin-bottom: 4px; color: var(--texto-suave); }
+.btn-secondary-item .titulo { font-size: 12px; font-weight: 600; color: var(--texto); }
 
 /* -------------------------------------------
-   HERRAMIENTAS OPERATIVAS (APILADAS A LA DERECHA) - INTENSAMENTE COMPACTADAS
+   HERRAMIENTAS OPERATIVAS (APILADAS A LA DERECHA)
 ------------------------------------------- */
-#calcBtn { position: fixed; bottom: 82px; /* Bajoneado sutilmente */ right: 20px; background: #1a6fc4; color: #fff; border: none; width: 48px; height: 48px; /* Más pequeño */ border-radius: 50%; font-size: 1.3rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.25); z-index: 400; display: flex; align-items: center; justify-content: center; transition: transform .15s ease; }
+#calcBtn { position: fixed; bottom: 82px; right: 20px; background: #1a6fc4; color: #fff; border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 1.3rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.25); z-index: 400; display: flex; align-items: center; justify-content: center; transition: transform .15s ease; }
 #calcBtn:hover { transform: translateY(-2px); }
 #calcOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 10000; align-items: center; justify-content: center; }
 
-.support-container { position: fixed; bottom: 20px; /* Bajoneado sutilmente */ right: 20px; z-index: 400; }
-.support-main { background: #005aa9; color: #fff; border: none; border-radius: 28px; padding: 10px 16px; /* Compactado */ font-weight: 600; font-size: 13px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.25); display: flex; align-items: center; gap: 5px; transition: transform .15s; }
+.support-container { position: fixed; bottom: 20px; right: 20px; z-index: 400; }
+.support-main { background: #005aa9; color: #fff; border: none; border-radius: 28px; padding: 10px 16px; font-weight: 600; font-size: 13px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.25); display: flex; align-items: center; gap: 5px; transition: transform .15s; }
 .support-main:hover { transform: translateY(-2px); }
 .support-menu { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
-.support-menu a { display: flex; align-items: center; gap: 5px; background: var(--card-bg); padding: 9px 11px; /* Compactado */ border-radius: 8px; text-decoration: none; color: var(--texto); font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); border: 1px solid var(--borde); position: relative; z-index: 10;}
+.support-menu a { display: flex; align-items: center; gap: 5px; background: var(--card-bg); padding: 9px 11px; border-radius: 8px; text-decoration: none; color: var(--texto); font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); border: 1px solid var(--borde); position: relative; z-index: 10;}
 .support-menu a:hover { background: var(--card-hover); }
 
-/* --- BLOCK DE NOTAS (POST-IT) - COMPACTADO Y APILADO CORRECTAMENTE --- */
-.post-it-widget { position: fixed; bottom: 144px; /* Calculado para apilar sobre calcBtn */ right: 20px; z-index: 400; }
-.post-it-btn { background: #f1c40f; color: #333; border: none; width: 48px; height: 48px; /* Más pequeño */ border-radius: 50%; font-size: 1.3rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; transition: transform 0.15s; }
+/* --- BLOCK DE NOTAS (POST-IT) --- */
+.post-it-widget { position: fixed; bottom: 144px; right: 20px; z-index: 400; }
+.post-it-btn { background: #f1c40f; color: #333; border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 1.3rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; transition: transform 0.15s; }
 .post-it-btn:hover { transform: translateY(-2px); }
-.post-it-panel { display: none; position: absolute; bottom: 0; right: 58px; background: var(--nota-bg); width: 320px; /* Sutilmente más estrecho */ padding: 12px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.25); border-top: 8px solid #f39c12; }
+.post-it-panel { display: none; position: absolute; bottom: 0; right: 58px; background: var(--nota-bg); width: 320px; padding: 12px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.25); border-top: 8px solid #f39c12; }
 .post-it-panel h4 { margin: 0 0 6px 0; font-size: 13px; color: #333; display: flex; justify-content: space-between; align-items: center; }
 .post-it-desc { font-size: 10px; color: #555; margin: 0 0 8px 0; line-height: 1.2; } 
-.post-it-panel textarea { width: 100%; height: 240px; /* Reducido */ background: transparent; border: none; resize: none; font-family: monospace; font-size: 12px; color: var(--texto); padding: 4px; outline: none; border-left: 2px solid rgba(0,0,0,0.05); }
+.post-it-panel textarea { width: 100%; height: 240px; background: transparent; border: none; resize: none; font-family: monospace; font-size: 12px; color: var(--texto); padding: 4px; outline: none; border-left: 2px solid rgba(0,0,0,0.05); }
 
 .post-it-actions { display: flex; gap: 6px; margin-top: 8px; }
 .btn-nota { flex: 1; padding: 7px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 11px; display: flex; align-items: center; justify-content: center; gap: 5px; transition: opacity 0.2s;}
@@ -258,7 +258,7 @@ body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
 body.dark-mode .btn-limpiar { background: rgba(255,255,255,0.1); color: #ddd; }
 body.dark-mode .post-it-desc { color: #aaa; }
 
-/* FOOTER - COMPACTADO */
+/* FOOTER */
 footer { text-align: center; font-size: 12px; color: var(--texto-suave); margin: 30px 0 15px; border-top: 1px solid var(--borde); padding-top: 15px; position: relative; z-index: 10;}
 .footer-links { margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 12px; font-weight: bold; font-size: 12px;}
 .footer-links a { color: var(--texto-suave); text-decoration: none; transition: color 0.2s; }
@@ -335,7 +335,9 @@ footer { text-align: center; font-size: 12px; color: var(--texto-suave); margin:
                         <i class="fa-solid fa-eraser"></i>
                     </button>
                 </div>
-                <div id="caminoInvitacion" class="camino-invitacion pulse-invitacion">⏳ Fija tu hora de salida para iniciar el viaje</div>
+                <div id="caminoInvitacion" style="font-size: 12px; color: #7f8c8d; text-align: center; margin-top: 10px; font-weight: normal; line-height: 1.3;">
+                    ⏳ Fija tu hora de salida para iniciar el viaje
+                </div>
                 <a href="/logout" class="btn-logout-game" id="btnCerrarSesionJuego">
                     <i class="fa-solid fa-power-off"></i> Finalizar Turno y Salir
                 </a>
@@ -382,7 +384,7 @@ footer { text-align: center; font-size: 12px; color: var(--texto-suave); margin:
         <h4 style="margin-bottom: 9px; color: var(--texto-suave); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding-left: 4px;">
             <i class="fa-regular fa-envelope"></i> Accesos Rápidos
         </h4>
-       <div class="grid-derivaciones">
+        <div class="grid-derivaciones">
             <a href="https://directorio-um-sat.onrender.com/#supervisor" class="btn-correo-frecuente">
                 <i class="fa-solid fa-user-tie icono"></i>
                 <span>Derivación a Supervisor</span>
@@ -392,25 +394,28 @@ footer { text-align: center; font-size: 12px; color: var(--texto-suave); margin:
                 <span>Derivación Área Comercial</span>
             </a>
         </div>
+      </div>
+      
+    </div>
 
     <div class="col-contexto">
       
       <div class="widget-box" style="border-top: 4px solid var(--um-verde);">
-        <h3 style="margin-bottom:0; color:var(--um-verde); font-size:15px; /* Reducido */">✨ Para tener en cuenta</h3>
+        <h3 style="margin-bottom:0; color:var(--um-verde); font-size:15px;">✨ Para tener en cuenta</h3>
         <div id="caja-mensajes" style="margin-top:10px; padding:12px; border-radius:6px; background:#e8f5e9; border-left:4px solid #2e7d32; min-height:48px; display: flex; align-items: center;">
-          <div id="texto-mensajes" style="color:#1b5e20; font-size:14px; /* Reducido */ font-weight:500; line-height:1.4; font-family:'Open Sans','Segoe UI',sans-serif; transition:opacity 0.5s ease-in-out; width: 100%;">
+          <div id="texto-mensajes" style="color:#1b5e20; font-size:14px; font-weight:500; line-height:1.4; font-family:'Open Sans','Segoe UI',sans-serif; transition:opacity 0.5s ease-in-out; width: 100%;">
             <i class="fa-solid fa-spinner fa-spin"></i> Buscando mensajes...
           </div>
         </div>
       </div>
 
       <div class="widget-box" id="contenedor-widget-alertas" style="border-top: 4px solid #e74c3c;">
-        <h3 style="margin-bottom:0; font-size:15px; /* Reducido */">
+        <h3 style="margin-bottom:0; font-size:15px;">
             <i class="fa-solid fa-triangle-exclamation" id="icono-alerta" style="color:#e74c3c; transition: color 0.5s;"></i> 
             <span id="titulo-caja-alerta" style="color:#e74c3c;">Estado del Sistema</span>
         </h3>
         <div id="caja-alertas" style="margin-top:10px; padding:12px; border-radius:6px; background:#fdecea; border-left:4px solid #c62828; transition:all 1s ease-in-out;">
-          <div id="texto-alertas" style="color:#c62828; font-size:13px; /* Reducido */ font-weight:500; transition:opacity 0.5s;">
+          <div id="texto-alertas" style="color:#c62828; font-size:13px; font-weight:500; transition:opacity 0.5s;">
             <i class="fa-solid fa-spinner fa-spin"></i> Conectando al panel de estado...
           </div>
         </div>
@@ -419,12 +424,12 @@ footer { text-align: center; font-size: 12px; color: var(--texto-suave); margin:
     </div>
   </div>
 
-<div class="buttons-vip">
-    <a href="https://login.microsoftonline.com/0dc2d1a0-913c-4a0d-b1a7-3e857d4cccdb/oauth2/authorize?client_id=00000007-0000-0000-c000-000000000000&response_type=code%20id_token&scope=openid%20profile&state=OpenIdConnect.AuthenticationProperties%3DMAAAAIRY97cWuBHxjHpgRb060AeLyeaYQyUNivI6mnpGlYm4iNB2LfHuEjY0O1eeeib_LAEAAAABAAAACS5yZWRpcmVjdFVodHRwczovL3VtYXlvci5jcm0yLmR5bmFtaWNzLmNvbS9tYWluLmFzcHg_YXBwaWQ9M2M1Y2YxMWQtM2ExYS1lYzExLWI2ZTYtMDAyMjQ4MzczYWVi%26ReplyUrl%3DMAAAAIRY97cWuBHxjHpgRb060Ad8J05DViXepKobdg6mTnuvl91J0tvo9hhYp%252f91DckOEWh0dHBzOi8vY3BxLS1zYW1jcm1saXZlc2c2MDEuY3JtMi5keW5hbWljcy5jb20v%26RedirectTo%3DMAAAAIRY97cWuBHxjHpgRb060AfaRfRSHHpIKrVXtl2vnR5lTajx7TFQef58%252fMqLQysMA2h0dHBzOi8vdW1heW9yLmNybTIuZHluYW1pY3MuY29tLw%253d%253d%26RedirectToForMcas%3Dhttps%253a%252f%252fumayor.crm2.dynamics.com%252fmain.aspx%253fappid%253d3c5cf11d-3a1a-ec11-b6e6-002248373aeb&response_mode=form_post&nonce=639105005277440350.ZTliNjFhODgtODViZS00MmIyLTg2M2MtMWU1N2VkZjBlYjk0ZTI3ZjY5ZDMtOTM0MC00MGVkLWJhNjYtMjkxYmQ3MGFkMTZj&redirect_uri=https%3A%2F%2Fcpq--samcrmlivesg601.crm2.dynamics.com%2F&max_age=86400&claims=%7B%22id_token%22%3A%7B%22xms_cc%22%3A%7B%22values%22%3A%5B%22CP1%22%5D%7D%7D%7D&x-client-SKU=ID_NET472&x-client-ver=8.14.0.0&sso_reload=true" target="_blank" class="btn-vip-item">
+  <div class="buttons-vip">
+    <a href="https://umayor.crm2.dynamics.com/main.aspx?appid=3c5cf11d-3a1a-ec11-b6e6-002248373aeb" target="_blank" class="btn-vip-item">
       <div class="icono"><i class="fa-solid fa-window-maximize"></i></div>
       <div class="titulo">CRM 365</div>
     </a>
-    <a href="https://login.microsoftonline.com/0dc2d1a0-913c-4a0d-b1a7-3e857d4cccdb/oauth2/authorize?client_id=00000007-0000-0000-c000-000000000000&response_type=code%20id_token&scope=openid%20profile&state=OpenIdConnect.AuthenticationProperties%3DMAAAAIRY97cWuBHxjHpgRb060AeTVz00ci9xv287NHwozp25QL_6jovzjlfdfMqKpqP6PwEAAAABAAAACS5yZWRpcmVjdLgBaHR0cHM6Ly91bWF5b3IuY3JtMi5keW5hbWljcy5jb20vbWFpbi5hc3B4P2FwcGlkPWVkZWVjNmMyLWUwNjQtNDBkOC04M2FlLWExN2E0OTU0ZTUxOSZwYWdldHlwZT1lbnRpdHlsaXN0JmV0bj13aXRfbWF0cmljdWxhd2ViJnZpZXdpZD00MWI1MzIxMS05ZTZjLWVjMTEtODk0My0wMDIyNDgzN2RhZTMmdmlld1R5cGU9NDIzMA%26ReplyUrl%3DMAAAAIRY97cWuBHxjHpgRb060Ad8J05DViXepKobdg6mTnuvl91J0tvo9hhYp%252f91DckOEWh0dHBzOi8vY3BxLS1zYW1jcm1saXZlc2c2MDEuY3JtMi5keW5hbWljcy5jb20v%26RedirectTo%3DMAAAAIRY97cWuBHxjHpgRb060AfaRfRSHHpIKrVXtl2vnR5lTajx7TFQef58%252fMqLQysMA2h0dHBzOi8vdW1heW9yLmNybTIuZHluYW1pY3MuY29tLw%253d%253d%26RedirectToForMcas%3Dhttps%253a%252f%252fumayor.crm2.dynamics.com%252fmain.aspx%253fappid%253dedeec6c2-e064-40d8-83ae-a17a4954e519%2526pagetype%253dentitylist%2526etn%253dwit_matriculaweb%2526viewid%253d41b53211-9e6c-ec11-8943-00224837dae3%2526viewType%253d4230&response_mode=form_post&nonce=639105006127779337.ZTI3MGVmNzctY2FlYi00ZDYzLWJiYmYtN2UyNzg2NTExNDQ1ZmJmOTg1MGYtM2NmNy00MjdjLTliZDQtMmMxYWNkNGE4Y2Nj&redirect_uri=https%3A%2F%2Fcpq--samcrmlivesg601.crm2.dynamics.com%2F&max_age=86400&claims=%7B%22id_token%22%3A%7B%22xms_cc%22%3A%7B%22values%22%3A%5B%22CP1%22%5D%7D%7D%7D&x-client-SKU=ID_NET472&x-client-ver=8.14.0.0" target="_blank" class="btn-vip-item">
+    <a href="https://umayor.crm2.dynamics.com/main.aspx?appid=edeec6c2-e064-40d8-83ae-a17a4954e519&pagetype=entitylist&etn=wit_matriculaweb&viewid=41b53211-9e6c-ec11-8943-00224837dae3&viewType=4230" target="_blank" class="btn-vip-item">
       <div class="icono"><i class="fa-solid fa-desktop"></i></div>
       <div class="titulo">CRM MW (matriculas)</div>
     </a>
@@ -437,8 +442,6 @@ footer { text-align: center; font-size: 12px; color: var(--texto-suave); margin:
       <div class="titulo">WEB MODULISTA</div>
     </a>
   </div>
-      
-
 
   <div class="buttons-secondary">
     <a href="/bitacora" class="btn-secondary-item">
@@ -715,6 +718,18 @@ function inicializarFechaYContexto() {
     const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
     const hoy = new Date();
     document.getElementById('fechaTexto').textContent = `${diasSemana[hoy.getDay()]} ${hoy.getDate()} de ${meses[hoy.getMonth()]}`;
+    
+    // Aquí inyectamos el mensaje del día según el día de la semana (0 = Domingo, 1 = Lunes...)
+    const mensajesDia = [
+        "¡Feliz domingo! Que sea un turno tranquilo y excelente.",
+        "¡Con todo este lunes! Excelente inicio de semana.",
+        "¡Buen martes! A mantener el ritmo y la buena energía.",
+        "¡Mitad de semana! Vamos que se puede, gran miércoles.",
+        "¡Jueves! Ya queda menos, excelente jornada.",
+        "¡Por fin viernes! A cerrar la semana con broche de oro.",
+        "¡Feliz sábado! Mucho éxito en el turno de hoy."
+    ];
+    document.getElementById('mensajeDia').textContent = mensajesDia[hoy.getDay()];
 }
 inicializarFechaYContexto();
 
