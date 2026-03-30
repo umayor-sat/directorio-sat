@@ -655,7 +655,7 @@
         }
     }
 
-    // ==========================================
+   // ==========================================
     // LÓGICA: PESTAÑA MENSAJES Y ALERTAS (USANDO COLUMNAS REALES)
     // ==========================================
     
@@ -666,7 +666,7 @@
             const tbody = document.getElementById('tbodyAlertas');
             tbody.innerHTML = '';
             
-            if(error) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Error cargando alertas.</td></tr>`;
+            if(error) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Error cargando alertas: ${error.message}</td></tr>`;
             if(!data || data.length === 0) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No hay alertas registradas.</td></tr>`;
 
             data.forEach(a => {
@@ -676,10 +676,16 @@
                 const catSegura = a.categoria ? a.categoria.replace(/'/g, "\\'") : '';
                 const msjSeguro = a.mensaje ? a.mensaje.replace(/'/g, "\\'") : '';
                 
-                // Mapeo del semáforo leyendo tu columna 'color'
                 let iconoSem = '🔴';
                 if(a.color === 'verde') iconoSem = '🟢';
                 if(a.color === 'amarillo') iconoSem = '🟡';
+
+                // NUEVO: Botón Switch (Toggle)
+                const btnSwitch = `<button class="btn-tabla ${a.estado ? 'btn-borrar' : 'btn-exportar'}" 
+                                style="color:${a.estado ? 'var(--rojo)' : 'white'}; border:1px solid ${a.estado ? 'var(--rojo)' : 'transparent'}; background:${a.estado ? 'transparent' : 'var(--verde-palta)'}" 
+                                onclick="toggleAlerta('${a.id}', ${a.estado})" title="${a.estado ? 'Desactivar Alerta' : 'Activar Alerta'}">
+                                <i class="fa-solid ${a.estado ? 'fa-toggle-off' : 'fa-toggle-on'}"></i>
+                            </button>`;
 
                 tbody.innerHTML += `
                     <tr>
@@ -688,6 +694,7 @@
                         <td style="text-align:center;">${badge}</td>
                         <td style="text-align:center; white-space:nowrap;">
                             <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormAlerta('${a.id}', '${catSegura}', '${msjSeguro}', ${a.estado}, '${a.color || 'rojo'}')"><i class="fa-solid fa-pen"></i></button>
+                            ${btnSwitch}
                             <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarAlerta('${a.id}')"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
@@ -696,13 +703,19 @@
         } catch (e) { console.error(e); }
     }
 
+    // NUEVO: Función para el Switch
+    async function toggleAlerta(id, estadoActual) {
+        const { error } = await _supabase.from('alertas_operativas').update({ estado: !estadoActual }).eq('id', id);
+        if (error) alert("Error al cambiar estado: " + error.message);
+        else cargarAlertas();
+    }
+
     function subirFormAlerta(id, categoria, mensaje, activo, color) {
         document.getElementById('alertaId').value = id;
         document.getElementById('alertaCategoria').value = categoria;
         document.getElementById('alertaMensaje').value = mensaje;
         document.getElementById('alertaActivo').checked = activo;
         document.getElementById('alertaColor').value = color;
-        // Al editar reiniciamos el input de duración por si quieren sumarle más horas desde AHORA
         document.getElementById('alertaDuracion').value = 24;
 
         document.getElementById('tituloFormularioAlerta').innerHTML = `<span><i class="fa-solid fa-pen"></i> Editando Alerta</span>`;
@@ -733,28 +746,39 @@
         
         if (!categoria || !mensaje) return alert("Categoría y Mensaje son obligatorios.");
         
-        // Calculamos las fechas en base a la duración solicitada
         const ahora = new Date();
         const fin = new Date(ahora.getTime() + (duracion * 60 * 60 * 1000));
 
+        // Añadida "prioridad" y "tipo_alerta" por si tu tabla los exige por defecto
         const paquete = { 
             categoria, 
             mensaje, 
             estado, 
             color,
             fecha_hora_inicio: ahora.toISOString(),
-            fecha_hora_fin: fin.toISOString()
+            fecha_hora_fin: fin.toISOString(),
+            prioridad: 1,
+            tipo_alerta: 'Operativa'
         };
 
-        if (id) {
-            await _supabase.from('alertas_operativas').update(paquete).eq('id', id);
-        } else {
-            paquete.es_default = false;
-            await _supabase.from('alertas_operativas').insert([paquete]);
+        try {
+            let res;
+            if (id) {
+                res = await _supabase.from('alertas_operativas').update(paquete).eq('id', id);
+            } else {
+                paquete.es_default = false;
+                res = await _supabase.from('alertas_operativas').insert([paquete]);
+            }
+            
+            // NUEVO: Capturador de errores explícito
+            if (res.error) throw res.error;
+            
+            limpiarFormularioAlerta();
+            cargarAlertas();
+        } catch (err) {
+            console.error(err);
+            alert("⚠️ La Base de Datos rechazó la carga:\n" + err.message);
         }
-        
-        limpiarFormularioAlerta();
-        cargarAlertas();
     }
 
     async function borrarAlerta(id) {
@@ -781,6 +805,13 @@
                 const catSegura = m.categoria ? m.categoria.replace(/'/g, "\\'") : '';
                 const fechaSegura = m.fecha_mmdd ? m.fecha_mmdd.replace(/'/g, "\\'") : '';
                 
+                // NUEVO: Botón Switch (Toggle)
+                const btnSwitch = `<button class="btn-tabla ${m.estado ? 'btn-borrar' : 'btn-exportar'}" 
+                                style="color:${m.estado ? 'var(--rojo)' : 'white'}; border:1px solid ${m.estado ? 'var(--rojo)' : 'transparent'}; background:${m.estado ? 'transparent' : 'var(--verde-palta)'}" 
+                                onclick="toggleMotiv('${m.id}', ${m.estado})" title="${m.estado ? 'Desactivar Mensaje' : 'Activar Mensaje'}">
+                                <i class="fa-solid ${m.estado ? 'fa-toggle-off' : 'fa-toggle-on'}"></i>
+                            </button>`;
+
                 tbody.innerHTML += `
                     <tr>
                         <td style="font-size:12px;">
@@ -791,12 +822,20 @@
                         <td style="text-align:center;">${badge}</td>
                         <td style="text-align:center; white-space:nowrap;">
                             <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormMotiv('${m.id}', '${msjSeguro}', ${m.duracion_min || 3}, ${m.estado}, ${m.prioridad || 1}, '${catSegura}', '${fechaSegura}')"><i class="fa-solid fa-pen"></i></button>
+                            ${btnSwitch}
                             <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarMotiv('${m.id}')"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
             });
         } catch (e) { console.error(e); }
+    }
+
+    // NUEVO: Función para el Switch
+    async function toggleMotiv(id, estadoActual) {
+        const { error } = await _supabase.from('mensajes_rotativos').update({ estado: !estadoActual }).eq('id', id);
+        if (error) alert("Error al cambiar estado: " + error.message);
+        else cargarMotivacionales();
     }
 
     function subirFormMotiv(id, mensaje, duracion, estado, prioridad, categoria, fecha_mmdd) {
@@ -840,14 +879,23 @@
         
         const paquete = { mensaje, duracion_min, estado, prioridad, categoria, fecha_mmdd };
 
-        if (id) {
-            await _supabase.from('mensajes_rotativos').update(paquete).eq('id', id);
-        } else {
-            await _supabase.from('mensajes_rotativos').insert([paquete]);
+        try {
+            let res;
+            if (id) {
+                res = await _supabase.from('mensajes_rotativos').update(paquete).eq('id', id);
+            } else {
+                res = await _supabase.from('mensajes_rotativos').insert([paquete]);
+            }
+            
+            // NUEVO: Capturador de errores explícito
+            if (res.error) throw res.error;
+
+            limpiarFormularioMotiv();
+            cargarMotivacionales();
+        } catch (err) {
+            console.error(err);
+            alert("⚠️ La Base de Datos rechazó la carga:\n" + err.message);
         }
-        
-        limpiarFormularioMotiv();
-        cargarMotivacionales();
     }
 
     async function borrarMotiv(id) {
