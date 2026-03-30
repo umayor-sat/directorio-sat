@@ -2,6 +2,15 @@ from flask import Flask, render_template, request, jsonify, session, redirect, u
 from functools import wraps
 from supabase import create_client
 import os
+from datetime import datetime
+
+# Manejo seguro de Zona Horaria (Hora de Chile)
+try:
+    from zoneinfo import ZoneInfo
+    TZ_CHILE = ZoneInfo("America/Santiago")
+except ImportError:
+    from datetime import timezone, timedelta
+    TZ_CHILE = timezone(timedelta(hours=-3)) # Fallback seguro
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "directorio-sat-clave-2026")
@@ -295,8 +304,94 @@ def editar_enlace(id):
         return jsonify({"status": "success", "data": res.data})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 # --- FIN DE INYECCIÓN ---
+
+# ==========================================
+# INYECCIÓN FASE 1: MENSAJES Y ALERTAS
+# ==========================================
+@app.route('/api/mensajes-rotativos', methods=['GET'])
+@login_required
+def api_mensajes_rotativos():
+    try:
+        # 1. Traer todos los mensajes activos ordenados por prioridad
+        res = supabase.table("mensajes_rotativos").select("*").eq("estado", True).order("prioridad").execute()
+        mensajes = res.data or []
+
+        # 2. Obtener el día actual en Chile (MM-DD)
+        hoy_chile = datetime.now(TZ_CHILE)
+        hoy_mmdd = hoy_chile.strftime("%m-%d")
+
+        especiales = []
+        genericos = []
+
+        # 3. Separar los especiales de hoy y los genéricos
+        for m in mensajes:
+            fecha_mmdd = m.get("fecha_mmdd")
+            if fecha_mmdd == hoy_mmdd:
+                especiales.append(m)
+            elif not fecha_mmdd:
+                genericos.append(m)
+
+        # 4. Regla: Si hay especiales, mandamos solo esos. Si no, los genéricos.
+        return jsonify(especiales if especiales else genericos)
+
+    except Exception as e:
+        print(f"Error Mensajes: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/alertas-operativas', methods=['GET'])
+@login_required
+def api_alertas_operativas():
+    try:
+        # 1. Traer todas las alertas activas ordenadas por prioridad
+        res = supabase.table("alertas_operativas").select("*").eq("estado", True).order("prioridad").execute()
+        todas = res.data or []
+
+        ahora = datetime.now(TZ_CHILE)
+        alertas_activas = []
+        mensaje_default = None
+
+        for a in todas:
+            # Separar el mensaje por default
+            if a.get("es_default") == True:
+                mensaje_default = a
+                continue
+
+            inicio_str = a.get("fecha_hora_inicio")
+            fin_str = a.get("fecha_hora_fin")
+
+            # Condición A: Tiene fechas de inicio y fin definidas
+            if inicio_str and fin_str:
+                try:
+                    # Parsear strings ISO de la BD a objetos datetime
+                    inicio_dt = datetime.fromisoformat(inicio_str.replace('Z', '+00:00'))
+                    fin_dt = datetime.fromisoformat(fin_str.replace('Z', '+00:00'))
+
+                    # Asignar zona horaria de Chile si vienen "limpios" de la BD
+                    if inicio_dt.tzinfo is None: inicio_dt = inicio_dt.replace(tzinfo=TZ_CHILE)
+                    if fin_dt.tzinfo is None: fin_dt = fin_dt.replace(tzinfo=TZ_CHILE)
+
+                    # ¡La magia matemática!
+                    if inicio_dt <= ahora <= fin_dt:
+                        alertas_activas.append(a)
+                except ValueError as e:
+                    print(f"Error formato de fecha en alerta {a.get('id')}: {e}")
+                    pass
+            
+            # Condición B: No tiene fechas (es permanente mientras el estado sea True)
+            elif not inicio_str and not fin_str:
+                alertas_activas.append(a)
+
+        # 2. Regla: Mostrar todas las activas. Si no hay, mostrar el default.
+        if alertas_activas:
+            return jsonify(alertas_activas)
+        else:
+            return jsonify([mensaje_default] if mensaje_default else [])
+
+    except Exception as e:
+        print(f"Error Alertas: {e}")
+        return jsonify({"error": str(e)}), 500
+# ==========================================
 
 @app.route('/administracion')
 @login_required
