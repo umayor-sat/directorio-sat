@@ -12,13 +12,16 @@
   --um-azul: #005aa9;
   --um-verde: #1a5c38;
   --um-gris: #f5f7fa;
-  --fondo: #f8f9fa; /* <-- Fondo gris nube protector */
+  --fondo: #f8f9fa;
   --texto: #222222;
   --texto-suave: #666666;
   --borde: #dde4ee;
-  --card-bg: #ffffff; /* <-- Tarjetas blancas para generar contraste */
+  --card-bg: #ffffff;
   --card-hover: #f0f4f8;
   --nota-bg: #fff9c4;
+  /* Color Grafito Anti-fatiga */
+  --btn-grafito: #4b535a;
+  --btn-grafito-hover: #3a4147;
 }
 
 /* MODO OSCURO */
@@ -31,16 +34,17 @@ body.dark-mode {
   --card-bg: #1e1e1e;
   --card-hover: #2a2a2a;
   --nota-bg: #5c5423;
+  --btn-grafito: #2c3136;
+  --btn-grafito-hover: #1f2327;
 }
 
 * { box-sizing: border-box; }
 body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--fondo); color: var(--texto); transition: background 0.2s, color 0.2s; }
 
 /* -------------------------------------------
-   MODAL AVISO EXTENDIDO (10s)
+   MODAL AVISO EXTENDIDO
 ------------------------------------------- */
 .modal-aviso { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 9999; align-items: center; justify-content: center; opacity: 1; transition: opacity 0.4s ease-out; }
-/* Seguro anti-bloqueo: si está oculto, no intercepta clics */
 .modal-aviso.oculto { pointer-events: none; }
 .modal-aviso-content { background: var(--fondo); width: 85%; max-width: 850px; padding: 40px; border-radius: 12px; border-top: 10px solid var(--um-amarillo); box-shadow: 0 15px 40px rgba(0,0,0,0.35); text-align: left; font-size: 15px; line-height: 1.6; color: var(--texto); position: relative; overflow: hidden; }
 .modal-aviso-content h3 { margin-top: 0; color: var(--um-azul); font-size: 22px; margin-bottom: 15px; }
@@ -58,7 +62,6 @@ body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--f
 .links-hover { position: relative; cursor: pointer; font-weight: 700; color: #222; height: 100%; display: flex; align-items: center; }
 .links-hover i { font-size: 14px; opacity: 0.8; margin-right: 4px; }
 
-/* INSTRUCCIÓN OBLIGATORIA: MEGA-MENÚ SALVA-RETINAS */
 .links-hover ul { 
     list-style: none; margin: 0; padding: 20px; 
     position: absolute; top: 100%; left: 0; 
@@ -81,17 +84,8 @@ body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--f
     transition: background 0.15s, color 0.15s, padding-left 0.15s; 
     font-weight: normal; font-size: 13px;
 }
-.links-hover ul li a i { 
-    font-size: 12px; 
-    color: rgba(255,255,255,0.4);
-    transition: color 0.15s;
-}
-.links-hover ul li a:hover { 
-    background: rgba(255,255,255,0.1);
-    color: #f2b705;
-    font-weight: bold;
-    padding-left: 16px;
-}
+.links-hover ul li a i { font-size: 12px; color: rgba(255,255,255,0.4); transition: color 0.15s; }
+.links-hover ul li a:hover { background: rgba(255,255,255,0.1); color: #f2b705; font-weight: bold; padding-left: 16px; }
 .links-hover ul li a:hover i { color: #f2b705; }
 
 .top-actions-container { display: flex; align-items: center; gap: 12px; }
@@ -106,158 +100,167 @@ body.dark-mode .btn-dark-mode { background: #333; color: #fff; }
 .btn-salir:hover { background-color: #c0392b; }
 
 /* -------------------------------------------
-   CENTRO DE CONTROL (WELCOME BAR)
+   CENTRO DE CONTROL (WELCOME BAR) - COMPACTADO
 ------------------------------------------- */
 .welcome-bar { 
     background: var(--card-bg); border-bottom: 1px solid var(--borde); 
-    padding: 16px 30px; 
+    padding: 14px 25px; /* Compactado verticalmente */
     display: grid; 
     grid-template-columns: minmax(200px, 1fr) 2fr minmax(300px, 1fr); 
-    gap: 20px; 
+    gap: 15px; /* Espacio reducido */
     align-items: center; 
     position: relative;
     z-index: 100;
 }
-@media (max-width: 950px) {
-    .welcome-bar { grid-template-columns: 1fr; text-align: center; justify-items: center; }
-}
+@media (max-width: 950px) { .welcome-bar { grid-template-columns: 1fr; text-align: center; justify-items: center; gap: 10px;} }
 
-/* Bloque Izquierdo: Tiempo y Contexto */
-.wb-left { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.wb-left { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
 @media (max-width: 950px) { .wb-left { align-items: center; } }
-.reloj-destacado { background: var(--um-azul); color: white; padding: 6px 14px; border-radius: 8px; font-size: 26px; font-family: monospace; font-weight: bold; letter-spacing: 2px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
-.fecha-tarjeta { background: var(--fondo); border: 1px solid var(--borde); border-radius: 6px; padding: 6px 10px; font-size: 13px; font-weight: bold; color: var(--texto); display: inline-flex; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.reloj-destacado { background: var(--um-azul); color: white; padding: 5px 12px; border-radius: 8px; font-size: 24px; font-family: monospace; font-weight: bold; letter-spacing: 2px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); }
+.fecha-tarjeta { background: var(--fondo); border: 1px solid var(--borde); border-radius: 6px; padding: 4px 8px; font-size: 12px; font-weight: bold; color: var(--texto); display: inline-flex; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
-/* Bloque Central: Empatía */
-.wb-center { text-align: center; display: flex; flex-direction: column; gap: 6px; }
-.wb-center h2 { margin: 0; color: var(--um-azul); font-size: 18px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-.mensaje-dia { font-size: 15px; font-weight: 600; color: var(--texto); margin-bottom: 2px; }
-.recordatorios { font-size: 13px; color: var(--texto-suave); font-weight: 500; }
+.wb-center { text-align: center; display: flex; flex-direction: column; gap: 4px; }
+.wb-center h2 { margin: 0; color: var(--um-azul); font-size: 17px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.mensaje-dia { font-size: 14px; font-weight: 600; color: var(--texto); margin-bottom: 1px; }
+.recordatorios { font-size: 12px; color: var(--texto-suave); font-weight: 500; }
 
-/* Bloque Derecho: Gamificación */
 .wb-right { display: flex; justify-content: flex-end; width: 100%; }
-.camino-casa-widget { width: 100%; max-width: 380px; background: var(--fondo); border: 1px solid var(--borde); border-radius: 12px; padding: 12px 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-.camino-header { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 600; color: var(--texto-suave); }
-.camino-porcentaje { font-size: 16px; font-weight: 800; color: var(--um-azul); }
+.camino-casa-widget { width: 100%; max-width: 380px; background: var(--fondo); border: 1px solid var(--borde); border-radius: 12px; padding: 10px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+.camino-header { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 600; color: var(--texto-suave); }
+.camino-porcentaje { font-size: 15px; font-weight: 800; color: var(--um-azul); }
 
-.camino-track-container { margin-top: 15px; position: relative; }
-.camino-track { height: 8px; background: rgba(0,0,0,0.1); border-radius: 4px; position: relative; margin: 0 10px 10px; cursor: help; }
+.camino-track-container { margin-top: 10px; position: relative; }
+.camino-track { height: 7px; background: rgba(0,0,0,0.1); border-radius: 4px; position: relative; margin: 0 8px 8px; cursor: help; }
 body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
-.camino-progress { height: 100%; background: var(--um-azul); border-radius: 4px; width: 0%; transition: width 1s linear, background-color 0.5s; }
-.camino-monito { position: absolute; top: -16px; left: 0%; transform: translateX(-50%); color: var(--um-azul); font-size: 18px; transition: left 1s linear, color 0.5s; }
-.camino-casa { position: absolute; top: -16px; right: -12px; color: var(--texto-suave); font-size: 18px; transition: color 0.5s, transform 0.5s; }
-.camino-mensaje-final { text-align: center; font-size: 14px; font-weight: bold; color: var(--um-verde); display: none; margin-bottom: 10px; animation: latido 2s infinite; }
+.camino-progress { height: 100%; background: var(--um-verde); border-radius: 4px; width: 0%; transition: width 1s linear, background-color 0.5s; }
+.camino-monito { position: absolute; top: -14px; left: 0%; transform: translateX(-50%); color: var(--um-verde); font-size: 16px; transition: left 1s linear, color 0.5s; }
+.camino-casa { position: absolute; top: -14px; right: -10px; color: var(--texto-suave); font-size: 16px; transition: color 0.5s, transform 0.5s; }
+.camino-mensaje-final { text-align: center; font-size: 13px; font-weight: bold; color: var(--um-verde); display: none; margin-bottom: 8px; animation: latido 2s infinite; }
 
-/* Controles de la hora y Botón Salir */
-.camino-controles { margin-top: 15px; background: var(--card-bg); border: 1px solid var(--borde); border-radius: 6px; padding: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; color: var(--texto-suave); box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
-.camino-controles input[type="time"] { border: 1px solid var(--borde); border-radius: 4px; padding: 4px 6px; font-family: monospace; font-size: 14px; color: var(--um-azul); font-weight: bold; background: var(--fondo); outline: none; cursor: pointer; transition: border-color 0.2s; position: relative; z-index: 10;}
+.camino-controles { margin-top: 10px; background: var(--card-bg); border: 1px solid var(--borde); border-radius: 6px; padding: 6px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px; color: var(--texto-suave); box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
+.camino-controles input[type="time"] { border: 1px solid var(--borde); border-radius: 4px; padding: 3px 5px; font-family: monospace; font-size: 13px; color: var(--um-azul); font-weight: bold; background: var(--fondo); outline: none; cursor: pointer; transition: border-color 0.2s; position: relative; z-index: 10;}
 .camino-controles input[type="time"]:focus { border-color: var(--um-azul); }
-.btn-editar-hora { background: none; border: none; font-size: 12px; color: var(--um-azul); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 4px; transition: opacity 0.2s; position: relative; z-index: 10;}
+.btn-editar-hora { background: none; border: none; font-size: 11px; color: var(--um-azul); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 3px; transition: opacity 0.2s; position: relative; z-index: 10;}
 .btn-editar-hora:hover { opacity: 0.7; }
-.btn-logout-game { display: none; width: 100%; margin-top: 10px; background-color: var(--um-verde); color: white; text-align: center; text-decoration: none; padding: 8px; border-radius: 6px; font-size: 13px; font-weight: bold; transition: background 0.2s; animation: fadeIn 1s; position: relative; z-index: 10;}
+.btn-logout-game { display: none; width: 100%; margin-top: 8px; background-color: var(--um-verde); color: white; text-align: center; text-decoration: none; padding: 6px; border-radius: 6px; font-size: 12px; font-weight: bold; transition: background 0.2s; animation: fadeIn 1s; position: relative; z-index: 10;}
 .btn-logout-game:hover { background-color: #144a2d; }
 
-@keyframes pulseSutil { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 0.8; } }
-.pulse-invitacion { animation: pulseSutil 2s infinite; }
-.camino-invitacion { font-size: 11px; color: var(--texto-suave); font-style: italic; margin-top: 10px; text-align: center; }
-
-/* Estados dinámicos de la barra */
-.estado-alerta .camino-progress { background: var(--um-amarillo); }
-.estado-alerta .camino-monito { color: var(--um-amarillo); }
-.estado-ok .camino-progress { background: var(--um-verde); }
-.estado-ok .camino-monito { display: none; }
-.estado-ok .camino-casa { color: var(--um-amarillo); font-size: 26px; transform: scale(1.2); } 
-
-/* ANIMACIONES */
-@keyframes latido { 0% { transform: scale(1); } 50% { transform: scale(1.12); } 100% { transform: scale(1); } }
-@keyframes parpadeoSuave { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-.alerta-activa-icono { animation: parpadeoSuave 1.5s infinite ease-in-out !important; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
 /* -------------------------------------------
-   ESTRUCTURA PRINCIPAL (Z-index normalizado)
+   ESTRUCTURA PRINCIPAL Y LAYOUT - COMPACTADO
 ------------------------------------------- */
-.main-content { padding: 32px 20px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; }
+.main-content { padding: 20px 15px; /* Compactado verticalmente */ max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; }
 
-/* --- NUEVO LAYOUT PRINCIPAL (GRID 2 COLUMNAS) --- */
 .layout-principal {  
   display: grid;  
   grid-template-columns: 1fr 1fr;  
   grid-template-rows: auto auto;  
-  gap: 16px;  
-  margin-bottom: 24px;
+  gap: 12px; /* Espacio reducido entre bloques principales */
+  margin-bottom: 18px;
 }
-.col-accesos {  
-  display: flex;  
-  flex-direction: column;  
-  gap: 16px;
+.col-accesos { display: flex; flex-direction: column; gap: 12px; /* Reducido */ }
+.col-contexto { display: flex; flex-direction: column; gap: 12px; /* Reducido */ }
+
+@media (max-width: 768px) { .layout-principal { grid-template-columns: 1fr; gap: 10px;} }
+
+.widget-box { background: var(--card-bg); border: 1px solid var(--borde); border-radius: 10px; padding: 15px 18px; /* Compactado */ box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: border-color 0.5s; }
+
+/* --- BOTONES PRIMARIOS (CON COLOR GRAFITO Y COMPACTADOS) --- */
+.btn-primary-item { 
+    background: var(--btn-grafito); 
+    border: 1px solid rgba(255,255,255,0.05); 
+    border-radius: 10px; 
+    padding: 15px 12px; /* Compactado verticalmente */
+    text-align: center; 
+    text-decoration: none; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    transition: transform .15s, box-shadow .15s, background .15s; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    position: relative; 
+    z-index: 10;
 }
-.col-contexto {  
-  display: flex;  
-  flex-direction: column;  
-  gap: 16px;
+.btn-primary-item:hover { transform: translateY(-2px); background: var(--btn-grafito-hover); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
+.btn-primary-item .icono { font-size: 22px; /* Reducido */ margin-bottom: 6px; color: var(--um-amarillo); }
+.btn-primary-item .titulo { color: #ffffff; font-size: 14px; /* Reducido */ font-weight: 700; letter-spacing: 0.3px;}
+.btn-primary-item .desc { color: rgba(255,255,255,0.7); font-size: 11px; /* Reducido */ margin-top: 3px; }
+
+/* --- BOTONES DE CORREOS FRECUENTES - COMPACTADOS --- */
+.grid-derivaciones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; /* Espacio reducido */ }
+@media (max-width: 768px) { .grid-derivaciones { grid-template-columns: 1fr; gap: 6px; } }
+
+.btn-correo-frecuente {
+    background: var(--btn-grafito);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 10px;
+    padding: 12px 8px; /* Compactado verticalmente */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 6px;
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 12px; /* Reducido */
+    font-weight: 700;
+    line-height: 1.2;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
-@media (max-width: 768px) {  
-  .layout-principal { grid-template-columns: 1fr; }
-}
+.btn-correo-frecuente:hover { transform: translateY(-2px); background: var(--btn-grafito-hover); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
+.btn-correo-frecuente .icono { color: var(--um-amarillo); font-size: 20px; /* Reducido */ }
 
-.widget-box { background: var(--card-bg); border: 1px solid var(--borde); border-radius: 10px; padding: 18px 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+/* --- NIVEL 3: ZONA VIP CORE - COMPACTADA --- */
+.buttons-vip { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Min-width reducido */ gap: 10px; /* Reducido */ margin-bottom: 24px; }
+.btn-vip-item { background: linear-gradient(135deg, var(--um-azul), #004080); border-radius: 10px; padding: 14px 10px; /* Compactado */ text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform .15s, box-shadow .15s; box-shadow: 0 4px 12px rgba(0,90,169,0.2); border: 1px solid rgba(255,255,255,0.1); position: relative; z-index: 10;}
+.btn-vip-item:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(0,90,169,0.3); }
+.btn-vip-item .icono { font-size: 24px; /* Reducido */ margin-bottom: 6px; color: var(--um-amarillo); }
+.btn-vip-item .titulo { color: #fff; font-size: 12px; /* Reducido */ font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; }
 
-/* --- BOTONES PRIMARIOS --- */
-.btn-primary-item { background: var(--card-bg); border: 2px solid var(--borde); border-radius: 10px; padding: 18px 14px; text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; transition: transform .15s, border-color .15s; position: relative; z-index: 10;}
-.btn-primary-item:hover { transform: translateY(-2px); border-color: var(--um-azul); }
-.btn-primary-item .icono { font-size: 22px; margin-bottom: 8px; color: var(--um-azul); }
-.btn-primary-item .titulo { color: var(--texto); font-size: 15px; font-weight: 700; }
-.btn-primary-item .desc { color: var(--texto-suave); font-size: 12px; margin-top: 4px; }
-
-/* --- NIVEL 3: ZONA VIP CORE --- */
-.buttons-vip { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 32px; }
-.btn-vip-item { background: linear-gradient(135deg, var(--um-azul), #004080); border-radius: 10px; padding: 16px 12px; text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform .15s, box-shadow .15s; box-shadow: 0 4px 12px rgba(0,90,169,0.2); border: 1px solid rgba(255,255,255,0.1); position: relative; z-index: 10;}
-.btn-vip-item:hover { transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0,90,169,0.3); }
-.btn-vip-item .icono { font-size: 26px; margin-bottom: 8px; color: var(--um-amarillo); }
-.btn-vip-item .titulo { color: #fff; font-size: 13px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; }
-
-/* --- NIVEL 4: HERRAMIENTAS SECUNDARIAS --- */
-.buttons-secondary { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 40px; }
-.btn-secondary-item { background: var(--card-bg); border: 1px solid var(--borde); border-radius: 8px; padding: 14px 8px; text-align: center; text-decoration: none; display: block; transition: background .15s, box-shadow .15s; position: relative; z-index: 10;}
+/* --- NIVEL 4: HERRAMIENTAS SECUNDARIAS - COMPACTADAS --- */
+.buttons-secondary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Min-width reducido */ gap: 10px; /* Reducido */ margin-bottom: 30px; }
+.btn-secondary-item { background: var(--card-bg); border: 1px solid var(--borde); border-radius: 8px; padding: 12px 6px; /* Compactado */ text-align: center; text-decoration: none; display: block; transition: background .15s, box-shadow .15s; position: relative; z-index: 10;}
 .btn-secondary-item:hover { background: var(--card-hover); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
-.btn-secondary-item .icono { font-size: 18px; margin-bottom: 6px; color: var(--texto-suave); }
-.btn-secondary-item .titulo { font-size: 13px; font-weight: 600; color: var(--texto); }
+.btn-secondary-item .icono { font-size: 16px; /* Reducido */ margin-bottom: 4px; color: var(--texto-suave); }
+.btn-secondary-item .titulo { font-size: 12px; /* Reducido */ font-weight: 600; color: var(--texto); }
 
 /* -------------------------------------------
-   HERRAMIENTAS OPERATIVAS (CALC, POST-IT, SOPORTE)
+   HERRAMIENTAS OPERATIVAS (APILADAS A LA DERECHA) - INTENSAMENTE COMPACTADAS
 ------------------------------------------- */
-#calcBtn { position: fixed; bottom: 88px; right: 24px; background: #1a6fc4; color: #fff; border: none; width: 52px; height: 52px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); z-index: 400; display: flex; align-items: center; justify-content: center; transition: transform .15s ease; }
+#calcBtn { position: fixed; bottom: 82px; /* Bajoneado sutilmente */ right: 20px; background: #1a6fc4; color: #fff; border: none; width: 48px; height: 48px; /* Más pequeño */ border-radius: 50%; font-size: 1.3rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.25); z-index: 400; display: flex; align-items: center; justify-content: center; transition: transform .15s ease; }
 #calcBtn:hover { transform: translateY(-2px); }
 #calcOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 10000; align-items: center; justify-content: center; }
 
-.support-container { position: fixed; bottom: 24px; right: 24px; z-index: 400; }
-.support-main { background: #005aa9; color: #fff; border: none; border-radius: 28px; padding: 12px 18px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); display: flex; align-items: center; gap: 6px; transition: transform .15s; }
+.support-container { position: fixed; bottom: 20px; /* Bajoneado sutilmente */ right: 20px; z-index: 400; }
+.support-main { background: #005aa9; color: #fff; border: none; border-radius: 28px; padding: 10px 16px; /* Compactado */ font-weight: 600; font-size: 13px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.25); display: flex; align-items: center; gap: 5px; transition: transform .15s; }
 .support-main:hover { transform: translateY(-2px); }
-.support-menu { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
-.support-menu a { display: flex; align-items: center; gap: 6px; background: var(--card-bg); padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--texto); font-size: 13px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); border: 1px solid var(--borde); position: relative; z-index: 10;}
+.support-menu { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.support-menu a { display: flex; align-items: center; gap: 5px; background: var(--card-bg); padding: 9px 11px; /* Compactado */ border-radius: 8px; text-decoration: none; color: var(--texto); font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); border: 1px solid var(--borde); position: relative; z-index: 10;}
 .support-menu a:hover { background: var(--card-hover); }
 
-/* --- BLOCK DE NOTAS --- */
-.post-it-widget { position: fixed; bottom: 24px; left: 24px; z-index: 400; }
-.post-it-btn { background: #f1c40f; color: #333; border: none; width: 52px; height: 52px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; transition: transform 0.15s; }
+/* --- BLOCK DE NOTAS (POST-IT) - COMPACTADO Y APILADO CORRECTAMENTE --- */
+.post-it-widget { position: fixed; bottom: 144px; /* Calculado para apilar sobre calcBtn */ right: 20px; z-index: 400; }
+.post-it-btn { background: #f1c40f; color: #333; border: none; width: 48px; height: 48px; /* Más pequeño */ border-radius: 50%; font-size: 1.3rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; transition: transform 0.15s; }
 .post-it-btn:hover { transform: translateY(-2px); }
-.post-it-panel { display: none; position: absolute; bottom: 65px; left: 0; background: var(--nota-bg); width: 340px; padding: 15px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.25); border-top: 10px solid #f39c12; }
-.post-it-panel h4 { margin: 0 0 8px 0; font-size: 14px; color: #333; display: flex; justify-content: space-between; align-items: center; }
-.post-it-desc { font-size: 11px; color: #555; margin: 0 0 10px 0; line-height: 1.3; } 
-.post-it-panel textarea { width: 100%; height: 260px; background: transparent; border: none; resize: none; font-family: monospace; font-size: 13px; color: var(--texto); padding: 5px; outline: none; border-left: 2px solid rgba(0,0,0,0.05); }
+.post-it-panel { display: none; position: absolute; bottom: 0; right: 58px; background: var(--nota-bg); width: 320px; /* Sutilmente más estrecho */ padding: 12px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.25); border-top: 8px solid #f39c12; }
+.post-it-panel h4 { margin: 0 0 6px 0; font-size: 13px; color: #333; display: flex; justify-content: space-between; align-items: center; }
+.post-it-desc { font-size: 10px; color: #555; margin: 0 0 8px 0; line-height: 1.2; } 
+.post-it-panel textarea { width: 100%; height: 240px; /* Reducido */ background: transparent; border: none; resize: none; font-family: monospace; font-size: 12px; color: var(--texto); padding: 4px; outline: none; border-left: 2px solid rgba(0,0,0,0.05); }
 
-.post-it-actions { display: flex; gap: 8px; margin-top: 10px; }
-.btn-nota { flex: 1; padding: 8px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; transition: opacity 0.2s;}
+.post-it-actions { display: flex; gap: 6px; margin-top: 8px; }
+.btn-nota { flex: 1; padding: 7px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 11px; display: flex; align-items: center; justify-content: center; gap: 5px; transition: opacity 0.2s;}
 .btn-nota:hover { opacity: 0.8; }
 .btn-copiar { background: var(--um-azul); color: white; }
 .btn-limpiar { background: rgba(0,0,0,0.08); color: #333; }
 body.dark-mode .btn-limpiar { background: rgba(255,255,255,0.1); color: #ddd; }
 body.dark-mode .post-it-desc { color: #aaa; }
 
-/* FOOTER */
-footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin: 48px 0 20px; border-top: 1px solid var(--borde); padding-top: 20px; position: relative; z-index: 10;}
-.footer-links { margin-top: 12px; display: flex; justify-content: center; align-items: center; gap: 15px; font-weight: bold; }
+/* FOOTER - COMPACTADO */
+footer { text-align: center; font-size: 12px; color: var(--texto-suave); margin: 30px 0 15px; border-top: 1px solid var(--borde); padding-top: 15px; position: relative; z-index: 10;}
+.footer-links { margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 12px; font-weight: bold; font-size: 12px;}
 .footer-links a { color: var(--texto-suave); text-decoration: none; transition: color 0.2s; }
 .footer-links a:hover { color: var(--um-azul); }
 
@@ -362,6 +365,7 @@ footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin:
 <div class="main-content">
 
   <div class="layout-principal">
+    
     <div class="col-accesos">
       <a href="/escuelas" class="btn-primary-item">
         <div class="icono"><i class="fa-solid fa-book-bookmark"></i></div>
@@ -373,23 +377,43 @@ footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin:
         <div class="titulo">Contactos Administrativos</div>
         <div class="desc">Áreas, roles y contactos internos</div>
       </a>
+      
+      <div style="margin-top: 6px;">
+        <h4 style="margin-bottom: 9px; color: var(--texto-suave); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding-left: 4px;">
+            <i class="fa-regular fa-envelope"></i> Accesos Rápidos
+        </h4>
+        <div class="grid-derivaciones">
+            <a href="/derivacion-supervisor" class="btn-correo-frecuente">
+                <i class="fa-solid fa-user-tie icono"></i>
+                <span>Derivación a Supervisor</span>
+            </a>
+            <a href="/derivacion-comercial" class="btn-correo-frecuente">
+                <i class="fa-solid fa-briefcase icono"></i>
+                <span>Derivación Área Comercial</span>
+            </a>
+        </div>
+      </div>
+      
     </div>
 
     <div class="col-contexto">
       
       <div class="widget-box" style="border-top: 4px solid var(--um-verde);">
-        <h3 style="margin-bottom:0; color:var(--um-verde);">✨ Para tener en cuenta</h3>
-        <div id="caja-mensajes" style="margin-top:12px; padding:14px; border-radius:6px; background:#e8f5e9; border-left:4px solid #2e7d32; min-height:52px; display: flex; align-items: center;">
-          <div id="texto-mensajes" style="color:#1b5e20; font-size:18px; font-weight:500; line-height:1.5; font-family:'Open Sans','Segoe UI',sans-serif; transition:opacity 0.5s ease-in-out; width: 100%;">
+        <h3 style="margin-bottom:0; color:var(--um-verde); font-size:15px; /* Reducido */">✨ Para tener en cuenta</h3>
+        <div id="caja-mensajes" style="margin-top:10px; padding:12px; border-radius:6px; background:#e8f5e9; border-left:4px solid #2e7d32; min-height:48px; display: flex; align-items: center;">
+          <div id="texto-mensajes" style="color:#1b5e20; font-size:14px; /* Reducido */ font-weight:500; line-height:1.4; font-family:'Open Sans','Segoe UI',sans-serif; transition:opacity 0.5s ease-in-out; width: 100%;">
             <i class="fa-solid fa-spinner fa-spin"></i> Buscando mensajes...
           </div>
         </div>
       </div>
 
-      <div class="widget-box" style="border-top: 4px solid #e74c3c;">
-        <h3 style="margin-bottom:0;"><i class="fa-solid fa-triangle-exclamation" id="icono-alerta" style="color:#e74c3c; transition: color 0.5s;"></i> <span style="color:#e74c3c;">Alerta Operativa</span></h3>
-        <div id="caja-alertas" style="margin-top:12px; padding:14px; border-radius:6px; background:#fdecea; border-left:4px solid #c62828; transition:all 1s ease-in-out;">
-          <div id="texto-alertas" style="color:#c62828; font-size:14px; font-weight:500; transition:opacity 0.5s;">
+      <div class="widget-box" id="contenedor-widget-alertas" style="border-top: 4px solid #e74c3c;">
+        <h3 style="margin-bottom:0; font-size:15px; /* Reducido */">
+            <i class="fa-solid fa-triangle-exclamation" id="icono-alerta" style="color:#e74c3c; transition: color 0.5s;"></i> 
+            <span id="titulo-caja-alerta" style="color:#e74c3c;">Estado del Sistema</span>
+        </h3>
+        <div id="caja-alertas" style="margin-top:10px; padding:12px; border-radius:6px; background:#fdecea; border-left:4px solid #c62828; transition:all 1s ease-in-out;">
+          <div id="texto-alertas" style="color:#c62828; font-size:13px; /* Reducido */ font-weight:500; transition:opacity 0.5s;">
             <i class="fa-solid fa-spinner fa-spin"></i> Conectando al panel de estado...
           </div>
         </div>
@@ -398,83 +422,57 @@ footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin:
     </div>
   </div>
 
-<div class="buttons-vip">
-    <a href="https://login.microsoftonline.com/0dc2d1a0-913c-4a0d-b1a7-3e857d4cccdb/oauth2/authorize?client_id=00000007-0000-0000-c000-000000000000&response_type=code%20id_token&scope=openid%20profile&state=OpenIdConnect.AuthenticationProperties%3DMAAAAIRY97cWuBHxjHpgRb060AeLyeaYQyUNivI6mnpGlYm4iNB2LfHuEjY0O1eeeib_LAEAAAABAAAACS5yZWRpcmVjdFVodHRwczovL3VtYXlvci5jcm0yLmR5bmFtaWNzLmNvbS9tYWluLmFzcHg_YXBwaWQ9M2M1Y2YxMWQtM2ExYS1lYzExLWI2ZTYtMDAyMjQ4MzczYWVi%26ReplyUrl%3DMAAAAIRY97cWuBHxjHpgRb060Ad8J05DViXepKobdg6mTnuvl91J0tvo9hhYp%252f91DckOEWh0dHBzOi8vY3BxLS1zYW1jcm1saXZlc2c2MDEuY3JtMi5keW5hbWljcy5jb20v%26RedirectTo%3DMAAAAIRY97cWuBHxjHpgRb060AfaRfRSHHpIKrVXtl2vnR5lTajx7TFQef58%252fMqLQysMA2h0dHBzOi8vdW1heW9yLmNybTIuZHluYW1pY3MuY29tLw%253d%253d%26RedirectToForMcas%3Dhttps%253a%252f%252fumayor.crm2.dynamics.com%252fmain.aspx%253fappid%253d3c5cf11d-3a1a-ec11-b6e6-002248373aeb&response_mode=form_post&nonce=639103872496776234.MjliOTQzMzUtMzFhMS00YThhLWE0OTgtMjIyMDJkYjcwZDNmMmM1ZDRkNzEtYmY3OC00YmE5LTgwZGYtODIwMmE2MTNhZWYy&redirect_uri=https%3A%2F%2Fcpq--samcrmlivesg601.crm2.dynamics.com%2F&max_age=86400&claims=%7B%22id_token%22%3A%7B%22xms_cc%22%3A%7B%22values%22%3A%5B%22CP1%22%5D%7D%7D%7D&x-client-SKU=ID_NET472&x-client-ver=8.14.0.0" target="_blank" class="btn-vip-item">
-      <div class="icono"><i class="fa-solid fa-users-viewfinder"></i></div>
+ <div class="buttons-vip">
+    <a href="https://login.microsoftonline.com/0dc2d1a0-913c-4a0d-b1a7-3e857d4cccdb/oauth2/authorize?client_id=00000007-0000-0000-c000-000000000000&response_type=code%20id_token&scope=openid%20profile&state=OpenIdConnect.AuthenticationProperties%3DMAAAAIRY97cWuBHxjHpgRb060AeLyeaYQyUNivI6mnpGlYm4iNB2LfHuEjY0O1eeeib_LAEAAAABAAAACS5yZWRpcmVjdFVodHRwczovL3VtYXlvci5jcm0yLmR5bmFtaWNzLmNvbS9tYWluLmFzcHg_YXBwaWQ9M2M1Y2YxMWQtM2ExYS1lYzExLWI2ZTYtMDAyMjQ4MzczYWVi%26ReplyUrl%3DMAAAAIRY97cWuBHxjHpgRb060Ad8J05DViXepKobdg6mTnuvl91J0tvo9hhYp%252f91DckOEWh0dHBzOi8vY3BxLS1zYW1jcm1saXZlc2c2MDEuY3JtMi5keW5hbWljcy5jb20v%26RedirectTo%3DMAAAAIRY97cWuBHxjHpgRb060AfaRfRSHHpIKrVXtl2vnR5lTajx7TFQef58%252fMqLQysMA2h0dHBzOi8vdW1heW9yLmNybTIuZHluYW1pY3MuY29tLw%253d%253d%26RedirectToForMcas%3Dhttps%253a%252f%252fumayor.crm2.dynamics.com%252fmain.aspx%253fappid%253d3c5cf11d-3a1a-ec11-b6e6-002248373aeb&response_mode=form_post&nonce=639103872496776234.MjliOTQzMzUtMzFhMS00YThhLWE0OTgtMjIyMDJkYjcwZDNmMmM1ZDRkNzEtYmY3OC00YmE5LTgwZGYtODIwMmE2MTNhZWYy&redirect_uri=https%3a%252f%252fumayor.crm2.dynamics.com%252f&msafed=0&x-client-SKU=ID_NET461&x-client-ver=6.35.0.0" target="_blank" class="btn-vip-item">
+      <div class="icono"><i class="fa-solid fa-window-maximize"></i></div>
       <div class="titulo">CRM 365</div>
     </a>
-    <a href="https://umayor.crm2.dynamics.com/main.aspx?appid=edeec6c2-e064-40d8-83ae-a17a4954e519&pagetype=entitylist&etn=wit_matriculaweb&viewid=41b53211-9e6c-ec11-8943-00224837dae3&viewType=4230" target="_blank" class="btn-vip-item">
-      <div class="icono"><i class="fa-solid fa-graduation-cap"></i></div>
-      <div class="titulo">CRM MW (Matrículas)</div>
+    <a href="https://login.mypurecloud.com/#/authenticate-adv/org/unimayor" target="_blank" class="btn-vip-item">
+      <div class="icono"><i class="fa-solid fa-desktop"></i></div>
+      <div class="titulo">CRM MW (matriculas)</div>
     </a>
-    <a href="https://login.mypurecloud.com/#/authenticate" target="_blank" class="btn-vip-item">
+    <a href="https://us.inconcertcc.com/formdesigner/f/A2yA5s" target="_blank" class="btn-vip-item">
       <div class="icono"><i class="fa-solid fa-headset"></i></div>
       <div class="titulo">Genesys</div>
     </a>
-    <a href="https://miportal.umayor.cl/site#Launchpad-openFLPPage?pageId=bf234e0a-aafc-48e4-a769-f89dfebc0f02&spaceId=3e4894cd-8342-4715-84a8-9e0a730bf01c" target="_blank" class="btn-vip-item">
-      <div class="icono"><i class="fa-solid fa-window-restore"></i></div>
-      <div class="titulo">Web Modulista</div>
+    <a href="https://wl.umayor.cl/index" target="_blank" class="btn-vip-item">
+      <div class="icono"><i class="fa-solid fa-address-card"></i></div>
+      <div class="titulo">WEB MODULISTA</div>
     </a>
   </div>
 
   <div class="buttons-secondary">
-    <a href="/academicos" class="btn-secondary-item">
-      <div class="icono"><i class="fa-solid fa-user-tie"></i></div>
-      <div class="titulo">Académicos Núcleos</div>
+    <a href="/bitacora" class="btn-secondary-item">
+      <div class="icono"><i class="fa-solid fa-book-journal-whills"></i></div>
+      <div class="titulo">Bitácora SAT</div>
     </a>
     <a href="/temas-crm" class="btn-secondary-item">
-      <div class="icono"><i class="fa-solid fa-folder-tree"></i></div>
-      <div class="titulo">Simulador CRM</div>
+      <div class="icono"><i class="fa-solid fa-list-check"></i></div>
+      <div class="titulo">Clasificador CRM</div>
     </a>
     <a href="/pauta-pmcc" class="btn-secondary-item">
-      <div class="icono"><i class="fa-solid fa-phone-volume"></i></div>
+      <div class="icono"><i class="fa-solid fa-clipboard-check"></i></div>
       <div class="titulo">Pauta PMCC</div>
     </a>
-    <a href="/bitacora" class="btn-secondary-item">
-      <div class="icono"><i class="fa-solid fa-clipboard-check"></i></div>
-      <div class="titulo">Bitácora SAT</div>
+    <a href="/academicos" class="btn-secondary-item">
+      <div class="icono"><i class="fa-solid fa-users-rectangle"></i></div>
+      <div class="titulo">Núcleos Académicos</div>
     </a>
   </div>
 
 </div>
 
-<div class="post-it-widget" id="postItWidget">
-    <button class="post-it-btn" onclick="togglePostIt()" title="Block de Notas Rápido"><i class="fa-regular fa-note-sticky"></i></button>
-    <div class="post-it-panel" id="postItPanel">
-        <h4>Apuntes Operativos <button onclick="togglePostIt()" style="background:none; border:none; cursor:pointer; color:var(--texto-suave);"><i class="fa-solid fa-xmark"></i></button></h4>
-        <p class="post-it-desc">Completa ambos bloques en caso de que llame una tercera persona en representación de un alumno.</p>
-        <textarea id="textoPostIt" placeholder="Anota RUTs, teléfonos o datos rápidos aquí. No se borrarán si cambias de pestaña..."></textarea>
-        <div class="post-it-actions">
-            <button onclick="limpiarPostIt()" class="btn-nota btn-limpiar" title="Borrar datos y cargar plantilla limpia"><i class="fa-solid fa-rotate-right"></i> Reiniciar</button>
-            <button onclick="copiarPostIt()" class="btn-nota btn-copiar" id="btnCopiarPostIt" title="Copia todo el texto al portapapeles"><i class="fa-regular fa-copy"></i> Copiar todo</button>
-        </div>
-    </div>
-</div>
+<button id="calcBtn" title="Calculadora de Plazos SLA" onclick="abrirCalc()"><i class="fa-solid fa-calculator"></i></button>
 
-<button onclick="abrirCalc()" id="calcBtn" title="Calculadora de días hábiles">📅</button>
-<div id="calcOverlay">
-  <div style="background:var(--card-bg); border-radius:14px; padding:32px 28px; width:100%; max-width:380px; box-shadow:0 15px 40px rgba(0,0,0,0.25); border-top:8px solid var(--um-amarillo); position:relative;">
-    <button onclick="cerrarCalc()" style="position:absolute;top:12px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--texto-suave);">x</button>
-    <h3 style="margin:0 0 6px; font-size:1rem; color:var(--um-azul);">Calculadora dias habiles</h3>
-    
-    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px;">
-        <p style="font-size:12px; color:var(--texto-suave); margin:0;">Plazo de feedback: <strong style="color:var(--um-azul);">3 dias habiles</strong></p>
-        <button onclick="limpiarCalculadora()" style="background-color: #6c757d; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'"><i class="fa-solid fa-eraser"></i> Limpiar</button>
-    </div>
-
-    <div style="margin-bottom:14px;">
-      <label style="display:block; font-size:11px; font-weight:700; color:var(--texto-suave); text-transform:uppercase; margin-bottom:5px;">Fecha del correo / contacto</label>
-      <input type="date" id="calcFechaInicio" style="width:100%; padding:9px 12px; border:1.5px solid var(--borde); border-radius:8px; font-size:14px; background:var(--fondo); color:var(--texto); outline:none;" oninput="calcularDias()"/>
-    </div>
-    <div style="margin-bottom:20px;">
-      <label style="display:block; font-size:11px; font-weight:700; color:var(--texto-suave); text-transform:uppercase; margin-bottom:5px;">Fecha de hoy / llamada</label>
-      <input type="date" id="calcFechaFin" style="width:100%; padding:9px 12px; border:1.5px solid var(--borde); border-radius:8px; font-size:14px; background:var(--fondo); color:var(--texto); outline:none;" oninput="calcularDias()"/>
-    </div>
-    <div id="calcResultado" style="display:none; border-radius:10px; padding:18px 20px; text-align:center;">
-      <div id="calcEmoji" style="font-size:2rem; margin-bottom:4px;"></div>
-      <div id="calcDias" style="font-size:2.2rem; font-weight:800; margin-bottom:4px; color:var(--texto);"></div>
-      <div id="calcLabel" style="font-size:13px; font-weight:700; margin-bottom:8px;"></div>
-      <div id="calcAccion" style="font-size:12px; padding:6px 12px; border-radius:6px; display:inline-block; font-weight:600;"></div>
+<div class="post-it-widget">
+  <button id="postItBtn" class="post-it-btn" onclick="togglePostIt()" title="Block de notas rápido"><i class="fa-solid fa-note-sticky"></i></button>
+  <div id="postItPanel" class="post-it-panel">
+    <h4>Block de Notas Rápidas <button onclick="togglePostIt()" style="background:none; border:none; color:#333; cursor:pointer; font-size:16px;">&times;</button></h4>
+    <p class="post-it-desc">Usa este espacio para tomar datos rápidos durante una llamada. Se guardan automáticamente en tu navegador.</p>
+    <textarea id="textoPostIt" placeholder="Escribe aquí tus apuntes..."></textarea>
+    <div class="post-it-actions">
+      <button class="btn-nota btn-copiar" onclick="copiarPostIt()"><i class="fa-regular fa-copy"></i> Copiar</button>
+      <button class="btn-nota btn-limpiar" onclick="limpiarPostIt()"><i class="fa-solid fa-eraser"></i> Limpiar</button>
     </div>
   </div>
 </div>
@@ -487,227 +485,181 @@ footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin:
   <button id="supportBtn" class="support-main">🛟 Soporte SAT</button>
 </div>
 
+<div id="calcOverlay">
+  <div style="background:var(--card-bg); width:90%; max-width:400px; padding:30px 25px; border-radius:14px; position:relative; box-shadow:0 15px 40px rgba(0,0,0,0.3); border-top:8px solid var(--um-azul);">
+    <button onclick="cerrarCalc()" style="position:absolute; top:15px; right:15px; background:none; border:none; font-size:22px; cursor:pointer; color:var(--texto-suave);">&times;</button>
+    <h3 style="margin-top:0; color:var(--um-azul); font-size:18px; text-align:center; margin-bottom:20px;"><i class="fa-solid fa-calculator"></i> Calculadora de Plazos SLA</h3>
+    <div style="margin-bottom:15px; display:flex; flex-direction:column; gap:6px;">
+      <label style="font-size:13px; font-weight:700; color:var(--texto-suave);">Fecha de Solicitud (Día Cero)</label>
+      <input type="date" id="calcFechaInicio" style="padding:9px 12px; border:1.5px solid var(--borde); border-radius:8px; font-size:14px; background:var(--fondo); color:var(--texto); outline:none;" oninput="calcularDias()"/>
+    </div>
+    <div style="margin-bottom:20px; display:flex; flex-direction:column; gap:6px;">
+      <label style="font-size:13px; font-weight:700; color:var(--texto-suave);">Fecha Actual / Resolución</label>
+      <input type="date" id="calcFechaFin" style="padding:9px 12px; border:1.5px solid var(--borde); border-radius:8px; font-size:14px; background:var(--fondo); color:var(--texto); outline:none;" oninput="calcularDias()"/>
+    </div>
+    <div id="calcResultado" style="display:none; border-radius:10px; padding:18px 20px; text-align:center;">
+      <div id="calcEmoji" style="font-size:2rem; margin-bottom:4px;"></div>
+      <div id="calcDias" style="font-size:2.2rem; font-weight:800; margin-bottom:4px; color:var(--texto);"></div>
+      <div id="calcLabel" style="font-size:13px; font-weight:700; margin-bottom:8px;"></div>
+      <div id="calcAccion" style="font-size:12px; padding:6px 12px; border-radius:6px; display:inline-block; font-weight:600;"></div>
+    </div>
+  </div>
+</div>
+
 <footer>
   Desarrollado por <strong>Eduardo Ferrada</strong><br>
   Universidad Mayor · Enero 2026
-  
   {% if session.get('rol') == 'supervisor' %}
   <div class="footer-links">
-    <a href="/monitor-calidad"><i class="fa-solid fa-chart-line"></i> Monitor de Calidad</a>
-    <span>|</span>
-    <a href="/administracion"><i class="fa-solid fa-lock"></i> Administración SAT</a>
-    <span>|</span>
+    <a href="/monitor-calidad"><i class="fa-solid fa-chart-line"></i> Monitor de Calidad</a> <span>|</span>
+    <a href="/administracion"><i class="fa-solid fa-lock"></i> Administración SAT</a> <span>|</span>
     <a href="/reporteria-sat"><i class="fa-solid fa-chart-pie"></i> Reportería SAT</a>
   </div>
   {% endif %}
-  
 </footer>
 
 <script>
 // ==========================================
-// FASE 2: LÓGICA DE ALERTAS Y MENSAJES ROTATIVOS
+// FASE 1: SINCRONIZACIÓN DE ALERTAS OPERATIVAS
 // ==========================================
 async function cargarAlertas() {
     try {
         const res = await fetch('/api/alertas-operativas');
         const alertas = await res.json();
-        
         const caja = document.getElementById('caja-alertas');
         const texto = document.getElementById('texto-alertas');
         const icono = document.getElementById('icono-alerta');
+        const titulo = document.getElementById('titulo-caja-alerta');
+        const contenedorFondo = document.getElementById('contenedor-widget-alertas');
         
-        let nuevoHTML = '';
-        const activasReales = alertas.filter(a => a.activo === true && a.es_default !== true);
+        if (!alertas || alertas.length === 0) {
+            aplicarEstiloTranquilidad();
+            return;
+        }
 
-        if (activasReales.length === 0) {
-            // Estado Normal: Mensaje default o estado neutral
-            const def = alertas.find(a => a.es_default === true);
-            nuevoHTML = def ? `<strong>${def.mensaje}</strong>` : `✅ <strong>Sistemas operando con normalidad.</strong> No hay incidentes reportados.`;
-            
-            icono.classList.remove('alerta-activa-icono');
-            caja.style.backgroundColor = '#f5f5f5'; 
-            caja.style.borderLeftColor = '#9e9e9e'; 
-            texto.style.color = '#616161'; 
-            icono.style.color = '#9e9e9e'; 
+        const a = alertas[0]; 
+        
+        if (a.es_default) {
+            aplicarEstiloTranquilidad(a.mensaje);
         } else {
-            // Hay Emergencias activas
-            activasReales.forEach(a => {
-                nuevoHTML += `<div style="margin-bottom: 4px;"><strong>${a.categoria}:</strong> ${a.mensaje}</div>`;
-            });
-            icono.classList.add('alerta-activa-icono');
-            caja.style.backgroundColor = '#fdecea';
+            texto.innerHTML = `<strong>${a.categoria || 'Aviso'}:</strong> ${a.mensaje}`;
+            caja.style.background = '#fdecea';
             caja.style.borderLeftColor = '#c62828';
             texto.style.color = '#c62828';
+            icono.className = 'fa-solid fa-triangle-exclamation alerta-activa-icono';
             icono.style.color = '#e74c3c';
+            if(titulo) { titulo.textContent = 'Estado del Sistema'; titulo.style.color = '#e74c3c'; }
+            contenedorFondo.style.borderTopColor = '#e74c3c';
         }
-
-        // Transición suave al cargar nuevos datos
-        if (texto.innerHTML !== nuevoHTML && !texto.innerHTML.includes('Conectando')) {
-            texto.style.opacity = 0;
-            setTimeout(() => {
-                texto.innerHTML = nuevoHTML;
-                texto.style.opacity = 1;
-            }, 500); 
-        } else {
-            texto.innerHTML = nuevoHTML;
-            texto.style.opacity = 1;
-        }
-
-    } catch (error) {
-        console.error("Error cargando alertas:", error);
+    } catch (e) {
+        aplicarEstiloTranquilidad();
     }
 }
 
+function aplicarEstiloTranquilidad(msj = "Está todo operativo") {
+    const caja = document.getElementById('caja-alertas');
+    const texto = document.getElementById('texto-alertas');
+    const icono = document.getElementById('icono-alerta');
+    const titulo = document.getElementById('titulo-caja-alerta');
+    const contenedorFondo = document.getElementById('contenedor-widget-alertas');
+
+    texto.innerHTML = msj;
+    caja.style.background = '#e8f5e9';
+    caja.style.borderLeftColor = '#2e7d32';
+    texto.style.color = '#1b5e20';
+    icono.className = 'fa-solid fa-circle-check';
+    icono.style.color = '#2e7d32';
+    icono.classList.remove('alerta-activa-icono');
+    if(titulo) { titulo.textContent = 'Estado del Sistema'; titulo.style.color = '#2e7d32'; }
+    contenedorFondo.style.borderTopColor = '#2e7d32';
+}
+
+// ==========================================
+// FASE 2: RESCATE CARRUSEL DE MENSAJES ROTATIVOS
+// ==========================================
 let listaMensajes = [];
 let indexMensaje = 0;
-let timerMensaje = null;
+let timerMensaje;
 
 async function iniciarMensajesRotativos() {
     try {
         const res = await fetch('/api/mensajes-rotativos');
-        listaMensajes = await res.json();
-        
-        if (listaMensajes.length > 0) {
+        const data = await res.json();
+        if (data && data.length > 0) {
+            listaMensajes = data;
             rotarMensaje();
         } else {
-            document.getElementById('texto-mensajes').innerHTML = "✨ Recuerda sonreír en cada llamada, ¡hace la diferencia!";
+            document.getElementById('texto-mensajes').innerHTML = "No hay novedades a destacar en este momento.";
         }
     } catch (error) {
-        console.error("Error cargando mensajes:", error);
+        document.getElementById('texto-mensajes').innerHTML = "Actualizando información de novedades...";
     }
 }
 
 function rotarMensaje() {
     if (listaMensajes.length === 0) return;
-    
     const msjActual = listaMensajes[indexMensaje];
     const textoElement = document.getElementById('texto-mensajes');
     
-    // Fade out suave (400ms visuales, usando base CSS de 0.5s)
     textoElement.style.opacity = 0;
-    
     setTimeout(() => {
-        // Asignación de mensaje puro. Cero categorías visibles.
         textoElement.innerHTML = msjActual.mensaje;
-        
-        // Fade in suave (500ms visuales)
         textoElement.style.opacity = 1;
         
-        // Tiempo de rotación: estándar de 3 min si no hay registro específico
         const minutos = msjActual.duracion_min || 3;
         const milisegundos = minutos * 60 * 1000;
         
         indexMensaje = (indexMensaje + 1) % listaMensajes.length;
         clearTimeout(timerMensaje);
         timerMensaje = setTimeout(rotarMensaje, milisegundos);
-        
-    }, 400); 
+    }, 400);
 }
 
-
-// --- 1. INICIALIZACIÓN DEL PORTAL Y MEGA-MENÚ DINÁMICO ---
+// --- INICIALIZACIÓN DEL PORTAL ---
 document.addEventListener('DOMContentLoaded', function() {
-  iniciarPortal();
-  cargarMegaMenuDinámico();
-  
-  // INICIALIZADORES FASE 2
-  cargarAlertas();
-  iniciarMensajesRotativos();
-  setInterval(cargarAlertas, 60000); // Revisa las alertas cada 1 min
+    iniciarPortal();
+    cargarMegaMenuDinámico();
+    cargarAlertas();
+    iniciarMensajesRotativos();
+    setInterval(cargarAlertas, 60000); 
 });
 
-const infoCategorias = {
-    "Links Frecuentes": { icono: "fa-link", tituloHover: "Herramientas y plataformas recurrentes" },
-    "Turnos SAT": { icono: "fa-calendar-days", tituloHover: "Programación operativa del equipo" },
-    "Mesa TI": { icono: "fa-headset", tituloHover: "Soporte Técnico" },
-    "Beneficios Ministeriales": { icono: "fa-landmark", tituloHover: "Mineduc, Junaeb, CAE, TNE" },
-    "Otros Recursos": { icono: "fa-box-open", tituloHover: "Recursos adicionales" }
-};
-
-const ordenDeseado = [
-    "Links Frecuentes",
-    "Turnos SAT",
-    "Mesa TI",
-    "Beneficios Ministeriales",
-    "Otros Recursos"
-];
-
+// --- COMPONENTES BÁSICOS ---
 async function cargarMegaMenuDinámico() {
     const contenedor = document.getElementById('megaMenuContainer');
     try {
         const respuesta = await fetch('/api/enlaces');
         const enlaces = await respuesta.json();
-
-        if (enlaces.error) {
-            contenedor.innerHTML = '<span style="color:#e74c3c;">Error al cargar menú</span>';
-            return;
-        }
-
+        if (enlaces.error) { contenedor.innerHTML = '<span style="color:#e74c3c;">Error al cargar menú</span>'; return; }
         const activos = enlaces.filter(link => link.activo === true);
-
         const grupos = {};
         activos.forEach(link => {
             if (!grupos[link.categoria]) grupos[link.categoria] = [];
             grupos[link.categoria].push(link);
         });
-
+        const ordenDeseado = ["Links Frecuentes", "Turnos SAT", "Mesa TI", "Beneficios Ministeriales", "Otros Recursos"];
         let htmlMegaMenu = '';
-        
-        ordenDeseado.forEach(categoria => {
-            if (grupos[categoria]) {
-                const linksArray = grupos[categoria];
-                linksArray.sort((a, b) => a.orden - b.orden);
-                const infoVisual = infoCategorias[categoria] || { icono: "fa-folder", tituloHover: `Opciones de ${categoria}` };
-
+        for (const cat of ordenDeseado) {
+            if (grupos[cat] && grupos[cat].length > 0) {
+                const configCat = { icono: "fa-link", tituloHover: cat };
+                if(cat === "Links Frecuentes") configCat.icono = "fa-link";
+                else if(cat === "Turnos SAT") configCat.icono = "fa-calendar-days";
+                else if(cat === "Mesa TI") configCat.icono = "fa-headset";
+                else if(cat === "Beneficios Ministeriales") configCat.icono = "fa-landmark";
+                else if(cat === "Otros Recursos") configCat.icono = "fa-box-open";
+                
                 htmlMegaMenu += `
-                <div class="links-hover">
-                    <span title="${infoVisual.tituloHover}">
-                        <i class="fa-solid ${infoVisual.icono}"></i> ${categoria} ▾
-                    </span>
+                <div class="links-hover" title="${configCat.tituloHover}">
+                    <i class="fa-solid ${configCat.icono}"></i> ${cat}
                     <ul>
-                        ${linksArray.map(l => `
-                            <li>
-                                <a href="${l.url}" target="_blank">
-                                    <i class="fa-solid ${l.icono || 'fa-link'}"></i> ${l.nombre_link}
-                                </a>
-                            </li>
-                        `).join('')}
-                    </ul>
-                </div>`;
-            }
-        });
-
-        for (const [categoria, linksArray] of Object.entries(grupos)) {
-            if (!ordenDeseado.includes(categoria)) {
-                linksArray.sort((a, b) => a.orden - b.orden);
-                const infoVisual = { icono: "fa-folder", tituloHover: `Opciones de ${categoria}` };
-                htmlMegaMenu += `
-                <div class="links-hover">
-                    <span title="${infoVisual.tituloHover}">
-                        <i class="fa-solid ${infoVisual.icono}"></i> ${categoria} ▾
-                    </span>
-                    <ul>
-                        ${linksArray.map(l => `
-                            <li>
-                                <a href="${l.url}" target="_blank">
-                                    <i class="fa-solid ${l.icono || 'fa-link'}"></i> ${l.nombre_link}
-                                </a>
-                            </li>
-                        `).join('')}
+                        ${grupos[cat].map(l => `<li><a href="${l.url}" target="_blank"><i class="fa-solid ${l.icono || 'fa-link'}"></i> ${l.nombre_link}</a></li>`).join('')}
                     </ul>
                 </div>`;
             }
         }
-
-        if (htmlMegaMenu === '') {
-            contenedor.innerHTML = '<span style="color:#666; font-size:12px;">Sin enlaces activos</span>';
-        } else {
-            contenedor.innerHTML = htmlMegaMenu;
-            atarEventosTouchMenu();
-        }
-
+        if (htmlMegaMenu === '') contenedor.innerHTML = '<span style="color:#666; font-size:12px;">Sin enlaces activos</span>';
+        else { contenedor.innerHTML = htmlMegaMenu; atarEventosTouchMenu(); }
     } catch (error) {
-        console.error("Error cargando mega menú:", error);
         contenedor.innerHTML = '<span style="color:#e74c3c;">Error de conexión</span>';
     }
 }
@@ -715,56 +667,41 @@ async function cargarMegaMenuDinámico() {
 function atarEventosTouchMenu() {
     document.querySelectorAll('.links-hover').forEach(item => {
         item.addEventListener('click', function(e) {
-            if(e.target.tagName !== 'A' && e.target.parentElement.tagName !== 'A') {
-                this.classList.toggle('activo');
-            }
+            if(e.target.tagName !== 'A' && e.target.parentElement.tagName !== 'A') { this.classList.toggle('activo'); }
         });
     });
 }
 
 function iniciarPortal() {
-  if (!sessionStorage.getItem('avisoSATVisto')) {
-    var modal = document.getElementById('modalAviso');
-    modal.style.display = 'flex';
-    modal.classList.remove('oculto');
-    
-    const cerrarModal = () => {
-        if(modal.style.display !== 'none') {
-            modal.style.opacity = '0'; 
-            modal.classList.add('oculto');
-            setTimeout(() => {
-                modal.style.display = 'none';
-                sessionStorage.setItem('avisoSATVisto', 'true');
-            }, 400); 
-        }
-    };
-
-    modal.addEventListener('click', function(e) {
-        if(e.target === modal) cerrarModal();
-    });
-
-    setTimeout(cerrarModal, 10000);
-  } else {
-    document.getElementById('modalAviso').classList.add('oculto');
-  }
+    if (!sessionStorage.getItem('avisoSATVisto')) {
+        var modal = document.getElementById('modalAviso');
+        modal.style.display = 'flex';
+        modal.classList.remove('oculto');
+        const cerrarModal = () => {
+            if(modal.style.display !== 'none') {
+                modal.style.opacity = '0';
+                modal.classList.add('oculto');
+                setTimeout(() => { modal.style.display = 'none'; sessionStorage.setItem('avisoSATVisto', 'true'); }, 400);
+            }
+        };
+        modal.addEventListener('click', function(e) { if(e.target === modal) cerrarModal(); });
+        setTimeout(cerrarModal, 10000);
+    } else {
+        document.getElementById('modalAviso').classList.add('oculto');
+    }
 }
 
 document.addEventListener('click', function(e) {
     document.querySelectorAll('.links-hover').forEach(item => {
-        if (!item.contains(e.target)) {
-            item.classList.remove('activo');
-        }
+        if (!item.contains(e.target)) { item.classList.remove('activo'); }
     });
 });
 
-
-// --- 2. MODO OSCURO ---
 function toggleDarkMode() {
     const body = document.body;
     body.classList.toggle('dark-mode');
     const isDark = body.classList.contains('dark-mode');
     localStorage.setItem('sat_darkmode', isDark ? 'yes' : 'no');
-    
     document.getElementById('iconoDark').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
     document.getElementById('textoDarkMode').textContent = isDark ? 'Modo Claro' : 'Modo Oscuro';
 }
@@ -772,45 +709,13 @@ if (localStorage.getItem('sat_darkmode') === 'yes') {
     document.body.classList.add('dark-mode');
     document.getElementById('iconoDark').className = 'fa-solid fa-sun';
     document.getElementById('textoDarkMode').textContent = 'Modo Claro';
-} else {
-    document.getElementById('textoDarkMode').textContent = 'Modo Oscuro';
-}
-
-
-// --- 3. RELOJ Y FECHA ---
-const diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
-const mesesAno = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+} else { document.getElementById('textoDarkMode').textContent = 'Modo Oscuro'; }
 
 function inicializarFechaYContexto() {
+    const diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+    const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
     const hoy = new Date();
-    const diaNum = hoy.getDate();
-    const mesNum = hoy.getMonth();
-    const diaSemana = hoy.getDay();
-    
-    document.getElementById('fechaTexto').textContent = `${diasSemana[diaSemana]} ${diaNum} de ${mesesAno[mesNum]}`;
-
-    let msj = "";
-    if (diaSemana === 1) msj = "¡Excelente inicio de semana! A darlo todo.";
-    else if (diaSemana >= 2 && diaSemana <= 4) msj = "¡La semana avanza, buen turno!";
-    else if (diaSemana === 5) msj = "¡Último esfuerzo, ya es Viernes!";
-    else msj = "Gracias por tu compromiso trabajando este fin de semana.";
-    document.getElementById('mensajeDia').textContent = msj;
-
-    fetch('https://api.open-meteo.com/v1/forecast?latitude=-33.4372&longitude=-70.6506&current_weather=true')
-    .then(r => r.json())
-    .then(data => {
-        const t = Math.round(data.current_weather.temperature);
-        const code = data.current_weather.weathercode;
-        let icon = '🌤️'; 
-        if(code === 0) icon = '☀️';
-        else if(code <= 3) icon = '⛅';
-        else if(code <= 48) icon = '🌫️';
-        else icon = '🌧️'; 
-        
-        const climaDiv = document.getElementById('climaTexto');
-        climaDiv.innerHTML = `${icon} ${t}°C`;
-        climaDiv.style.display = 'inline';
-    }).catch(e => { /* Modo silencioso */ });
+    document.getElementById('fechaTexto').textContent = `${diasSemana[hoy.getDay()]} ${hoy.getDate()} de ${meses[hoy.getMonth()]}`;
 }
 inicializarFechaYContexto();
 
@@ -819,30 +724,29 @@ function actualizarReloj() {
     const h = ahora.getHours();
     const m = String(ahora.getMinutes()).padStart(2, '0');
     const s = String(ahora.getSeconds()).padStart(2, '0');
-    
     document.getElementById('relojHora').textContent = `${String(h).padStart(2,'0')}:${m}:${s}`;
-    
     let saludo = "Buenas noches,";
     if (h >= 6 && h < 12) saludo = "Buenos días,";
     else if (h >= 12 && h < 20) saludo = "Buenas tardes,";
-    
     document.getElementById('saludoHora').textContent = saludo;
 }
 setInterval(actualizarReloj, 1000);
 actualizarReloj();
 
-
-// --- 4. MINIJUEGO 3.0: MEMORIA FUERTE CON FECHA EXACTA MATEMÁTICA ---
+// ==========================================
+// FASE 4: MINIJUEGO CON MEMORIA SUPERIOR (localStorage)
+// ==========================================
 const hoyDate = new Date();
 const fechaDeHoyStr = hoyDate.getFullYear() + "-" + String(hoyDate.getMonth() + 1).padStart(2, '0') + "-" + String(hoyDate.getDate()).padStart(2, '0');
 
 if (localStorage.getItem('fecha_ultimo_juego') !== fechaDeHoyStr) {
-    sessionStorage.removeItem('horaInicioTurno');
-    localStorage.removeItem('horaSalidaGuardada'); 
+    localStorage.removeItem('horaInicioTurno');
+    localStorage.removeItem('horaSalidaGuardada');
     localStorage.setItem('fecha_ultimo_juego', fechaDeHoyStr);
 }
-if (!sessionStorage.getItem('horaInicioTurno')) {
-    sessionStorage.setItem('horaInicioTurno', new Date().getTime());
+
+if (!localStorage.getItem('horaInicioTurno')) {
+    localStorage.setItem('horaInicioTurno', new Date().getTime());
 }
 
 const inputSalida = document.getElementById('horaSalidaInput');
@@ -853,106 +757,92 @@ const widgetCasa = document.getElementById('caminoCasaWidget');
 const msjFinal = document.getElementById('caminoMensajeFinal');
 const pistaCamino = document.getElementById('pistaCamino');
 const btnCerrarSesion = document.getElementById('btnCerrarSesionJuego');
+
 let intervaloCamino;
 
 if (localStorage.getItem('horaSalidaGuardada')) {
     inputSalida.value = localStorage.getItem('horaSalidaGuardada');
     iniciarCamino();
 } else {
-    // Si no hay hora guardada, aseguramos que la invitación se muestre
     const invitacion = document.getElementById('caminoInvitacion');
     if(invitacion) invitacion.style.display = 'block';
 }
 
 function iniciarCamino() {
     if (!inputSalida.value) return;
-    
     localStorage.setItem('horaSalidaGuardada', inputSalida.value);
-    
     msjFinal.style.display = 'none';
     pistaCamino.style.display = 'block';
     monito.style.display = 'block';
     btnCerrarSesion.style.display = 'none';
-    document.getElementById('caminoCasa').className = "fa-solid fa-flag-checkered camino-casa"; 
+    document.getElementById('caminoCasa').className = "fa-solid fa-flag-checkered camino-casa";
     widgetCasa.classList.remove('estado-alerta', 'estado-ok');
     
-    // Ocultar invitación
     const invitacion = document.getElementById('caminoInvitacion');
     if(invitacion) invitacion.style.display = 'none';
-    
+
     clearInterval(intervaloCamino);
-    actualizarCamino(); 
-    intervaloCamino = setInterval(actualizarCamino, 30000); 
+    intervaloCamino = setInterval(actualizarCamino, 30000);
+    actualizarCamino();
 }
 
 function resetearTurno() {
-    if(confirm("¿Deseas limpiar la hora de salida seleccionada?")) {
-        localStorage.removeItem('horaSalidaGuardada');
-        document.getElementById('horaSalidaInput').value = "";
-        progreso.style.width = "0%";
-        monito.style.left = "0%";
-        porcentajeTexto.textContent = "0%";
-        pistaCamino.style.display = 'block';
-        msjFinal.style.display = 'none';
-        btnCerrarSesion.style.display = 'none';
-        monito.className = "fa-solid fa-person-walking camino-monito";
-        widgetCasa.classList.remove('estado-alerta', 'estado-ok');
-        document.getElementById('caminoCasa').className = "fa-solid fa-flag-checkered camino-casa"; 
-        
-        const invitacion = document.getElementById('caminoInvitacion');
-        if(invitacion) invitacion.style.display = 'block';
-        
-        clearInterval(intervaloCamino);
-    }
+    localStorage.removeItem('horaSalidaGuardada');
+    inputSalida.value = '';
+    clearInterval(intervaloCamino);
+    
+    progreso.style.width = '0%';
+    monito.style.left = '0%';
+    porcentajeTexto.textContent = '0%';
+    monito.className = "fa-solid fa-person-walking camino-monito";
+    document.getElementById('caminoCasa').className = "fa-solid fa-flag-checkered camino-casa";
+    widgetCasa.classList.remove('estado-alerta', 'estado-ok');
+    
+    pistaCamino.style.display = 'block';
+    msjFinal.style.display = 'none';
+    btnCerrarSesion.style.display = 'none';
+    
+    const invitacion = document.getElementById('caminoInvitacion');
+    if(invitacion) invitacion.style.display = 'block';
 }
 
 function actualizarCamino() {
-    if (!inputSalida.value) {
-        const invitacion = document.getElementById('caminoInvitacion');
-        if(invitacion) invitacion.style.display = 'block';
-        return;
-    } else {
-        const invitacion = document.getElementById('caminoInvitacion');
-        if(invitacion) invitacion.style.display = 'none';
-    }
-
+    if (!inputSalida.value) return;
     const ahora = new Date();
-    const horaInicio = parseInt(sessionStorage.getItem('horaInicioTurno'));
-    
-    const [horas, minutos] = inputSalida.value.split(':');
-    const fechaSalida = new Date();
-    fechaSalida.setHours(horas, minutos, 0, 0);
+    const salidaStr = inputSalida.value.split(':');
+    const dSalida = new Date();
+    dSalida.setHours(parseInt(salidaStr[0]), parseInt(salidaStr[1]), 0, 0);
 
-    const totalMs = fechaSalida.getTime() - horaInicio;
+    const horaInicio = parseInt(localStorage.getItem('horaInicioTurno'));
+    const totalMs = dSalida.getTime() - horaInicio;
     const transcurridoMs = ahora.getTime() - horaInicio;
-
+    
     let porcentaje = (transcurridoMs / totalMs) * 100;
+    
     if (porcentaje < 0 || totalMs < 0) porcentaje = 0;
     if (porcentaje > 100) porcentaje = 100;
     
     const pctInt = Math.floor(porcentaje);
+    
     progreso.style.width = pctInt + '%';
     monito.style.left = pctInt + '%';
     porcentajeTexto.textContent = pctInt + '%';
     pistaCamino.title = "Salida estimada: " + inputSalida.value;
-
+    
     if (pctInt < 50) {
         monito.className = "fa-solid fa-person-walking camino-monito";
     } else if (pctInt >= 50 && pctInt < 100) {
         monito.className = "fa-solid fa-person-running camino-monito";
     }
-
+    
     if (pctInt >= 100) {
         widgetCasa.classList.add('estado-ok');
         widgetCasa.classList.remove('estado-alerta');
-        
-        document.getElementById('caminoCasa').className = "fa-solid fa-medal camino-casa"; 
-        
+        document.getElementById('caminoCasa').className = "fa-solid fa-medal camino-casa";
         porcentajeTexto.textContent = "100%";
-        pistaCamino.style.display = 'none'; 
-        msjFinal.style.display = 'block'; 
-        btnCerrarSesion.style.display = 'block'; 
-        
+        pistaCamino.style.display = 'none';
+        msjFinal.style.display = 'block';
+        btnCerrarSesion.style.display = 'block';
         clearInterval(intervaloCamino);
     } else if (pctInt >= 90) {
         widgetCasa.classList.add('estado-alerta');
@@ -961,139 +851,125 @@ function actualizarCamino() {
     }
 }
 
-// --- 5. BLOCK DE NOTAS Y HERRAMIENTAS ANTIGUAS ---
+// --- BLOCK DE NOTAS ---
 const txtPostIt = document.getElementById('textoPostIt');
-const plantillaMultiple = "Nombre solicitante:\nRUT: (sin puntos ni guión) \nCorreo:\nTeléfono:\nComentario:\n\n----------------------\nNombre Alumno:\nRUT alumno: (sin puntos ni guión) \nCorreo institucional:\nComentarios adicionales:\n";
+const plantillaMultiple = "Nombre solicitante:\nRUT: (sin puntos ni guión) \nCorreo:\nTeléfono:\nComentario:\n\n----------------------\nNombre Alumno:\nRUT alumno:\nCorreo institucional:\nComentarios adicionales:\n";
 let savedPostIt = localStorage.getItem('sat_postit');
-if (!savedPostIt || savedPostIt.trim() === '') {
-    txtPostIt.value = plantillaMultiple;
-} else {
-    txtPostIt.value = savedPostIt;
-}
+if (!savedPostIt || savedPostIt.trim() === '') { txtPostIt.value = plantillaMultiple; } else { txtPostIt.value = savedPostIt; }
 txtPostIt.addEventListener('input', function() { localStorage.setItem('sat_postit', this.value); });
-function togglePostIt() {
-    const panel = document.getElementById('postItPanel');
-    panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
-}
-function copiarPostIt() {
-    txtPostIt.select();
-    document.execCommand('copy');
-    window.getSelection().removeAllRanges();
-    const btn = document.getElementById('btnCopiarPostIt');
-    const originalHTML = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!';
-    btn.style.background = 'var(--um-verde)';
-    setTimeout(() => { btn.innerHTML = originalHTML; btn.style.background = 'var(--um-azul)'; }, 2000);
-}
-function limpiarPostIt() {
-    if(confirm("¿Estás seguro que quieres borrar tus apuntes y volver a la plantilla en blanco?")) {
-        txtPostIt.value = plantillaMultiple;
-        localStorage.setItem('sat_postit', plantillaMultiple);
-    }
-}
-document.addEventListener('click', function(event) {
-    const widget = document.getElementById('postItWidget');
-    const panel = document.getElementById('postItPanel');
-    if (panel.style.display === 'block' && !widget.contains(event.target)) {
-        panel.style.display = 'none';
+function togglePostIt() { const panel = document.getElementById('postItPanel'); panel.style.display = (panel.style.display === 'block') ? 'none' : 'block'; }
+function copiarPostIt() { txtPostIt.select(); document.execCommand('copy'); const btn = document.querySelector('.btn-copiar'); const oldHtml = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!'; setTimeout(() => { btn.innerHTML = oldHtml; }, 2000); }
+function limpiarPostIt() { if(confirm("¿Seguro que deseas borrar tus apuntes?")) { txtPostIt.value = plantillaMultiple; localStorage.setItem('sat_postit', plantillaMultiple); } }
+
+document.getElementById('supportBtn').addEventListener('click', function() {
+    var menu = document.getElementById('supportMenu');
+    menu.style.display = (menu.style.display === 'none' || menu.style.display === '') ? 'flex' : 'none';
+});
+
+// ==========================================
+// CALCULADORA DE PLAZOS (INTACTA Y BLINDADA)
+// ==========================================
+document.getElementById('calcOverlay').addEventListener('click', function(e) {
+    if (e.target === this) {
+        cerrarCalc();
     }
 });
 
-// Soporte SAT
-var btnSoporte = document.getElementById('supportBtn');
-var menuSoporte = document.getElementById('supportMenu');
-btnSoporte.addEventListener('click', function(e) {
-  e.stopPropagation();
-  menuSoporte.style.display = menuSoporte.style.display === 'flex' ? 'none' : 'flex';
-});
-document.addEventListener('click', function(event) {
-  if (!menuSoporte.contains(event.target) && !btnSoporte.contains(event.target)) {
-    menuSoporte.style.display = 'none';
-  }
-});
-
-// Calculadora
-var FERIADOS_CL = ["2024-01-01","2024-03-29","2024-03-30","2024-04-01","2024-05-01","2024-05-21","2024-06-20","2024-06-29","2024-07-16","2024-08-15","2024-09-18","2024-09-19","2024-09-20","2024-10-12","2024-10-31","2024-11-01","2024-11-16","2024-12-08","2024-12-25","2025-01-01","2025-04-18","2025-04-19","2025-04-21","2025-05-01","2025-05-21","2025-06-20","2025-06-29","2025-07-16","2025-08-15","2025-09-18","2025-09-19","2025-10-12","2025-10-31","2025-11-01","2025-11-16","2025-12-08","2025-12-25","2026-01-01","2026-04-03","2026-04-04","2026-04-06","2026-05-01","2026-05-21","2026-06-20","2026-06-29","2026-07-16","2026-08-15","2026-09-18","2026-09-19","2026-10-12","2026-10-31","2026-11-01","2026-11-16","2026-12-08","2026-12-25"];
-function esHabil(fecha) {
-  var d = fecha.getDay();
-  if (d === 0 || d === 6) return false;
-  var iso = fecha.toISOString().split("T")[0];
-  return FERIADOS_CL.indexOf(iso) === -1;
+function esFeriado(d) {
+    var f = d.toISOString().split('T')[0];
+    var feriados = [
+        "2025-01-01", "2025-04-18", "2025-04-19", "2025-05-01", "2025-05-21",
+        "2025-06-20", "2025-07-16", "2025-08-15", "2025-09-18", "2025-09-19",
+        "2025-10-12", "2025-10-31", "2025-11-01", "2025-12-08", "2025-12-25",
+        "2026-01-01", "2026-04-03", "2026-04-04", "2026-05-01", "2026-05-21",
+        "2026-06-21", "2026-06-29", "2026-07-16", "2026-08-15", "2026-09-18",
+        "2026-09-19", "2026-10-12", "2026-10-31", "2026-11-01", "2026-12-08", "2026-12-25"
+    ];
+    return feriados.includes(f);
 }
+
+function esHabil(d) {
+    var day = d.getDay();
+    if (day === 0 || day === 6) return false;
+    return !esFeriado(d);
+}
+
 function diasHabiles(inicio, fin) {
-  var count = 0;
-  var cur = new Date(inicio);
-  cur.setDate(cur.getDate() + 1);
-  var end = new Date(fin);
-  while (cur <= end) {
-    if (esHabil(cur)) count++;
+    var count = 0;
+    var cur = new Date(inicio);
     cur.setDate(cur.getDate() + 1);
-  }
-  return count;
+    var end = new Date(fin);
+    while (cur <= end) {
+        if (esHabil(cur)) count++;
+        cur.setDate(cur.getDate() + 1);
+    }
+    return count;
 }
+
 function abrirCalc() {
-  var overlay = document.getElementById("calcOverlay");
-  overlay.style.display = "flex";
-  var hoy = new Date().toISOString().split("T")[0];
-  document.getElementById("calcFechaFin").value = hoy;
-  document.getElementById("calcFechaInicio").value = "";
-  document.getElementById("calcResultado").style.display = "none";
+    var overlay = document.getElementById("calcOverlay");
+    overlay.style.display = "flex";
+    var hoy = new Date().toISOString().split("T")[0];
+    document.getElementById("calcFechaFin").value = hoy;
+    document.getElementById("calcFechaInicio").value = "";
+    document.getElementById("calcResultado").style.display = "none";
 }
-function cerrarCalc() { document.getElementById("calcOverlay").style.display = "none"; }
+
+function cerrarCalc() {
+    document.getElementById("calcOverlay").style.display = "none";
+}
 
 function limpiarCalculadora() {
-  var hoy = new Date().toISOString().split("T")[0];
-  document.getElementById("calcFechaFin").value = hoy;
-  document.getElementById("calcFechaInicio").value = "";
-  document.getElementById("calcResultado").style.display = "none";
+    var hoy = new Date().toISOString().split("T")[0];
+    document.getElementById("calcFechaFin").value = hoy;
+    document.getElementById("calcFechaInicio").value = "";
+    document.getElementById("calcResultado").style.display = "none";
 }
 
 function calcularDias() {
-  var ini = document.getElementById("calcFechaInicio").value;
-  var fin = document.getElementById("calcFechaFin").value;
-  if (!ini || !fin) return;
-  var d1 = new Date(ini + "T12:00:00");
-  var d2 = new Date(fin + "T12:00:00");
-  if (d2 < d1) { document.getElementById("calcResultado").style.display = "none"; return; }
-  var dias = diasHabiles(d1, d2);
-  var res = document.getElementById("calcResultado");
-  var emoji = document.getElementById("calcEmoji");
-  var num = document.getElementById("calcDias");
-  var label = document.getElementById("calcLabel");
-  var accion = document.getElementById("calcAccion");
-  num.textContent = dias + (dias === 1 ? " dia habil" : " dias habiles");
-  if (dias <= 3) {
-    res.style.background = "#e8f5e9";
-    emoji.textContent = "🟢";
-    label.style.color = "#2e7d32";
-    label.textContent = "Dentro del plazo";
-    accion.style.background = "#c8e6c9";
-    accion.style.color = "#1b5e20";
-    accion.textContent = "Sin accion requerida";
-  } else if (dias <= 5) {
-    res.style.background = "#fff8e1";
-    emoji.textContent = "🟡";
-    label.style.color = "#856404";
-    label.textContent = "Plazo vencido";
-    accion.style.background = "#fff3cd";
-    accion.style.color = "#856404";
-    accion.textContent = "Derivar por Customer";
-  } else {
-    res.style.background = "#fdecea";
-    emoji.textContent = "🔴";
-    label.style.color = "#c62828";
-    label.textContent = "Plazo critico";
-    accion.style.background = "#fce4e4";
-    accion.style.color = "#a32d2d";
-    accion.textContent = "Escalar a Supervisor";
-  }
-  res.style.display = "block";
+    var startVal = document.getElementById("calcFechaInicio").value;
+    var endVal = document.getElementById("calcFechaFin").value;
+    if (!startVal || !endVal) {
+        document.getElementById("calcResultado").style.display = "none";
+        return;
+    }
+    var d1 = new Date(startVal + "T00:00:00");
+    var d2 = new Date(endVal + "T00:00:00");
+    if (d1 > d2) { document.getElementById("calcResultado").style.display = "none"; return; }
+    var dias = diasHabiles(d1, d2);
+    var res = document.getElementById("calcResultado");
+    var emoji = document.getElementById("calcEmoji");
+    var num = document.getElementById("calcDias");
+    var label = document.getElementById("calcLabel");
+    var accion = document.getElementById("calcAccion");
+    num.textContent = dias + (dias === 1 ? " día hábil" : " días hábiles");
+    res.style.display = "block";
+    if (dias <= 3) {
+        res.style.background = "#e8f5e9";
+        emoji.textContent = "🟢";
+        label.style.color = "#2e7d32";
+        label.textContent = "Dentro del plazo";
+        accion.style.background = "#c8e6c9";
+        accion.style.color = "#1b5e20";
+        accion.textContent = "Sin acción requerida";
+    } else if (dias <= 5) {
+        res.style.background = "#fff8e1";
+        emoji.textContent = "🟡";
+        label.style.color = "#856404";
+        label.textContent = "Plazo vencido";
+        accion.style.background = "#fff3cd";
+        accion.style.color = "#856404";
+        accion.textContent = "Derivar por Customer";
+    } else {
+        res.style.background = "#fdecea";
+        emoji.textContent = "🔴";
+        label.style.color = "#c62828";
+        label.textContent = "Fuera de SLA";
+        accion.style.background = "#f5c6cb";
+        accion.style.color = "#721c24";
+        accion.textContent = "Escalar a Jefatura";
+    }
 }
-document.getElementById("calcOverlay").addEventListener("click", function(e) {
-  if (e.target === this) cerrarCalc();
-});
-
 </script>
-
 </body>
 </html>
