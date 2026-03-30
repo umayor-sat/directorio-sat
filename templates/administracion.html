@@ -206,9 +206,33 @@
                     <h3 id="tituloFormularioAlerta" style="color:var(--rojo);"><span><i class="fa-solid fa-bell"></i> Nueva Alerta</span></h3>
                     <input type="hidden" id="alertaId" value="">
                     
-                    <div class="campo" style="margin-bottom:12px;">
-                        <label>Categoría / Título</label>
-                        <input type="text" id="alertaCategoria" placeholder="Ej: Falla en CRM, Aviso TI...">
+                    <div class="grid-formulario" style="grid-template-columns: 1fr; gap:12px; margin-bottom:12px;">
+                        <div class="campo">
+                            <label>Categoría / Título</label>
+                            <input type="text" id="alertaCategoria" list="listaCategorias" placeholder="Selecciona o escribe una nueva...">
+                            <datalist id="listaCategorias">
+                                <option value="Falla General de Sistemas">
+                                <option value="Intermitencia Portal Financiero">
+                                <option value="Lentitud en CRM">
+                                <option value="Aviso TI / Mantenimiento">
+                                <option value="Caída de Telefonía">
+                            </datalist>
+                        </div>
+                    </div>
+
+                    <div class="grid-formulario" style="grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
+                        <div class="campo">
+                            <label>Nivel (Semáforo)</label>
+                            <select id="alertaColor">
+                                <option value="rojo">🔴 Crítico (Rojo)</option>
+                                <option value="amarillo">🟡 Intermitencia (Amarillo)</option>
+                                <option value="verde">🟢 Informativo (Verde)</option>
+                            </select>
+                        </div>
+                        <div class="campo">
+                            <label>Duración (Horas)</label>
+                            <input type="number" id="alertaDuracion" value="24" min="1" placeholder="Ej: 12">
+                        </div>
                     </div>
                     
                     <div class="campo" style="margin-bottom:12px;">
@@ -218,7 +242,7 @@
                     
                     <div class="campo" style="margin-bottom:12px;">
                         <label class="campo-check" style="color:var(--texto);">
-                            <input type="checkbox" id="alertaActivo" checked> Alerta Activa en el Home
+                            <input type="checkbox" id="alertaActivo" checked> Alerta visible en el Home
                         </label>
                     </div>
 
@@ -233,11 +257,11 @@
                         <h3 style="margin:0; font-size:14px; color:var(--texto);"><i class="fa-solid fa-list"></i> Historial de Alertas</h3>
                         <button class="btn-accion btn-exportar" style="height:30px; font-size:11px;" onclick="exportarTablaLimpia('tablaAlertas', 'Historial_Alertas_SAT')"><i class="fa-solid fa-file-excel"></i> Exportar</button>
                     </div>
-                    <div class="table-container" style="max-height: 350px; overflow-y: auto; border: 1px solid var(--borde); border-radius: 8px;">
+                    <div class="table-container" style="max-height: 480px; overflow-y: auto; border: 1px solid var(--borde); border-radius: 8px;">
                         <table id="tablaAlertas" style="margin-top:0;">
                             <thead>
                                 <tr>
-                                    <th>Categoría</th>
+                                    <th>Semáforo / Categoría</th>
                                     <th>Mensaje</th>
                                     <th style="text-align:center;">Estado</th>
                                     <th style="text-align:center;" class="columna-acciones">Acción</th>
@@ -262,10 +286,25 @@
                     
                     <div class="campo" style="margin-bottom:12px;">
                         <label>Texto del Mensaje</label>
-                        <textarea id="motivMensaje" rows="4" placeholder="Ej: Recuerda sonreír en cada llamada, ¡hace la diferencia!"></textarea>
+                        <textarea id="motivMensaje" rows="3" placeholder="Ej: Recuerda sonreír en cada llamada..."></textarea>
                     </div>
                     
-                    <div class="grid-formulario" style="grid-template-columns: 1fr 1fr; align-items: center;">
+                    <div class="grid-formulario" style="grid-template-columns: 1fr 1fr 1fr; gap:12px; margin-bottom:12px;">
+                        <div class="campo">
+                            <label>Prioridad</label>
+                            <input type="number" id="motivPrioridad" value="1" min="1" title="Orden de aparición (1 es el primero)">
+                        </div>
+                        <div class="campo">
+                            <label>Categoría</label>
+                            <input type="text" id="motivCategoria" placeholder="Ej: Motivacional">
+                        </div>
+                        <div class="campo">
+                            <label>Fecha Especial</label>
+                            <input type="text" id="motivFecha" placeholder="MM-DD (Ej: 12-25)">
+                        </div>
+                    </div>
+
+                    <div class="grid-formulario" style="grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px; align-items: center;">
                         <div class="campo">
                             <label>Duración (Mins)</label>
                             <input type="number" id="motivDuracion" value="3" min="1" title="Tiempo que permanecerá visible antes de rotar">
@@ -288,12 +327,12 @@
                         <h3 style="margin:0; font-size:14px; color:var(--texto);"><i class="fa-solid fa-list"></i> Mensajes Rotativos</h3>
                         <button class="btn-accion btn-exportar" style="height:30px; font-size:11px;" onclick="exportarTablaLimpia('tablaMotivacionales', 'Mensajes_SAT')"><i class="fa-solid fa-file-excel"></i> Exportar</button>
                     </div>
-                    <div class="table-container" style="max-height: 350px; overflow-y: auto; border: 1px solid var(--borde); border-radius: 8px;">
+                    <div class="table-container" style="max-height: 480px; overflow-y: auto; border: 1px solid var(--borde); border-radius: 8px;">
                         <table id="tablaMotivacionales" style="margin-top:0;">
                             <thead>
                                 <tr>
                                     <th>Mensaje</th>
-                                    <th style="text-align:center;">Mins</th>
+                                    <th style="text-align:center;">Pri/Min</th>
                                     <th style="text-align:center;">Estado</th>
                                     <th style="text-align:center;" class="columna-acciones">Acción</th>
                                 </tr>
@@ -449,10 +488,7 @@
         const tabla = document.getElementById(tablaId);
         if (!tabla) return alert("No se encontró la tabla a exportar.");
         
-        // Clonar la tabla para no afectar la vista HTML
         const clon = tabla.cloneNode(true);
-        
-        // Remover la última columna (Acciones) de cada fila (thead y tbody)
         const filas = clon.querySelectorAll('tr');
         filas.forEach(fila => {
             if(fila.children.length > 0) {
@@ -460,7 +496,6 @@
             }
         });
 
-        // Exportar clon limpio
         const wb = XLSX.utils.table_to_book(clon, { sheet: "Reporte" });
         const hoy = new Date();
         const fecha = `${hoy.getDate()}-${hoy.getMonth()+1}-${hoy.getFullYear()}`;
@@ -506,7 +541,7 @@
         });
     }
 
-    function exportarExcel() { // Mantenemos la función original JSON para casos
+    function exportarExcel() {
         if (datosParaExcel.length === 0) return alert("No hay datos para exportar.");
         const hoja = XLSX.utils.json_to_sheet(datosParaExcel);
         const libro = XLSX.utils.book_new();
@@ -565,17 +600,14 @@
 
     function subirFormStaff(id, nombre, mail, rol, activo, user, pass, nivel) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
-
         document.getElementById('ejecutivoId').value = id;
         document.getElementById('formNombre').value = nombre;
         document.getElementById('formMail').value = mail;
         document.getElementById('formRol').value = (['apoyo', 'staff', 'supervisor'].includes(rol)) ? rol : 'apoyo';
         document.getElementById('formActivo').checked = activo;
-        
         document.getElementById('formLoginUser').value = user;
         document.getElementById('formLoginPass').value = pass;
         document.getElementById('formNivelAcceso').value = nivel || 'usuario';
-
         document.getElementById('tituloFormulario').innerHTML = `<span><i class="fa-solid fa-pen"></i> Editando a: ${nombre}</span>`;
         document.getElementById('panelFormulario').style.border = "2px solid #f39c12";
         document.getElementById('btnCancelarStaff').style.display = "inline-block";
@@ -587,11 +619,9 @@
         document.getElementById('formMail').value = '';
         document.getElementById('formRol').value = 'apoyo'; 
         document.getElementById('formActivo').checked = true;
-        
         document.getElementById('formLoginUser').value = '';
         document.getElementById('formLoginPass').value = '';
         document.getElementById('formNivelAcceso').value = 'usuario';
-
         document.getElementById('tituloFormulario').innerHTML = `<span><i class="fa-solid fa-user-plus"></i> Añadir Nuevo Ejecutivo</span>`;
         document.getElementById('panelFormulario').style.border = "1px solid var(--borde)";
         document.getElementById('btnCancelarStaff').style.display = "none";
@@ -603,7 +633,6 @@
         const mail = document.getElementById('formMail').value.trim();
         const rol = document.getElementById('formRol').value.toLowerCase(); 
         const activo = document.getElementById('formActivo').checked;
-        
         const login_user = document.getElementById('formLoginUser').value.trim();
         const login_password = document.getElementById('formLoginPass').value.trim();
         const nivel_acceso = document.getElementById('formNivelAcceso').value;
@@ -611,7 +640,6 @@
         if (!nombre) return alert("El nombre es obligatorio.");
         
         const paquete = { nombre, mail, rol, activo, login_user, login_password, nivel_acceso };
-
         if (id) await _supabase.from('ejecutivos').update(paquete).eq('id', id);
         else await _supabase.from('ejecutivos').insert([paquete]);
         
@@ -628,34 +656,39 @@
     }
 
     // ==========================================
-    // LÓGICA: PESTAÑA MENSAJES (Alertas y Motiv)
+    // LÓGICA: PESTAÑA MENSAJES Y ALERTAS (USANDO COLUMNAS REALES)
     // ==========================================
     
     // --- ALERTAS ---
     async function cargarAlertas() {
         try {
-            const res = await fetch('/api/alertas-operativas');
-            const data = await res.json();
+            const { data, error } = await _supabase.from('alertas_operativas').select('*').order('created_at', { ascending: false });
             const tbody = document.getElementById('tbodyAlertas');
             tbody.innerHTML = '';
             
-            if(data.error) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Error cargando alertas.</td></tr>`;
-            if(data.length === 0) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No hay alertas registradas.</td></tr>`;
+            if(error) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Error cargando alertas.</td></tr>`;
+            if(!data || data.length === 0) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No hay alertas registradas.</td></tr>`;
 
             data.forEach(a => {
-                if(a.es_default) return; // Ocultamos la de sistema por defecto
-                const badge = a.activo ? `<span class="badge activo">Activa</span>` : `<span class="badge inactivo">Inactiva</span>`;
+                if(a.es_default) return; 
+                
+                const badge = a.estado ? `<span class="badge activo">Activa</span>` : `<span class="badge inactivo" style="background:var(--rojo);">Inactiva</span>`;
                 const catSegura = a.categoria ? a.categoria.replace(/'/g, "\\'") : '';
                 const msjSeguro = a.mensaje ? a.mensaje.replace(/'/g, "\\'") : '';
                 
+                // Mapeo del semáforo leyendo tu columna 'color'
+                let iconoSem = '🔴';
+                if(a.color === 'verde') iconoSem = '🟢';
+                if(a.color === 'amarillo') iconoSem = '🟡';
+
                 tbody.innerHTML += `
                     <tr>
-                        <td style="font-weight:bold; color:var(--rojo);">${a.categoria}</td>
+                        <td style="font-weight:bold; color:#444;">${iconoSem} ${a.categoria || 'Sin Categoría'}</td>
                         <td style="font-size:12px;">${a.mensaje}</td>
                         <td style="text-align:center;">${badge}</td>
                         <td style="text-align:center; white-space:nowrap;">
-                            <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormAlerta(${a.id}, '${catSegura}', '${msjSeguro}', ${a.activo})"><i class="fa-solid fa-pen"></i></button>
-                            <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarAlerta(${a.id})"><i class="fa-solid fa-trash"></i></button>
+                            <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormAlerta('${a.id}', '${catSegura}', '${msjSeguro}', ${a.estado}, '${a.color || 'rojo'}')"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarAlerta('${a.id}')"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
@@ -663,11 +696,14 @@
         } catch (e) { console.error(e); }
     }
 
-    function subirFormAlerta(id, categoria, mensaje, activo) {
+    function subirFormAlerta(id, categoria, mensaje, activo, color) {
         document.getElementById('alertaId').value = id;
         document.getElementById('alertaCategoria').value = categoria;
         document.getElementById('alertaMensaje').value = mensaje;
         document.getElementById('alertaActivo').checked = activo;
+        document.getElementById('alertaColor').value = color;
+        // Al editar reiniciamos el input de duración por si quieren sumarle más horas desde AHORA
+        document.getElementById('alertaDuracion').value = 24;
 
         document.getElementById('tituloFormularioAlerta').innerHTML = `<span><i class="fa-solid fa-pen"></i> Editando Alerta</span>`;
         document.getElementById('panelFormularioAlerta').style.border = "2px solid #f39c12";
@@ -679,6 +715,8 @@
         document.getElementById('alertaCategoria').value = '';
         document.getElementById('alertaMensaje').value = '';
         document.getElementById('alertaActivo').checked = true;
+        document.getElementById('alertaColor').value = 'rojo';
+        document.getElementById('alertaDuracion').value = '24';
 
         document.getElementById('tituloFormularioAlerta').innerHTML = `<span><i class="fa-solid fa-bell"></i> Nueva Alerta</span>`;
         document.getElementById('panelFormularioAlerta').style.border = "1px solid var(--borde)";
@@ -689,22 +727,39 @@
         const id = document.getElementById('alertaId').value;
         const categoria = document.getElementById('alertaCategoria').value.trim();
         const mensaje = document.getElementById('alertaMensaje').value.trim();
-        const activo = document.getElementById('alertaActivo').checked;
+        const estado = document.getElementById('alertaActivo').checked;
+        const color = document.getElementById('alertaColor').value;
+        const duracion = parseInt(document.getElementById('alertaDuracion').value) || 24;
         
         if (!categoria || !mensaje) return alert("Categoría y Mensaje son obligatorios.");
         
-        const payload = { categoria, mensaje, activo, es_default: false };
-        let endpoint = id ? `/api/alertas-operativas/editar/${id}` : '/api/alertas-operativas/nuevo';
-        let method = id ? 'PUT' : 'POST';
+        // Calculamos las fechas en base a la duración solicitada
+        const ahora = new Date();
+        const fin = new Date(ahora.getTime() + (duracion * 60 * 60 * 1000));
 
-        await fetch(endpoint, { method: method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+        const paquete = { 
+            categoria, 
+            mensaje, 
+            estado, 
+            color,
+            fecha_hora_inicio: ahora.toISOString(),
+            fecha_hora_fin: fin.toISOString()
+        };
+
+        if (id) {
+            await _supabase.from('alertas_operativas').update(paquete).eq('id', id);
+        } else {
+            paquete.es_default = false;
+            await _supabase.from('alertas_operativas').insert([paquete]);
+        }
+        
         limpiarFormularioAlerta();
         cargarAlertas();
     }
 
     async function borrarAlerta(id) {
-        if (confirm("¿Eliminar esta alerta?")) {
-            await fetch(`/api/alertas-operativas/eliminar/${id}`, { method: 'DELETE' });
+        if (confirm("¿Eliminar esta alerta permanentemente?")) {
+            await _supabase.from('alertas_operativas').delete().eq('id', id);
             limpiarFormularioAlerta();
             cargarAlertas();
         }
@@ -713,25 +768,30 @@
     // --- MOTIVACIONALES ---
     async function cargarMotivacionales() {
         try {
-            const res = await fetch('/api/mensajes-rotativos');
-            const data = await res.json();
+            const { data, error } = await _supabase.from('mensajes_rotativos').select('*').order('created_at', { ascending: false });
             const tbody = document.getElementById('tbodyMotivacionales');
             tbody.innerHTML = '';
             
-            if(data.error || data.length === 0) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No hay mensajes registrados.</td></tr>`;
+            if(error) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Error cargando mensajes.</td></tr>`;
+            if(!data || data.length === 0) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No hay mensajes registrados.</td></tr>`;
 
             data.forEach(m => {
-                const badge = m.activo ? `<span class="badge activo">Activo</span>` : `<span class="badge inactivo" style="background:gray;">Inactivo</span>`;
+                const badge = m.estado ? `<span class="badge activo">Activo</span>` : `<span class="badge inactivo" style="background:var(--rojo);">Inactivo</span>`;
                 const msjSeguro = m.mensaje ? m.mensaje.replace(/'/g, "\\'") : '';
+                const catSegura = m.categoria ? m.categoria.replace(/'/g, "\\'") : '';
+                const fechaSegura = m.fecha_mmdd ? m.fecha_mmdd.replace(/'/g, "\\'") : '';
                 
                 tbody.innerHTML += `
                     <tr>
-                        <td style="font-size:12px;"><strong>${m.mensaje}</strong></td>
-                        <td style="text-align:center;">${m.duracion_min || 3}</td>
+                        <td style="font-size:12px;">
+                            <strong>${m.mensaje}</strong>
+                            ${m.fecha_mmdd ? `<br><span style="color:var(--um-azul); font-size:10px;">📅 Especial: ${m.fecha_mmdd}</span>` : ''}
+                        </td>
+                        <td style="text-align:center;">${m.prioridad || 1} / ${m.duracion_min || 3}m</td>
                         <td style="text-align:center;">${badge}</td>
                         <td style="text-align:center; white-space:nowrap;">
-                            <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormMotiv(${m.id}, '${msjSeguro}', ${m.duracion_min || 3}, ${m.activo})"><i class="fa-solid fa-pen"></i></button>
-                            <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarMotiv(${m.id})"><i class="fa-solid fa-trash"></i></button>
+                            <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormMotiv('${m.id}', '${msjSeguro}', ${m.duracion_min || 3}, ${m.estado}, ${m.prioridad || 1}, '${catSegura}', '${fechaSegura}')"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarMotiv('${m.id}')"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
@@ -739,11 +799,14 @@
         } catch (e) { console.error(e); }
     }
 
-    function subirFormMotiv(id, mensaje, duracion, activo) {
+    function subirFormMotiv(id, mensaje, duracion, estado, prioridad, categoria, fecha_mmdd) {
         document.getElementById('motivId').value = id;
         document.getElementById('motivMensaje').value = mensaje;
         document.getElementById('motivDuracion').value = duracion;
-        document.getElementById('motivActivo').checked = activo;
+        document.getElementById('motivActivo').checked = estado;
+        document.getElementById('motivPrioridad').value = prioridad;
+        document.getElementById('motivCategoria').value = categoria;
+        document.getElementById('motivFecha').value = fecha_mmdd;
 
         document.getElementById('tituloFormularioMotiv').innerHTML = `<span><i class="fa-solid fa-pen"></i> Editando Mensaje</span>`;
         document.getElementById('panelFormularioMotiv').style.border = "2px solid #f39c12";
@@ -755,6 +818,9 @@
         document.getElementById('motivMensaje').value = '';
         document.getElementById('motivDuracion').value = '3';
         document.getElementById('motivActivo').checked = true;
+        document.getElementById('motivPrioridad').value = '1';
+        document.getElementById('motivCategoria').value = '';
+        document.getElementById('motivFecha').value = '';
 
         document.getElementById('tituloFormularioMotiv').innerHTML = `<span><i class="fa-solid fa-pen"></i> Nuevo Mensaje</span>`;
         document.getElementById('panelFormularioMotiv').style.border = "1px solid var(--borde)";
@@ -764,23 +830,29 @@
     async function guardarMotivacional() {
         const id = document.getElementById('motivId').value;
         const mensaje = document.getElementById('motivMensaje').value.trim();
-        const duracion_min = document.getElementById('motivDuracion').value;
-        const activo = document.getElementById('motivActivo').checked;
+        const duracion_min = parseInt(document.getElementById('motivDuracion').value) || 3;
+        const estado = document.getElementById('motivActivo').checked;
+        const prioridad = parseInt(document.getElementById('motivPrioridad').value) || 1;
+        const categoria = document.getElementById('motivCategoria').value.trim() || null;
+        const fecha_mmdd = document.getElementById('motivFecha').value.trim() || null;
         
         if (!mensaje) return alert("El texto del mensaje es obligatorio.");
         
-        const payload = { mensaje, duracion_min, activo };
-        let endpoint = id ? `/api/mensajes-rotativos/editar/${id}` : '/api/mensajes-rotativos/nuevo';
-        let method = id ? 'PUT' : 'POST';
+        const paquete = { mensaje, duracion_min, estado, prioridad, categoria, fecha_mmdd };
 
-        await fetch(endpoint, { method: method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+        if (id) {
+            await _supabase.from('mensajes_rotativos').update(paquete).eq('id', id);
+        } else {
+            await _supabase.from('mensajes_rotativos').insert([paquete]);
+        }
+        
         limpiarFormularioMotiv();
         cargarMotivacionales();
     }
 
     async function borrarMotiv(id) {
-        if (confirm("¿Eliminar este mensaje?")) {
-            await fetch(`/api/mensajes-rotativos/eliminar/${id}`, { method: 'DELETE' });
+        if (confirm("¿Eliminar este mensaje permanentemente?")) {
+            await _supabase.from('mensajes_rotativos').delete().eq('id', id);
             limpiarFormularioMotiv();
             cargarMotivacionales();
         }
@@ -852,7 +924,6 @@
 
     function subirFormEnlace(id, nombre, url, categoria, icono, orden) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
-
         document.getElementById('linkId').value = id;
         document.getElementById('linkNombre').value = nombre;
         document.getElementById('linkUrl').value = url;
@@ -874,7 +945,6 @@
         const orden = document.getElementById('linkOrden').value;
         
         if (!nombre_link || !url) return alert("El nombre y la URL son obligatorios.");
-        
         const payload = { nombre_link, url, categoria, icono, orden };
         
         try {
@@ -928,8 +998,8 @@
         cargarRegistros();
         cargarEjecutivos();
         cargarEnlaces();
-        cargarAlertas();         // NUEVO
-        cargarMotivacionales();  // NUEVO
+        cargarAlertas();         
+        cargarMotivacionales();  
     });
 
 </script>
