@@ -58,16 +58,15 @@ body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--f
 .links-hover { position: relative; cursor: pointer; font-weight: 700; color: #222; height: 100%; display: flex; align-items: center; }
 .links-hover i { font-size: 14px; opacity: 0.8; margin-right: 4px; }
 
-/* PANEL MEGA-MENÚ GRID (CARAMELO 1: MENÚ GRIS) */
+/* INSTRUCCIÓN OBLIGATORIA: MEGA-MENÚ SALVA-RETINAS */
 .links-hover ul { 
     list-style: none; margin: 0; padding: 20px; 
     position: absolute; top: 100%; left: 0; 
-    background: var(--um-gris); /* <-- Ajuste de color para salvar retinas */
-    min-width: 400px; 
-    max-width: 800px;
+    background: #3d3d3d;
+    min-width: 400px; max-width: 800px;
     box-shadow: 0 15px 35px rgba(0,0,0,0.15); 
     border-radius: 0 0 8px 8px; 
-    border: 1px solid var(--borde); border-top: none; 
+    border: 1px solid rgba(255,255,255,0.1); border-top: none; 
     display: none; z-index: 9999; 
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
     gap: 10px 20px;
@@ -75,20 +74,25 @@ body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--f
 .links-hover:hover ul, .links-hover.activo ul { display: grid; } 
 .links-hover ul li { padding: 0; }
 .links-hover ul li a { 
-    text-decoration: none; color: var(--texto); 
+    text-decoration: none; color: #ffffff; 
     display: flex; align-items: center; gap: 8px; 
-    padding: 8px 12px; border-bottom: 1px solid var(--borde); 
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.08); 
     transition: background 0.15s, color 0.15s, padding-left 0.15s; 
     font-weight: normal; font-size: 13px;
 }
-.links-hover ul li a i { font-size: 12px; color: var(--texto-suave); transition: color 0.15s; }
-.links-hover ul li a:hover { 
-    background: var(--borde); /* <-- Ajuste para que se vea el hover sobre el gris */
-    color: var(--um-azul); 
-    font-weight: bold; 
-    padding-left: 16px; 
+.links-hover ul li a i { 
+    font-size: 12px; 
+    color: rgba(255,255,255,0.4);
+    transition: color 0.15s;
 }
-.links-hover ul li a:hover i { color: var(--um-azul); }
+.links-hover ul li a:hover { 
+    background: rgba(255,255,255,0.1);
+    color: #f2b705;
+    font-weight: bold;
+    padding-left: 16px;
+}
+.links-hover ul li a:hover i { color: #f2b705; }
 
 .top-actions-container { display: flex; align-items: center; gap: 12px; }
 .user-name-display { font-weight: 700; color: #222; font-size: 14px; margin-right: 5px; text-transform: uppercase; }
@@ -132,7 +136,7 @@ body.dark-mode .btn-dark-mode { background: #333; color: #fff; }
 
 /* Bloque Derecho: Gamificación */
 .wb-right { display: flex; justify-content: flex-end; width: 100%; }
-.camino-casa-widget { width: 100%; max-width: 320px; background: var(--fondo); border: 1px solid var(--borde); border-radius: 12px; padding: 12px 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+.camino-casa-widget { width: 100%; max-width: 380px; background: var(--fondo); border: 1px solid var(--borde); border-radius: 12px; padding: 12px 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 .camino-header { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 600; color: var(--texto-suave); }
 .camino-porcentaje { font-size: 16px; font-weight: 800; color: var(--um-azul); }
 
@@ -152,7 +156,10 @@ body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
 .btn-editar-hora:hover { opacity: 0.7; }
 .btn-logout-game { display: none; width: 100%; margin-top: 10px; background-color: var(--um-verde); color: white; text-align: center; text-decoration: none; padding: 8px; border-radius: 6px; font-size: 13px; font-weight: bold; transition: background 0.2s; animation: fadeIn 1s; position: relative; z-index: 10;}
 .btn-logout-game:hover { background-color: #144a2d; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+@keyframes pulseSutil { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 0.8; } }
+.pulse-invitacion { animation: pulseSutil 2s infinite; }
+.camino-invitacion { font-size: 11px; color: var(--texto-suave); font-style: italic; margin-top: 10px; text-align: center; }
 
 /* Estados dinámicos de la barra */
 .estado-alerta .camino-progress { background: var(--um-amarillo); }
@@ -165,18 +172,38 @@ body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
 @keyframes latido { 0% { transform: scale(1); } 50% { transform: scale(1.12); } 100% { transform: scale(1); } }
 @keyframes parpadeoSuave { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 .alerta-activa-icono { animation: parpadeoSuave 1.5s infinite ease-in-out !important; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
 /* -------------------------------------------
    ESTRUCTURA PRINCIPAL (Z-index normalizado)
 ------------------------------------------- */
 .main-content { padding: 32px 20px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; }
 
-/* --- NIVEL 1: TARJETAS --- */
-.dashboard-widgets { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 16px; text-align: left; margin-bottom: 24px; }
+/* --- NUEVO LAYOUT PRINCIPAL (GRID 2 COLUMNAS) --- */
+.layout-principal {  
+  display: grid;  
+  grid-template-columns: 1fr 1fr;  
+  grid-template-rows: auto auto;  
+  gap: 16px;  
+  margin-bottom: 24px;
+}
+.col-accesos {  
+  display: flex;  
+  flex-direction: column;  
+  gap: 16px;
+}
+.col-contexto {  
+  display: flex;  
+  flex-direction: column;  
+  gap: 16px;
+}
+@media (max-width: 768px) {  
+  .layout-principal { grid-template-columns: 1fr; }
+}
+
 .widget-box { background: var(--card-bg); border: 1px solid var(--borde); border-radius: 10px; padding: 18px 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
 
-/* --- NIVEL 2: DIRECTORIOS PRIMARIOS --- */
-.buttons-primary { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 24px; }
+/* --- BOTONES PRIMARIOS --- */
 .btn-primary-item { background: var(--card-bg); border: 2px solid var(--borde); border-radius: 10px; padding: 18px 14px; text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; transition: transform .15s, border-color .15s; position: relative; z-index: 10;}
 .btn-primary-item:hover { transform: translateY(-2px); border-color: var(--um-azul); }
 .btn-primary-item .icono { font-size: 22px; margin-bottom: 8px; color: var(--um-azul); }
@@ -301,7 +328,11 @@ footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin:
                     <button class="btn-editar-hora" onclick="document.getElementById('horaSalidaInput').focus()" title="Modificar hora de salida (incluye horas extras)">
                         <i class="fa-solid fa-pencil"></i> Editar
                     </button>
+                    <button class="btn-editar-hora" style="color: #e74c3c;" onclick="resetearTurno()" title="Borrar hora de salida">
+                        <i class="fa-solid fa-eraser"></i>
+                    </button>
                 </div>
+                <div id="caminoInvitacion" class="camino-invitacion pulse-invitacion">⏳ Fija tu hora de salida para iniciar el viaje</div>
                 <a href="/logout" class="btn-logout-game" id="btnCerrarSesionJuego">
                     <i class="fa-solid fa-power-off"></i> Finalizar Turno y Salir
                 </a>
@@ -330,37 +361,41 @@ footer { text-align: center; font-size: 13px; color: var(--texto-suave); margin:
 
 <div class="main-content">
 
-  <div class="dashboard-widgets">
-      <div class="widget-box" style="border-top: 4px solid #e74c3c;">
-          <h3 style="margin-bottom: 0;"><i class="fa-solid fa-triangle-exclamation" id="icono-alerta" style="color:#e74c3c; transition: color 0.5s;"></i> <span style="color:#e74c3c;">Alerta Operativa</span></h3>
-          <div id="caja-alertas" style="margin-top: 12px; padding: 14px; border-radius: 6px; background-color: #fdecea; border-left: 4px solid #c62828; transition: all 1s ease-in-out;">
-              <div id="texto-alertas" style="color: #c62828; font-size: 14px; font-weight: 500; transition: opacity 0.5s;">
-                  <i class="fa-solid fa-spinner fa-spin"></i> Conectando al panel de estado...
-              </div>
-          </div>
-      </div>
+  <div class="layout-principal">
+    <div class="col-accesos">
+      <a href="/escuelas" class="btn-primary-item">
+        <div class="icono"><i class="fa-solid fa-book-bookmark"></i></div>
+        <div class="titulo">Directorio de Escuelas</div>
+        <div class="desc">Busca por nombre, sede o cargo</div>
+      </a>
+      <a href="/contactos-administrativos" class="btn-primary-item">
+        <div class="icono"><i class="fa-solid fa-building-user"></i></div>
+        <div class="titulo">Contactos Administrativos</div>
+        <div class="desc">Áreas, roles y contactos internos</div>
+      </a>
+    </div>
+
+    <div class="col-contexto">
       
       <div class="widget-box" style="border-top: 4px solid var(--um-verde);">
-          <h3 style="margin-bottom: 0; color: var(--um-verde);">✨ Para tener en cuenta</h3>
-          <div id="caja-mensajes" style="margin-top: 12px; padding: 14px; border-radius: 6px; background-color: #e8f5e9; border-left: 4px solid #2e7d32; display: flex; align-items: center; min-height: 52px;">
-              <div id="texto-mensajes" style="color: #1b5e20; font-size: 14px; width: 100%; transition: opacity 1s ease-in-out;">
-                  <i class="fa-solid fa-spinner fa-spin"></i> Buscando mensajes...
-              </div>
+        <h3 style="margin-bottom:0; color:var(--um-verde);">✨ Para tener en cuenta</h3>
+        <div id="caja-mensajes" style="margin-top:12px; padding:14px; border-radius:6px; background:#e8f5e9; border-left:4px solid #2e7d32; min-height:52px; display: flex; align-items: center;">
+          <div id="texto-mensajes" style="color:#1b5e20; font-size:18px; font-weight:500; line-height:1.5; font-family:'Open Sans','Segoe UI',sans-serif; transition:opacity 0.5s ease-in-out; width: 100%;">
+            <i class="fa-solid fa-spinner fa-spin"></i> Buscando mensajes...
           </div>
+        </div>
       </div>
-  </div>
 
-  <div class="buttons-primary">
-    <a href="/escuelas" class="btn-primary-item">
-      <div class="icono"><i class="fa-solid fa-book-bookmark"></i></div>
-      <div class="titulo">Directorio de Escuelas</div>
-      <div class="desc">Busca por nombre, sede o cargo</div>
-    </a>
-    <a href="/contactos-administrativos" class="btn-primary-item">
-      <div class="icono"><i class="fa-solid fa-building-user"></i></div>
-      <div class="titulo">Contactos Administrativos</div>
-      <div class="desc">Áreas, roles y contactos internos</div>
-    </a>
+      <div class="widget-box" style="border-top: 4px solid #e74c3c;">
+        <h3 style="margin-bottom:0;"><i class="fa-solid fa-triangle-exclamation" id="icono-alerta" style="color:#e74c3c; transition: color 0.5s;"></i> <span style="color:#e74c3c;">Alerta Operativa</span></h3>
+        <div id="caja-alertas" style="margin-top:12px; padding:14px; border-radius:6px; background:#fdecea; border-left:4px solid #c62828; transition:all 1s ease-in-out;">
+          <div id="texto-alertas" style="color:#c62828; font-size:14px; font-weight:500; transition:opacity 0.5s;">
+            <i class="fa-solid fa-spinner fa-spin"></i> Conectando al panel de estado...
+          </div>
+        </div>
+      </div>
+      
+    </div>
   </div>
 
   <div class="buttons-vip">
@@ -482,36 +517,37 @@ async function cargarAlertas() {
         const icono = document.getElementById('icono-alerta');
         
         let nuevoHTML = '';
+        const activasReales = alertas.filter(a => a.activo === true && a.es_default !== true);
 
-        if (alertas.length === 1 && alertas[0].es_default) {
-            // Estado Normal: Mensaje default
-            nuevoHTML = `<strong>${alertas[0].mensaje}</strong>`;
+        if (activasReales.length === 0) {
+            // Estado Normal: Mensaje default o estado neutral
+            const def = alertas.find(a => a.es_default === true);
+            nuevoHTML = def ? `<strong>${def.mensaje}</strong>` : `✅ <strong>Sistemas operando con normalidad.</strong> No hay incidentes reportados.`;
+            
             icono.classList.remove('alerta-activa-icono');
-            // Aplicar estilo gris/tenue para que no grite "peligro"
             caja.style.backgroundColor = '#f5f5f5'; 
             caja.style.borderLeftColor = '#9e9e9e'; 
             texto.style.color = '#616161'; 
             icono.style.color = '#9e9e9e'; 
-        } else if (alertas.length > 0) {
+        } else {
             // Hay Emergencias activas
-            alertas.forEach(a => {
+            activasReales.forEach(a => {
                 nuevoHTML += `<div style="margin-bottom: 4px;"><strong>${a.categoria}:</strong> ${a.mensaje}</div>`;
             });
             icono.classList.add('alerta-activa-icono');
-            // Aplicar estilo rojo peligro
             caja.style.backgroundColor = '#fdecea';
             caja.style.borderLeftColor = '#c62828';
             texto.style.color = '#c62828';
             icono.style.color = '#e74c3c';
         }
 
-        // Aplicar fade-out / fade-in si el texto cambió
+        // Transición suave al cargar nuevos datos
         if (texto.innerHTML !== nuevoHTML && !texto.innerHTML.includes('Conectando')) {
             texto.style.opacity = 0;
             setTimeout(() => {
                 texto.innerHTML = nuevoHTML;
                 texto.style.opacity = 1;
-            }, 500); // 0.5s de transición
+            }, 500); 
         } else {
             texto.innerHTML = nuevoHTML;
             texto.style.opacity = 1;
@@ -547,26 +583,25 @@ function rotarMensaje() {
     const msjActual = listaMensajes[indexMensaje];
     const textoElement = document.getElementById('texto-mensajes');
     
-    // Fade out suave
+    // Fade out suave (400ms visuales, usando base CSS de 0.5s)
     textoElement.style.opacity = 0;
     
     setTimeout(() => {
-        let catHTML = msjActual.categoria ? `<strong>${msjActual.categoria} |</strong> ` : '';
-        textoElement.innerHTML = `${catHTML}${msjActual.mensaje}`;
+        // Asignación de mensaje puro. Cero categorías visibles.
+        textoElement.innerHTML = msjActual.mensaje;
         
-        // Fade in suave
+        // Fade in suave (500ms visuales)
         textoElement.style.opacity = 1;
         
-        // Calcular tiempo de espera (5 min por defecto)
-        const minutos = msjActual.duracion_min || 5;
+        // Tiempo de rotación: estándar de 3 min si no hay registro específico
+        const minutos = msjActual.duracion_min || 3;
         const milisegundos = minutos * 60 * 1000;
         
-        // Preparar el siguiente mensaje
         indexMensaje = (indexMensaje + 1) % listaMensajes.length;
         clearTimeout(timerMensaje);
         timerMensaje = setTimeout(rotarMensaje, milisegundos);
         
-    }, 1000); // Esperar 1 segundo a que se desvanezca antes de cambiar el texto
+    }, 400); 
 }
 
 
@@ -578,10 +613,9 @@ document.addEventListener('DOMContentLoaded', function() {
   // INICIALIZADORES FASE 2
   cargarAlertas();
   iniciarMensajesRotativos();
-  setInterval(cargarAlertas, 60000); // El centinela invisible: Revisa las alertas rojas cada 1 min
+  setInterval(cargarAlertas, 60000); // Revisa las alertas cada 1 min
 });
 
-// Diccionario visual para inyectar íconos a las categorías principales
 const infoCategorias = {
     "Links Frecuentes": { icono: "fa-link", tituloHover: "Herramientas y plataformas recurrentes" },
     "Turnos SAT": { icono: "fa-calendar-days", tituloHover: "Programación operativa del equipo" },
@@ -590,7 +624,6 @@ const infoCategorias = {
     "Otros Recursos": { icono: "fa-box-open", tituloHover: "Recursos adicionales" }
 };
 
-// ORDEN INNEGOCIABLE DE LA RONDA 1
 const ordenDeseado = [
     "Links Frecuentes",
     "Turnos SAT",
@@ -612,7 +645,6 @@ async function cargarMegaMenuDinámico() {
 
         const activos = enlaces.filter(link => link.activo === true);
 
-        // Agrupamos por categoría
         const grupos = {};
         activos.forEach(link => {
             if (!grupos[link.categoria]) grupos[link.categoria] = [];
@@ -621,7 +653,6 @@ async function cargarMegaMenuDinámico() {
 
         let htmlMegaMenu = '';
         
-        // 1. DIBUJAR EN EL ORDEN ESTRICTO
         ordenDeseado.forEach(categoria => {
             if (grupos[categoria]) {
                 const linksArray = grupos[categoria];
@@ -646,7 +677,6 @@ async function cargarMegaMenuDinámico() {
             }
         });
 
-        // 2. POR SI AGREGAS OTRA CATEGORÍA EN EL FUTURO (Se pone al final)
         for (const [categoria, linksArray] of Object.entries(grupos)) {
             if (!ordenDeseado.includes(categoria)) {
                 linksArray.sort((a, b) => a.orden - b.orden);
@@ -719,7 +749,6 @@ function iniciarPortal() {
   }
 }
 
-// Cierre automático del menú si tocan afuera
 document.addEventListener('click', function(e) {
     document.querySelectorAll('.links-hover').forEach(item => {
         if (!item.contains(e.target)) {
@@ -829,6 +858,10 @@ let intervaloCamino;
 if (localStorage.getItem('horaSalidaGuardada')) {
     inputSalida.value = localStorage.getItem('horaSalidaGuardada');
     iniciarCamino();
+} else {
+    // Si no hay hora guardada, aseguramos que la invitación se muestre
+    const invitacion = document.getElementById('caminoInvitacion');
+    if(invitacion) invitacion.style.display = 'block';
 }
 
 function iniciarCamino() {
@@ -843,13 +876,46 @@ function iniciarCamino() {
     document.getElementById('caminoCasa').className = "fa-solid fa-flag-checkered camino-casa"; 
     widgetCasa.classList.remove('estado-alerta', 'estado-ok');
     
+    // Ocultar invitación
+    const invitacion = document.getElementById('caminoInvitacion');
+    if(invitacion) invitacion.style.display = 'none';
+    
     clearInterval(intervaloCamino);
     actualizarCamino(); 
     intervaloCamino = setInterval(actualizarCamino, 30000); 
 }
 
+function resetearTurno() {
+    if(confirm("¿Deseas limpiar la hora de salida seleccionada?")) {
+        localStorage.removeItem('horaSalidaGuardada');
+        document.getElementById('horaSalidaInput').value = "";
+        progreso.style.width = "0%";
+        monito.style.left = "0%";
+        porcentajeTexto.textContent = "0%";
+        pistaCamino.style.display = 'block';
+        msjFinal.style.display = 'none';
+        btnCerrarSesion.style.display = 'none';
+        monito.className = "fa-solid fa-person-walking camino-monito";
+        widgetCasa.classList.remove('estado-alerta', 'estado-ok');
+        document.getElementById('caminoCasa').className = "fa-solid fa-flag-checkered camino-casa"; 
+        
+        const invitacion = document.getElementById('caminoInvitacion');
+        if(invitacion) invitacion.style.display = 'block';
+        
+        clearInterval(intervaloCamino);
+    }
+}
+
 function actualizarCamino() {
-    if (!inputSalida.value) return;
+    if (!inputSalida.value) {
+        const invitacion = document.getElementById('caminoInvitacion');
+        if(invitacion) invitacion.style.display = 'block';
+        return;
+    } else {
+        const invitacion = document.getElementById('caminoInvitacion');
+        if(invitacion) invitacion.style.display = 'none';
+    }
+
     const ahora = new Date();
     const horaInicio = parseInt(sessionStorage.getItem('horaInicioTurno'));
     
@@ -975,7 +1041,6 @@ function abrirCalc() {
 }
 function cerrarCalc() { document.getElementById("calcOverlay").style.display = "none"; }
 
-// Función CARAMELO 2: Limpiar Calculadora
 function limpiarCalculadora() {
   var hoy = new Date().toISOString().split("T")[0];
   document.getElementById("calcFechaFin").value = hoy;
