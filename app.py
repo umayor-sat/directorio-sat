@@ -2,14 +2,13 @@ from flask import Flask, render_template, request, jsonify, session, redirect, u
 from functools import wraps
 from supabase import create_client
 import os
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 # Manejo seguro de Zona Horaria (Hora de Chile)
 try:
     from zoneinfo import ZoneInfo
     TZ_CHILE = ZoneInfo("America/Santiago")
 except ImportError:
-    from datetime import timezone, timedelta
     TZ_CHILE = timezone(timedelta(hours=-3)) # Fallback seguro
 
 app = Flask(__name__)
@@ -226,14 +225,31 @@ def nuevo_enlace():
     except Exception as e: return jsonify({"error": str(e)}), 500
 
 # ==========================================
+# LÓGICA DE MENSAJES ROTATIVOS (CARRUSEL)
+# ==========================================
+@app.route('/api/mensajes-rotativos', methods=['GET'])
+@login_required
+def api_mensajes_rotativos():
+    try:
+        # Busca en la tabla mensajes_rotativos aquellos que estén activos
+        res = supabase.table("mensajes_rotativos").select("*").eq("activo", True).execute()
+        return jsonify(res.data or [])
+    except Exception as e:
+        print(f"Error al cargar mensajes rotativos: {e}")
+        # Retorna lista vacía si falla para no romper el frontend
+        return jsonify([])
+
+# ==========================================
 # LÓGICA DE ALERTAS OPERATIVAS (CATÁLOGO)
 # ==========================================
 @app.route('/api/alertas-operativas', methods=['GET'])
 @login_required
 def api_alertas_operativas():
     try:
-        ahora = datetime.now(TZ_CHILE)
-        # 1. Traer solo las que tienen estado=True
+        # Usamos zona horaria UTC explícita para asegurar consistencia con Supabase
+        ahora_utc = datetime.now(timezone.utc)
+        
+        # 1. Traer solo las que tienen estado=True en la base de datos
         res = supabase.table("alertas_operativas").select("*").eq("estado", True).order("prioridad").execute()
         
         todas_activas = res.data or []
@@ -251,14 +267,16 @@ def api_alertas_operativas():
                 alertas_finales.append(a)
             else:
                 try:
-                    # Limpieza y comparación de fecha
+                    # Parsear la fecha de fin y asegurar que sea comparada en UTC
                     fecha_fin = datetime.fromisoformat(fin_str.replace('Z', '+00:00'))
-                    if fecha_fin > ahora:
+                    
+                    # Si la alerta todavía no expira, la enviamos al frontend
+                    if fecha_fin > ahora_utc:
                         alertas_finales.append(a)
-                    else:
-                        # AUTO-APAGADO: Si expiró, la pasamos a false en la BD
-                        supabase.table("alertas_operativas").update({"estado": False}).eq("id", a['id']).execute()
-                except:
+                    # NOTA: Eliminamos el update destructivo. Si expiró, simplemente la ignoramos 
+                    # y no la incluimos en el array que se envía al Home.
+                except Exception as ex:
+                    print(f"Error parseando fecha de alerta {a.get('id')}: {ex}")
                     alertas_finales.append(a) # Por seguridad, si falla el parseo la mostramos
 
         if alertas_finales:
@@ -267,6 +285,7 @@ def api_alertas_operativas():
             return jsonify([mensaje_default] if mensaje_default else [])
 
     except Exception as e:
+        print(f"Error en api_alertas_operativas: {e}")
         return jsonify({"error": str(e)}), 500
 
 @app.route('/api/alertas-operativas/nuevo', methods=['POST'])
@@ -291,7 +310,6 @@ def toggle_alerta(id):
     if session.get('nivel_acceso') != 'admin': return jsonify({"error": "No autorizado"}), 403
     try:
         datos = request.json
-        # Aquí recibimos el nuevo estado y las fechas calculadas por el JS
         res = supabase.table("alertas_operativas").update({
             "estado": datos.get('estado'),
             "fecha_hora_inicio": datos.get('fecha_hora_inicio'),
