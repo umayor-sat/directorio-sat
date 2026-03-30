@@ -36,7 +36,7 @@ def login_required(f):
     return decorated_function
 
 # =========================
-# LOGIN UNIFICADO (REAL BD)
+# LOGIN UNIFICADO
 # =========================
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -57,31 +57,18 @@ def login():
 
             usuario = usuarios[0]
             
-            # --- EL "CHISMOSO" PARA LA CONSOLA DE RENDER ---
-            print("========================================")
-            print(f"DATOS LEÍDOS DE SUPABASE PARA: {username}")
-            print(usuario) 
-            print("========================================")
-
             if not usuario.get('activo'):
                 return render_template('login.html', error="Su cuenta está inactiva. Contacte al administrador.")
 
             if usuario.get('login_password') == password:
-                
-                # Buscamos el rol y lo pasamos a minúscula
                 rol_db = str(usuario.get('rol', '')).lower().strip()
-                
-                # Buscamos el nivel de acceso en todas sus formas posibles y lo pasamos a minúscula
-                nivel_crudo = usuario.get('nivel_acceso') or usuario.get('nivel de acceso') or usuario.get('Nivel_acceso') or usuario.get('Nivel de acceso') or ''
+                nivel_crudo = usuario.get('nivel_acceso') or usuario.get('nivel de acceso') or ''
                 nivel_db = str(nivel_crudo).lower().strip()
 
                 session['username'] = usuario.get('login_user')
                 session['nombre'] = usuario.get('nombre')
                 session['rol'] = rol_db 
                 session['nivel_acceso'] = nivel_db 
-
-                # --- OTRO CHISMOSO PARA VER CÓMO QUEDÓ LA SESIÓN ---
-                print(f"SESIÓN CREADA -> ROL: {session['rol']} | NIVEL: {session['nivel_acceso']}")
 
                 return redirect(url_for('home'))
             else:
@@ -93,25 +80,15 @@ def login():
 
     return render_template('login.html')
 
-# =========================
-# LOGOUT DEL PORTAL (ACTUALIZADO PARA DESPEDIDA HUMANA)
-# =========================
 @app.route("/logout")
 def logout():
-    # 1. Guardamos el nombre en el bolsillo antes de borrar todo
     nombre_completo = session.get('nombre', '')
-    
-    # 2. Extraemos solo el primer nombre (para que sea más cercano)
     primer_nombre = nombre_completo.split()[0] if nombre_completo else 'Equipo'
-    
-    # 3. Destruimos la sesión por seguridad
     session.clear() 
-    
-    # 4. Le enviamos el nombre a tu diseño de despedida
     return render_template('logout.html', nombre=primer_nombre)
 
 # =========================
-# HOME Y DEMÁS RUTAS
+# RUTAS DE NAVEGACIÓN
 # =========================
 @app.route("/")
 @login_required
@@ -161,21 +138,11 @@ def api_contactos_administrativos():
     q = request.args.get("q", "").strip()
     if len(q) < 2: return jsonify([])
     try:
-        # Intentamos primero búsqueda EXACTA por área (para casos como ORE)
         res_exacto = supabase.table("contactos_administrativos").select("*").ieq("area_busqueda", q).execute()
-        
-        if res_exacto.data:
-            return jsonify(res_exacto.data)
-        
-        # Si no hay match exacto, buscamos de forma FLEXIBLE por nombre
+        if res_exacto.data: return jsonify(res_exacto.data)
         res_flexible = supabase.table("contactos_administrativos").select("*").ilike("nombre", f"%{q}%").execute()
-        
         return jsonify(res_flexible.data or [])
-        
-    except Exception as e: 
-        print(f"Error: {e}")
-        return jsonify({"error": str(e)}), 500
-
+    except Exception as e: return jsonify({"error": str(e)}), 500
 
 @app.route("/bitacora")
 @login_required
@@ -221,34 +188,30 @@ def soporte():
 @app.route("/monitor-calidad")
 @login_required
 def monitor_calidad():
-    if session.get('nivel_acceso') != 'admin':
-        return redirect(url_for('home'))
+    if session.get('nivel_acceso') != 'admin': return redirect(url_for('home'))
     return render_template("monitor_calidad.html")
 
 @app.route('/reporteria-sat')
 @login_required
 def reporteria_sat():
-    if session.get('nivel_acceso') != 'admin':
-        return redirect(url_for('home'))
+    if session.get('nivel_acceso') != 'admin': return redirect(url_for('home'))
     return render_template('reporteria_sat.html')
-    
-# --- INICIO DE INYECCIÓN: GESTIÓN DE LINKS ---
+
+# ==========================================
+# GESTIÓN DE ENLACES (LINKS)
+# ==========================================
 @app.route('/api/enlaces', methods=['GET'])
 @login_required
 def get_enlaces():
-    if session.get('nivel_acceso') != 'admin':
-        return jsonify({"error": "No autorizado"}), 403
     try:
         res = supabase.table("LINKS").select("*").order("categoria").order("orden").execute()
         return jsonify(res.data)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    except Exception as e: return jsonify({"error": str(e)}), 500
 
 @app.route('/api/enlaces/nuevo', methods=['POST'])
 @login_required
 def nuevo_enlace():
-    if session.get('nivel_acceso') != 'admin':
-        return jsonify({"error": "No autorizado"}), 403
+    if session.get('nivel_acceso') != 'admin': return jsonify({"error": "No autorizado"}), 403
     try:
         datos = request.json
         res = supabase.table("LINKS").insert({
@@ -260,241 +223,99 @@ def nuevo_enlace():
             "activo": True
         }).execute()
         return jsonify({"status": "success", "data": res.data})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/api/enlaces/toggle/<int:id>', methods=['POST'])
-@login_required
-def toggle_enlace(id):
-    if session.get('nivel_acceso') != 'admin':
-        return jsonify({"error": "No autorizado"}), 403
-    try:
-        current = supabase.table("LINKS").select("activo").eq("id", id).single().execute()
-        nuevo_estado = not current.data['activo']
-        supabase.table("LINKS").update({"activo": nuevo_estado}).eq("id", id).execute()
-        return jsonify({"status": "success", "nuevo_estado": nuevo_estado})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/api/enlaces/eliminar/<int:id>', methods=['DELETE'])
-@login_required
-def eliminar_enlace(id):
-    if session.get('nivel_acceso') != 'admin':
-        return jsonify({"error": "No autorizado"}), 403
-    try:
-        supabase.table("LINKS").delete().eq("id", id).execute()
-        return jsonify({"status": "success"})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/api/enlaces/editar/<int:id>', methods=['PUT'])
-@login_required
-def editar_enlace(id):
-    if session.get('nivel_acceso') != 'admin':
-        return jsonify({"error": "No autorizado"}), 403
-    try:
-        datos = request.json
-        res = supabase.table("LINKS").update({
-            "nombre_link": datos.get('nombre_link'),
-            "url": datos.get('url'),
-            "categoria": datos.get('categoria'),
-            "orden": int(datos.get('orden', 0)),
-            "icono": datos.get('icono', '')
-        }).eq("id", id).execute()
-        return jsonify({"status": "success", "data": res.data})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-# --- FIN DE INYECCIÓN ---
+    except Exception as e: return jsonify({"error": str(e)}), 500
 
 # ==========================================
-# INYECCIÓN FASE 1: MENSAJES Y ALERTAS
+# LÓGICA DE ALERTAS OPERATIVAS (CATÁLOGO)
 # ==========================================
-@app.route('/api/mensajes-rotativos', methods=['GET'])
-@login_required
-def api_mensajes_rotativos():
-    try:
-        # 1. Traer todos los mensajes activos ordenados por prioridad
-        res = supabase.table("mensajes_rotativos").select("*").eq("estado", True).order("prioridad").execute()
-        mensajes = res.data or []
-
-        # 2. Obtener el día actual en Chile (MM-DD)
-        hoy_chile = datetime.now(TZ_CHILE)
-        hoy_mmdd = hoy_chile.strftime("%m-%d")
-
-        especiales = []
-        genericos = []
-
-        # 3. Separar los especiales de hoy y los genéricos
-        for m in mensajes:
-            fecha_mmdd = m.get("fecha_mmdd")
-            if fecha_mmdd == hoy_mmdd:
-                especiales.append(m)
-            elif not fecha_mmdd:
-                genericos.append(m)
-
-        # 4. Regla: Si hay especiales, mandamos solo esos. Si no, los genéricos.
-        return jsonify(especiales if especiales else genericos)
-
-    except Exception as e:
-        print(f"Error Mensajes: {e}")
-        return jsonify({"error": str(e)}), 500
-
 @app.route('/api/alertas-operativas', methods=['GET'])
 @login_required
 def api_alertas_operativas():
     try:
-        # 1. Traer todas las alertas activas ordenadas por prioridad
-        res = supabase.table("alertas_operativas").select("*").eq("estado", True).order("prioridad").execute()
-        todas = res.data or []
-
         ahora = datetime.now(TZ_CHILE)
-        alertas_activas = []
+        # 1. Traer solo las que tienen estado=True
+        res = supabase.table("alertas_operativas").select("*").eq("estado", True).order("prioridad").execute()
+        
+        todas_activas = res.data or []
+        alertas_finales = []
         mensaje_default = None
 
-        for a in todas:
-            # Separar el mensaje por default
-            if a.get("es_default") == True:
+        for a in todas_activas:
+            if a.get("es_default"):
                 mensaje_default = a
                 continue
 
-            inicio_str = a.get("fecha_hora_inicio")
             fin_str = a.get("fecha_hora_fin")
 
-            # Condición A: Tiene fechas de inicio y fin definidas
-            if inicio_str and fin_str:
+            if not fin_str:
+                alertas_finales.append(a)
+            else:
                 try:
-                    # Parsear strings ISO de la BD a objetos datetime
-                    inicio_dt = datetime.fromisoformat(inicio_str.replace('Z', '+00:00'))
-                    fin_dt = datetime.fromisoformat(fin_str.replace('Z', '+00:00'))
+                    # Limpieza y comparación de fecha
+                    fecha_fin = datetime.fromisoformat(fin_str.replace('Z', '+00:00'))
+                    if fecha_fin > ahora:
+                        alertas_finales.append(a)
+                    else:
+                        # AUTO-APAGADO: Si expiró, la pasamos a false en la BD
+                        supabase.table("alertas_operativas").update({"estado": False}).eq("id", a['id']).execute()
+                except:
+                    alertas_finales.append(a) # Por seguridad, si falla el parseo la mostramos
 
-                    # Asignar zona horaria de Chile si vienen "limpios" de la BD
-                    if inicio_dt.tzinfo is None: inicio_dt = inicio_dt.replace(tzinfo=TZ_CHILE)
-                    if fin_dt.tzinfo is None: fin_dt = fin_dt.replace(tzinfo=TZ_CHILE)
-
-                    # ¡La magia matemática!
-                    if inicio_dt <= ahora <= fin_dt:
-                        alertas_activas.append(a)
-                except ValueError as e:
-                    print(f"Error formato de fecha en alerta {a.get('id')}: {e}")
-                    pass
-            
-            # Condición B: No tiene fechas (es permanente mientras el estado sea True)
-            elif not inicio_str and not fin_str:
-                alertas_activas.append(a)
-
-        # 2. Regla: Mostrar todas las activas. Si no hay, mostrar el default.
-        if alertas_activas:
-            return jsonify(alertas_activas)
+        if alertas_finales:
+            return jsonify(alertas_finales)
         else:
             return jsonify([mensaje_default] if mensaje_default else [])
 
     except Exception as e:
-        print(f"Error Alertas: {e}")
         return jsonify({"error": str(e)}), 500
-# ==========================================
 
-# ==========================================
-# RUTAS ADMIN: GESTIÓN DE ALERTAS
-# ==========================================
 @app.route('/api/alertas-operativas/nuevo', methods=['POST'])
 @login_required
 def nueva_alerta():
-    if session.get('nivel_acceso') != 'admin':
-        return jsonify({"error": "No autorizado"}), 403
+    if session.get('nivel_acceso') != 'admin': return jsonify({"error": "No autorizado"}), 403
     try:
         datos = request.json
-        # Mapeamos 'activo' del JS a 'estado' en la BD
+        # IMPORTANTE: Siempre nace en False (Catálogo)
         res = supabase.table("alertas_operativas").insert({
             "categoria": datos.get('categoria'),
             "mensaje": datos.get('mensaje'),
-            "estado": datos.get('activo', True),
+            "estado": False, 
             "es_default": datos.get('es_default', False)
         }).execute()
         return jsonify({"status": "success", "data": res.data})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    except Exception as e: return jsonify({"error": str(e)}), 500
 
-@app.route('/api/alertas-operativas/editar/<int:id>', methods=['PUT'])
+@app.route('/api/alertas-operativas/toggle/<int:id>', methods=['POST'])
 @login_required
-def editar_alerta(id):
-    if session.get('nivel_acceso') != 'admin':
-        return jsonify({"error": "No autorizado"}), 403
+def toggle_alerta(id):
+    if session.get('nivel_acceso') != 'admin': return jsonify({"error": "No autorizado"}), 403
     try:
         datos = request.json
+        # Aquí recibimos el nuevo estado y las fechas calculadas por el JS
         res = supabase.table("alertas_operativas").update({
-            "categoria": datos.get('categoria'),
-            "mensaje": datos.get('mensaje'),
-            "estado": datos.get('activo', True)
+            "estado": datos.get('estado'),
+            "fecha_hora_inicio": datos.get('fecha_hora_inicio'),
+            "fecha_hora_fin": datos.get('fecha_hora_fin')
         }).eq("id", id).execute()
-        return jsonify({"status": "success", "data": res.data})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"status": "success"})
+    except Exception as e: return jsonify({"error": str(e)}), 500
 
 @app.route('/api/alertas-operativas/eliminar/<int:id>', methods=['DELETE'])
 @login_required
 def eliminar_alerta(id):
-    if session.get('nivel_acceso') != 'admin':
-        return jsonify({"error": "No autorizado"}), 403
+    if session.get('nivel_acceso') != 'admin': return jsonify({"error": "No autorizado"}), 403
     try:
         supabase.table("alertas_operativas").delete().eq("id", id).execute()
         return jsonify({"status": "success"})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    except Exception as e: return jsonify({"error": str(e)}), 500
 
 # ==========================================
-# RUTAS ADMIN: MENSAJES ROTATIVOS
+# RUTAS DE ADMINISTRACIÓN
 # ==========================================
-@app.route('/api/mensajes-rotativos/nuevo', methods=['POST'])
-@login_required
-def nuevo_mensaje():
-    if session.get('nivel_acceso') != 'admin':
-        return jsonify({"error": "No autorizado"}), 403
-    try:
-        datos = request.json
-        res = supabase.table("mensajes_rotativos").insert({
-            "mensaje": datos.get('mensaje'),
-            "duracion_min": int(datos.get('duracion_min', 3)),
-            "estado": datos.get('activo', True)
-        }).execute()
-        return jsonify({"status": "success", "data": res.data})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/api/mensajes-rotativos/editar/<int:id>', methods=['PUT'])
-@login_required
-def editar_mensaje(id):
-    if session.get('nivel_acceso') != 'admin':
-        return jsonify({"error": "No autorizado"}), 403
-    try:
-        datos = request.json
-        res = supabase.table("mensajes_rotativos").update({
-            "mensaje": datos.get('mensaje'),
-            "duracion_min": int(datos.get('duracion_min', 3)),
-            "estado": datos.get('activo', True)
-        }).eq("id", id).execute()
-        return jsonify({"status": "success", "data": res.data})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/api/mensajes-rotativos/eliminar/<int:id>', methods=['DELETE'])
-@login_required
-def eliminar_mensaje(id):
-    if session.get('nivel_acceso') != 'admin':
-        return jsonify({"error": "No autorizado"}), 403
-    try:
-        supabase.table("mensajes_rotativos").delete().eq("id", id).execute()
-        return jsonify({"status": "success"})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-
-
 @app.route('/administracion')
 @login_required
 def administracion():
-    if session.get('nivel_acceso') != 'admin':
-        return redirect(url_for('home'))
+    if session.get('nivel_acceso') != 'admin': return redirect(url_for('home'))
     return render_template('administracion.html')
 
 if __name__ == "__main__":
