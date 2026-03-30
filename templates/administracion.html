@@ -47,8 +47,9 @@
         .filtros { display:flex; flex-wrap:wrap; gap:15px; margin-bottom:25px; background:var(--um-gris); padding:18px 20px; border-radius:8px; align-items:flex-end; border:1px solid var(--borde); }
         .campo { display:flex; flex-direction:column; gap:6px; flex:1; min-width:150px; }
         label { font-size:11px; color:var(--texto-suave); font-weight:700; text-transform:uppercase; }
-        input[type="text"], input[type="date"], input[type="email"], select, input[type="password"], input[type="url"], input[type="number"] { padding:9px 12px; border:1px solid var(--borde); border-radius:6px; font-size:13px; font-family:inherit; background:#fff; }
-        input:focus, select:focus { border-color:var(--um-azul); outline:none; }
+        input[type="text"], input[type="date"], input[type="email"], select, input[type="password"], input[type="url"], input[type="number"], textarea { padding:9px 12px; border:1px solid var(--borde); border-radius:6px; font-size:13px; font-family:inherit; background:#fff; }
+        input:focus, select:focus, textarea:focus { border-color:var(--um-azul); outline:none; }
+        textarea { resize: vertical; }
         
         /* BOTONES */
         .btn-accion { padding:10px 16px; border:none; border-radius:6px; font-size:13px; font-weight:bold; cursor:pointer; height:37px; transition:all 0.2s; white-space:nowrap; color:white; }
@@ -83,6 +84,10 @@
         .col-rol { text-transform: capitalize; }
         
         footer { text-align:center; font-size:12px; color:#999; margin:40px 0 20px; padding-top:16px; }
+
+        /* UTILIDAD PARA DOS COLUMNAS (PESTAÑA MENSAJES) */
+        .admin-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; align-items: start; }
+        @media (max-width: 900px) { .admin-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -98,56 +103,15 @@
     </div>
 
     <div class="tabs-nav">
-      <button class="tab-btn active" onclick="switchTab('casos', this)"><i class="fa-solid fa-clipboard-list"></i> Reporte de Casos</button>
-      <button class="tab-btn" onclick="switchTab('staff', this)"><i class="fa-solid fa-users-gear"></i> Gestión de Staff</button>
-      <button class="tab-btn" onclick="switchTab('enlaces', this)"><i class="fa-solid fa-link"></i> Gestión de Enlaces</button>
+      <button class="tab-btn active" onclick="switchTab('staff', this)"><i class="fa-solid fa-users-gear"></i> 1. Gestión de Staff</button>
+      <button class="tab-btn" onclick="switchTab('mensajes', this)"><i class="fa-solid fa-message"></i> 2. Gestión de Mensajes</button>
+      <button class="tab-btn" onclick="switchTab('enlaces', this)"><i class="fa-solid fa-link"></i> 3. Gestión de Enlaces</button>
+      <button class="tab-btn" onclick="switchTab('casos', this)"><i class="fa-solid fa-clipboard-list"></i> 4. Reporte de Casos</button>
     </div>
 
     <div class="content">
 
-        <div id="tab-casos" class="tab-panel active">
-            <h2>
-                <span>Filtrar y Exportar</span>
-                <button class="btn-accion btn-exportar" onclick="exportarExcel()"><i class="fa-solid fa-file-excel"></i> Exportar a Excel</button>
-            </h2>
-
-            <div class="filtros">
-                <div class="campo">
-                    <label>Desde fecha</label>
-                    <input type="date" id="fechaDesde">
-                </div>
-                <div class="campo">
-                    <label>Hasta fecha</label>
-                    <input type="date" id="fechaHasta">
-                </div>
-                <div class="campo">
-                    <label>Filtrar por Ejecutivo</label>
-                    <input type="text" id="filtroEjecutivo" placeholder="Escribe un nombre...">
-                </div>
-                <button class="btn-accion btn-filtrar" onclick="cargarRegistros()"><i class="fa-solid fa-magnifying-glass"></i> Filtrar</button>
-                <button class="btn-accion btn-limpiar" onclick="limpiarFiltrosCasos()"><i class="fa-solid fa-eraser"></i> Limpiar Filtros</button>
-            </div>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Fecha y Hora</th>
-                            <th>Ejecutivo</th>
-                            <th>Área</th>
-                            <th>Solicitud</th>
-                            <th>RUT Registro</th>
-                            <th style="text-align:center;">Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tablaCasos">
-                        <tr><td colspan="6" style="text-align:center; padding:30px; color:#888;">Cargando registros...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="tab-staff" class="tab-panel">
+        <div id="tab-staff" class="tab-panel active">
             <h2>Añadir o Editar Ejecutivos</h2>
 
             <div class="panel-formulario" id="panelFormulario">
@@ -204,11 +168,14 @@
 
             <div class="filtros" style="justify-content: space-between; align-items: center; padding: 10px 20px; margin-bottom: 10px;">
                 <h3 style="margin:0; font-size:15px; color:var(--um-azul);"><i class="fa-solid fa-list"></i> Lista de Staff</h3>
-                <input type="text" id="buscadorStaff" placeholder="🔍 Buscar por nombre o rol..." onkeyup="filtrarStaff()" style="width: 300px;">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" id="buscadorStaff" placeholder="🔍 Buscar por nombre o rol..." onkeyup="filtrarStaff()" style="width: 250px;">
+                    <button class="btn-accion btn-exportar" onclick="exportarTablaLimpia('tablaStaff', 'Plantilla_Staff_SAT')"><i class="fa-solid fa-file-excel"></i> Exportar XLS</button>
+                </div>
             </div>
 
             <div class="table-container">
-                <table>
+                <table id="tablaStaff">
                     <thead>
                         <tr>
                             <th>Nombre</th>
@@ -218,14 +185,127 @@
                             <th>Password</th>
                             <th>Nivel</th>
                             <th style="text-align:center;">Estado</th>
-                            <th style="text-align:center;">Acciones</th>
+                            <th style="text-align:center;" class="columna-acciones">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="tablaStaff">
+                    <tbody id="tbodyStaff">
                         <tr><td colspan="8" style="text-align:center; padding:30px; color:#888;">Cargando staff...</td></tr>
                     </tbody>
                 </table>
             </div>
+        </div>
+
+        <div id="tab-mensajes" class="tab-panel">
+            
+            <h2 style="color:var(--rojo); border-bottom-color: var(--rojo);">
+                <span><i class="fa-solid fa-triangle-exclamation"></i> Alertas Operativas (Urgentes)</span>
+            </h2>
+            <div class="admin-grid" style="margin-bottom: 40px;">
+                
+                <div class="panel-formulario" id="panelFormularioAlerta" style="margin-bottom: 0;">
+                    <h3 id="tituloFormularioAlerta" style="color:var(--rojo);"><span><i class="fa-solid fa-bell"></i> Nueva Alerta</span></h3>
+                    <input type="hidden" id="alertaId" value="">
+                    
+                    <div class="campo" style="margin-bottom:12px;">
+                        <label>Categoría / Título</label>
+                        <input type="text" id="alertaCategoria" placeholder="Ej: Falla en CRM, Aviso TI...">
+                    </div>
+                    
+                    <div class="campo" style="margin-bottom:12px;">
+                        <label>Mensaje Detallado</label>
+                        <textarea id="alertaMensaje" rows="3" placeholder="Ingresa el detalle del aviso para los ejecutivos..."></textarea>
+                    </div>
+                    
+                    <div class="campo" style="margin-bottom:12px;">
+                        <label class="campo-check" style="color:var(--texto);">
+                            <input type="checkbox" id="alertaActivo" checked> Alerta Activa en el Home
+                        </label>
+                    </div>
+
+                    <div class="acciones-form" style="margin-top:20px;">
+                        <button class="btn-accion btn-limpiar" id="btnCancelarAlerta" style="display:none;" onclick="limpiarFormularioAlerta()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+                        <button class="btn-accion" style="background:var(--rojo);" onclick="guardarAlerta()"><i class="fa-solid fa-floppy-disk"></i> Guardar Alerta</button>
+                    </div>
+                </div>
+
+                <div class="lista">
+                    <div class="filtros" style="justify-content: space-between; align-items: center; padding: 10px 20px; margin-bottom: 10px; border-left: 4px solid var(--rojo);">
+                        <h3 style="margin:0; font-size:14px; color:var(--texto);"><i class="fa-solid fa-list"></i> Historial de Alertas</h3>
+                        <button class="btn-accion btn-exportar" style="height:30px; font-size:11px;" onclick="exportarTablaLimpia('tablaAlertas', 'Historial_Alertas_SAT')"><i class="fa-solid fa-file-excel"></i> Exportar</button>
+                    </div>
+                    <div class="table-container" style="max-height: 350px; overflow-y: auto; border: 1px solid var(--borde); border-radius: 8px;">
+                        <table id="tablaAlertas" style="margin-top:0;">
+                            <thead>
+                                <tr>
+                                    <th>Categoría</th>
+                                    <th>Mensaje</th>
+                                    <th style="text-align:center;">Estado</th>
+                                    <th style="text-align:center;" class="columna-acciones">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyAlertas">
+                                <tr><td colspan="4" style="text-align:center; padding:30px; color:#888;">Cargando alertas...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <h2 style="color:var(--um-verde); border-bottom-color: var(--um-verde); margin-top: 40px;">
+                <span><i class="fa-solid fa-lightbulb"></i> Mensajes "Para tener en cuenta"</span>
+            </h2>
+            <div class="admin-grid">
+                
+                <div class="panel-formulario" id="panelFormularioMotiv" style="margin-bottom: 0;">
+                    <h3 id="tituloFormularioMotiv" style="color:var(--um-verde);"><span><i class="fa-solid fa-pen"></i> Nuevo Mensaje</span></h3>
+                    <input type="hidden" id="motivId" value="">
+                    
+                    <div class="campo" style="margin-bottom:12px;">
+                        <label>Texto del Mensaje</label>
+                        <textarea id="motivMensaje" rows="4" placeholder="Ej: Recuerda sonreír en cada llamada, ¡hace la diferencia!"></textarea>
+                    </div>
+                    
+                    <div class="grid-formulario" style="grid-template-columns: 1fr 1fr; align-items: center;">
+                        <div class="campo">
+                            <label>Duración (Mins)</label>
+                            <input type="number" id="motivDuracion" value="3" min="1" title="Tiempo que permanecerá visible antes de rotar">
+                        </div>
+                        <div class="campo">
+                            <label class="campo-check" style="color:var(--texto);">
+                                <input type="checkbox" id="motivActivo" checked> Activo
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="acciones-form" style="margin-top:20px;">
+                        <button class="btn-accion btn-limpiar" id="btnCancelarMotiv" style="display:none;" onclick="limpiarFormularioMotiv()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+                        <button class="btn-accion" style="background:var(--um-verde);" onclick="guardarMotivacional()"><i class="fa-solid fa-floppy-disk"></i> Guardar Mensaje</button>
+                    </div>
+                </div>
+
+                <div class="lista">
+                    <div class="filtros" style="justify-content: space-between; align-items: center; padding: 10px 20px; margin-bottom: 10px; border-left: 4px solid var(--um-verde);">
+                        <h3 style="margin:0; font-size:14px; color:var(--texto);"><i class="fa-solid fa-list"></i> Mensajes Rotativos</h3>
+                        <button class="btn-accion btn-exportar" style="height:30px; font-size:11px;" onclick="exportarTablaLimpia('tablaMotivacionales', 'Mensajes_SAT')"><i class="fa-solid fa-file-excel"></i> Exportar</button>
+                    </div>
+                    <div class="table-container" style="max-height: 350px; overflow-y: auto; border: 1px solid var(--borde); border-radius: 8px;">
+                        <table id="tablaMotivacionales" style="margin-top:0;">
+                            <thead>
+                                <tr>
+                                    <th>Mensaje</th>
+                                    <th style="text-align:center;">Mins</th>
+                                    <th style="text-align:center;">Estado</th>
+                                    <th style="text-align:center;" class="columna-acciones">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyMotivacionales">
+                                <tr><td colspan="4" style="text-align:center; padding:30px; color:#888;">Cargando mensajes...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <div id="tab-enlaces" class="tab-panel">
@@ -233,7 +313,9 @@
 
             <div class="panel-formulario" id="panelFormularioEnlace">
                 <h3 id="tituloFormularioEnlace"><span><i class="fa-solid fa-link"></i> Registrar Nuevo Link</span></h3>
-                <input type="hidden" id="linkId" value=""> <div class="grid-formulario">
+                <input type="hidden" id="linkId" value=""> 
+                
+                <div class="grid-formulario">
                     <div class="campo">
                         <label>Nombre del Link *</label>
                         <input type="text" id="linkNombre" placeholder="Ej: Intranet SAT">
@@ -273,11 +355,14 @@
 
             <div class="filtros" style="justify-content: space-between; align-items: center; padding: 10px 20px; margin-bottom: 10px;">
                 <h3 style="margin:0; font-size:15px; color:var(--um-azul);"><i class="fa-solid fa-list"></i> Enlaces Activos en la Base de Datos</h3>
-                <input type="text" id="buscadorEnlaces" placeholder="🔍 Buscar por nombre o URL..." onkeyup="filtrarEnlaces()" style="width: 300px;">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" id="buscadorEnlaces" placeholder="🔍 Buscar por nombre o URL..." onkeyup="filtrarEnlaces()" style="width: 250px;">
+                    <button class="btn-accion btn-exportar" onclick="exportarTablaLimpia('tablaEnlaces', 'Plantilla_Enlaces_SAT')"><i class="fa-solid fa-file-excel"></i> Exportar XLS</button>
+                </div>
             </div>
 
             <div class="table-container">
-                <table>
+                <table id="tablaEnlaces">
                     <thead>
                         <tr>
                             <th>Ord</th>
@@ -285,7 +370,7 @@
                             <th>Nombre y URL</th>
                             <th>Categoría</th>
                             <th style="text-align:center;">Estado</th>
-                            <th style="text-align:center;">Acciones</th>
+                            <th style="text-align:center;" class="columna-acciones">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="tbody-enlaces">
@@ -294,7 +379,50 @@
                 </table>
             </div>
         </div>
+
+        <div id="tab-casos" class="tab-panel">
+            <h2>
+                <span>Filtrar y Exportar Casos</span>
+                <button class="btn-accion btn-exportar" onclick="exportarExcel()"><i class="fa-solid fa-file-excel"></i> Exportar a Excel</button>
+            </h2>
+
+            <div class="filtros">
+                <div class="campo">
+                    <label>Desde fecha</label>
+                    <input type="date" id="fechaDesde">
+                </div>
+                <div class="campo">
+                    <label>Hasta fecha</label>
+                    <input type="date" id="fechaHasta">
+                </div>
+                <div class="campo">
+                    <label>Filtrar por Ejecutivo</label>
+                    <input type="text" id="filtroEjecutivo" placeholder="Escribe un nombre...">
+                </div>
+                <button class="btn-accion btn-filtrar" onclick="cargarRegistros()"><i class="fa-solid fa-magnifying-glass"></i> Filtrar</button>
+                <button class="btn-accion btn-limpiar" onclick="limpiarFiltrosCasos()"><i class="fa-solid fa-eraser"></i> Limpiar Filtros</button>
+            </div>
+
+            <div class="table-container">
+                <table id="tablaCasosOriginal">
+                    <thead>
+                        <tr>
+                            <th>Fecha y Hora</th>
+                            <th>Ejecutivo</th>
+                            <th>Área</th>
+                            <th>Solicitud</th>
+                            <th>RUT Registro</th>
+                            <th style="text-align:center;" class="columna-acciones">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaCasos">
+                        <tr><td colspan="6" style="text-align:center; padding:30px; color:#888;">Cargando registros...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
+
+    </div>
     <footer>Portal SAT &middot; Universidad Mayor &middot; 2026</footer>
 </div>
 
@@ -313,6 +441,31 @@
     const supabaseUrl = 'https://jxmrznqppddabuqtbufq.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTA4MTcsImV4cCI6MjA4ODEyNjgxN30.pqT_PlAAn3oR6g_0Iaa2fs6qV8M3RQFzNOCAssyZZh4';
     const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+    // ==========================================
+    // FUNCION MAESTRA EXPORTAR A EXCEL LIMPIO
+    // ==========================================
+    function exportarTablaLimpia(tablaId, nombreArchivo) {
+        const tabla = document.getElementById(tablaId);
+        if (!tabla) return alert("No se encontró la tabla a exportar.");
+        
+        // Clonar la tabla para no afectar la vista HTML
+        const clon = tabla.cloneNode(true);
+        
+        // Remover la última columna (Acciones) de cada fila (thead y tbody)
+        const filas = clon.querySelectorAll('tr');
+        filas.forEach(fila => {
+            if(fila.children.length > 0) {
+                fila.removeChild(fila.lastElementChild);
+            }
+        });
+
+        // Exportar clon limpio
+        const wb = XLSX.utils.table_to_book(clon, { sheet: "Reporte" });
+        const hoy = new Date();
+        const fecha = `${hoy.getDate()}-${hoy.getMonth()+1}-${hoy.getFullYear()}`;
+        XLSX.writeFile(wb, `${nombreArchivo}_${fecha}.xlsx`);
+    }
 
     // ==========================================
     // LÓGICA: REPORTE DE CASOS
@@ -353,7 +506,7 @@
         });
     }
 
-    function exportarExcel() {
+    function exportarExcel() { // Mantenemos la función original JSON para casos
         if (datosParaExcel.length === 0) return alert("No hay datos para exportar.");
         const hoja = XLSX.utils.json_to_sheet(datosParaExcel);
         const libro = XLSX.utils.book_new();
@@ -373,7 +526,7 @@
     // LÓGICA: PESTAÑA STAFF
     // ==========================================
     async function cargarEjecutivos() {
-        const cuerpo = document.getElementById('tablaStaff');
+        const cuerpo = document.getElementById('tbodyStaff');
         const { data, error } = await _supabase.from('ejecutivos').select('*').order('nombre');
         cuerpo.innerHTML = '';
         if (error || data.length === 0) return cuerpo.innerHTML = `<tr><td colspan="8" style="text-align:center;">No hay ejecutivos.</td></tr>`;
@@ -393,7 +546,7 @@
                     <td style="font-family:monospace;">${e.login_password || '-'}</td>
                     <td><span style="font-size:11px; text-transform:uppercase; font-weight:bold; color:#777;">${e.nivel_acceso || 'usuario'}</span></td>
                     <td style="text-align:center;">${badge}</td>
-                    <td style="text-align:center;">
+                    <td style="text-align:center; white-space:nowrap;">
                         <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormStaff(${e.id}, '${nomSeguro}', '${mailSeguro}', '${rolSeguro}', ${e.activo}, '${e.login_user || ''}', '${e.login_password || ''}', '${e.nivel_acceso || 'usuario'}')"><i class="fa-solid fa-pen"></i></button>
                         <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarStaff(${e.id}, '${nomSeguro}')"><i class="fa-solid fa-trash"></i></button>
                     </td>
@@ -475,7 +628,166 @@
     }
 
     // ==========================================
-    // LÓGICA: PESTAÑA ENLACES (NUEVA - Vía API)
+    // LÓGICA: PESTAÑA MENSAJES (Alertas y Motiv)
+    // ==========================================
+    
+    // --- ALERTAS ---
+    async function cargarAlertas() {
+        try {
+            const res = await fetch('/api/alertas-operativas');
+            const data = await res.json();
+            const tbody = document.getElementById('tbodyAlertas');
+            tbody.innerHTML = '';
+            
+            if(data.error) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Error cargando alertas.</td></tr>`;
+            if(data.length === 0) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No hay alertas registradas.</td></tr>`;
+
+            data.forEach(a => {
+                if(a.es_default) return; // Ocultamos la de sistema por defecto
+                const badge = a.activo ? `<span class="badge activo">Activa</span>` : `<span class="badge inactivo">Inactiva</span>`;
+                const catSegura = a.categoria ? a.categoria.replace(/'/g, "\\'") : '';
+                const msjSeguro = a.mensaje ? a.mensaje.replace(/'/g, "\\'") : '';
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight:bold; color:var(--rojo);">${a.categoria}</td>
+                        <td style="font-size:12px;">${a.mensaje}</td>
+                        <td style="text-align:center;">${badge}</td>
+                        <td style="text-align:center; white-space:nowrap;">
+                            <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormAlerta(${a.id}, '${catSegura}', '${msjSeguro}', ${a.activo})"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarAlerta(${a.id})"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        } catch (e) { console.error(e); }
+    }
+
+    function subirFormAlerta(id, categoria, mensaje, activo) {
+        document.getElementById('alertaId').value = id;
+        document.getElementById('alertaCategoria').value = categoria;
+        document.getElementById('alertaMensaje').value = mensaje;
+        document.getElementById('alertaActivo').checked = activo;
+
+        document.getElementById('tituloFormularioAlerta').innerHTML = `<span><i class="fa-solid fa-pen"></i> Editando Alerta</span>`;
+        document.getElementById('panelFormularioAlerta').style.border = "2px solid #f39c12";
+        document.getElementById('btnCancelarAlerta').style.display = "inline-block";
+    }
+
+    function limpiarFormularioAlerta() {
+        document.getElementById('alertaId').value = '';
+        document.getElementById('alertaCategoria').value = '';
+        document.getElementById('alertaMensaje').value = '';
+        document.getElementById('alertaActivo').checked = true;
+
+        document.getElementById('tituloFormularioAlerta').innerHTML = `<span><i class="fa-solid fa-bell"></i> Nueva Alerta</span>`;
+        document.getElementById('panelFormularioAlerta').style.border = "1px solid var(--borde)";
+        document.getElementById('btnCancelarAlerta').style.display = "none";
+    }
+
+    async function guardarAlerta() {
+        const id = document.getElementById('alertaId').value;
+        const categoria = document.getElementById('alertaCategoria').value.trim();
+        const mensaje = document.getElementById('alertaMensaje').value.trim();
+        const activo = document.getElementById('alertaActivo').checked;
+        
+        if (!categoria || !mensaje) return alert("Categoría y Mensaje son obligatorios.");
+        
+        const payload = { categoria, mensaje, activo, es_default: false };
+        let endpoint = id ? `/api/alertas-operativas/editar/${id}` : '/api/alertas-operativas/nuevo';
+        let method = id ? 'PUT' : 'POST';
+
+        await fetch(endpoint, { method: method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+        limpiarFormularioAlerta();
+        cargarAlertas();
+    }
+
+    async function borrarAlerta(id) {
+        if (confirm("¿Eliminar esta alerta?")) {
+            await fetch(`/api/alertas-operativas/eliminar/${id}`, { method: 'DELETE' });
+            limpiarFormularioAlerta();
+            cargarAlertas();
+        }
+    }
+
+    // --- MOTIVACIONALES ---
+    async function cargarMotivacionales() {
+        try {
+            const res = await fetch('/api/mensajes-rotativos');
+            const data = await res.json();
+            const tbody = document.getElementById('tbodyMotivacionales');
+            tbody.innerHTML = '';
+            
+            if(data.error || data.length === 0) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No hay mensajes registrados.</td></tr>`;
+
+            data.forEach(m => {
+                const badge = m.activo ? `<span class="badge activo">Activo</span>` : `<span class="badge inactivo" style="background:gray;">Inactivo</span>`;
+                const msjSeguro = m.mensaje ? m.mensaje.replace(/'/g, "\\'") : '';
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-size:12px;"><strong>${m.mensaje}</strong></td>
+                        <td style="text-align:center;">${m.duracion_min || 3}</td>
+                        <td style="text-align:center;">${badge}</td>
+                        <td style="text-align:center; white-space:nowrap;">
+                            <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormMotiv(${m.id}, '${msjSeguro}', ${m.duracion_min || 3}, ${m.activo})"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarMotiv(${m.id})"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        } catch (e) { console.error(e); }
+    }
+
+    function subirFormMotiv(id, mensaje, duracion, activo) {
+        document.getElementById('motivId').value = id;
+        document.getElementById('motivMensaje').value = mensaje;
+        document.getElementById('motivDuracion').value = duracion;
+        document.getElementById('motivActivo').checked = activo;
+
+        document.getElementById('tituloFormularioMotiv').innerHTML = `<span><i class="fa-solid fa-pen"></i> Editando Mensaje</span>`;
+        document.getElementById('panelFormularioMotiv').style.border = "2px solid #f39c12";
+        document.getElementById('btnCancelarMotiv').style.display = "inline-block";
+    }
+
+    function limpiarFormularioMotiv() {
+        document.getElementById('motivId').value = '';
+        document.getElementById('motivMensaje').value = '';
+        document.getElementById('motivDuracion').value = '3';
+        document.getElementById('motivActivo').checked = true;
+
+        document.getElementById('tituloFormularioMotiv').innerHTML = `<span><i class="fa-solid fa-pen"></i> Nuevo Mensaje</span>`;
+        document.getElementById('panelFormularioMotiv').style.border = "1px solid var(--borde)";
+        document.getElementById('btnCancelarMotiv').style.display = "none";
+    }
+
+    async function guardarMotivacional() {
+        const id = document.getElementById('motivId').value;
+        const mensaje = document.getElementById('motivMensaje').value.trim();
+        const duracion_min = document.getElementById('motivDuracion').value;
+        const activo = document.getElementById('motivActivo').checked;
+        
+        if (!mensaje) return alert("El texto del mensaje es obligatorio.");
+        
+        const payload = { mensaje, duracion_min, activo };
+        let endpoint = id ? `/api/mensajes-rotativos/editar/${id}` : '/api/mensajes-rotativos/nuevo';
+        let method = id ? 'PUT' : 'POST';
+
+        await fetch(endpoint, { method: method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+        limpiarFormularioMotiv();
+        cargarMotivacionales();
+    }
+
+    async function borrarMotiv(id) {
+        if (confirm("¿Eliminar este mensaje?")) {
+            await fetch(`/api/mensajes-rotativos/eliminar/${id}`, { method: 'DELETE' });
+            limpiarFormularioMotiv();
+            cargarMotivacionales();
+        }
+    }
+
+    // ==========================================
+    // LÓGICA: PESTAÑA ENLACES
     // ==========================================
     async function cargarEnlaces() {
         try {
@@ -488,7 +800,6 @@
                 tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px; color:#888;">Error cargando enlaces.</td></tr>`;
                 return; 
             }
-            
             if(data.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px; color:#888;">No hay enlaces registrados.</td></tr>`;
                 return;
@@ -502,7 +813,6 @@
                 const urlCorta = link.url.length > 55 ? link.url.substring(0,55) + '...' : link.url;
                 const nomSeguro = link.nombre_link ? link.nombre_link.replace(/'/g, "\\'") : '';
                 
-                // NOTA: Se agregaron los botones estandarizados de Editar y Eliminar
                 tbody.innerHTML += `
                     <tr class="fila-enlace">
                         <td style="font-weight:bold; color:#777;">${link.orden}</td>
@@ -529,12 +839,9 @@
                     </tr>
                 `;
             });
-        } catch (error) { 
-            console.error("Error cargando enlaces:", error); 
-        }
+        } catch (error) { console.error("Error cargando enlaces:", error); }
     }
 
-    // NUEVA FUNCIÓN: Buscador de enlaces
     function filtrarEnlaces() {
         const input = document.getElementById("buscadorEnlaces").value.toLowerCase();
         const filas = document.getElementsByClassName("fila-enlace");
@@ -543,7 +850,6 @@
         }
     }
 
-    // NUEVA FUNCIÓN: Subir form y preparar edición de enlaces
     function subirFormEnlace(id, nombre, url, categoria, icono, orden) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -559,7 +865,6 @@
         document.getElementById('btnCancelarEnlace').style.display = "inline-block";
     }
 
-    // Lógica inteligente de guardado (Insertar o Actualizar)
     async function guardarEnlace() {
         const id = document.getElementById('linkId').value;
         const nombre_link = document.getElementById('linkNombre').value.trim();
@@ -573,14 +878,8 @@
         const payload = { nombre_link, url, categoria, icono, orden };
         
         try {
-            // Decide si crear o editar basado en si existe el id
-            let endpoint = '/api/enlaces/nuevo';
-            let method = 'POST';
-
-            if (id) {
-                endpoint = `/api/enlaces/editar/${id}`;
-                method = 'PUT';
-            }
+            let endpoint = id ? `/api/enlaces/editar/${id}` : '/api/enlaces/nuevo';
+            let method = id ? 'PUT' : 'POST';
 
             const res = await fetch(endpoint, {
                 method: method,
@@ -609,7 +908,6 @@
         }
     }
 
-    // Actualizada para resetear modo edición
     function limpiarFormularioEnlace() {
         document.getElementById('linkId').value = '';
         document.getElementById('linkNombre').value = '';
@@ -630,6 +928,8 @@
         cargarRegistros();
         cargarEjecutivos();
         cargarEnlaces();
+        cargarAlertas();         // NUEVO
+        cargarMotivacionales();  // NUEVO
     });
 
 </script>
