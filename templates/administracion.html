@@ -888,44 +888,174 @@
         }
     }
 
-    // --- MOTIVACIONALES Y CARRUSEL ---
+    // ==========================================
+    // 5. MENSAJES ROTATIVOS (CARRUSEL) - SEGURO
+    // ==========================================
     async function cargarMotivacionales() {
         try {
-            const { data, error } = await _supabase.from('mensajes_rotativos').select('*').order('created_at', { ascending: false });
+            const res = await fetch('/api/mensajes-rotativos');
+            const data = await res.json();
+            
             const tbody = document.getElementById('tbodyMotivacionales');
+            if(!tbody) return;
             tbody.innerHTML = '';
             
-            if(error) return tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:red;">Error cargando mensajes: ${error.message}</td></tr>`;
-            if(!data || data.length === 0) return tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">No hay mensajes en el catálogo.</td></tr>`;
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No hay mensajes registrados</td></tr>';
+                return;
+            }
 
             data.forEach(m => {
-                const badge = m.estado ? `<span class="badge activo">ENCENDIDO</span>` : `<span class="badge inactivo">Apagado</span>`;
-                const msjSeguro = m.mensaje ? m.mensaje.replace(/'/g, "\\'") : '';
-                const catSegura = m.categoria ? m.categoria.replace(/'/g, "\\'") : '';
-                const fechaSegura = m.fecha_mmdd ? m.fecha_mmdd.replace(/'/g, "\\'") : '';
+                const badge = m.activo ? `<span class="badge activo">ENCENDIDO</span>` : `<span class="badge inactivo">Apagado</span>`;
                 
                 const btnSwitch = `<button class="btn-tabla" 
-                                style="color:${m.estado ? 'white' : 'var(--texto-suave)'}; border:1px solid ${m.estado ? 'var(--um-verde)' : 'var(--borde)'}; background:${m.estado ? 'var(--um-verde)' : '#f9f9f9'}; font-size:14px; padding: 6px 12px;" 
-                                onclick="toggleMotiv('${m.id}', ${m.estado})" title="${m.estado ? 'Desactivar Mensaje' : 'Activar Mensaje'}">
-                                <i class="fa-solid ${m.estado ? 'fa-toggle-on' : 'fa-toggle-off'}"></i>
-                            </button>`;
+                    style="color:${m.activo ? 'white' : 'var(--texto-suave)'}; border:1px solid ${m.activo ? 'var(--um-verde)' : 'var(--borde)'}; background:${m.activo ? 'var(--um-verde)' : '#f9f9f9'}; font-size:14px; padding: 6px 12px;" 
+                    onclick="toggleMotiv('${m.id}', ${m.activo})" title="${m.activo ? 'Desactivar' : 'Activar'}">
+                    <i class="fa-solid ${m.activo ? 'fa-toggle-on' : 'fa-toggle-off'}"></i>
+                </button>`;
 
                 tbody.innerHTML += `
-                    <tr style="background-color: ${m.estado ? '#f0f9f0' : 'transparent'};">
-                        <td style="font-size:12px;">
-                            <strong>${m.mensaje}</strong>
-                            ${m.fecha_mmdd ? `<br><span style="color:var(--um-azul); font-size:10px; background:#eef5ea; padding:2px 4px; border-radius:3px;">📅 Se activa solo el: ${m.fecha_mmdd}</span>` : ''}
-                        </td>
-                        <td style="text-align:center;">${badge}</td>
-                        <td style="text-align:center; white-space:nowrap;">
-                            <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormMotiv('${m.id}', '${msjSeguro}', ${m.estado}, ${m.prioridad || 1}, '${catSegura}', '${fechaSegura}')"><i class="fa-solid fa-pen"></i></button>
-                            ${btnSwitch}
-                            <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarMotiv('${m.id}')"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
+                <tr style="background-color: ${m.activo ? '#f0f9f0' : 'transparent'};">
+                    <td style="font-size:12px;">
+                        <strong>${m.mensaje}</strong>
+                        ${m.fecha_mmdd ? `<br><span style="color:var(--um-azul); font-size:10px; background:#eef5ea; padding:2px 4px; border-radius:3px;">📅 Solo el: ${m.fecha_mmdd}</span>` : ''}
+                    </td>
+                    <td style="text-align:center;">${badge}</td>
+                    <td style="text-align:center; white-space:nowrap;">
+                        <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormMotiv('${m.id}', '${m.mensaje.replace(/'/g, "\\'")}', ${m.activo}, ${m.prioridad || 1}, '${m.categoria || ''}', '${m.fecha_mmdd || ''}')">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        ${btnSwitch}
+                        <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarMotiv('${m.id}')">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>`;
             });
-        } catch (e) { console.error(e); }
+        } catch (error) { console.error("Error cargando mensajes:", error); }
+    }
+
+    async function guardarMotivacional() {
+        const id = document.getElementById('motivId').value;
+        const mensaje = document.getElementById('motivMensaje').value;
+        const categoria = document.getElementById('motivCategoria').value;
+        const fecha = document.getElementById('motivFecha').value;
+        const activo = document.getElementById('motivActivo').value === 'true';
+        const prioridad = document.getElementById('motivPrioridad') ? document.getElementById('motivPrioridad').value : 1;
+
+        if (!mensaje) { alert("Debe escribir un mensaje."); return; }
+
+        const paquete = { mensaje: mensaje, categoria: categoria, fecha_mmdd: fecha, estado: activo, prioridad: prioridad, duracion_min: 15 };
+
+        try {
+            const url = id ? `/api/mensajes-rotativos/editar/${id}` : '/api/mensajes-rotativos/nuevo';
+            const method = id ? 'PUT' : 'POST';
+
+            const res = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(paquete)
+            });
+
+            if (!res.ok) throw new Error("Error en servidor al guardar");
+            
+            limpiarFormularioMotiv();
+            cargarMotivacionales();
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Error al guardar el mensaje.");
+        }
+    }
+
+    // --- VARIABLES Y FUNCIONES PARA EL MODAL DE ACTIVACIÓN ---
+    let motivIdPendiente = null;
+
+    async function toggleMotiv(id, estadoActual) {
+        if (!estadoActual) { 
+            // ENCENDER -> Abre tu Modal de minutos
+            motivIdPendiente = id;
+            if(document.getElementById('inputMinutosMotiv')) document.getElementById('inputMinutosMotiv').value = '15';
+            if(document.getElementById('modalActivarMotiv')) document.getElementById('modalActivarMotiv').style.display = 'flex';
+        } else { 
+            // APAGAR -> Lo hace directo por el túnel de Python
+            try {
+                await fetch(`/api/mensajes-rotativos/toggle/${id}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ estado: false, duracion_min: 0 })
+                });
+                cargarMotivacionales();
+            } catch (err) { alert("⚠️ Error al apagar:\n" + err.message); }
+        }
+    }
+
+    function cerrarModalMotiv() {
+        if(document.getElementById('modalActivarMotiv')) document.getElementById('modalActivarMotiv').style.display = 'none';
+        motivIdPendiente = null;
+    }
+
+    async function confirmarActivarMotiv() {
+        if(!motivIdPendiente) return;
+        const minutos = document.getElementById('inputMinutosMotiv') ? parseInt(document.getElementById('inputMinutosMotiv').value) : 15;
+        
+        try {
+            // Confirmar usando el túnel de Python en vez de Supabase directo
+            await fetch(`/api/mensajes-rotativos/toggle/${motivIdPendiente}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ estado: true, duracion_min: minutos })
+            });
+            cerrarModalMotiv();
+            cargarMotivacionales();
+        } catch (err) { alert("⚠️ Error al encender:\n" + err.message); }
+    }
+
+    async function borrarMotiv(id) {
+        if(confirm('¿Eliminar este mensaje permanentemente?')) {
+            try {
+                await fetch(`/api/mensajes-rotativos/eliminar/${id}`, { method: 'DELETE' });
+                if(document.getElementById('motivId').value == id) limpiarFormularioMotiv();
+                cargarMotivacionales();
+            } catch (e) { console.error(e); }
+        }
+    }
+
+    function subirFormMotiv(id, mensaje, activo, prioridad, categoria, fecha) {
+        document.getElementById('motivId').value = id;
+        document.getElementById('motivMensaje').value = mensaje;
+        document.getElementById('motivCategoria').value = categoria || '';
+        document.getElementById('motivFecha').value = fecha || '';
+        document.getElementById('motivActivo').value = activo ? 'true' : 'false';
+        if(document.getElementById('motivPrioridad')) document.getElementById('motivPrioridad').value = prioridad || 1;
+        
+        const titulo = document.getElementById('tituloFormularioMotiv');
+        if(titulo) titulo.innerHTML = `<span><i class="fa-solid fa-pen"></i> Editar Mensaje</span>`;
+        
+        const panel = document.getElementById('panelFormularioMotiv');
+        if(panel) panel.style.border = "1px solid var(--um-amarillo)";
+        
+        const btnCancelar = document.getElementById('btnCancelarMotiv');
+        if(btnCancelar) btnCancelar.style.display = "inline-block";
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function limpiarFormularioMotiv() {
+        document.getElementById('motivId').value = '';
+        document.getElementById('motivMensaje').value = '';
+        document.getElementById('motivCategoria').value = '';
+        document.getElementById('motivFecha').value = '';
+        document.getElementById('motivActivo').value = 'true';
+        if(document.getElementById('motivPrioridad')) document.getElementById('motivPrioridad').value = '1';
+        
+        const titulo = document.getElementById('tituloFormularioMotiv');
+        if(titulo) titulo.innerHTML = `<span><i class="fa-solid fa-comment-dots"></i> Nuevo Mensaje</span>`;
+        
+        const panel = document.getElementById('panelFormularioMotiv');
+        if(panel) panel.style.border = "1px solid var(--borde)";
+        
+        const btnCancelar = document.getElementById('btnCancelarMotiv');
+        if(btnCancelar) btnCancelar.style.display = "none";
     }
 
     // 1. Abre el Modal o Apaga Directo
