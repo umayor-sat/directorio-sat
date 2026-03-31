@@ -80,7 +80,7 @@
         .campo-check input[type="checkbox"] { width:18px; height:18px; cursor:pointer; }
         .acciones-form { display:flex; gap:10px; margin-top:15px; justify-content:flex-end; }
         .badge { padding:4px 8px; border-radius:12px; font-size:11px; font-weight:bold; color:white; display:inline-block; text-align:center;}
-        .badge.activo { background:#27ae60; } .badge.inactivo { background:var(--texto-suave); } /* Modificado UX */
+        .badge.activo { background:#27ae60; } .badge.inactivo { background:var(--texto-suave); }
         .col-rol { text-transform: capitalize; }
         
         footer { text-align:center; font-size:12px; color:#999; margin:40px 0 20px; padding-top:16px; }
@@ -88,6 +88,18 @@
         /* UTILIDAD PARA DOS COLUMNAS (PESTAÑA MENSAJES) */
         .admin-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; align-items: start; }
         @media (max-width: 900px) { .admin-grid { grid-template-columns: 1fr; } }
+
+        /* =========================================
+           ESTILOS PARA LOS MODALES DE TIEMPO
+        ========================================= */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+        .modal-box { background: #fff; padding: 25px 30px; border-radius: 12px; width: 90%; max-width: 420px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); animation: slideDown 0.3s ease; }
+        @keyframes slideDown { from { transform: translateY(-30px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+        @keyframes pulse {
+          0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.7); }
+          50% { transform: scale(1.05); box-shadow: 0 0 0 5px rgba(192, 57, 43, 0); }
+          100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(192, 57, 43, 0); }
+        }
     </style>
 </head>
 <body>
@@ -303,7 +315,7 @@
                         <div class="campo" style="background: #eef5ea; padding: 10px; border-radius: 6px; border: 1px dashed var(--um-verde);">
                             <label style="color:var(--um-verde);">📅 Programar Fecha Especial (Opcional)</label>
                             <input type="text" id="motivFecha" placeholder="MM-DD (Ej: 12-25 para Navidad)" style="margin-top:5px;">
-                            <small style="color:#555; margin-top:5px; font-size:10px;">Si agregas una fecha, el Home encenderá este mensaje automáticamente ese día.</small>
+                            <small style="color:#555; margin-top:5px; font-size:10px;">Si agregas una fecha, el servidor encenderá este mensaje automáticamente ese día.</small>
                         </div>
                     </div>
 
@@ -455,6 +467,57 @@
 
     </div>
     <footer>Portal SAT &middot; Universidad Mayor &middot; 2026</footer>
+</div>
+
+<div id="modalActivarAlerta" class="modal-overlay">
+    <div class="modal-box" style="border-top: 6px solid var(--rojo);">
+        <h3 style="color:var(--rojo); margin-top:0; font-size:18px;"><i class="fa-solid fa-clock"></i> Tiempo de la Alerta</h3>
+        <p style="font-size:13px; color:#555; margin-top:5px;">¿Cuánto tiempo estará visible esta alerta en el Home antes de apagarse sola?</p>
+        
+        <div style="display:flex; justify-content:center; align-items:center; gap:15px; margin: 25px 0; background:var(--um-gris); padding:15px; border-radius:8px; border:1px solid var(--borde);">
+            <div style="text-align:center;">
+                <label style="display:block; font-size:11px; font-weight:bold; color:var(--texto-suave); margin-bottom:5px;">HORAS</label>
+                <input type="number" id="inputHorasAlerta" value="4" min="0" style="width:70px; font-size:18px; text-align:center; font-weight:bold; color:var(--rojo); border-radius:6px; border:1px solid var(--borde); padding:5px;">
+            </div>
+            <div style="font-size:24px; font-weight:bold; color:var(--texto-suave); margin-top:15px;">:</div>
+            <div style="text-align:center;">
+                <label style="display:block; font-size:11px; font-weight:bold; color:var(--texto-suave); margin-bottom:5px;">MINUTOS</label>
+                <select id="inputMinutosAlerta" style="width:70px; font-size:18px; text-align:center; font-weight:bold; color:var(--rojo); border-radius:6px; border:1px solid var(--borde); padding:5px; cursor:pointer;">
+                    <option value="0">00</option>
+                    <option value="15">15</option>
+                    <option value="30">30</option>
+                    <option value="45">45</option>
+                </select>
+            </div>
+        </div>
+        
+        <div style="display:flex; gap:10px; justify-content:flex-end;">
+            <button class="btn-accion btn-limpiar" onclick="cerrarModalAlerta()">Cancelar</button>
+            <button class="btn-accion" style="background:var(--rojo);" onclick="confirmarActivarAlerta()"><i class="fa-solid fa-fire"></i> Encender Alerta</button>
+        </div>
+    </div>
+</div>
+
+<div id="modalActivarMotiv" class="modal-overlay">
+    <div class="modal-box" style="border-top: 6px solid var(--um-verde);">
+        <h3 style="color:var(--um-verde); margin-top:0; font-size:18px;"><i class="fa-solid fa-stopwatch"></i> Tiempo de Rotación</h3>
+        <p style="font-size:13px; color:#555; margin-top:5px;">¿Cuántos minutos se quedará este mensaje en pantalla antes de dar paso al siguiente?</p>
+        
+        <div style="display:flex; justify-content:center; align-items:center; gap:15px; margin: 25px 0; background:var(--um-gris); padding:15px; border-radius:8px; border:1px solid var(--borde);">
+            <div style="text-align:center;">
+                <label style="display:block; font-size:11px; font-weight:bold; color:var(--texto-suave); margin-bottom:5px;">MINUTOS EN PANTALLA</label>
+                <div style="display:flex; align-items:center; justify-content:center; gap:10px;">
+                    <input type="number" id="inputMinutosMotiv" value="15" min="1" style="width:80px; font-size:18px; text-align:center; font-weight:bold; color:var(--um-verde); border-radius:6px; border:1px solid var(--borde); padding:5px;">
+                    <span style="font-size:14px; color:var(--texto-suave); font-weight:bold;">min.</span>
+                </div>
+            </div>
+        </div>
+        
+        <div style="display:flex; gap:10px; justify-content:flex-end;">
+            <button class="btn-accion btn-limpiar" onclick="cerrarModalMotiv()">Cancelar</button>
+            <button class="btn-accion" style="background:var(--um-verde);" onclick="confirmarActivarMotiv()"><i class="fa-solid fa-play"></i> Activar Mensaje</button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -648,10 +711,14 @@
     }
 
     // ==========================================
-    // LÓGICA: PESTAÑA MENSAJES Y ALERTAS (MODO CATÁLOGO UX)
+    // LÓGICA: PESTAÑA MENSAJES Y ALERTAS
     // ==========================================
     
-    // --- ALERTAS ---
+    // --- VARIABLES PARA MODALES ---
+    let alertaIdPendiente = null;
+    let motivIdPendiente = null;
+
+    // --- ALERTAS OPERATIVAS ---
     async function cargarAlertas() {
         try {
             const { data, error } = await _supabase.from('alertas_operativas').select('*').order('created_at', { ascending: false });
@@ -664,7 +731,6 @@
             data.forEach(a => {
                 if(a.es_default) return; 
                 
-                // UX: Badge Encendido/Apagado
                 const badge = a.estado ? `<span class="badge activo" style="animation: pulse 2s infinite;">🔥 ENCENDIDA EN HOME</span>` : `<span class="badge inactivo">Apagada</span>`;
                 const catSegura = a.categoria ? a.categoria.replace(/'/g, "\\'") : '';
                 const msjSeguro = a.mensaje ? a.mensaje.replace(/'/g, "\\'") : '';
@@ -673,7 +739,6 @@
                 if(a.color === 'verde') iconoSem = '🟢';
                 if(a.color === 'amarillo') iconoSem = '🟡';
 
-                // SWITCH INTELIGENTE
                 const btnSwitch = `<button class="btn-tabla" 
                                 style="color:${a.estado ? 'white' : 'var(--texto-suave)'}; border:1px solid ${a.estado ? 'var(--rojo)' : 'var(--borde)'}; background:${a.estado ? 'var(--rojo)' : '#f9f9f9'}; font-size:14px; padding: 6px 12px;" 
                                 onclick="toggleAlerta('${a.id}', ${a.estado})" title="${a.estado ? 'Apagar Alerta' : 'Encender Alerta'}">
@@ -696,29 +761,56 @@
         } catch (e) { console.error(e); }
     }
 
+    // 1. Abre el Modal o Apaga Directamente
     async function toggleAlerta(id, estadoActual) {
-        try {
-            if (!estadoActual) { 
-                // Va a encender
-                let horas = prompt("🚨 ESTÁS ENCENDIENDO UNA ALERTA EN EL HOME.\n\n¿Por cuántas HORAS quieres que se mantenga visible antes de apagarse automáticamente?", "24");
-                if (horas === null) return; 
-                horas = parseInt(horas) || 24;
-
-                const ahora = new Date();
-                const fin = new Date(ahora.getTime() + (horas * 60 * 60 * 1000));
-
-                const { error } = await _supabase.from('alertas_operativas').update({ 
-                    estado: true,
-                    fecha_hora_inicio: ahora.toISOString(),
-                    fecha_hora_fin: fin.toISOString()
-                }).eq('id', id);
-
-                if (error) throw error;
-            } else { 
-                // Va a apagar
+        if (!estadoActual) { 
+            // ENCENDER -> Abre el Modal
+            alertaIdPendiente = id;
+            document.getElementById('inputHorasAlerta').value = '4'; // Valor por defecto
+            document.getElementById('inputMinutosAlerta').value = '0';
+            document.getElementById('modalActivarAlerta').style.display = 'flex';
+        } else { 
+            // APAGAR -> Lo hace directo
+            try {
                 const { error } = await _supabase.from('alertas_operativas').update({ estado: false }).eq('id', id);
                 if (error) throw error;
+                cargarAlertas();
+            } catch (err) {
+                alert("⚠️ Error al comunicarse con la base de datos:\n" + err.message);
             }
+        }
+    }
+
+    function cerrarModalAlerta() {
+        document.getElementById('modalActivarAlerta').style.display = 'none';
+        alertaIdPendiente = null;
+    }
+
+    // 2. Confirma la activación con los selectores del Modal
+    async function confirmarActivarAlerta() {
+        if(!alertaIdPendiente) return;
+        
+        const horas = parseInt(document.getElementById('inputHorasAlerta').value) || 0;
+        const minutos = parseInt(document.getElementById('inputMinutosAlerta').value) || 0;
+        
+        if (horas === 0 && minutos === 0) {
+            alert("⚠️ El tiempo de la alerta debe ser mayor a 0.");
+            return;
+        }
+
+        const ahora = new Date();
+        const fin = new Date(ahora.getTime() + (horas * 60 * 60 * 1000) + (minutos * 60 * 1000));
+
+        try {
+            const { error } = await _supabase.from('alertas_operativas').update({ 
+                estado: true,
+                fecha_hora_inicio: ahora.toISOString(),
+                fecha_hora_fin: fin.toISOString()
+            }).eq('id', alertaIdPendiente);
+
+            if (error) throw error;
+            
+            cerrarModalAlerta();
             cargarAlertas();
         } catch (err) {
             alert("⚠️ Error al comunicarse con la base de datos:\n" + err.message);
@@ -729,7 +821,7 @@
         document.getElementById('alertaId').value = id;
         document.getElementById('alertaCategoria').value = categoria;
         document.getElementById('alertaMensaje').value = mensaje;
-        document.getElementById('alertaActivo').value = activo; // hidden
+        document.getElementById('alertaActivo').value = activo;
         document.getElementById('alertaColor').value = color;
 
         document.getElementById('tituloFormularioAlerta').innerHTML = `<span><i class="fa-solid fa-pen"></i> Editando Catálogo</span>`;
@@ -754,21 +846,13 @@
             const id = document.getElementById('alertaId').value;
             const categoria = document.getElementById('alertaCategoria').value;
             const mensaje = document.getElementById('alertaMensaje').value.trim();
-            const estado = document.getElementById('alertaActivo').value === 'true'; // Mantiene su estado al editar
+            const estado = document.getElementById('alertaActivo').value === 'true';
             const color = document.getElementById('alertaColor').value;
             
             if (!categoria || !mensaje) return alert("Debes seleccionar una categoría y escribir un mensaje.");
             
-            const paquete = { 
-                categoria, 
-                mensaje, 
-                estado, 
-                color,
-                prioridad: 1,
-                tipo_alerta: 'Operativa'
-            };
+            const paquete = { categoria, mensaje, estado, color, prioridad: 1, tipo_alerta: 'Operativa' };
 
-            // Solo si es NUEVA le ponemos fechas fake para que no moleste a la BD
             if (!id) {
                 const ahora = new Date();
                 paquete.fecha_hora_inicio = ahora.toISOString();
@@ -776,18 +860,14 @@
                 paquete.es_default = false;
             }
 
-            let res;
-            if (id) {
-                res = await _supabase.from('alertas_operativas').update(paquete).eq('id', id);
-            } else {
-                res = await _supabase.from('alertas_operativas').insert([paquete]);
-            }
+            let res = id ? await _supabase.from('alertas_operativas').update(paquete).eq('id', id) 
+                         : await _supabase.from('alertas_operativas').insert([paquete]);
             
             if (res && res.error) throw res.error;
             
             limpiarFormularioAlerta();
             cargarAlertas();
-            // Notificación discreta
+            
             const btn = document.getElementById('tituloFormularioAlerta');
             const originalHTML = btn.innerHTML;
             btn.innerHTML = `<span style="color:var(--um-verde);"><i class="fa-solid fa-check"></i> ¡Guardado en el catálogo!</span>`;
@@ -807,7 +887,7 @@
         }
     }
 
-    // --- MOTIVACIONALES ---
+    // --- MOTIVACIONALES Y CARRUSEL ---
     async function cargarMotivacionales() {
         try {
             const { data, error } = await _supabase.from('mensajes_rotativos').select('*').order('created_at', { ascending: false });
@@ -823,7 +903,6 @@
                 const catSegura = m.categoria ? m.categoria.replace(/'/g, "\\'") : '';
                 const fechaSegura = m.fecha_mmdd ? m.fecha_mmdd.replace(/'/g, "\\'") : '';
                 
-                // SWITCH INTELIGENTE
                 const btnSwitch = `<button class="btn-tabla" 
                                 style="color:${m.estado ? 'white' : 'var(--texto-suave)'}; border:1px solid ${m.estado ? 'var(--um-verde)' : 'var(--borde)'}; background:${m.estado ? 'var(--um-verde)' : '#f9f9f9'}; font-size:14px; padding: 6px 12px;" 
                                 onclick="toggleMotiv('${m.id}', ${m.estado})" title="${m.estado ? 'Desactivar Mensaje' : 'Activar Mensaje'}">
@@ -848,22 +927,42 @@
         } catch (e) { console.error(e); }
     }
 
+    // 1. Abre el Modal o Apaga Directo
     async function toggleMotiv(id, estadoActual) {
-        try {
-            if (!estadoActual) { 
-                let mins = prompt("💡 ESTÁS ENCENDIENDO UN MENSAJE EN EL HOME.\n\n¿Por cuántos MINUTOS deseas que se mantenga en el carrusel antes de rotar y apagarse?", "15");
-                if (mins === null) return; 
-                mins = parseInt(mins) || 15;
-
-                const { error } = await _supabase.from('mensajes_rotativos').update({ estado: true, duracion_min: mins }).eq('id', id);
-                if (error) throw error;
-            } else { 
+        if (!estadoActual) { 
+            // ENCENDER -> Abre el Modal
+            motivIdPendiente = id;
+            document.getElementById('inputMinutosMotiv').value = '15';
+            document.getElementById('modalActivarMotiv').style.display = 'flex';
+        } else { 
+            // APAGAR -> Lo hace directo
+            try {
                 const { error } = await _supabase.from('mensajes_rotativos').update({ estado: false }).eq('id', id);
                 if (error) throw error;
+                cargarMotivacionales();
+            } catch (err) {
+                alert("⚠️ Error al cambiar estado:\n" + err.message);
             }
+        }
+    }
+
+    function cerrarModalMotiv() {
+        document.getElementById('modalActivarMotiv').style.display = 'none';
+        motivIdPendiente = null;
+    }
+
+    // 2. Confirma la activación con los minutos del Modal
+    async function confirmarActivarMotiv() {
+        if(!motivIdPendiente) return;
+        const mins = parseInt(document.getElementById('inputMinutosMotiv').value) || 15;
+        
+        try {
+            const { error } = await _supabase.from('mensajes_rotativos').update({ estado: true, duracion_min: mins }).eq('id', motivIdPendiente);
+            if (error) throw error;
+            cerrarModalMotiv();
             cargarMotivacionales();
         } catch (err) {
-            alert("⚠️ Error al cambiar estado:\n" + err.message);
+            alert("⚠️ Error al comunicarse con la base de datos:\n" + err.message);
         }
     }
 
@@ -906,15 +1005,10 @@
             
             const paquete = { mensaje, estado, prioridad, categoria, fecha_mmdd };
 
-            // Fake duracion inicial
             if(!id) paquete.duracion_min = 15;
 
-            let res;
-            if (id) {
-                res = await _supabase.from('mensajes_rotativos').update(paquete).eq('id', id);
-            } else {
-                res = await _supabase.from('mensajes_rotativos').insert([paquete]);
-            }
+            let res = id ? await _supabase.from('mensajes_rotativos').update(paquete).eq('id', id)
+                         : await _supabase.from('mensajes_rotativos').insert([paquete]);
             
             if (res && res.error) throw res.error;
 
@@ -1085,14 +1179,6 @@
     });
 
 </script>
-
-<style>
-@keyframes pulse {
-  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.7); }
-  50% { transform: scale(1.05); box-shadow: 0 0 0 5px rgba(192, 57, 43, 0); }
-  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(192, 57, 43, 0); }
-}
-</style>
 
 </body>
 </html>
