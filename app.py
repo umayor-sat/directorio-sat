@@ -245,7 +245,6 @@ def editar_enlace(id):
 def toggle_enlace(id):
     if session.get('nivel_acceso') != 'admin': return jsonify({"error": "No autorizado"}), 403
     try:
-        # Obtenemos el estado actual primero para invertirlo
         link = supabase.table("LINKS").select("activo").eq("id", id).execute()
         if not link.data: return jsonify({"error": "No encontrado"}), 404
         nuevo_estado = not link.data[0].get('activo')
@@ -263,7 +262,6 @@ def eliminar_enlace(id):
         return jsonify({"status": "success"})
     except Exception as e: return jsonify({"error": str(e)}), 500
 
-
 # ==========================================
 # LÓGICA DE MENSAJES ROTATIVOS (CARRUSEL)
 # ==========================================
@@ -276,24 +274,26 @@ def api_mensajes_rotativos():
         hoy_ddmm = hoy_chile.strftime("%d-%m") # Formato chileno Ej: "18-09"
         hoy_mmdd = hoy_chile.strftime("%m-%d") # Formato inglés por si acaso Ej: "09-18"
 
-        # 2. Traemos TODOS los mensajes de la base de datos para analizarlos
+        # 2. Traemos TODOS los mensajes de la BD
         res = supabase.table("mensajes_rotativos").select("*").execute()
         todos = res.data or []
         
         mensajes_finales = []
         for m in todos:
-            # En base de datos la columna se llama "activo"
             es_activo = m.get("activo", False) 
             fecha_esp = str(m.get("fecha_mmdd", "")).strip()
 
-            # LÓGICA DE ROTACIÓN: 
-            # Entra al carrusel SI lo encendiste manualmente (activo=True) 
-            # O SI la fecha especial del mensaje coincide con el día de HOY.
-            if es_activo is True or fecha_esp == hoy_ddmm or fecha_esp == hoy_mmdd:
+            # LÓGICA DE PRIORIDAD: Si es hoy, gana prioridad cero.
+            if fecha_esp == hoy_ddmm or fecha_esp == hoy_mmdd:
+                m['prioridad_calculada'] = 0
+                mensajes_finales.append(m)
+            elif es_activo is True:
+                # Si está activo manualmente, mantiene su prioridad original o se va al final (999)
+                m['prioridad_calculada'] = int(m.get("prioridad") or 999)
                 mensajes_finales.append(m)
         
-        # 3. Los ordenamos por tu columna de Prioridad (los que no tengan, van al final con 999)
-        mensajes_finales.sort(key=lambda x: int(x.get("prioridad") or 999))
+        # 3. Los ordenamos por la prioridad calculada (Los 0 van primero)
+        mensajes_finales.sort(key=lambda x: x.get("prioridad_calculada", 999))
         
         return jsonify(mensajes_finales)
     except Exception as e:
@@ -309,7 +309,7 @@ def nuevo_mensaje():
         datos = request.json
         res = supabase.table("mensajes_rotativos").insert({
             "mensaje": datos.get('mensaje'),
-            "activo": datos.get('estado', False), # El frontend envía 'estado', la BD usa 'activo'
+            "activo": datos.get('estado', False),
             "prioridad": datos.get('prioridad', 1),
             "categoria": datos.get('categoria'),
             "fecha_mmdd": datos.get('fecha_mmdd'),
@@ -355,7 +355,6 @@ def eliminar_mensaje(id):
         supabase.table("mensajes_rotativos").delete().eq("id", id).execute()
         return jsonify({"status": "success"})
     except Exception as e: return jsonify({"error": str(e)}), 500
-
 
 # ==========================================
 # LÓGICA DE ALERTAS OPERATIVAS (CATÁLOGO)
