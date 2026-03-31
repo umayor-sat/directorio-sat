@@ -905,18 +905,27 @@
     // ==========================================
     async function cargarMotivacionales() {
         try {
-            const res = await fetch('/api/mensajes-rotativos');
-            const data = await res.json();
+            // 1. CONEXIÓN DIRECTA A SUPABASE (Saltamos el túnel de Python)
+            const { data, error } = await _supabase
+                .from('mensajes_rotativos')
+                .select('*')
+                .order('id', { ascending: true });
             
             const tbody = document.getElementById('tbodyMotivacionales');
             if(!tbody) return;
             tbody.innerHTML = '';
+
+            if (error) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:red;">Error: ${error.message}</td></tr>`;
+                return;
+            }
             
             if (!data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No hay mensajes registrados</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No hay mensajes registrados en la base de datos</td></tr>';
                 return;
             }
 
+            // 2. DIBUJAR LOS MENSAJES Y BOTONES
             data.forEach(m => {
                 const badge = m.activo ? `<span class="badge activo">ENCENDIDO</span>` : `<span class="badge inactivo">Apagado</span>`;
                 
