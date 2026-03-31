@@ -966,25 +966,83 @@
 
         if (!mensaje) { alert("Debe escribir un mensaje."); return; }
 
-        const paquete = { mensaje: mensaje, categoria: categoria, fecha_mmdd: fecha, estado: activo, prioridad: prioridad, duracion_min: 15 };
+        const paquete = { 
+            mensaje: mensaje, 
+            categoria: categoria || null, 
+            fecha_mmdd: fecha || null, 
+            activo: activo, 
+            prioridad: prioridad 
+        };
 
         try {
-            const url = id ? `/api/mensajes-rotativos/editar/${id}` : '/api/mensajes-rotativos/nuevo';
-            const method = id ? 'PUT' : 'POST';
+            let error;
+            if (id) {
+                // EDITAR DIRECTO EN SUPABASE
+                const res = await _supabase.from('mensajes_rotativos').update(paquete).eq('id', id);
+                error = res.error;
+            } else {
+                // CREAR NUEVO DIRECTO EN SUPABASE
+                const res = await _supabase.from('mensajes_rotativos').insert([paquete]);
+                error = res.error;
+            }
 
-            const res = await fetch(url, {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(paquete)
-            });
-
-            if (!res.ok) throw new Error("Error en servidor al guardar");
+            if (error) throw error;
             
             limpiarFormularioMotiv();
             cargarMotivacionales();
         } catch (error) {
             console.error("Error:", error);
             alert("Error al guardar el mensaje.");
+        }
+    }
+
+    // --- VARIABLES Y FUNCIONES PARA EL MODAL DE ACTIVACIÓN ---
+    let motivIdPendiente = null;
+
+    async function toggleMotiv(id, estadoActual) {
+        if (!estadoActual) { 
+            // ENCENDER -> Abre tu Modal de minutos
+            motivIdPendiente = id;
+            if(document.getElementById('inputMinutosMotiv')) document.getElementById('inputMinutosMotiv').value = '15';
+            if(document.getElementById('modalActivarMotiv')) document.getElementById('modalActivarMotiv').style.display = 'flex';
+        } else { 
+            // APAGAR DIRECTO EN SUPABASE
+            try {
+                const { error } = await _supabase.from('mensajes_rotativos').update({ activo: false }).eq('id', id);
+                if (error) throw error;
+                cargarMotivacionales();
+            } catch (err) { alert("⚠️ Error al apagar:\n" + err.message); }
+        }
+    }
+
+    function cerrarModalMotiv() {
+        if(document.getElementById('modalActivarMotiv')) document.getElementById('modalActivarMotiv').style.display = 'none';
+        motivIdPendiente = null;
+    }
+
+    async function confirmarActivarMotiv() {
+        if(!motivIdPendiente) return;
+        
+        try {
+            // ENCENDER DIRECTO EN SUPABASE
+            const { error } = await _supabase.from('mensajes_rotativos').update({ activo: true }).eq('id', motivIdPendiente);
+            if (error) throw error;
+            
+            cerrarModalMotiv();
+            cargarMotivacionales();
+        } catch (err) { alert("⚠️ Error al encender:\n" + err.message); }
+    }
+
+    async function borrarMotiv(id) {
+        if(confirm('¿Eliminar este mensaje permanentemente?')) {
+            try {
+                // BORRAR DIRECTO EN SUPABASE
+                const { error } = await _supabase.from('mensajes_rotativos').delete().eq('id', id);
+                if (error) throw error;
+
+                if(document.getElementById('motivId').value == id) limpiarFormularioMotiv();
+                cargarMotivacionales();
+            } catch (e) { console.error("Error al borrar:", e); }
         }
     }
 
