@@ -287,7 +287,7 @@ def api_mensajes_rotativos():
             if fecha_esp == hoy_ddmm or fecha_esp == hoy_mmdd:
                 m['prioridad_calculada'] = 0
                 mensajes_finales.append(m)
-            elif es_activo is True:
+            elif es_activo:
                 # Si está activo manualmente, mantiene su prioridad original o se va al final (999)
                 m['prioridad_calculada'] = int(m.get("prioridad") or 999)
                 mensajes_finales.append(m)
