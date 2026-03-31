@@ -536,18 +536,20 @@
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTA4MTcsImV4cCI6MjA4ODEyNjgxN30.pqT_PlAAn3oR6g_0Iaa2fs6qV8M3RQFzNOCAssyZZh4';
     const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    
     // ==========================================
     // FUNCION MAESTRA EXPORTAR A EXCEL LIMPIO
     // ==========================================
     function exportarTablaLimpia(tablaId, nombreArchivo) {
-        const tabla = document.getElementById(tablaId);
-        if (!tabla) return alert("No se encontró la tabla a exportar.");
-        
-        const clon = tabla.cloneNode(true);
+        const tablaOriginal = document.getElementById(tablaId);
+        if(!tablaOriginal) return;
+
+        const clon = tablaOriginal.cloneNode(true);
+        const botones = clon.querySelectorAll('button, i, .fa-solid');
+        botones.forEach(b => b.remove());
+
         const filas = clon.querySelectorAll('tr');
         filas.forEach(fila => {
-            if(fila.children.length > 0) {
+            if(fila.lastElementChild && fila.lastElementChild.classList.contains('columna-acciones')) {
                 fila.removeChild(fila.lastElementChild);
             }
         });
@@ -556,6 +558,10 @@
         const hoy = new Date();
         const fecha = `${hoy.getDate()}-${hoy.getMonth()+1}-${hoy.getFullYear()}`;
         XLSX.writeFile(wb, `${nombreArchivo}_${fecha}.xlsx`);
+    }
+
+    function exportarExcel() {
+        exportarTablaLimpia('tablaCasosOriginal', 'Reporte_Casos_SAT');
     }
 
     // ==========================================
@@ -573,77 +579,91 @@
     async function cargarRegistros() {
         const cuerpo = document.getElementById('tablaCasos');
         cuerpo.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px;">Cargando...</td></tr>`;
+        
         let query = _supabase.from('registro_derivaciones').select('*').order('created_at', { ascending: false });
+        
         const ejec = document.getElementById('filtroEjecutivo').value;
         if (ejec) query = query.ilike('ejecutivo', `%${ejec}%`);
+        
         const desde = document.getElementById('fechaDesde').value;
         const hasta = document.getElementById('fechaHasta').value;
         if (desde) query = query.gte('created_at', desde);
         if (hasta) query = query.lte('created_at', hasta + 'T23:59:59');
-
+        
         const { data, error } = await query;
         cuerpo.innerHTML = '';
         datosParaExcel = [];
+        
         if (error || data.length === 0) {
             cuerpo.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:40px; color:#666;">No se encontraron casos.</td></tr>`;
             return;
         }
-
+        
         data.forEach(reg => {
             const f = new Date(reg.created_at);
             const fechaFormateada = `${String(f.getDate()).padStart(2,'0')}-${String(f.getMonth()+1).padStart(2,'0')}-${f.getFullYear()} ${String(f.getHours()).padStart(2,'0')}:${String(f.getMinutes()).padStart(2,'0')}`;
-            datosParaExcel.push({ "Fecha y Hora": fechaFormateada, "Ejecutivo": reg.ejecutivo || '-', "Área": reg.area || '-', "Tipo Solicitud": reg.tipo_de_solicitud || '-', "RUT Registro": reg.identificador || '-' });
-            cuerpo.innerHTML += `<tr><td style="font-weight:bold; color:var(--um-azul);">${fechaFormateada}</td><td>${reg.ejecutivo || '-'}</td><td>${reg.area || '-'}</td><td>${reg.tipo_de_solicitud || '-'}</td><td style="font-family:monospace;">${reg.identificador || '-'}</td><td style="text-align:center;"><button class="btn-tabla btn-borrar" onclick="borrarCaso(${reg.id})"><i class="fa-solid fa-trash"></i> Borrar</button></td></tr>`;
+            
+            datosParaExcel.push({
+                "Fecha y Hora": fechaFormateada,
+                "Ejecutivo": reg.ejecutivo || '-',
+                "Área": reg.area || '-',
+                "Tipo Solicitud": reg.tipo_de_solicitud || '-',
+                "RUT Registro": reg.identificador || '-'
+            });
+            
+            cuerpo.innerHTML += `<tr>
+                <td style="font-weight:bold; color:var(--um-azul);">${fechaFormateada}</td>
+                <td>${reg.ejecutivo || '-'}</td>
+                <td>${reg.area || '-'}</td>
+                <td>${reg.tipo_de_solicitud || '-'}</td>
+                <td style="font-family:monospace;">${reg.identificador || '-'}</td>
+                <td style="text-align:center;">
+                    <button class="btn-tabla btn-borrar" onclick="borrarCaso(${reg.id})"><i class="fa-solid fa-trash"></i> Borrar</button>
+                </td>
+            </tr>`;
         });
     }
 
-    function exportarExcel() {
-        if (datosParaExcel.length === 0) return alert("No hay datos para exportar.");
-        const hoja = XLSX.utils.json_to_sheet(datosParaExcel);
-        const libro = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(libro, hoja, "Casos");
-        const hoy = new Date();
-        XLSX.writeFile(libro, `Casos_SAT_${hoy.getDate()}-${hoy.getMonth()+1}-${hoy.getFullYear()}.xlsx`);
-    }
-
     async function borrarCaso(id) {
-        if(confirm('¿Borrar este caso permanentemente?')) {
+        if (confirm("¿Seguro que deseas eliminar este caso del registro?")) {
             await _supabase.from('registro_derivaciones').delete().eq('id', id);
             cargarRegistros();
         }
     }
 
     // ==========================================
-    // LÓGICA: PESTAÑA STAFF
+    // LÓGICA: GESTIÓN DE STAFF
     // ==========================================
     async function cargarEjecutivos() {
-        const cuerpo = document.getElementById('tbodyStaff');
-        const { data, error } = await _supabase.from('ejecutivos').select('*').order('nombre');
-        cuerpo.innerHTML = '';
-        if (error || data.length === 0) return cuerpo.innerHTML = `<tr><td colspan="8" style="text-align:center;">No hay ejecutivos.</td></tr>`;
+        try {
+            const { data, error } = await _supabase.from('ejecutivos').select('*').order('nombre');
+            const tbody = document.getElementById('tbodyStaff');
+            tbody.innerHTML = '';
+            if(error) return tbody.innerHTML = `<tr><td colspan="8" style="color:red; text-align:center;">Error al cargar staff: ${error.message}</td></tr>`;
+            if(!data || data.length === 0) return tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">No hay staff registrado.</td></tr>`;
 
-        data.forEach(e => {
-            const badge = e.activo ? `<span class="badge activo">Activo</span>` : `<span class="badge inactivo">Inactivo</span>`;
-            const nomSeguro = e.nombre ? e.nombre.replace(/'/g, "\\'") : '';
-            const mailSeguro = e.mail ? e.mail.replace(/'/g, "\\'") : '';
-            const rolSeguro = e.rol ? e.rol.replace(/'/g, "\\'").toLowerCase() : 'apoyo';
-            
-            cuerpo.innerHTML += `
+            data.forEach(e => {
+                const badge = e.activo ? `<span class="badge activo">Activo</span>` : `<span class="badge inactivo">Inactivo</span>`;
+                const nomSeguro = e.nombre ? e.nombre.replace(/'/g, "\\'") : '';
+                const mailSeguro = e.correo ? e.correo.replace(/'/g, "\\'") : '';
+                const rolSeguro = e.rol ? e.rol.replace(/'/g, "\\'") : 'apoyo';
+                
+                tbody.innerHTML += `
                 <tr class="fila-staff">
-                    <td style="font-weight:bold; color:var(--um-azul);">${e.nombre || '-'}</td>
-                    <td>${e.mail || '-'}</td>
-                    <td class="col-rol">${e.rol || '-'}</td>
-                    <td style="color:#666;">${e.login_user || '-'}</td>
-                    <td style="font-family:monospace;">${e.login_password || '-'}</td>
-                    <td><span style="font-size:11px; text-transform:uppercase; font-weight:bold; color:#777;">${e.nivel_acceso || 'usuario'}</span></td>
+                    <td><strong>${e.nombre}</strong></td>
+                    <td>${e.correo}</td>
+                    <td class="col-rol">${e.rol}</td>
+                    <td><span style="background:#eee; padding:3px 6px; border-radius:4px; font-family:monospace;">${e.login_user || '-'}</span></td>
+                    <td><span style="background:#eee; padding:3px 6px; border-radius:4px; font-family:monospace;">${e.login_password || '-'}</span></td>
+                    <td style="text-transform:capitalize;">${e.nivel_acceso || 'Usuario'}</td>
                     <td style="text-align:center;">${badge}</td>
                     <td style="text-align:center; white-space:nowrap;">
                         <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormStaff(${e.id}, '${nomSeguro}', '${mailSeguro}', '${rolSeguro}', ${e.activo}, '${e.login_user || ''}', '${e.login_password || ''}', '${e.nivel_acceso || 'usuario'}')"><i class="fa-solid fa-pen"></i></button>
                         <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarStaff(${e.id}, '${nomSeguro}')"><i class="fa-solid fa-trash"></i></button>
                     </td>
-                </tr>
-            `;
-        });
+                </tr>`;
+            });
+        } catch(e) { console.error(e); }
     }
 
     function filtrarStaff() {
@@ -664,6 +684,7 @@
         document.getElementById('formLoginUser').value = user;
         document.getElementById('formLoginPass').value = pass;
         document.getElementById('formNivelAcceso').value = nivel || 'usuario';
+        
         document.getElementById('tituloFormulario').innerHTML = `<span><i class="fa-solid fa-pen"></i> Editando a: ${nombre}</span>`;
         document.getElementById('panelFormulario').style.border = "2px solid #f39c12";
         document.getElementById('btnCancelarStaff').style.display = "inline-block";
@@ -673,11 +694,12 @@
         document.getElementById('ejecutivoId').value = '';
         document.getElementById('formNombre').value = '';
         document.getElementById('formMail').value = '';
-        document.getElementById('formRol').value = 'apoyo'; 
+        document.getElementById('formRol').value = 'apoyo';
         document.getElementById('formActivo').checked = true;
         document.getElementById('formLoginUser').value = '';
         document.getElementById('formLoginPass').value = '';
         document.getElementById('formNivelAcceso').value = 'usuario';
+        
         document.getElementById('tituloFormulario').innerHTML = `<span><i class="fa-solid fa-user-plus"></i> Añadir Nuevo Ejecutivo</span>`;
         document.getElementById('panelFormulario').style.border = "1px solid var(--borde)";
         document.getElementById('btnCancelarStaff').style.display = "none";
@@ -686,52 +708,50 @@
     async function guardarEjecutivo() {
         const id = document.getElementById('ejecutivoId').value;
         const nombre = document.getElementById('formNombre').value.trim();
-        const mail = document.getElementById('formMail').value.trim();
-        const rol = document.getElementById('formRol').value.toLowerCase(); 
+        const correo = document.getElementById('formMail').value.trim();
+        const rol = document.getElementById('formRol').value;
         const activo = document.getElementById('formActivo').checked;
         const login_user = document.getElementById('formLoginUser').value.trim();
         const login_password = document.getElementById('formLoginPass').value.trim();
         const nivel_acceso = document.getElementById('formNivelAcceso').value;
 
-        if (!nombre) return alert("El nombre es obligatorio.");
-        
-        const paquete = { nombre, mail, rol, activo, login_user, login_password, nivel_acceso };
-        if (id) await _supabase.from('ejecutivos').update(paquete).eq('id', id);
-        else await _supabase.from('ejecutivos').insert([paquete]);
+        if(!nombre || !correo) return alert("El nombre y el correo son obligatorios.");
+
+        const paquete = { nombre, correo, rol, activo, login_user, login_password, nivel_acceso };
+
+        if(id) {
+            await _supabase.from('ejecutivos').update(paquete).eq('id', id);
+        } else {
+            await _supabase.from('ejecutivos').insert([paquete]);
+        }
         
         limpiarFormularioStaff();
         cargarEjecutivos();
     }
 
     async function borrarStaff(id, nombre) {
-        if (confirm(`¿Eliminar a "${nombre}" del staff irreversiblemente?`)) {
+        if(confirm(`¿Estás seguro de eliminar a ${nombre}? Esta acción no se puede deshacer.`)) {
             await _supabase.from('ejecutivos').delete().eq('id', id);
-            if (document.getElementById('ejecutivoId').value == id) limpiarFormularioStaff();
+            limpiarFormularioStaff();
             cargarEjecutivos();
         }
     }
 
     // ==========================================
-    // LÓGICA: PESTAÑA MENSAJES Y ALERTAS
+    // LÓGICA DE ALERTAS OPERATIVAS (CATÁLOGO)
     // ==========================================
-    
-    // --- VARIABLES PARA MODALES ---
     let alertaIdPendiente = null;
-    let motivIdPendiente = null;
 
-    // --- ALERTAS OPERATIVAS ---
     async function cargarAlertas() {
         try {
-            const { data, error } = await _supabase.from('alertas_operativas').select('*').order('created_at', { ascending: false });
+            const { data, error } = await _supabase.from('alertas_operativas').select('*').eq('es_default', false).order('created_at', { ascending: false });
             const tbody = document.getElementById('tbodyAlertas');
             tbody.innerHTML = '';
             
             if(error) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red;">Error cargando catálogo: ${error.message}</td></tr>`;
-            if(!data || data.length === 0) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No hay alertas en tu catálogo.</td></tr>`;
+            if(!data || data.length === 0) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">El catálogo está vacío.</td></tr>`;
 
             data.forEach(a => {
-                if(a.es_default) return; 
-                
                 const badge = a.estado ? `<span class="badge activo" style="animation: pulse 2s infinite;">🔥 ENCENDIDA EN HOME</span>` : `<span class="badge inactivo">Apagada</span>`;
                 const catSegura = a.categoria ? a.categoria.replace(/'/g, "\\'") : '';
                 const msjSeguro = a.mensaje ? a.mensaje.replace(/'/g, "\\'") : '';
@@ -741,44 +761,40 @@
                 if(a.color === 'amarillo') iconoSem = '🟡';
 
                 const btnSwitch = `<button class="btn-tabla" 
-                                style="color:${a.estado ? 'white' : 'var(--texto-suave)'}; border:1px solid ${a.estado ? 'var(--rojo)' : 'var(--borde)'}; background:${a.estado ? 'var(--rojo)' : '#f9f9f9'}; font-size:14px; padding: 6px 12px;" 
-                                onclick="toggleAlerta('${a.id}', ${a.estado})" title="${a.estado ? 'Apagar Alerta' : 'Encender Alerta'}">
-                                <i class="fa-solid ${a.estado ? 'fa-toggle-on' : 'fa-toggle-off'}"></i>
-                            </button>`;
+                    style="color:${a.estado ? 'white' : 'var(--texto-suave)'}; border:1px solid ${a.estado ? 'var(--rojo)' : 'var(--borde)'}; background:${a.estado ? 'var(--rojo)' : '#f9f9f9'}; font-size:14px; padding: 6px 12px;" 
+                    onclick="toggleAlerta('${a.id}', ${a.estado})" title="${a.estado ? 'Apagar Alerta' : 'Encender Alerta'}">
+                    <i class="fa-solid ${a.estado ? 'fa-toggle-on' : 'fa-toggle-off'}"></i>
+                </button>`;
 
                 tbody.innerHTML += `
-                    <tr style="background-color: ${a.estado ? '#fff5f5' : 'transparent'};">
-                        <td style="font-weight:bold; color:#444;">${iconoSem} ${a.categoria || 'Sin Categoría'}</td>
-                        <td style="font-size:12px;">${a.mensaje}</td>
-                        <td style="text-align:center;">${badge}</td>
-                        <td style="text-align:center; white-space:nowrap;">
-                            <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormAlerta('${a.id}', '${catSegura}', '${msjSeguro}', ${a.estado}, '${a.color || 'rojo'}')"><i class="fa-solid fa-pen"></i></button>
-                            ${btnSwitch}
-                            <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarAlerta('${a.id}')"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
+                <tr style="background-color: ${a.estado ? '#fff5f5' : 'transparent'};">
+                    <td style="font-weight:bold; color:#444;">${iconoSem} ${a.categoria || 'Sin Categoría'}</td>
+                    <td style="font-size:12px;">${a.mensaje}</td>
+                    <td style="text-align:center;">${badge}</td>
+                    <td style="text-align:center; white-space:nowrap;">
+                        <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormAlerta('${a.id}', '${catSegura}', '${msjSeguro}', ${a.estado}, '${a.color || 'rojo'}')"><i class="fa-solid fa-pen"></i></button>
+                        ${btnSwitch}
+                        <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarAlerta('${a.id}')"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>`;
             });
         } catch (e) { console.error(e); }
     }
 
-    // 1. Abre el Modal o Apaga Directamente
     async function toggleAlerta(id, estadoActual) {
         if (!estadoActual) { 
             // ENCENDER -> Abre el Modal
             alertaIdPendiente = id;
-            document.getElementById('inputHorasAlerta').value = '4'; // Valor por defecto
+            document.getElementById('inputHorasAlerta').value = '4';
             document.getElementById('inputMinutosAlerta').value = '0';
             document.getElementById('modalActivarAlerta').style.display = 'flex';
         } else { 
-            // APAGAR -> Lo hace directo
+            // APAGAR -> Directo
             try {
                 const { error } = await _supabase.from('alertas_operativas').update({ estado: false }).eq('id', id);
                 if (error) throw error;
                 cargarAlertas();
-            } catch (err) {
-                alert("⚠️ Error al comunicarse con la base de datos:\n" + err.message);
-            }
+            } catch (err) { alert("⚠️ Error al cambiar estado:\n" + err.message); }
         }
     }
 
@@ -787,7 +803,6 @@
         alertaIdPendiente = null;
     }
 
-    // 2. Confirma la activación con los selectores del Modal
     async function confirmarActivarAlerta() {
         if(!alertaIdPendiente) return;
         
@@ -810,12 +825,9 @@
             }).eq('id', alertaIdPendiente);
 
             if (error) throw error;
-            
             cerrarModalAlerta();
             cargarAlertas();
-        } catch (err) {
-            alert("⚠️ Error al comunicarse con la base de datos:\n" + err.message);
-        }
+        } catch (err) { alert("⚠️ Error al encender:\n" + err.message); }
     }
 
     function subirFormAlerta(id, categoria, mensaje, activo, color) {
@@ -834,7 +846,7 @@
         document.getElementById('alertaId').value = '';
         document.getElementById('alertaCategoria').value = '';
         document.getElementById('alertaMensaje').value = '';
-        document.getElementById('alertaActivo').value = 'false'; 
+        document.getElementById('alertaActivo').value = 'false';
         document.getElementById('alertaColor').value = 'rojo';
 
         document.getElementById('tituloFormularioAlerta').innerHTML = `<span><i class="fa-solid fa-folder-plus"></i> Agregar al Catálogo</span>`;
@@ -968,6 +980,7 @@
     }
 
     // --- VARIABLES Y FUNCIONES PARA EL MODAL DE ACTIVACIÓN ---
+    let motivIdPendiente = null;
 
     async function toggleMotiv(id, estadoActual) {
         if (!estadoActual) { 
@@ -998,7 +1011,6 @@
         const minutos = document.getElementById('inputMinutosMotiv') ? parseInt(document.getElementById('inputMinutosMotiv').value) : 15;
         
         try {
-            // Confirmar usando el túnel de Python en vez de Supabase directo
             await fetch(`/api/mensajes-rotativos/toggle/${motivIdPendiente}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1057,113 +1069,6 @@
         if(btnCancelar) btnCancelar.style.display = "none";
     }
 
-    // 1. Abre el Modal o Apaga Directo
-    async function toggleMotiv(id, estadoActual) {
-        if (!estadoActual) { 
-            // ENCENDER -> Abre el Modal
-            motivIdPendiente = id;
-            document.getElementById('inputMinutosMotiv').value = '15';
-            document.getElementById('modalActivarMotiv').style.display = 'flex';
-        } else { 
-            // APAGAR -> Lo hace directo
-            try {
-                const { error } = await _supabase.from('mensajes_rotativos').update({ estado: false }).eq('id', id);
-                if (error) throw error;
-                cargarMotivacionales();
-            } catch (err) {
-                alert("⚠️ Error al cambiar estado:\n" + err.message);
-            }
-        }
-    }
-
-    function cerrarModalMotiv() {
-        document.getElementById('modalActivarMotiv').style.display = 'none';
-        motivIdPendiente = null;
-    }
-
-    // 2. Confirma la activación con los minutos del Modal
-    async function confirmarActivarMotiv() {
-        if(!motivIdPendiente) return;
-        const mins = parseInt(document.getElementById('inputMinutosMotiv').value) || 15;
-        
-        try {
-            const { error } = await _supabase.from('mensajes_rotativos').update({ estado: true, duracion_min: mins }).eq('id', motivIdPendiente);
-            if (error) throw error;
-            cerrarModalMotiv();
-            cargarMotivacionales();
-        } catch (err) {
-            alert("⚠️ Error al comunicarse con la base de datos:\n" + err.message);
-        }
-    }
-
-    function subirFormMotiv(id, mensaje, estado, prioridad, categoria, fecha_mmdd) {
-        document.getElementById('motivId').value = id;
-        document.getElementById('motivMensaje').value = mensaje;
-        document.getElementById('motivActivo').value = estado;
-        document.getElementById('motivPrioridad').value = prioridad;
-        document.getElementById('motivCategoria').value = categoria;
-        document.getElementById('motivFecha').value = fecha_mmdd;
-
-        document.getElementById('tituloFormularioMotiv').innerHTML = `<span><i class="fa-solid fa-pen"></i> Editando Frase</span>`;
-        document.getElementById('panelFormularioMotiv').style.border = "2px solid #f39c12";
-        document.getElementById('btnCancelarMotiv').style.display = "inline-block";
-    }
-
-    function limpiarFormularioMotiv() {
-        document.getElementById('motivId').value = '';
-        document.getElementById('motivMensaje').value = '';
-        document.getElementById('motivActivo').value = 'false';
-        document.getElementById('motivPrioridad').value = '1';
-        document.getElementById('motivCategoria').value = '';
-        document.getElementById('motivFecha').value = '';
-
-        document.getElementById('tituloFormularioMotiv').innerHTML = `<span><i class="fa-solid fa-folder-plus"></i> Nueva Frase o Efeméride</span>`;
-        document.getElementById('panelFormularioMotiv').style.border = "1px solid var(--borde)";
-        document.getElementById('btnCancelarMotiv').style.display = "none";
-    }
-
-    async function guardarMotivacional() {
-        try {
-            const id = document.getElementById('motivId').value;
-            const mensaje = document.getElementById('motivMensaje').value.trim();
-            const estado = document.getElementById('motivActivo').value === 'true';
-            const prioridad = parseInt(document.getElementById('motivPrioridad').value) || 1;
-            const categoria = document.getElementById('motivCategoria').value.trim() || null;
-            const fecha_mmdd = document.getElementById('motivFecha').value.trim() || null;
-            
-            if (!mensaje) return alert("Debes escribir el texto del mensaje.");
-            
-            const paquete = { mensaje, estado, prioridad, categoria, fecha_mmdd };
-
-            if(!id) paquete.duracion_min = 15;
-
-            let res = id ? await _supabase.from('mensajes_rotativos').update(paquete).eq('id', id)
-                         : await _supabase.from('mensajes_rotativos').insert([paquete]);
-            
-            if (res && res.error) throw res.error;
-
-            limpiarFormularioMotiv();
-            cargarMotivacionales();
-            
-            const btn = document.getElementById('tituloFormularioMotiv');
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = `<span style="color:var(--um-verde);"><i class="fa-solid fa-check"></i> ¡Frase guardada!</span>`;
-            setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
-
-        } catch (err) {
-            console.error(err);
-            alert("⚠️ La Base de Datos rechazó la carga:\n" + err.message);
-        }
-    }
-
-    async function borrarMotiv(id) {
-        if (confirm("¿Eliminar este mensaje permanentemente del catálogo?")) {
-            await _supabase.from('mensajes_rotativos').delete().eq('id', id);
-            limpiarFormularioMotiv();
-            cargarMotivacionales();
-        }
-    }
-
     // ==========================================
     // LÓGICA: PESTAÑA ENLACES
     // ==========================================
@@ -1171,12 +1076,13 @@
         try {
             const res = await fetch('/api/enlaces');
             const data = await res.json();
+            
             const tbody = document.getElementById('tbody-enlaces');
             tbody.innerHTML = '';
             
             if(data.error) {
                 tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px; color:#888;">Error cargando enlaces.</td></tr>`;
-                return; 
+                return;
             }
             if(data.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px; color:#888;">No hay enlaces registrados.</td></tr>`;
@@ -1184,40 +1090,24 @@
             }
 
             data.forEach(link => {
-                const badge = link.activo 
-                    ? `<span class="badge activo">Activo</span>`
-                    : `<span class="badge inactivo" style="background:gray;">Inactivo</span>`;
-                
-                const urlCorta = link.url.length > 55 ? link.url.substring(0,55) + '...' : link.url;
-                const nomSeguro = link.nombre_link ? link.nombre_link.replace(/'/g, "\\'") : '';
+                const badge = link.activo ? `<span class="badge activo">Visible</span>` : `<span class="badge inactivo">Oculto</span>`;
+                const btnSwitch = `<button class="btn-tabla" style="color:${link.activo ? 'white' : 'var(--texto-suave)'}; border:1px solid ${link.activo ? 'var(--um-verde)' : 'var(--borde)'}; background:${link.activo ? 'var(--um-verde)' : '#f9f9f9'};" onclick="toggleEnlace(${link.id})"><i class="fa-solid ${link.activo ? 'fa-toggle-on' : 'fa-toggle-off'}"></i></button>`;
                 
                 tbody.innerHTML += `
-                    <tr class="fila-enlace">
-                        <td style="font-weight:bold; color:#777;">${link.orden}</td>
-                        <td style="color:var(--um-azul); font-size:16px; text-align:center;"><i class="fa-solid ${link.icono || 'fa-link'}"></i></td>
-                        <td>
-                            <strong>${link.nombre_link}</strong><br>
-                            <a href="${link.url}" target="_blank" style="font-size:11px; color:#666; text-decoration:none;">${urlCorta}</a>
-                        </td>
-                        <td>${link.categoria}</td>
-                        <td style="text-align:center;">${badge}</td>
-                        <td style="text-align:center; white-space:nowrap;">
-                            <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormEnlace(${link.id}, '${nomSeguro}', '${link.url}', '${link.categoria}', '${link.icono || ''}', ${link.orden})"><i class="fa-solid fa-pen"></i></button>
-                            
-                            <button class="btn-tabla ${link.activo ? 'btn-borrar' : 'btn-exportar'}" 
-                                style="color:${link.activo ? 'var(--rojo)' : 'white'}; border:1px solid ${link.activo ? 'var(--rojo)' : 'transparent'}; background:${link.activo ? 'transparent' : 'var(--verde-palta)'}" 
-                                onclick="toggleEnlace(${link.id})" title="${link.activo ? 'Desactivar Link' : 'Activar Link'}">
-                                <i class="fa-solid ${link.activo ? 'fa-toggle-off' : 'fa-toggle-on'}"></i>
-                            </button>
-                            
-                            <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarEnlace(${link.id}, '${nomSeguro}')">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
+                <tr class="fila-enlace">
+                    <td style="text-align:center;"><strong>${link.orden}</strong></td>
+                    <td style="text-align:center; font-size:18px; color:var(--um-azul);"><i class="fa-solid ${link.icono || 'fa-link'}"></i></td>
+                    <td><strong>${link.nombre_link}</strong><br><a href="${link.url}" target="_blank" style="font-size:11px; color:#888;">${link.url}</a></td>
+                    <td>${link.categoria}</td>
+                    <td style="text-align:center;">${badge}</td>
+                    <td style="text-align:center; white-space:nowrap;">
+                        <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormEnlace(${link.id}, '${link.nombre_link}', '${link.url}', '${link.categoria}', '${link.icono}', ${link.orden})"><i class="fa-solid fa-pen"></i></button>
+                        ${btnSwitch}
+                        <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarEnlace(${link.id}, '${link.nombre_link}')"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>`;
             });
-        } catch (error) { console.error("Error cargando enlaces:", error); }
+        } catch (e) { console.error(e); }
     }
 
     function filtrarEnlaces() {
@@ -1247,28 +1137,24 @@
         const nombre_link = document.getElementById('linkNombre').value.trim();
         const url = document.getElementById('linkUrl').value.trim();
         const categoria = document.getElementById('linkCategoria').value;
-        const icono = document.getElementById('linkIcono').value.trim();
-        const orden = document.getElementById('linkOrden').value;
-        
-        if (!nombre_link || !url) return alert("El nombre y la URL son obligatorios.");
-        const payload = { nombre_link, url, categoria, icono, orden };
-        
-        try {
-            let endpoint = id ? `/api/enlaces/editar/${id}` : '/api/enlaces/nuevo';
-            let method = id ? 'PUT' : 'POST';
+        const icono = document.getElementById('linkIcono').value.trim() || 'fa-link';
+        const orden = parseInt(document.getElementById('linkOrden').value) || 1;
 
-            const res = await fetch(endpoint, {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            const result = await res.json();
-            
-            if (result.status === 'success') {
-                limpiarFormularioEnlace();
-                cargarEnlaces();
-            } else alert("Error al guardar: " + result.error);
-        } catch (error) { console.error("Error guardando:", error); }
+        if(!nombre_link || !url) return alert("El nombre y la URL son obligatorios.");
+
+        const paquete = { nombre_link, url, categoria, icono, orden };
+
+        const urlFetch = id ? `/api/enlaces/editar/${id}` : '/api/enlaces/nuevo';
+        const method = id ? 'PUT' : 'POST';
+
+        await fetch(urlFetch, {
+            method: method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(paquete)
+        });
+
+        limpiarFormularioEnlace();
+        cargarEnlaces();
     }
 
     async function toggleEnlace(id) {
@@ -1307,7 +1193,6 @@
         cargarAlertas();         
         cargarMotivacionales();  
     });
-
 </script>
 
 </body>
