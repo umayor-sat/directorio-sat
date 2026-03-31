@@ -224,6 +224,46 @@ def nuevo_enlace():
         return jsonify({"status": "success", "data": res.data})
     except Exception as e: return jsonify({"error": str(e)}), 500
 
+@app.route('/api/enlaces/editar/<int:id>', methods=['PUT'])
+@login_required
+def editar_enlace(id):
+    if session.get('nivel_acceso') != 'admin': return jsonify({"error": "No autorizado"}), 403
+    try:
+        datos = request.json
+        res = supabase.table("LINKS").update({
+            "nombre_link": datos.get('nombre_link'),
+            "url": datos.get('url'),
+            "categoria": datos.get('categoria'),
+            "orden": int(datos.get('orden', 0)),
+            "icono": datos.get('icono', 'fa-link')
+        }).eq("id", id).execute()
+        return jsonify({"status": "success"})
+    except Exception as e: return jsonify({"error": str(e)}), 500
+
+@app.route('/api/enlaces/toggle/<int:id>', methods=['POST'])
+@login_required
+def toggle_enlace(id):
+    if session.get('nivel_acceso') != 'admin': return jsonify({"error": "No autorizado"}), 403
+    try:
+        # Obtenemos el estado actual primero para invertirlo
+        link = supabase.table("LINKS").select("activo").eq("id", id).execute()
+        if not link.data: return jsonify({"error": "No encontrado"}), 404
+        nuevo_estado = not link.data[0].get('activo')
+        
+        supabase.table("LINKS").update({"activo": nuevo_estado}).eq("id", id).execute()
+        return jsonify({"status": "success", "nuevo_estado": nuevo_estado})
+    except Exception as e: return jsonify({"error": str(e)}), 500
+
+@app.route('/api/enlaces/eliminar/<int:id>', methods=['DELETE'])
+@login_required
+def eliminar_enlace(id):
+    if session.get('nivel_acceso') != 'admin': return jsonify({"error": "No autorizado"}), 403
+    try:
+        supabase.table("LINKS").delete().eq("id", id).execute()
+        return jsonify({"status": "success"})
+    except Exception as e: return jsonify({"error": str(e)}), 500
+
+
 # ==========================================
 # LÓGICA DE MENSAJES ROTATIVOS (CARRUSEL)
 # ==========================================
@@ -231,13 +271,91 @@ def nuevo_enlace():
 @login_required
 def api_mensajes_rotativos():
     try:
-        # Busca en la tabla mensajes_rotativos aquellos que estén activos
-        res = supabase.table("mensajes_rotativos").select("*").eq("activo", True).execute()
-        return jsonify(res.data or [])
+        # 1. Cerebro de Calendario: Obtener la fecha de HOY en Chile
+        hoy_chile = datetime.now(TZ_CHILE)
+        hoy_ddmm = hoy_chile.strftime("%d-%m") # Formato chileno Ej: "18-09"
+        hoy_mmdd = hoy_chile.strftime("%m-%d") # Formato inglés por si acaso Ej: "09-18"
+
+        # 2. Traemos TODOS los mensajes de la base de datos para analizarlos
+        res = supabase.table("mensajes_rotativos").select("*").execute()
+        todos = res.data or []
+        
+        mensajes_finales = []
+        for m in todos:
+            # En base de datos la columna se llama "activo"
+            es_activo = m.get("activo", False) 
+            fecha_esp = str(m.get("fecha_mmdd", "")).strip()
+
+            # LÓGICA DE ROTACIÓN: 
+            # Entra al carrusel SI lo encendiste manualmente (activo=True) 
+            # O SI la fecha especial del mensaje coincide con el día de HOY.
+            if es_activo is True or fecha_esp == hoy_ddmm or fecha_esp == hoy_mmdd:
+                mensajes_finales.append(m)
+        
+        # 3. Los ordenamos por tu columna de Prioridad (los que no tengan, van al final con 999)
+        mensajes_finales.sort(key=lambda x: int(x.get("prioridad") or 999))
+        
+        return jsonify(mensajes_finales)
     except Exception as e:
         print(f"Error al cargar mensajes rotativos: {e}")
-        # Retorna lista vacía si falla para no romper el frontend
         return jsonify([])
+
+# --- PUERTAS CRUD PARA EL ADMINISTRADOR (MENSAJES) ---
+@app.route('/api/mensajes-rotativos/nuevo', methods=['POST'])
+@login_required
+def nuevo_mensaje():
+    if session.get('nivel_acceso') != 'admin': return jsonify({"error": "No autorizado"}), 403
+    try:
+        datos = request.json
+        res = supabase.table("mensajes_rotativos").insert({
+            "mensaje": datos.get('mensaje'),
+            "activo": datos.get('estado', False), # El frontend envía 'estado', la BD usa 'activo'
+            "prioridad": datos.get('prioridad', 1),
+            "categoria": datos.get('categoria'),
+            "fecha_mmdd": datos.get('fecha_mmdd'),
+            "duracion_min": datos.get('duracion_min', 15)
+        }).execute()
+        return jsonify({"status": "success"})
+    except Exception as e: return jsonify({"error": str(e)}), 500
+
+@app.route('/api/mensajes-rotativos/editar/<int:id>', methods=['PUT'])
+@login_required
+def editar_mensaje(id):
+    if session.get('nivel_acceso') != 'admin': return jsonify({"error": "No autorizado"}), 403
+    try:
+        datos = request.json
+        res = supabase.table("mensajes_rotativos").update({
+            "mensaje": datos.get('mensaje'),
+            "activo": datos.get('estado', False),
+            "prioridad": datos.get('prioridad', 1),
+            "categoria": datos.get('categoria'),
+            "fecha_mmdd": datos.get('fecha_mmdd')
+        }).eq("id", id).execute()
+        return jsonify({"status": "success"})
+    except Exception as e: return jsonify({"error": str(e)}), 500
+
+@app.route('/api/mensajes-rotativos/toggle/<int:id>', methods=['POST'])
+@login_required
+def toggle_mensaje(id):
+    if session.get('nivel_acceso') != 'admin': return jsonify({"error": "No autorizado"}), 403
+    try:
+        datos = request.json
+        res = supabase.table("mensajes_rotativos").update({
+            "activo": datos.get('estado'),
+            "duracion_min": datos.get('duracion_min')
+        }).eq("id", id).execute()
+        return jsonify({"status": "success"})
+    except Exception as e: return jsonify({"error": str(e)}), 500
+
+@app.route('/api/mensajes-rotativos/eliminar/<int:id>', methods=['DELETE'])
+@login_required
+def eliminar_mensaje(id):
+    if session.get('nivel_acceso') != 'admin': return jsonify({"error": "No autorizado"}), 403
+    try:
+        supabase.table("mensajes_rotativos").delete().eq("id", id).execute()
+        return jsonify({"status": "success"})
+    except Exception as e: return jsonify({"error": str(e)}), 500
+
 
 # ==========================================
 # LÓGICA DE ALERTAS OPERATIVAS (CATÁLOGO)
@@ -246,10 +364,7 @@ def api_mensajes_rotativos():
 @login_required
 def api_alertas_operativas():
     try:
-        # Usamos zona horaria UTC explícita para asegurar consistencia con Supabase
         ahora_utc = datetime.now(timezone.utc)
-        
-        # 1. Traer solo las que tienen estado=True en la base de datos
         res = supabase.table("alertas_operativas").select("*").eq("estado", True).order("prioridad").execute()
         
         todas_activas = res.data or []
@@ -267,41 +382,49 @@ def api_alertas_operativas():
                 alertas_finales.append(a)
             else:
                 try:
-                    # Parsear la fecha de fin y asegurar que sea comparada en UTC
                     fecha_fin = datetime.fromisoformat(fin_str.replace('Z', '+00:00'))
-                    
-                    # Si la alerta todavía no expira, la enviamos al frontend
                     if fecha_fin > ahora_utc:
                         alertas_finales.append(a)
-                    # NOTA: Eliminamos el update destructivo. Si expiró, simplemente la ignoramos 
-                    # y no la incluimos en el array que se envía al Home.
                 except Exception as ex:
-                    print(f"Error parseando fecha de alerta {a.get('id')}: {ex}")
-                    alertas_finales.append(a) # Por seguridad, si falla el parseo la mostramos
+                    print(f"Error parseando fecha de alerta: {ex}")
+                    alertas_finales.append(a)
 
         if alertas_finales:
             return jsonify(alertas_finales)
         else:
             return jsonify([mensaje_default] if mensaje_default else [])
+    except Exception as e: return jsonify({"error": str(e)}), 500
 
-    except Exception as e:
-        print(f"Error en api_alertas_operativas: {e}")
-        return jsonify({"error": str(e)}), 500
-
+# --- PUERTAS CRUD PARA EL ADMINISTRADOR (ALERTAS) ---
 @app.route('/api/alertas-operativas/nuevo', methods=['POST'])
 @login_required
 def nueva_alerta():
     if session.get('nivel_acceso') != 'admin': return jsonify({"error": "No autorizado"}), 403
     try:
         datos = request.json
-        # IMPORTANTE: Siempre nace en False (Catálogo)
         res = supabase.table("alertas_operativas").insert({
             "categoria": datos.get('categoria'),
             "mensaje": datos.get('mensaje'),
+            "color": datos.get('color', 'rojo'),
             "estado": False, 
-            "es_default": datos.get('es_default', False)
+            "es_default": False
         }).execute()
-        return jsonify({"status": "success", "data": res.data})
+        return jsonify({"status": "success"})
+    except Exception as e: return jsonify({"error": str(e)}), 500
+
+@app.route('/api/alertas-operativas/editar/<int:id>', methods=['PUT'])
+@login_required
+def editar_alerta(id):
+    if session.get('nivel_acceso') != 'admin': return jsonify({"error": "No autorizado"}), 403
+    try:
+        datos = request.json
+        res = supabase.table("alertas_operativas").update({
+            "categoria": datos.get('categoria'),
+            "mensaje": datos.get('mensaje'),
+            "color": datos.get('color', 'rojo'),
+            "estado": datos.get('estado', False)
+        }).eq("id", id).execute()
+        return jsonify({"status": "success"})
     except Exception as e: return jsonify({"error": str(e)}), 500
 
 @app.route('/api/alertas-operativas/toggle/<int:id>', methods=['POST'])
