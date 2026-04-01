@@ -302,20 +302,17 @@
                     
                     <div class="grid-formulario" style="grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
                         <div class="campo">
-                            <label>Prioridad (Orden)</label>
-                            <input type="number" id="motivPrioridad" value="1" min="1" title="Orden de aparición (1 es el primero)">
+                            <label>Categoría</label>
+                            <select id="motivCategoria">
+                                <option value="motivacional">Motivacional</option>
+                                <option value="bienestar">Bienestar / Salud</option>
+                                <option value="protocolo">Protocolo Telefónico</option>
+                                <option value="efemeride">Efeméride / Feriado</option>
+                            </select>
                         </div>
                         <div class="campo">
-                            <label>Categoría (Opcional)</label>
-                            <input type="text" id="motivCategoria" placeholder="Ej: Motivacional">
-                        </div>
-                    </div>
-
-                    <div class="grid-formulario" style="grid-template-columns: 1fr; gap:12px; margin-bottom:12px;">
-                        <div class="campo" style="background: #eef5ea; padding: 10px; border-radius: 6px; border: 1px dashed var(--um-verde);">
-                            <label style="color:var(--um-verde);">📅 Programar Fecha Especial (Opcional)</label>
-                            <input type="text" id="motivFecha" placeholder="MM-DD (Ej: 12-25 para Navidad)" style="margin-top:5px;">
-                            <small style="color:#555; margin-top:5px; font-size:10px;">Si agregas una fecha, el servidor encenderá este mensaje automáticamente ese día.</small>
+                            <label>Día Fijo Anual (Opcional)</label>
+                            <input type="text" id="motivFecha" placeholder="MM-DD (Ej: 12-25)">
                         </div>
                     </div>
 
@@ -348,59 +345,52 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
         <div id="tab-enlaces" class="tab-panel">
-            <h2>Añadir o Editar Enlace (Mega-Menú)</h2>
+            <h2 style="color:var(--um-azul); border-bottom-color: var(--um-azul);">
+                <span><i class="fa-solid fa-link"></i> Gestión de Botones y Enlaces Útiles</span>
+                <button class="btn-accion btn-filtrar" style="font-size:12px; height:auto; padding:6px 12px;" onclick="abrirModalLink()"><i class="fa-solid fa-plus"></i> Nuevo Enlace</button>
+            </h2>
 
-            <div class="panel-formulario" id="panelFormularioEnlace">
-                <h3 id="tituloFormularioEnlace"><span><i class="fa-solid fa-link"></i> Registrar Nuevo Link</span></h3>
-                <input type="hidden" id="linkId" value=""> 
+            <div class="panel-formulario" id="panelFormularioEnlace" style="display:none; border:2px solid var(--um-azul);">
+                <h3 id="tituloFormularioEnlace" style="color:var(--um-azul);"><span><i class="fa-solid fa-link"></i> Registrar Nuevo Link</span></h3>
+                <input type="hidden" id="linkId" value="">
                 
-                <div class="grid-formulario">
+                <div class="grid-formulario" style="grid-template-columns: 2fr 3fr 1fr;">
                     <div class="campo">
-                        <label>Nombre del Link *</label>
-                        <input type="text" id="linkNombre" placeholder="Ej: Intranet SAT">
+                        <label>Nombre del Enlace</label>
+                        <input type="text" id="linkNombre" placeholder="Ej: Portal Financiero">
                     </div>
                     <div class="campo">
-                        <label>URL de destino *</label>
+                        <label>URL / Link de Destino</label>
                         <input type="url" id="linkUrl" placeholder="https://...">
                     </div>
                     <div class="campo">
-                        <label>Categoría *</label>
+                        <label>Ícono (FontAwesome)</label>
+                        <input type="text" id="linkIcono" placeholder="fa-link" value="fa-link">
+                    </div>
+                </div>
+
+                <div class="grid-formulario" style="grid-template-columns: 1fr 1fr; margin-top:15px;">
+                     <div class="campo">
+                        <label>Categoría</label>
                         <select id="linkCategoria">
-                            <option value="Links Frecuentes">Links Frecuentes</option>
-                            <option value="Beneficios Ministeriales">Beneficios Ministeriales</option>
-                            <option value="Turnos SAT">Turnos SAT</option>
-                            <option value="Mesa TI">Mesa TI</option>
-                            <option value="Otros Recursos">Otros Recursos</option>
+                            <option value="Sistemas Internos">Sistemas Internos</option>
+                            <option value="Portales Externos">Portales Externos</option>
+                            <option value="Documentos y Guías">Documentos y Guías</option>
+                            <option value="General">General</option>
                         </select>
                     </div>
                     <div class="campo">
-                        <label>Ícono (Ej: fa-link)</label>
-                        <input type="text" id="linkIcono" value="fa-link">
+                        <label>Orden de Aparición</label>
+                        <input type="number" id="linkOrden" value="1" min="1" max="99">
                     </div>
                 </div>
-                
-                <div class="grid-formulario" style="grid-template-columns: 1fr 3fr; margin-top:15px; border-top:1px dashed #ccc; padding-top:15px;">
-                    <div class="campo">
-                        <label>Orden (Prioridad)</label>
-                        <input type="number" id="linkOrden" value="1" min="1">
-                    </div>
-                    <div class="acciones-form" style="margin-top:0; align-items:flex-end; justify-content:flex-end;">
-                        <button class="btn-accion btn-limpiar" id="btnCancelarEnlace" style="display:none;" onclick="limpiarFormularioEnlace()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
-                        <button class="btn-accion btn-limpiar" onclick="limpiarFormularioEnlace()"><i class="fa-solid fa-eraser"></i> Limpiar</button>
-                        <button class="btn-accion btn-filtrar" onclick="guardarEnlace()"><i class="fa-solid fa-floppy-disk"></i> Guardar Enlace</button>
-                    </div>
-                </div>
-            </div>
 
-            <div class="filtros" style="justify-content: space-between; align-items: center; padding: 10px 20px; margin-bottom: 10px;">
-                <h3 style="margin:0; font-size:15px; color:var(--um-azul);"><i class="fa-solid fa-list"></i> Enlaces Activos en la Base de Datos</h3>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <input type="text" id="buscadorEnlaces" placeholder="🔍 Buscar por nombre o URL..." onkeyup="filtrarEnlaces()" style="width: 250px;">
-                    <button class="btn-accion btn-exportar" onclick="exportarTablaLimpia('tablaEnlaces', 'Plantilla_Enlaces_SAT')"><i class="fa-solid fa-file-excel"></i> Exportar XLS</button>
+                <div class="acciones-form">
+                    <button class="btn-accion btn-limpiar" id="btnCancelarEnlace" onclick="cerrarModalLink()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+                    <button class="btn-accion btn-filtrar" onclick="guardarEnlace()"><i class="fa-solid fa-save"></i> Guardar Enlace</button>
                 </div>
             </div>
 
@@ -408,44 +398,39 @@
                 <table id="tablaEnlaces">
                     <thead>
                         <tr>
-                            <th>Ord</th>
-                            <th style="text-align:center;">Icono</th>
-                            <th>Nombre y URL</th>
+                            <th>Nombre</th>
+                            <th>Enlace de Prueba</th>
                             <th>Categoría</th>
-                            <th style="text-align:center;">Estado</th>
-                            <th style="text-align:center;" class="columna-acciones">Acciones</th>
+                            <th style="text-align:center;">Visibilidad</th>
+                            <th style="text-align:center;" class="columna-acciones">Acción</th>
                         </tr>
                     </thead>
                     <tbody id="tbody-enlaces">
-                        <tr><td colspan="6" style="text-align:center; padding:30px; color:#888;">Cargando enlaces...</td></tr>
+                        <tr><td colspan="5" style="text-align:center; padding:30px; color:#888;">Cargando enlaces...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
         <div id="tab-casos" class="tab-panel">
-            <h2>
-                <span>Filtrar y Exportar Casos</span>
-                <button class="btn-accion btn-exportar" onclick="exportarExcel()"><i class="fa-solid fa-file-excel"></i> Exportar a Excel</button>
-            </h2>
-
+            <h2>Exportación y Reporte de Casos</h2>
             <div class="filtros">
                 <div class="campo">
-                    <label>Desde fecha</label>
+                    <label>Fecha Desde</label>
                     <input type="date" id="fechaDesde">
                 </div>
                 <div class="campo">
-                    <label>Hasta fecha</label>
+                    <label>Fecha Hasta</label>
                     <input type="date" id="fechaHasta">
                 </div>
                 <div class="campo">
-                    <label>Filtrar por Ejecutivo</label>
-                    <input type="text" id="filtroEjecutivo" placeholder="Escribe un nombre...">
+                    <label>Ejecutivo</label>
+                    <input type="text" id="filtroEjecutivo" placeholder="Buscar por nombre...">
                 </div>
-                <button class="btn-accion btn-filtrar" onclick="cargarRegistros()"><i class="fa-solid fa-magnifying-glass"></i> Filtrar</button>
-                <button class="btn-accion btn-limpiar" onclick="limpiarFiltrosCasos()"><i class="fa-solid fa-eraser"></i> Limpiar Filtros</button>
+                <button class="btn-accion btn-limpiar" onclick="limpiarFiltrosCasos()"><i class="fa-solid fa-eraser"></i> Limpiar</button>
+                <button class="btn-accion btn-filtrar" onclick="cargarRegistros()"><i class="fa-solid fa-magnifying-glass"></i> Aplicar Filtros</button>
+                <button class="btn-accion btn-exportar" onclick="exportarExcel()"><i class="fa-solid fa-file-excel"></i> Exportar a Excel</button>
             </div>
-
             <div class="table-container">
                 <table id="tablaCasosOriginal">
                     <thead>
@@ -474,94 +459,75 @@
         <h3 style="color:var(--rojo); margin-top:0; font-size:18px;"><i class="fa-solid fa-clock"></i> Tiempo de la Alerta</h3>
         <p style="font-size:13px; color:#555; margin-top:5px;">¿Cuánto tiempo estará visible esta alerta en el Home antes de apagarse sola?</p>
         
-        <div style="display:flex; justify-content:center; align-items:center; gap:15px; margin: 25px 0; background:var(--um-gris); padding:15px; border-radius:8px; border:1px solid var(--borde);">
-            <div style="text-align:center;">
-                <label style="display:block; font-size:11px; font-weight:bold; color:var(--texto-suave); margin-bottom:5px;">HORAS</label>
-                <input type="number" id="inputHorasAlerta" value="4" min="0" style="width:70px; font-size:18px; text-align:center; font-weight:bold; color:var(--rojo); border-radius:6px; border:1px solid var(--borde); padding:5px;">
+        <div style="display:flex; justify-content:center; align-items:center; gap:15px; margin: 25px 0; background:#f9f9f9; padding:20px; border-radius:8px;">
+            <div class="campo" style="margin:0;">
+                <input type="number" id="tiempoAlerta" value="15" min="1" max="1440" style="font-size:24px; text-align:center; height:50px; width:100px; font-weight:bold; color:var(--rojo);">
             </div>
-            <div style="font-size:24px; font-weight:bold; color:var(--texto-suave); margin-top:15px;">:</div>
-            <div style="text-align:center;">
-                <label style="display:block; font-size:11px; font-weight:bold; color:var(--texto-suave); margin-bottom:5px;">MINUTOS</label>
-                <select id="inputMinutosAlerta" style="width:70px; font-size:18px; text-align:center; font-weight:bold; color:var(--rojo); border-radius:6px; border:1px solid var(--borde); padding:5px; cursor:pointer;">
-                    <option value="0">00</option>
-                    <option value="15">15</option>
-                    <option value="30">30</option>
-                    <option value="45">45</option>
+            <div class="campo" style="margin:0;">
+                <select id="unidadAlerta" style="font-size:16px; height:50px; background:white;">
+                    <option value="minutos">Minutos</option>
+                    <option value="horas">Horas</option>
                 </select>
             </div>
         </div>
-        
-        <div style="display:flex; gap:10px; justify-content:flex-end;">
-            <button class="btn-accion btn-limpiar" onclick="cerrarModalAlerta()">Cancelar</button>
-            <button class="btn-accion" style="background:var(--rojo);" onclick="confirmarActivarAlerta()"><i class="fa-solid fa-fire"></i> Encender Alerta</button>
-        </div>
-    </div>
-</div>
 
-<div id="modalActivarMotiv" class="modal-overlay">
-    <div class="modal-box" style="border-top: 6px solid var(--um-verde);">
-        <h3 style="color:var(--um-verde); margin-top:0; font-size:18px;"><i class="fa-solid fa-stopwatch"></i> Tiempo de Rotación</h3>
-        <p style="font-size:13px; color:#555; margin-top:5px;">¿Cuántos minutos se quedará este mensaje en pantalla antes de dar paso al siguiente?</p>
-        
-        <div style="display:flex; justify-content:center; align-items:center; gap:15px; margin: 25px 0; background:var(--um-gris); padding:15px; border-radius:8px; border:1px solid var(--borde);">
-            <div style="text-align:center;">
-                <label style="display:block; font-size:11px; font-weight:bold; color:var(--texto-suave); margin-bottom:5px;">MINUTOS EN PANTALLA</label>
-                <div style="display:flex; align-items:center; justify-content:center; gap:10px;">
-                    <input type="number" id="inputMinutosMotiv" value="15" min="1" style="width:80px; font-size:18px; text-align:center; font-weight:bold; color:var(--um-verde); border-radius:6px; border:1px solid var(--borde); padding:5px;">
-                    <span style="font-size:14px; color:var(--texto-suave); font-weight:bold;">min.</span>
-                </div>
-            </div>
-        </div>
+        <input type="hidden" id="tempAlertaId">
         
         <div style="display:flex; gap:10px; justify-content:flex-end;">
-            <button class="btn-accion btn-limpiar" onclick="cerrarModalMotiv()">Cancelar</button>
-            <button class="btn-accion" style="background:var(--um-verde);" onclick="confirmarActivarMotiv()"><i class="fa-solid fa-play"></i> Activar Mensaje</button>
+            <button class="btn-accion btn-limpiar" onclick="cerrarModalAlerta()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+            <button class="btn-accion btn-filtrar" style="background:var(--rojo);" onclick="confirmarActivarAlerta()"><i class="fa-solid fa-power-off"></i> Encender Alerta</button>
         </div>
     </div>
 </div>
 
 <script>
     // ==========================================
-    // SISTEMA DE PESTAÑAS Y SETUP
+    // INICIALIZACIÓN Y CONFIGURACIÓN BASE
     // ==========================================
+    const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjU1MDgxNywiZXhwIjoyMDg4MTI2ODE3fQ.EopCzL9iTQ0ujKFWNi4aqVUhTDeYp4_0nt8wcdk67Mo";
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
     function switchTab(tabId, btnElement) {
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
-        
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(`tab-${tabId}`).classList.add('active');
         btnElement.classList.add('active');
-        document.getElementById('tab-' + tabId).classList.add('active');
     }
 
-    const supabaseUrl = 'https://jxmrznqppddabuqtbufq.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTA4MTcsImV4cCI6MjA4ODEyNjgxN30.pqT_PlAAn3oR6g_0Iaa2fs6qV8M3RQFzNOCAssyZZh4';
-    const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-    // ==========================================
-    // FUNCION MAESTRA EXPORTAR A EXCEL LIMPIO
-    // ==========================================
     function exportarTablaLimpia(tablaId, nombreArchivo) {
-        const tabla = document.getElementById(tablaId);
-        if (!tabla) return alert("No se encontró la tabla a exportar.");
-        
-        const clon = tabla.cloneNode(true);
+        let tabla = document.getElementById(tablaId);
+        let clon = tabla.cloneNode(true);
         const filas = clon.querySelectorAll('tr');
         filas.forEach(fila => {
-            if(fila.children.length > 0) {
+            if (fila.lastElementChild && fila.lastElementChild.classList.contains('columna-acciones')) {
                 fila.removeChild(fila.lastElementChild);
             }
         });
-
         const wb = XLSX.utils.table_to_book(clon, { sheet: "Reporte" });
         const hoy = new Date();
         const fecha = `${hoy.getDate()}-${hoy.getMonth()+1}-${hoy.getFullYear()}`;
         XLSX.writeFile(wb, `${nombreArchivo}_${fecha}.xlsx`);
     }
 
+    function exportarExcel() {
+        let tabla = document.getElementById("tablaCasosOriginal");
+        let clon = tabla.cloneNode(true);
+        const filas = clon.querySelectorAll('tr');
+        filas.forEach(fila => {
+            if (fila.lastElementChild && fila.lastElementChild.classList.contains('columna-acciones')) {
+                fila.removeChild(fila.lastElementChild);
+            }
+        });
+        const wb = XLSX.utils.table_to_book(clon, { sheet: "Reporte" });
+        const hoy = new Date();
+        const fecha = `${hoy.getDate()}-${hoy.getMonth()+1}-${hoy.getFullYear()}`;
+        XLSX.writeFile(wb, `Reporte_Casos_SAT_${fecha}.xlsx`);
+    }
+
     // ==========================================
     // LÓGICA: REPORTE DE CASOS
     // ==========================================
-    let datosParaExcel = [];
-
     function limpiarFiltrosCasos() {
         document.getElementById('fechaDesde').value = '';
         document.getElementById('fechaHasta').value = '';
@@ -572,37 +538,38 @@
     async function cargarRegistros() {
         const cuerpo = document.getElementById('tablaCasos');
         cuerpo.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px;">Cargando...</td></tr>`;
+        
         let query = _supabase.from('registro_derivaciones').select('*').order('created_at', { ascending: false });
+        
         const ejec = document.getElementById('filtroEjecutivo').value;
         if (ejec) query = query.ilike('ejecutivo', `%${ejec}%`);
+        
         const desde = document.getElementById('fechaDesde').value;
         const hasta = document.getElementById('fechaHasta').value;
-        if (desde) query = query.gte('created_at', desde);
-        if (hasta) query = query.lte('created_at', hasta + 'T23:59:59');
+        if (desde) query = query.gte('created_at', desde + 'T00:00:00Z');
+        if (hasta) query = query.lte('created_at', hasta + 'T23:59:59Z');
 
         const { data, error } = await query;
+        if (error) { console.error(error); return; }
+
         cuerpo.innerHTML = '';
-        datosParaExcel = [];
-        if (error || data.length === 0) {
-            cuerpo.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:40px; color:#666;">No se encontraron casos.</td></tr>`;
+        if(data.length === 0){
+            cuerpo.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px; color:#888;">No hay registros</td></tr>`;
             return;
         }
 
-        data.forEach(reg => {
-            const f = new Date(reg.created_at);
-            const fechaFormateada = `${String(f.getDate()).padStart(2,'0')}-${String(f.getMonth()+1).padStart(2,'0')}-${f.getFullYear()} ${String(f.getHours()).padStart(2,'0')}:${String(f.getMinutes()).padStart(2,'0')}`;
-            datosParaExcel.push({ "Fecha y Hora": fechaFormateada, "Ejecutivo": reg.ejecutivo || '-', "Área": reg.area || '-', "Tipo Solicitud": reg.tipo_de_solicitud || '-', "RUT Registro": reg.identificador || '-' });
-            cuerpo.innerHTML += `<tr><td style="font-weight:bold; color:var(--um-azul);">${fechaFormateada}</td><td>${reg.ejecutivo || '-'}</td><td>${reg.area || '-'}</td><td>${reg.tipo_de_solicitud || '-'}</td><td style="font-family:monospace;">${reg.identificador || '-'}</td><td style="text-align:center;"><button class="btn-tabla btn-borrar" onclick="borrarCaso(${reg.id})"><i class="fa-solid fa-trash"></i> Borrar</button></td></tr>`;
+        data.forEach(r => {
+            const fecha = new Date(r.created_at).toLocaleString('es-CL', { timeZone: 'America/Santiago' });
+            cuerpo.innerHTML += `
+            <tr>
+                <td>${fecha}</td>
+                <td><strong>${r.ejecutivo}</strong></td>
+                <td><span class="badge" style="background:#555;">${r.area_derivacion}</span></td>
+                <td>${r.solicitud}</td>
+                <td>${r.rut_alumno || '-'}</td>
+                <td style="text-align:center;"><button class="btn-tabla btn-borrar" onclick="borrarCaso(${r.id})"><i class="fa-solid fa-trash"></i></button></td>
+            </tr>`;
         });
-    }
-
-    function exportarExcel() {
-        if (datosParaExcel.length === 0) return alert("No hay datos para exportar.");
-        const hoja = XLSX.utils.json_to_sheet(datosParaExcel);
-        const libro = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(libro, hoja, "Casos");
-        const hoy = new Date();
-        XLSX.writeFile(libro, `Casos_SAT_${hoy.getDate()}-${hoy.getMonth()+1}-${hoy.getFullYear()}.xlsx`);
     }
 
     async function borrarCaso(id) {
@@ -613,35 +580,37 @@
     }
 
     // ==========================================
-    // LÓGICA: PESTAÑA STAFF
+    // LÓGICA: STAFF
     // ==========================================
-    async function cargarEjecutivos() {
-        const cuerpo = document.getElementById('tbodyStaff');
+   async function cargarEjecutivos() {
         const { data, error } = await _supabase.from('ejecutivos').select('*').order('nombre');
+        const cuerpo = document.getElementById('tbodyStaff');
         cuerpo.innerHTML = '';
-        if (error || data.length === 0) return cuerpo.innerHTML = `<tr><td colspan="8" style="text-align:center;">No hay ejecutivos.</td></tr>`;
-
+        
+        if (error || !data) return;
+        
         data.forEach(e => {
             const badge = e.activo ? `<span class="badge activo">Activo</span>` : `<span class="badge inactivo">Inactivo</span>`;
+            
+            // Aquí estaba el error: restauré la validación por si vienen vacíos (?)
             const nomSeguro = e.nombre ? e.nombre.replace(/'/g, "\\'") : '';
-            const mailSeguro = e.mail ? e.mail.replace(/'/g, "\\'") : '';
-            const rolSeguro = e.rol ? e.rol.replace(/'/g, "\\'").toLowerCase() : 'apoyo';
+            const mailSeguro = e.correo ? e.correo.replace(/'/g, "\\'") : '';
+            const rolSeguro = e.rol ? e.rol.replace(/'/g, "\\'") : '';
             
             cuerpo.innerHTML += `
-                <tr class="fila-staff">
-                    <td style="font-weight:bold; color:var(--um-azul);">${e.nombre || '-'}</td>
-                    <td>${e.mail || '-'}</td>
-                    <td class="col-rol">${e.rol || '-'}</td>
-                    <td style="color:#666;">${e.login_user || '-'}</td>
-                    <td style="font-family:monospace;">${e.login_password || '-'}</td>
-                    <td><span style="font-size:11px; text-transform:uppercase; font-weight:bold; color:#777;">${e.nivel_acceso || 'usuario'}</span></td>
-                    <td style="text-align:center;">${badge}</td>
-                    <td style="text-align:center; white-space:nowrap;">
-                        <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormStaff(${e.id}, '${nomSeguro}', '${mailSeguro}', '${rolSeguro}', ${e.activo}, '${e.login_user || ''}', '${e.login_password || ''}', '${e.nivel_acceso || 'usuario'}')"><i class="fa-solid fa-pen"></i></button>
-                        <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarStaff(${e.id}, '${nomSeguro}')"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-            `;
+            <tr class="fila-staff">
+                <td><strong>${e.nombre || 'Sin nombre'}</strong></td>
+                <td>${e.correo || 'Sin correo'}</td>
+                <td class="col-rol">${e.rol || 'Sin rol'}</td>
+                <td><span style="font-family:monospace; color:var(--um-azul); font-weight:bold;">${e.login_user || 'Sin asignar'}</span></td>
+                <td><span style="font-family:monospace; color:#888;">${e.login_password ? '••••••' : 'Sin asignar'}</span></td>
+                <td><span class="badge" style="background:${e.nivel_acceso === 'admin' ? 'var(--rojo)' : '#7f8c8d'};">${e.nivel_acceso === 'admin' ? 'Admin' : 'Usuario'}</span></td>
+                <td style="text-align:center;">${badge}</td>
+                <td style="text-align:center; white-space:nowrap;">
+                    <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormStaff(${e.id}, '${nomSeguro}', '${mailSeguro}', '${rolSeguro}', ${e.activo}, '${e.login_user || ''}', '${e.login_password || ''}', '${e.nivel_acceso || 'usuario'}')"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarStaff(${e.id}, '${nomSeguro}')"><i class="fa-solid fa-trash"></i></button>
+                </td>
+            </tr>`;
         });
     }
 
@@ -658,12 +627,13 @@
         document.getElementById('ejecutivoId').value = id;
         document.getElementById('formNombre').value = nombre;
         document.getElementById('formMail').value = mail;
-        document.getElementById('formRol').value = (['apoyo', 'staff', 'supervisor'].includes(rol)) ? rol : 'apoyo';
+        document.getElementById('formRol').value = rol;
         document.getElementById('formActivo').checked = activo;
         document.getElementById('formLoginUser').value = user;
         document.getElementById('formLoginPass').value = pass;
-        document.getElementById('formNivelAcceso').value = nivel || 'usuario';
-        document.getElementById('tituloFormulario').innerHTML = `<span><i class="fa-solid fa-pen"></i> Editando a: ${nombre}</span>`;
+        document.getElementById('formNivelAcceso').value = nivel;
+        
+        document.getElementById('tituloFormulario').innerHTML = `<span><i class="fa-solid fa-pen"></i> Editar Ejecutivo</span>`;
         document.getElementById('panelFormulario').style.border = "2px solid #f39c12";
         document.getElementById('btnCancelarStaff').style.display = "inline-block";
     }
@@ -672,11 +642,12 @@
         document.getElementById('ejecutivoId').value = '';
         document.getElementById('formNombre').value = '';
         document.getElementById('formMail').value = '';
-        document.getElementById('formRol').value = 'apoyo'; 
+        document.getElementById('formRol').value = 'apoyo';
         document.getElementById('formActivo').checked = true;
         document.getElementById('formLoginUser').value = '';
         document.getElementById('formLoginPass').value = '';
         document.getElementById('formNivelAcceso').value = 'usuario';
+        
         document.getElementById('tituloFormulario').innerHTML = `<span><i class="fa-solid fa-user-plus"></i> Añadir Nuevo Ejecutivo</span>`;
         document.getElementById('panelFormulario').style.border = "1px solid var(--borde)";
         document.getElementById('btnCancelarStaff').style.display = "none";
@@ -684,54 +655,56 @@
 
     async function guardarEjecutivo() {
         const id = document.getElementById('ejecutivoId').value;
-        const nombre = document.getElementById('formNombre').value.trim();
-        const mail = document.getElementById('formMail').value.trim();
-        const rol = document.getElementById('formRol').value.toLowerCase(); 
+        const nombre = document.getElementById('formNombre').value;
+        const correo = document.getElementById('formMail').value;
+        const rol = document.getElementById('formRol').value;
         const activo = document.getElementById('formActivo').checked;
-        const login_user = document.getElementById('formLoginUser').value.trim();
-        const login_password = document.getElementById('formLoginPass').value.trim();
+        const login_user = document.getElementById('formLoginUser').value;
+        const login_password = document.getElementById('formLoginPass').value;
         const nivel_acceso = document.getElementById('formNivelAcceso').value;
 
-        if (!nombre) return alert("El nombre es obligatorio.");
-        
-        const paquete = { nombre, mail, rol, activo, login_user, login_password, nivel_acceso };
-        if (id) await _supabase.from('ejecutivos').update(paquete).eq('id', id);
-        else await _supabase.from('ejecutivos').insert([paquete]);
-        
-        limpiarFormularioStaff();
-        cargarEjecutivos();
+        if (!nombre || !correo) return alert("Nombre y correo son obligatorios.");
+
+        const paquete = { nombre, correo, rol, activo, login_user, login_password, nivel_acceso };
+
+        try {
+            if (id) await _supabase.from('ejecutivos').update(paquete).eq('id', id);
+            else await _supabase.from('ejecutivos').insert([paquete]);
+            limpiarFormularioStaff();
+            cargarEjecutivos();
+        } catch(e) { alert("Error guardando ejecutivo."); }
     }
 
     async function borrarStaff(id, nombre) {
-        if (confirm(`¿Eliminar a "${nombre}" del staff irreversiblemente?`)) {
+        if(confirm(`¿Eliminar definitivamente a ${nombre}?`)) {
             await _supabase.from('ejecutivos').delete().eq('id', id);
-            if (document.getElementById('ejecutivoId').value == id) limpiarFormularioStaff();
             cargarEjecutivos();
         }
     }
 
     // ==========================================
-    // LÓGICA: PESTAÑA MENSAJES Y ALERTAS
+    // LÓGICA: ALERTAS OPERATIVAS (CON RELOJ AUTOMÁTICO)
     // ==========================================
-    
-    // --- VARIABLES PARA MODALES ---
-    let alertaIdPendiente = null;
-    let motivIdPendiente = null;
-
-    // --- ALERTAS OPERATIVAS ---
     async function cargarAlertas() {
         try {
-            const { data, error } = await _supabase.from('alertas_operativas').select('*').order('created_at', { ascending: false });
+            const { data, error } = await _supabase.from('alertas_operativas').select('*').order('prioridad');
             const tbody = document.getElementById('tbodyAlertas');
+            if(!tbody) return;
             tbody.innerHTML = '';
             
-            if(error) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red;">Error cargando catálogo: ${error.message}</td></tr>`;
-            if(!data || data.length === 0) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No hay alertas en tu catálogo.</td></tr>`;
+            if (error) throw error;
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:30px; color:#888;">No hay alertas en el catálogo. Usa el panel superior para agregar una.</td></tr>';
+                return;
+            }
 
             data.forEach(a => {
-                if(a.es_default) return; 
-                
-                const badge = a.estado ? `<span class="badge activo" style="animation: pulse 2s infinite;">🔥 ENCENDIDA EN HOME</span>` : `<span class="badge inactivo">Apagada</span>`;
+                // AQUÍ ESTÁ LA MAGIA DEL TIEMPO PARA EL PANEL
+                const ahora = new Date();
+                const fin = a.fecha_hora_fin ? new Date(a.fecha_hora_fin) : null;
+                const estaActiva = a.estado && (!fin || ahora < fin);
+
+                const badge = estaActiva ? `<span class="badge activo" style="animation: pulse 2s infinite;">🔥 ENCENDIDA EN HOME</span>` : `<span class="badge inactivo">Apagada</span>`;
                 const catSegura = a.categoria ? a.categoria.replace(/'/g, "\\'") : '';
                 const msjSeguro = a.mensaje ? a.mensaje.replace(/'/g, "\\'") : '';
                 
@@ -739,82 +712,75 @@
                 if(a.color === 'verde') iconoSem = '🟢';
                 if(a.color === 'amarillo') iconoSem = '🟡';
 
-                const btnSwitch = `<button class="btn-tabla" 
-                                style="color:${a.estado ? 'white' : 'var(--texto-suave)'}; border:1px solid ${a.estado ? 'var(--rojo)' : 'var(--borde)'}; background:${a.estado ? 'var(--rojo)' : '#f9f9f9'}; font-size:14px; padding: 6px 12px;" 
-                                onclick="toggleAlerta('${a.id}', ${a.estado})" title="${a.estado ? 'Apagar Alerta' : 'Encender Alerta'}">
-                                <i class="fa-solid ${a.estado ? 'fa-toggle-on' : 'fa-toggle-off'}"></i>
-                            </button>`;
+                const btnSwitch = `<button class="btn-tabla" style="color:${estaActiva ? 'white' : 'var(--texto-suave)'}; border:1px solid ${estaActiva ? 'var(--rojo)' : 'var(--borde)'}; background:${estaActiva ? 'var(--rojo)' : '#f9f9f9'}; font-size:14px; padding: 6px 12px;" onclick="toggleAlerta('${a.id}', ${estaActiva})" title="${estaActiva ? 'Apagar Alerta' : 'Encender Alerta'}">
+                    <i class="fa-solid ${estaActiva ? 'fa-toggle-on' : 'fa-toggle-off'}"></i>
+                </button>`;
 
                 tbody.innerHTML += `
-                    <tr style="background-color: ${a.estado ? '#fff5f5' : 'transparent'};">
-                        <td style="font-weight:bold; color:#444;">${iconoSem} ${a.categoria || 'Sin Categoría'}</td>
-                        <td style="font-size:12px;">${a.mensaje}</td>
-                        <td style="text-align:center;">${badge}</td>
-                        <td style="text-align:center; white-space:nowrap;">
-                            <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormAlerta('${a.id}', '${catSegura}', '${msjSeguro}', ${a.estado}, '${a.color || 'rojo'}')"><i class="fa-solid fa-pen"></i></button>
-                            ${btnSwitch}
-                            <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarAlerta('${a.id}')"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
+                <tr style="background-color: ${estaActiva ? '#fff0f0' : 'transparent'};">
+                    <td><strong>${iconoSem} ${a.categoria}</strong></td>
+                    <td style="font-size:12px;">${a.mensaje}</td>
+                    <td style="text-align:center;">${badge}</td>
+                    <td style="text-align:center; white-space:nowrap;">
+                        <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormAlerta('${a.id}', '${catSegura}', '${msjSeguro}', ${a.estado}, '${a.color}')"><i class="fa-solid fa-pen"></i></button>
+                        ${btnSwitch}
+                        <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarAlerta('${a.id}')"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>`;
             });
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error("Error cargando alertas:", e); }
     }
 
-    // 1. Abre el Modal o Apaga Directamente
-    async function toggleAlerta(id, estadoActual) {
-        if (!estadoActual) { 
-            // ENCENDER -> Abre el Modal
-            alertaIdPendiente = id;
-            document.getElementById('inputHorasAlerta').value = '4'; // Valor por defecto
-            document.getElementById('inputMinutosAlerta').value = '0';
+    // 1. Abre el Modal cuando hacen clic en "Encender"
+    function toggleAlerta(id, estadoActual) {
+        if (estadoActual) {
+            // Si estaba prendida, la apagamos directo sin preguntar tiempo
+            apagarAlerta(id);
+        } else {
+            // Si estaba apagada, abrimos el modal para pedir tiempo
+            document.getElementById('tempAlertaId').value = id;
             document.getElementById('modalActivarAlerta').style.display = 'flex';
-        } else { 
-            // APAGAR -> Lo hace directo
-            try {
-                const { error } = await _supabase.from('alertas_operativas').update({ estado: false }).eq('id', id);
-                if (error) throw error;
-                cargarAlertas();
-            } catch (err) {
-                alert("⚠️ Error al comunicarse con la base de datos:\n" + err.message);
-            }
         }
     }
 
     function cerrarModalAlerta() {
         document.getElementById('modalActivarAlerta').style.display = 'none';
-        alertaIdPendiente = null;
+        document.getElementById('tempAlertaId').value = '';
     }
 
     // 2. Confirma la activación con los selectores del Modal
     async function confirmarActivarAlerta() {
-        if(!alertaIdPendiente) return;
+        const id = document.getElementById('tempAlertaId').value;
+        const cant = parseInt(document.getElementById('tiempoAlerta').value);
+        const unidad = document.getElementById('unidadAlerta').value;
         
-        const horas = parseInt(document.getElementById('inputHorasAlerta').value) || 0;
-        const minutos = parseInt(document.getElementById('inputMinutosAlerta').value) || 0;
-        
-        if (horas === 0 && minutos === 0) {
-            alert("⚠️ El tiempo de la alerta debe ser mayor a 0.");
-            return;
-        }
+        let minutosASumar = cant;
+        if(unidad === 'horas') minutosASumar = cant * 60;
 
-        const ahora = new Date();
-        const fin = new Date(ahora.getTime() + (horas * 60 * 60 * 1000) + (minutos * 60 * 1000));
+        const inicio = new Date();
+        const fin = new Date(inicio.getTime() + (minutosASumar * 60000));
 
         try {
-            const { error } = await _supabase.from('alertas_operativas').update({ 
+            await _supabase.from('alertas_operativas').update({
                 estado: true,
-                fecha_hora_inicio: ahora.toISOString(),
+                fecha_hora_inicio: inicio.toISOString(),
                 fecha_hora_fin: fin.toISOString()
-            }).eq('id', alertaIdPendiente);
-
-            if (error) throw error;
+            }).eq('id', id);
             
             cerrarModalAlerta();
             cargarAlertas();
-        } catch (err) {
-            alert("⚠️ Error al comunicarse con la base de datos:\n" + err.message);
-        }
+        } catch (e) { alert("Error activando alerta"); }
+    }
+
+    async function apagarAlerta(id) {
+        try {
+            await _supabase.from('alertas_operativas').update({
+                estado: false,
+                fecha_hora_inicio: null,
+                fecha_hora_fin: null
+            }).eq('id', id);
+            cargarAlertas();
+        } catch (e) { alert("Error apagando alerta"); }
     }
 
     function subirFormAlerta(id, categoria, mensaje, activo, color) {
@@ -823,7 +789,7 @@
         document.getElementById('alertaMensaje').value = mensaje;
         document.getElementById('alertaActivo').value = activo;
         document.getElementById('alertaColor').value = color;
-
+        
         document.getElementById('tituloFormularioAlerta').innerHTML = `<span><i class="fa-solid fa-pen"></i> Editando Catálogo</span>`;
         document.getElementById('panelFormularioAlerta').style.border = "2px solid #f39c12";
         document.getElementById('btnCancelarAlerta').style.display = "inline-block";
@@ -833,147 +799,100 @@
         document.getElementById('alertaId').value = '';
         document.getElementById('alertaCategoria').value = '';
         document.getElementById('alertaMensaje').value = '';
-        document.getElementById('alertaActivo').value = 'false'; 
+        document.getElementById('alertaActivo').value = 'false';
         document.getElementById('alertaColor').value = 'rojo';
-
+        
         document.getElementById('tituloFormularioAlerta').innerHTML = `<span><i class="fa-solid fa-folder-plus"></i> Agregar al Catálogo</span>`;
         document.getElementById('panelFormularioAlerta').style.border = "1px solid var(--borde)";
         document.getElementById('btnCancelarAlerta').style.display = "none";
     }
 
     async function guardarAlerta() {
+        const id = document.getElementById('alertaId').value;
+        const paquete = {
+            categoria: document.getElementById('alertaCategoria').value,
+            mensaje: document.getElementById('alertaMensaje').value,
+            color: document.getElementById('alertaColor').value,
+            estado: document.getElementById('alertaActivo').value === 'true'
+        };
+
+        if (!paquete.categoria || !paquete.mensaje) return alert("Debe seleccionar una categoría y escribir un mensaje.");
+
         try {
-            const id = document.getElementById('alertaId').value;
-            const categoria = document.getElementById('alertaCategoria').value;
-            const mensaje = document.getElementById('alertaMensaje').value.trim();
-            const estado = document.getElementById('alertaActivo').value === 'true';
-            const color = document.getElementById('alertaColor').value;
-            
-            if (!categoria || !mensaje) return alert("Debes seleccionar una categoría y escribir un mensaje.");
-            
-            const paquete = { categoria, mensaje, estado, color, prioridad: 1, tipo_alerta: 'Operativa' };
-
-            if (!id) {
-                const ahora = new Date();
-                paquete.fecha_hora_inicio = ahora.toISOString();
-                paquete.fecha_hora_fin = ahora.toISOString();
-                paquete.es_default = false;
+            if (id) {
+                await _supabase.from('alertas_operativas').update(paquete).eq('id', id);
+            } else {
+                paquete.prioridad = paquete.color === 'rojo' ? 1 : (paquete.color === 'amarillo' ? 2 : 3);
+                await _supabase.from('alertas_operativas').insert([paquete]);
             }
-
-            let res = id ? await _supabase.from('alertas_operativas').update(paquete).eq('id', id) 
-                         : await _supabase.from('alertas_operativas').insert([paquete]);
-            
-            if (res && res.error) throw res.error;
-            
             limpiarFormularioAlerta();
             cargarAlertas();
             
             const btn = document.getElementById('tituloFormularioAlerta');
             const originalHTML = btn.innerHTML;
-            btn.innerHTML = `<span style="color:var(--um-verde);"><i class="fa-solid fa-check"></i> ¡Guardado en el catálogo!</span>`;
+            btn.innerHTML = `<span style="color:var(--um-verde);"><i class="fa-solid fa-check"></i> ¡Guardada en el catálogo!</span>`;
             setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
-
-        } catch (err) {
-            console.error(err);
-            alert("⚠️ La Base de Datos rechazó la carga:\n" + err.message);
-        }
+            
+        } catch (e) { alert("Error guardando en el catálogo."); }
     }
 
     async function borrarAlerta(id) {
-        if (confirm("¿Estás seguro de ELIMINAR esta alerta del catálogo? (Ya no podrás volver a encenderla)")) {
+        if(confirm("¿Eliminar esta alerta permanentemente del catálogo?")) {
             await _supabase.from('alertas_operativas').delete().eq('id', id);
-            limpiarFormularioAlerta();
             cargarAlertas();
         }
     }
 
-    // --- MOTIVACIONALES Y CARRUSEL ---
+    // ==========================================
+    // LÓGICA: MENSAJES ROTATIVOS (CONEXIÓN DIRECTA)
+    // ==========================================
     async function cargarMotivacionales() {
         try {
-            const { data, error } = await _supabase.from('mensajes_rotativos').select('*').order('created_at', { ascending: false });
+            const { data, error } = await _supabase.from('mensajes_rotativos').select('*').order('id', { ascending: true });
             const tbody = document.getElementById('tbodyMotivacionales');
+            if(!tbody) return;
             tbody.innerHTML = '';
             
-            if(error) return tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:red;">Error cargando mensajes: ${error.message}</td></tr>`;
-            if(!data || data.length === 0) return tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">No hay mensajes en el catálogo.</td></tr>`;
+            if (error) throw error;
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:30px; color:#888;">Cargando mensajes...</td></tr>';
+                return;
+            }
 
             data.forEach(m => {
-                const badge = m.estado ? `<span class="badge activo">ENCENDIDO</span>` : `<span class="badge inactivo">Apagado</span>`;
-                const msjSeguro = m.mensaje ? m.mensaje.replace(/'/g, "\\'") : '';
+                const badge = m.estado ? `<span class="badge activo">Activo en Home</span>` : `<span class="badge inactivo">Apagado</span>`;
                 const catSegura = m.categoria ? m.categoria.replace(/'/g, "\\'") : '';
-                const fechaSegura = m.fecha_mmdd ? m.fecha_mmdd.replace(/'/g, "\\'") : '';
-                
-                const btnSwitch = `<button class="btn-tabla" 
-                                style="color:${m.estado ? 'white' : 'var(--texto-suave)'}; border:1px solid ${m.estado ? 'var(--um-verde)' : 'var(--borde)'}; background:${m.estado ? 'var(--um-verde)' : '#f9f9f9'}; font-size:14px; padding: 6px 12px;" 
-                                onclick="toggleMotiv('${m.id}', ${m.estado})" title="${m.estado ? 'Desactivar Mensaje' : 'Activar Mensaje'}">
-                                <i class="fa-solid ${m.estado ? 'fa-toggle-on' : 'fa-toggle-off'}"></i>
-                            </button>`;
+                const msjSeguro = m.mensaje ? m.mensaje.replace(/'/g, "\\'") : '';
+                const fechaSegura = m.fecha_mmdd || '';
+
+                const btnSwitch = `<button class="btn-tabla" style="color:${m.estado ? 'white' : 'var(--texto-suave)'}; border:1px solid ${m.estado ? 'var(--um-verde)' : 'var(--borde)'}; background:${m.estado ? 'var(--um-verde)' : '#f9f9f9'}; font-size:14px; padding: 6px 12px;" onclick="toggleMotiv('${m.id}', ${m.estado})" title="${m.estado ? 'Apagar' : 'Encender Mensaje'}">
+                    <i class="fa-solid ${m.estado ? 'fa-toggle-on' : 'fa-toggle-off'}"></i>
+                </button>`;
 
                 tbody.innerHTML += `
-                    <tr style="background-color: ${m.estado ? '#f0f9f0' : 'transparent'};">
-                        <td style="font-size:12px;">
-                            <strong>${m.mensaje}</strong>
-                            ${m.fecha_mmdd ? `<br><span style="color:var(--um-azul); font-size:10px; background:#eef5ea; padding:2px 4px; border-radius:3px;">📅 Se activa solo el: ${m.fecha_mmdd}</span>` : ''}
-                        </td>
-                        <td style="text-align:center;">${badge}</td>
-                        <td style="text-align:center; white-space:nowrap;">
-                            <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormMotiv('${m.id}', '${msjSeguro}', ${m.estado}, ${m.prioridad || 1}, '${catSegura}', '${fechaSegura}')"><i class="fa-solid fa-pen"></i></button>
-                            ${btnSwitch}
-                            <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarMotiv('${m.id}')"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
+                <tr style="background-color: ${m.estado ? '#f0f9f0' : 'transparent'};">
+                    <td style="font-size:12px;">
+                        <strong>${m.mensaje}</strong>
+                        ${m.fecha_mmdd ? `<br><span style="color:var(--um-azul); font-size:10px; background:#eef5ea; padding:2px 4px; border-radius:3px;">📅 Se activa solo el: ${m.fecha_mmdd}</span>` : ''}
+                    </td>
+                    <td style="text-align:center;">${badge}</td>
+                    <td style="text-align:center; white-space:nowrap;">
+                        <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormMotiv('${m.id}', '${msjSeguro}', ${m.estado}, ${m.prioridad || 1}, '${catSegura}', '${fechaSegura}')"><i class="fa-solid fa-pen"></i></button>
+                        ${btnSwitch}
+                        <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarMotiv('${m.id}')"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>`;
             });
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error("Error cargando mensajes:", e); }
     }
 
-    // 1. Abre el Modal o Apaga Directo
-    async function toggleMotiv(id, estadoActual) {
-        if (!estadoActual) { 
-            // ENCENDER -> Abre el Modal
-            motivIdPendiente = id;
-            document.getElementById('inputMinutosMotiv').value = '15';
-            document.getElementById('modalActivarMotiv').style.display = 'flex';
-        } else { 
-            // APAGAR -> Lo hace directo
-            try {
-                const { error } = await _supabase.from('mensajes_rotativos').update({ estado: false }).eq('id', id);
-                if (error) throw error;
-                cargarMotivacionales();
-            } catch (err) {
-                alert("⚠️ Error al cambiar estado:\n" + err.message);
-            }
-        }
-    }
-
-    function cerrarModalMotiv() {
-        document.getElementById('modalActivarMotiv').style.display = 'none';
-        motivIdPendiente = null;
-    }
-
-    // 2. Confirma la activación con los minutos del Modal
-    async function confirmarActivarMotiv() {
-        if(!motivIdPendiente) return;
-        const mins = parseInt(document.getElementById('inputMinutosMotiv').value) || 15;
-        
-        try {
-            const { error } = await _supabase.from('mensajes_rotativos').update({ estado: true, duracion_min: mins }).eq('id', motivIdPendiente);
-            if (error) throw error;
-            cerrarModalMotiv();
-            cargarMotivacionales();
-        } catch (err) {
-            alert("⚠️ Error al comunicarse con la base de datos:\n" + err.message);
-        }
-    }
-
-    function subirFormMotiv(id, mensaje, estado, prioridad, categoria, fecha_mmdd) {
+    function subirFormMotiv(id, mensaje, activo, prioridad, categoria, fecha) {
         document.getElementById('motivId').value = id;
         document.getElementById('motivMensaje').value = mensaje;
-        document.getElementById('motivActivo').value = estado;
-        document.getElementById('motivPrioridad').value = prioridad;
         document.getElementById('motivCategoria').value = categoria;
-        document.getElementById('motivFecha').value = fecha_mmdd;
-
+        document.getElementById('motivFecha').value = fecha;
+        document.getElementById('motivActivo').value = activo ? 'true' : 'false';
+        
         document.getElementById('tituloFormularioMotiv').innerHTML = `<span><i class="fa-solid fa-pen"></i> Editando Frase</span>`;
         document.getElementById('panelFormularioMotiv').style.border = "2px solid #f39c12";
         document.getElementById('btnCancelarMotiv').style.display = "inline-block";
@@ -982,36 +901,30 @@
     function limpiarFormularioMotiv() {
         document.getElementById('motivId').value = '';
         document.getElementById('motivMensaje').value = '';
-        document.getElementById('motivActivo').value = 'false';
-        document.getElementById('motivPrioridad').value = '1';
-        document.getElementById('motivCategoria').value = '';
+        document.getElementById('motivCategoria').value = 'motivacional';
         document.getElementById('motivFecha').value = '';
-
+        document.getElementById('motivActivo').value = 'false';
+        
         document.getElementById('tituloFormularioMotiv').innerHTML = `<span><i class="fa-solid fa-folder-plus"></i> Nueva Frase o Efeméride</span>`;
         document.getElementById('panelFormularioMotiv').style.border = "1px solid var(--borde)";
         document.getElementById('btnCancelarMotiv').style.display = "none";
     }
 
     async function guardarMotivacional() {
+        const id = document.getElementById('motivId').value;
+        const paquete = {
+            mensaje: document.getElementById('motivMensaje').value.trim(),
+            categoria: document.getElementById('motivCategoria').value,
+            fecha_mmdd: document.getElementById('motivFecha').value || null,
+            estado: document.getElementById('motivActivo').value === 'true'
+        };
+
+        if (!paquete.mensaje) return alert("Debe escribir un mensaje.");
+
         try {
-            const id = document.getElementById('motivId').value;
-            const mensaje = document.getElementById('motivMensaje').value.trim();
-            const estado = document.getElementById('motivActivo').value === 'true';
-            const prioridad = parseInt(document.getElementById('motivPrioridad').value) || 1;
-            const categoria = document.getElementById('motivCategoria').value.trim() || null;
-            const fecha_mmdd = document.getElementById('motivFecha').value.trim() || null;
+            if (id) await _supabase.from('mensajes_rotativos').update(paquete).eq('id', id);
+            else await _supabase.from('mensajes_rotativos').insert([paquete]);
             
-            if (!mensaje) return alert("Debes escribir el texto del mensaje.");
-            
-            const paquete = { mensaje, estado, prioridad, categoria, fecha_mmdd };
-
-            if(!id) paquete.duracion_min = 15;
-
-            let res = id ? await _supabase.from('mensajes_rotativos').update(paquete).eq('id', id)
-                         : await _supabase.from('mensajes_rotativos').insert([paquete]);
-            
-            if (res && res.error) throw res.error;
-
             limpiarFormularioMotiv();
             cargarMotivacionales();
             
@@ -1019,87 +932,74 @@
             const originalHTML = btn.innerHTML;
             btn.innerHTML = `<span style="color:var(--um-verde);"><i class="fa-solid fa-check"></i> ¡Frase guardada!</span>`;
             setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
+            
+        } catch (err) { alert("⚠️ La Base de Datos rechazó la carga."); }
+    }
 
-        } catch (err) {
-            console.error(err);
-            alert("⚠️ La Base de Datos rechazó la carga:\n" + err.message);
-        }
+    async function toggleMotiv(id, estadoActual) {
+        try {
+            await _supabase.from('mensajes_rotativos').update({ estado: !estadoActual }).eq('id', id);
+            cargarMotivacionales();
+        } catch (e) { alert("Error cambiando estado"); }
     }
 
     async function borrarMotiv(id) {
         if (confirm("¿Eliminar este mensaje permanentemente del catálogo?")) {
             await _supabase.from('mensajes_rotativos').delete().eq('id', id);
-            limpiarFormularioMotiv();
             cargarMotivacionales();
         }
     }
 
     // ==========================================
-    // LÓGICA: PESTAÑA ENLACES
+    // LÓGICA: PESTAÑA ENLACES (CONEXIÓN DIRECTA)
     // ==========================================
+    function abrirModalLink() {
+        limpiarFormularioEnlace();
+        document.getElementById('panelFormularioEnlace').style.display = 'block';
+    }
+
+    function cerrarModalLink() {
+        document.getElementById('panelFormularioEnlace').style.display = 'none';
+        limpiarFormularioEnlace();
+    }
+
     async function cargarEnlaces() {
         try {
-            const res = await fetch('/api/enlaces');
-            const data = await res.json();
+            const { data, error } = await _supabase.from('LINKS').select('*').order('categoria').order('orden');
             const tbody = document.getElementById('tbody-enlaces');
+            if(!tbody) return;
             tbody.innerHTML = '';
             
-            if(data.error) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px; color:#888;">Error cargando enlaces.</td></tr>`;
-                return; 
-            }
-            if(data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px; color:#888;">No hay enlaces registrados.</td></tr>`;
+            if (error) throw error;
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px; color:#888;">No hay enlaces registrados</td></tr>';
                 return;
             }
 
             data.forEach(link => {
-                const badge = link.activo 
-                    ? `<span class="badge activo">Activo</span>`
-                    : `<span class="badge inactivo" style="background:gray;">Inactivo</span>`;
-                
-                const urlCorta = link.url.length > 55 ? link.url.substring(0,55) + '...' : link.url;
-                const nomSeguro = link.nombre_link ? link.nombre_link.replace(/'/g, "\\'") : '';
-                
+                const badge = link.activo ? `<span class="badge activo">Visible</span>` : `<span class="badge inactivo">Oculto</span>`;
+                const btnSwitch = `<button class="btn-tabla" style="color:${link.activo ? 'white' : 'var(--texto-suave)'}; border:1px solid ${link.activo ? 'var(--um-verde)' : 'var(--borde)'}; background:${link.activo ? 'var(--um-verde)' : '#f9f9f9'};" onclick="toggleEnlace('${link.id}', ${link.activo})"><i class="fa-solid ${link.activo ? 'fa-toggle-on' : 'fa-toggle-off'}"></i></button>`;
+
                 tbody.innerHTML += `
-                    <tr class="fila-enlace">
-                        <td style="font-weight:bold; color:#777;">${link.orden}</td>
-                        <td style="color:var(--um-azul); font-size:16px; text-align:center;"><i class="fa-solid ${link.icono || 'fa-link'}"></i></td>
-                        <td>
-                            <strong>${link.nombre_link}</strong><br>
-                            <a href="${link.url}" target="_blank" style="font-size:11px; color:#666; text-decoration:none;">${urlCorta}</a>
-                        </td>
-                        <td>${link.categoria}</td>
-                        <td style="text-align:center;">${badge}</td>
-                        <td style="text-align:center; white-space:nowrap;">
-                            <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormEnlace(${link.id}, '${nomSeguro}', '${link.url}', '${link.categoria}', '${link.icono || ''}', ${link.orden})"><i class="fa-solid fa-pen"></i></button>
-                            
-                            <button class="btn-tabla ${link.activo ? 'btn-borrar' : 'btn-exportar'}" 
-                                style="color:${link.activo ? 'var(--rojo)' : 'white'}; border:1px solid ${link.activo ? 'var(--rojo)' : 'transparent'}; background:${link.activo ? 'transparent' : 'var(--verde-palta)'}" 
-                                onclick="toggleEnlace(${link.id})" title="${link.activo ? 'Desactivar Link' : 'Activar Link'}">
-                                <i class="fa-solid ${link.activo ? 'fa-toggle-off' : 'fa-toggle-on'}"></i>
-                            </button>
-                            
-                            <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarEnlace(${link.id}, '${nomSeguro}')">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
+                <tr style="background-color: ${link.activo ? 'transparent' : '#f9f9f9'}; opacity: ${link.activo ? '1' : '0.6'};">
+                    <td><i class="fa-solid ${link.icono || 'fa-link'}" style="color:var(--um-azul); width: 20px;"></i> <strong>${link.nombre_link}</strong></td>
+                    <td><a href="${link.url}" target="_blank" style="color:var(--um-verde); text-decoration:none;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Probar</a></td>
+                    <td><span class="badge" style="background:var(--um-gris); color:var(--texto-suave); border:1px solid var(--borde);">${link.categoria || 'General'}</span></td>
+                    <td style="text-align:center;">${badge}</td>
+                    <td style="text-align:center; white-space:nowrap;">
+                        <button class="btn-tabla btn-editar" onclick="subirFormEnlace('${link.id}', '${link.nombre_link.replace(/'/g, "\\'")}', '${link.url}', '${link.categoria || 'General'}', '${link.icono || 'fa-link'}', ${link.orden || 1}, ${link.activo})"><i class="fa-solid fa-pen"></i></button>
+                        ${btnSwitch}
+                        <button class="btn-tabla btn-borrar" onclick="borrarEnlace('${link.id}', '${link.nombre_link.replace(/'/g, "\\'")}')"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>`;
             });
-        } catch (error) { console.error("Error cargando enlaces:", error); }
+        } catch (e) { console.error("Error cargando enlaces:", e); }
     }
 
-    function filtrarEnlaces() {
-        const input = document.getElementById("buscadorEnlaces").value.toLowerCase();
-        const filas = document.getElementsByClassName("fila-enlace");
-        for (let i = 0; i < filas.length; i++) {
-            filas[i].style.display = (filas[i].textContent.toLowerCase().indexOf(input) > -1) ? "" : "none";
-        }
-    }
-
-    function subirFormEnlace(id, nombre, url, categoria, icono, orden) {
+    function subirFormEnlace(id, nombre, url, categoria, icono, orden, activo) {
+        document.getElementById('panelFormularioEnlace').style.display = 'block';
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        
         document.getElementById('linkId').value = id;
         document.getElementById('linkNombre').value = nombre;
         document.getElementById('linkUrl').value = url;
@@ -1107,7 +1007,7 @@
         document.getElementById('linkIcono').value = icono;
         document.getElementById('linkOrden').value = orden;
 
-        document.getElementById('tituloFormularioEnlace').innerHTML = `<span><i class="fa-solid fa-pen"></i> Editando Enlace: ${nombre}</span>`;
+        document.getElementById('tituloFormularioEnlace').innerHTML = `<span><i class="fa-solid fa-pen"></i> Editando Enlace</span>`;
         document.getElementById('panelFormularioEnlace').style.border = "2px solid #f39c12";
         document.getElementById('btnCancelarEnlace').style.display = "inline-block";
     }
@@ -1116,40 +1016,39 @@
         const id = document.getElementById('linkId').value;
         const nombre_link = document.getElementById('linkNombre').value.trim();
         const url = document.getElementById('linkUrl').value.trim();
-        const categoria = document.getElementById('linkCategoria').value;
-        const icono = document.getElementById('linkIcono').value.trim();
-        const orden = document.getElementById('linkOrden').value;
-        
-        if (!nombre_link || !url) return alert("El nombre y la URL son obligatorios.");
-        const payload = { nombre_link, url, categoria, icono, orden };
-        
-        try {
-            let endpoint = id ? `/api/enlaces/editar/${id}` : '/api/enlaces/nuevo';
-            let method = id ? 'PUT' : 'POST';
 
-            const res = await fetch(endpoint, {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            const result = await res.json();
-            
-            if (result.status === 'success') {
-                limpiarFormularioEnlace();
-                cargarEnlaces();
-            } else alert("Error al guardar: " + result.error);
-        } catch (error) { console.error("Error guardando:", error); }
+        if (!nombre_link || !url) return alert("El nombre y la URL son obligatorios.");
+
+        const paquete = {
+            nombre_link: nombre_link,
+            url: url,
+            categoria: document.getElementById('linkCategoria').value || 'General',
+            icono: document.getElementById('linkIcono').value || 'fa-link',
+            orden: parseInt(document.getElementById('linkOrden').value) || 1
+        };
+
+        try {
+            if (id) {
+                await _supabase.from('LINKS').update(paquete).eq('id', id);
+            } else {
+                paquete.activo = true; // Por defecto activos al crear
+                await _supabase.from('LINKS').insert([paquete]);
+            }
+            limpiarFormularioEnlace();
+            cerrarModalLink();
+            cargarEnlaces();
+        } catch (e) { alert("Error al guardar enlace en Supabase"); }
     }
 
-    async function toggleEnlace(id) {
-        await fetch(`/api/enlaces/toggle/${id}`, { method: 'POST' });
+    async function toggleEnlace(id, estadoActual) {
+        await _supabase.from('LINKS').update({ activo: !estadoActual }).eq('id', id);
         cargarEnlaces();
     }
 
     async function borrarEnlace(id, nombre) {
         if (confirm(`¿Estás seguro de eliminar el enlace "${nombre}"? Esta acción no se puede deshacer.`)) {
-            await fetch(`/api/enlaces/eliminar/${id}`, { method: 'DELETE' });
-            if (document.getElementById('linkId').value == id) limpiarFormularioEnlace();
+            await _supabase.from('LINKS').delete().eq('id', id);
+            if (document.getElementById('linkId').value == id) cerrarModalLink();
             cargarEnlaces();
         }
     }
@@ -1163,7 +1062,7 @@
         document.getElementById('linkCategoria').selectedIndex = 0;
 
         document.getElementById('tituloFormularioEnlace').innerHTML = `<span><i class="fa-solid fa-link"></i> Registrar Nuevo Link</span>`;
-        document.getElementById('panelFormularioEnlace').style.border = "1px solid var(--borde)";
+        document.getElementById('panelFormularioEnlace').style.border = "2px solid var(--um-azul)";
         document.getElementById('btnCancelarEnlace').style.display = "none";
     }
 
@@ -1173,9 +1072,9 @@
     document.addEventListener("DOMContentLoaded", () => {
         cargarRegistros();
         cargarEjecutivos();
-        cargarEnlaces();
         cargarAlertas();         
         cargarMotivacionales();  
+        cargarEnlaces();
     });
 
 </script>
