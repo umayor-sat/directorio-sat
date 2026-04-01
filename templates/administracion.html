@@ -592,20 +592,18 @@
         
         data.forEach(e => {
             const badge = e.activo ? `<span class="badge activo">Activo</span>` : `<span class="badge inactivo">Inactivo</span>`;
-            
-            // Icono dinámico para el Switch
             const switchIcon = e.activo ? 'fa-toggle-on' : 'fa-toggle-off';
             const switchColor = e.activo ? 'var(--verde-palta)' : '#7f8c8d';
             
-            // MEJORA DE VISIBILIDAD: Limpieza de nombres y correos (evita que la tabla falle)
             const nomSeguro = e.nombre ? e.nombre.replace(/'/g, "\\'") : '';
-            const mailSeguro = e.correo ? e.correo.replace(/'/g, "\\'") : '';
+            // ¡AQUÍ ESTÁ LA CORRECCIÓN! Leemos e.mail
+            const mailSeguro = e.mail ? e.mail.replace(/'/g, "\\'") : '';
             const rolSeguro = e.rol ? e.rol.replace(/'/g, "\\'") : '';
             
             cuerpo.innerHTML += `
             <tr class="fila-staff">
                 <td><strong>${e.nombre || 'Sin nombre'}</strong></td>
-                <td>${e.correo || 'Sin correo'}</td>
+                <td>${e.mail || 'Sin correo'}</td>
                 <td class="col-rol">${e.rol || 'Sin rol'}</td>
                 <td><span style="font-family:monospace; color:var(--um-azul); font-weight:bold;">${e.login_user || 'Sin asignar'}</span></td>
                 <td><span style="font-family:monospace; color:#888;">${e.login_password ? '••••••' : 'Sin asignar'}</span></td>
@@ -678,30 +676,39 @@
 
     async function guardarEjecutivo() {
         const id = document.getElementById('ejecutivoId').value;
-        const nombre = document.getElementById('formNombre').value;
-        const correo = document.getElementById('formMail').value;
-        const rol = document.getElementById('formRol').value;
-        const activo = document.getElementById('formActivo').checked;
-        const login_user = document.getElementById('formLoginUser').value;
-        const login_password = document.getElementById('formLoginPass').value;
-        const nivel_acceso = document.getElementById('formNivelAcceso').value;
+        
+        // ¡AQUÍ ESTÁ LA CORRECCIÓN! Usamos 'mail' para que Supabase lo entienda
+        const paquete = { 
+            nombre: document.getElementById('formNombre').value,
+            mail: document.getElementById('formMail').value, 
+            rol: document.getElementById('formRol').value,
+            activo: document.getElementById('formActivo').checked,
+            login_user: document.getElementById('formLoginUser').value,
+            login_password: document.getElementById('formLoginPass').value,
+            nivel_acceso: document.getElementById('formNivelAcceso').value
+        };
 
-        if (!nombre || !correo) return alert("Nombre y correo son obligatorios.");
-
-        const paquete = { nombre, correo, rol, activo, login_user, login_password, nivel_acceso };
+        if (!paquete.nombre || !paquete.mail) return alert("Nombre y correo son obligatorios.");
 
         try {
-            if (id) await _supabase.from('ejecutivos').update(paquete).eq('id', id);
-            else await _supabase.from('ejecutivos').insert([paquete]);
-            limpiarFormularioStaff();
-            cargarEjecutivos();
-        } catch(e) { alert("Error guardando ejecutivo."); }
-    }
+            let respuestaSupabase;
+            
+            if (id) {
+                respuestaSupabase = await _supabase.from('ejecutivos').update(paquete).eq('id', id);
+            } else {
+                respuestaSupabase = await _supabase.from('ejecutivos').insert([paquete]);
+            }
 
-    async function borrarStaff(id, nombre) {
-        if(confirm(`¿Eliminar definitivamente a ${nombre}?`)) {
-            await _supabase.from('ejecutivos').delete().eq('id', id);
-            cargarEjecutivos();
+            if (respuestaSupabase.error) {
+                alert("❌ SUPABASE RECHAZÓ EL CAMBIO:\n" + respuestaSupabase.error.message);
+                return;
+            }
+
+            limpiarFormularioStaff();
+            cargarEjecutivos(); // Recarga la tabla
+            
+        } catch(e) { 
+            alert("🚨 Error:\n" + e.message); 
         }
     }
 
