@@ -869,7 +869,7 @@ function actualizarCamino() {
 
 // --- BLOCK DE NOTAS ---
 const txtPostIt = document.getElementById('textoPostIt');
-const plantillaMultiple = "Nombre solicitante:\nRUT: (sin puntos ni guión) \nCorreo:\nTeléfono:\nComentario:\n\n----------------------\nNombre Alumno:\nRUT alumno:\nCorreo institucional:\nComentarios adicionales:\n";
+const plantillaMultiple = "Nombre solicitante:\nRUT: \nCorreo:\nTeléfono:\nComentario:\n\n----------------------\nNombre Alumno:\nRUT alumno:\nCorreo institucional:\nComentarios adicionales:\n";
 let savedPostIt = localStorage.getItem('sat_postit');
 if (!savedPostIt || savedPostIt.trim() === '') { txtPostIt.value = plantillaMultiple; } else { txtPostIt.value = savedPostIt; }
 txtPostIt.addEventListener('input', function() { localStorage.setItem('sat_postit', this.value); });
