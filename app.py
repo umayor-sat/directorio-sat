@@ -280,14 +280,15 @@ def api_mensajes_rotativos():
         
         mensajes_finales = []
         for m in todos:
-            es_activo = m.get("activo", False) 
+            # ¡AQUÍ ESTÁ LA MAGIA! Ahora busca la columna correcta "estado"
+            es_activo = m.get("estado", False) 
             fecha_esp = str(m.get("fecha_mmdd", "")).strip()
 
             # LÓGICA DE PRIORIDAD: Si es hoy, gana prioridad cero.
             if fecha_esp == hoy_ddmm or fecha_esp == hoy_mmdd:
                 m['prioridad_calculada'] = 0
                 mensajes_finales.append(m)
-            elif es_activo:
+            elif es_activo:  # Validación segura (sin el "is True" estricto)
                 # Si está activo manualmente, mantiene su prioridad original o se va al final (999)
                 m['prioridad_calculada'] = int(m.get("prioridad") or 999)
                 mensajes_finales.append(m)
@@ -309,7 +310,7 @@ def nuevo_mensaje():
         datos = request.json
         res = supabase.table("mensajes_rotativos").insert({
             "mensaje": datos.get('mensaje'),
-            "activo": datos.get('estado', False),
+            "estado": datos.get('estado', False),  # Corregido de activo a estado
             "prioridad": datos.get('prioridad', 1),
             "categoria": datos.get('categoria'),
             "fecha_mmdd": datos.get('fecha_mmdd'),
@@ -326,7 +327,7 @@ def editar_mensaje(id):
         datos = request.json
         res = supabase.table("mensajes_rotativos").update({
             "mensaje": datos.get('mensaje'),
-            "activo": datos.get('estado', False),
+            "estado": datos.get('estado', False),  # Corregido de activo a estado
             "prioridad": datos.get('prioridad', 1),
             "categoria": datos.get('categoria'),
             "fecha_mmdd": datos.get('fecha_mmdd')
@@ -341,7 +342,7 @@ def toggle_mensaje(id):
     try:
         datos = request.json
         res = supabase.table("mensajes_rotativos").update({
-            "activo": datos.get('estado'),
+            "estado": datos.get('estado'),  # Corregido de activo a estado
             "duracion_min": datos.get('duracion_min')
         }).eq("id", id).execute()
         return jsonify({"status": "success"})
