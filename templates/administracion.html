@@ -189,17 +189,17 @@
             <div class="table-container">
                 <table id="tablaStaff">
                     <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Correo</th>
-                            <th>Rol</th>
-                            <th>Usuario Portal</th>
-                            <th>Password</th>
-                            <th>Nivel</th>
-                            <th style="text-align:center;">Estado</th>
-                            <th style="text-align:center;" class="columna-acciones">Acciones</th>
-                        </tr>
-                    </thead>
+    <tr>
+        <th>Nombre Completo</th>
+        <th>Email</th>
+        <th class="col-rol">Rol / Cargo</th>
+        <th>Usuario</th>
+        <th>Password</th>
+        <th>Acceso</th>
+        <th>Estado</th>
+        <th>Switch</th> <th>Acciones</th>
+    </tr>
+</thead>
                     <tbody id="tbodyStaff">
                         <tr><td colspan="8" style="text-align:center; padding:30px; color:#888;">Cargando staff...</td></tr>
                     </tbody>
@@ -582,7 +582,8 @@
     // ==========================================
     // LÓGICA: STAFF
     // ==========================================
-   async function cargarEjecutivos() {
+// 1. FUNCIÓN PARA MOSTRAR LA LISTA (CON MEJORA DE VISIBILIDAD)
+    async function cargarEjecutivos() {
         const { data, error } = await _supabase.from('ejecutivos').select('*').order('nombre');
         const cuerpo = document.getElementById('tbodyStaff');
         cuerpo.innerHTML = '';
@@ -592,7 +593,11 @@
         data.forEach(e => {
             const badge = e.activo ? `<span class="badge activo">Activo</span>` : `<span class="badge inactivo">Inactivo</span>`;
             
-            // Aquí estaba el error: restauré la validación por si vienen vacíos (?)
+            // Icono dinámico para el Switch
+            const switchIcon = e.activo ? 'fa-toggle-on' : 'fa-toggle-off';
+            const switchColor = e.activo ? 'var(--verde-palta)' : '#7f8c8d';
+            
+            // MEJORA DE VISIBILIDAD: Limpieza de nombres y correos (evita que la tabla falle)
             const nomSeguro = e.nombre ? e.nombre.replace(/'/g, "\\'") : '';
             const mailSeguro = e.correo ? e.correo.replace(/'/g, "\\'") : '';
             const rolSeguro = e.rol ? e.rol.replace(/'/g, "\\'") : '';
@@ -606,12 +611,30 @@
                 <td><span style="font-family:monospace; color:#888;">${e.login_password ? '••••••' : 'Sin asignar'}</span></td>
                 <td><span class="badge" style="background:${e.nivel_acceso === 'admin' ? 'var(--rojo)' : '#7f8c8d'};">${e.nivel_acceso === 'admin' ? 'Admin' : 'Usuario'}</span></td>
                 <td style="text-align:center;">${badge}</td>
+                
+                <td style="text-align:center;">
+                    <button class="btn-tabla" style="color:${switchColor}; font-size:1.5rem; background:none; border:none; cursor:pointer;" 
+                            title="Cambiar Estado" onclick="toggleStaff(${e.id}, ${e.activo})">
+                        <i class="fa-solid ${switchIcon}"></i>
+                    </button>
+                </td>
+
                 <td style="text-align:center; white-space:nowrap;">
                     <button class="btn-tabla btn-editar" title="Editar" onclick="subirFormStaff(${e.id}, '${nomSeguro}', '${mailSeguro}', '${rolSeguro}', ${e.activo}, '${e.login_user || ''}', '${e.login_password || ''}', '${e.nivel_acceso || 'usuario'}')"><i class="fa-solid fa-pen"></i></button>
                     <button class="btn-tabla btn-borrar" title="Eliminar" onclick="borrarStaff(${e.id}, '${nomSeguro}')"><i class="fa-solid fa-trash"></i></button>
                 </td>
             </tr>`;
         });
+    }
+
+    // 2. NUEVA FUNCIÓN PARA ACTIVAR/DESACTIVAR AL INSTANTE
+    async function toggleStaff(id, estadoActual) {
+        const { error } = await _supabase.from('ejecutivos').update({ activo: !estadoActual }).eq('id', id);
+        if (error) {
+            alert("Error al actualizar el estado: " + error.message);
+        } else {
+            cargarEjecutivos(); // Refresca la tabla automáticamente
+        }
     }
 
     function filtrarStaff() {
