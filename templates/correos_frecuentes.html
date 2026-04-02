@@ -4,247 +4,286 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Correos Frecuentes · Portal SAT</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-:root{
-  --um-amarillo:#f2b705;
-  --um-azul:#005aa9;
-  --um-verde:#1a5c38;
-  --um-gris:#f5f7fa;
-  --borde:#e0e6ef;
-  --texto:#222;
-  --texto-suave:#666;
-  --rojo:#c0392b;
-  --rojo-bg:#fdecea;
+:root {
+  --um-amarillo: #f2b705;
+  --um-azul:     #005aa9;
+  --um-verde:    #1a5c38;
+  --um-gris:     #f5f7fa;
+  --borde:       #dde4ee;
+  --texto:       #222;
+  --texto-suave: #666;
+  --rojo:        #c0392b;
+  --rojo-bg:     #fdecea;
   --alerta-borde:#f9a825;
-  --preview-bg:#e8f0fb;
+  --preview-bg:  #e8f0fb;
   --preview-borde:#b5d4f4;
   --preview-titulo:#185fa5;
   --preview-texto:#0c447c;
+  --card-bg:     #ffffff;
+  --fondo:       #f0f2f5;
+  --sombra:      0 2px 8px rgba(0,0,0,0.06);
 }
-*{box-sizing:border-box;}
-body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#fff;color:var(--texto);}
-.header{background:var(--um-amarillo);padding:20px 30px;display:flex;align-items:center;gap:25px;}
-.header img{height:70px;}
-.header-text h1{margin:0;font-size:22px;color:#222;}
-.header-text p{margin:2px 0 0;font-size:12px;color:#666;}
-.tabs-nav{background:var(--um-azul);display:flex;overflow-x:auto;gap:2px;padding:0 20px;}
-.tab-btn{padding:12px 18px;color:#cce;cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap;border-bottom:3px solid transparent;background:none;border-top:none;border-left:none;border-right:none;transition:color .15s;}
-.tab-btn:hover{color:#fff;}
-.tab-btn.active{color:#fff;border-bottom:3px solid var(--um-amarillo);}
-.content{max-width:860px;margin:0 auto;padding:32px 20px;}
-.tab-panel{display:none;}
-.tab-panel.active{display:block;}
-.form-section{background:var(--um-gris);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
-.form-section-title{font-size:13px;font-weight:700;color:var(--um-azul);margin-bottom:4px;}
-.form-section-sub{font-size:11px;color:var(--texto-suave);margin-bottom:14px;}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.form-field{display:flex;flex-direction:column;gap:4px;}
-.form-field.span2{grid-column:1/-1;}
-label{font-size:11px;color:var(--texto-suave);font-weight:600;}
-.req{color:var(--rojo);}
-input[type="text"],input[type="email"],input[type="date"],select,textarea{width:100%;padding:8px 10px;border:1px solid var(--borde);border-radius:6px;font-size:13px;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(--texto);transition:border-color .15s;}
-input:focus,select:focus,textarea:focus{border-color:var(--um-azul);outline:none;}
-textarea{resize:vertical;min-height:70px;}
-.field-hint{font-size:10px;color:var(--texto-suave);margin-top:2px;}
-.field-error{border-color:var(--rojo) !important;background:#fff8f8 !important;}
-.asunto-select{width:100%;padding:10px 12px;border:1.5px solid var(--borde);border-radius:8px;font-size:14px;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(--texto);margin-bottom:20px;cursor:pointer;}
-.asunto-select:focus{border-color:var(--um-azul);outline:none;}
-.error-panel{display:none;background:var(--rojo-bg);border-left:3px solid var(--rojo);border-radius:0 6px 6px 0;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#8b1a1a;}
-.btn-enviar{display:none;width:100%;background:var(--um-azul);color:#fff;border:none;border-radius:8px;padding:13px 28px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .15s;}
-.btn-enviar:hover{opacity:.9;}
-.btn-volver{position:fixed;top:12px;right:16px;background:var(--um-azul);color:#fff;border:none;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;z-index:999;opacity:.85;transition:opacity .2s;}
-.btn-volver:hover{opacity:1;}
-footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top:1px solid #eee;padding-top:16px;}
+body.dark-mode {
+  --fondo:        #121212;
+  --texto:        #e0e0e0;
+  --texto-suave:  #aaaaaa;
+  --borde:        #333333;
+  --card-bg:      #1e1e1e;
+  --um-gris:      #1e1e1e;
+  --preview-bg:   #1a2a3a;
+  --preview-borde:#2a4a6a;
+}
 
-.modal-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.6); z-index: 9999;
-    display: none; justify-content: center; align-items: center;
-    backdrop-filter: blur(4px);
+* { box-sizing: border-box; }
+body { font-family: Arial, Helvetica, sans-serif; margin: 0; background: var(--fondo); color: var(--texto); transition: background 0.2s, color 0.2s; }
+
+/* ============================================================
+   HEADER Y TABS
+   ============================================================ */
+.header {
+  background: var(--um-amarillo); padding: 14px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
 }
-.modal-box {
-    background: #fff; border-top: 6px solid var(--um-verde);
-    border-radius: 12px; padding: 40px 30px; max-width: 420px;
-    text-align: center; box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-    animation: slideDown 0.3s ease-out;
+.header-left { display: flex; align-items: center; gap: 16px; }
+.header img { height: 56px; }
+.header h1 { margin: 0; font-size: 18px; color: #1a1a1a; font-weight: 700; }
+.header p  { margin: 2px 0 0; font-size: 11px; color: #555; }
+.btn-volver {
+  background: rgba(0,0,0,0.12); color: #1a1a1a; border: none;
+  border-radius: 20px; padding: 7px 16px; font-size: 12px;
+  font-weight: 700; cursor: pointer; text-decoration: none;
+  display: flex; align-items: center; gap: 6px; transition: background 0.15s;
 }
-.modal-box h3 { color: var(--um-azul); margin: 15px 0 10px 0; font-size: 22px;}
-.modal-box p { color: var(--texto-suave); font-size: 14px; margin: 0; line-height: 1.5;}
+.btn-volver:hover { background: rgba(0,0,0,0.2); }
+
+.tabs-nav {
+  background: var(--um-azul); display: flex;
+  gap: 2px; padding: 0 24px; overflow-x: auto;
+}
+.tab-btn {
+  padding: 12px 20px; color: rgba(255,255,255,0.6); cursor: pointer;
+  font-size: 13px; font-weight: 600; white-space: nowrap;
+  border: none; border-bottom: 3px solid transparent;
+  background: none; transition: color 0.15s;
+}
+.tab-btn:hover { color: #fff; }
+.tab-btn.active { color: #fff; border-bottom-color: var(--um-amarillo); }
+
+/* ============================================================
+   CONTENIDO PRINCIPAL
+   ============================================================ */
+.content { max-width: 820px; margin: 24px auto; padding: 0 20px 40px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Selector asunto */
+.asunto-select {
+  width: 100%; padding: 11px 14px; border: 1.5px solid var(--borde);
+  border-radius: 9px; font-size: 14px; font-family: Arial, Helvetica, sans-serif;
+  background: var(--card-bg); color: var(--texto);
+  margin-bottom: 20px; cursor: pointer; transition: border-color 0.15s;
+}
+.asunto-select:focus { border-color: var(--um-azul); outline: none; }
+
+/* Secciones del formulario */
+.form-section {
+  background: var(--um-gris); border-radius: 10px;
+  padding: 16px 18px; margin-bottom: 14px;
+  border: 1px solid var(--borde);
+}
+.form-section-title { font-size: 13px; font-weight: 700; color: var(--um-azul); margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
+.form-section-sub   { font-size: 11px; color: var(--texto-suave); margin-bottom: 12px; }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+.form-field { display: flex; flex-direction: column; gap: 4px; }
+.form-field.span2 { grid-column: 1 / -1; }
+
+label { font-size: 11px; color: var(--texto-suave); font-weight: 600; }
+.req { color: var(--rojo); }
+
+input[type="text"], input[type="email"], input[type="date"], select, textarea {
+  width: 100%; padding: 8px 10px; border: 1px solid var(--borde);
+  border-radius: 6px; font-size: 13px; font-family: Arial, Helvetica, sans-serif;
+  background: var(--card-bg); color: var(--texto); transition: border-color 0.15s;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--um-azul); outline: none; }
+textarea { resize: vertical; min-height: 68px; }
+.field-hint { font-size: 10px; color: var(--texto-suave); margin-top: 2px; }
+.field-error { border-color: var(--rojo) !important; background: #fff8f8 !important; }
+
+/* Vista previa asunto */
+.preview-asunto {
+  background: var(--preview-bg); border: 0.5px solid var(--preview-borde);
+  border-radius: 8px; padding: 11px 14px; margin-bottom: 16px;
+}
+.preview-label { font-size: 11px; color: var(--preview-titulo); font-weight: 700; margin-bottom: 4px; }
+.preview-texto { font-size: 13px; font-weight: 700; color: var(--preview-texto); word-break: break-all; }
+
+/* Panel de errores */
+.error-panel {
+  display: none; background: var(--rojo-bg);
+  border-left: 3px solid var(--rojo); border-radius: 0 6px 6px 0;
+  padding: 10px 14px; margin-bottom: 14px;
+  font-size: 12px; color: #8b1a1a;
+}
+
+/* Aviso firma */
+.aviso-firma {
+  background: #fffbea; border: 2px solid var(--alerta-borde);
+  border-radius: 8px; padding: 13px 16px; margin-bottom: 18px;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.aviso-firma-icon { font-size: 18px; flex-shrink: 0; color: #7a5c00; margin-top: 1px; }
+.aviso-firma-title { font-size: 13px; font-weight: 700; color: #7a5c00; }
+.aviso-firma-sub { font-size: 11px; color: #9a7800; margin-top: 3px; line-height: 1.4; }
+
+/* Botón enviar */
+.btn-enviar {
+  width: 100%; background: var(--um-azul); color: #fff;
+  border: none; border-radius: 8px; padding: 13px 24px;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: opacity 0.15s; display: flex; align-items: center;
+  justify-content: center; gap: 8px;
+}
+.btn-enviar:hover { opacity: 0.9; }
+.btn-enviar.verde { background: var(--um-verde); }
+
+/* ============================================================
+   SUB-MODAL CONFIRMACIÓN
+   ============================================================ */
+.submodal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  z-index: 99999; display: none; align-items: center; justify-content: center;
+}
+.submodal-overlay.visible { display: flex; }
+.submodal-box {
+  background: var(--card-bg); border-top: 6px solid var(--um-verde);
+  border-radius: 14px; padding: 36px 32px; max-width: 400px; width: 90%;
+  text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+  animation: slideDown 0.3s ease-out;
+}
 @keyframes slideDown {
-    from { transform: translateY(-30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+  from { transform: translateY(-20px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+.submodal-icon { font-size: 48px; margin-bottom: 12px; }
+.submodal-title { font-size: 20px; font-weight: 700; color: var(--um-azul); margin-bottom: 8px; }
+.submodal-msg { font-size: 13px; color: var(--texto-suave); line-height: 1.5; }
+.submodal-countdown { font-size: 11px; color: #bbb; margin-top: 16px; }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  text-align: center; font-size: 11px; color: var(--texto-suave);
+  margin: 30px 0 16px; border-top: 1px solid var(--borde); padding-top: 14px;
 }
 </style>
 </head>
 <body>
 
-<a href="/" class="btn-volver">&#8592; Inicio</a>
-
+<!-- ============================================================
+     HEADER
+     ============================================================ -->
 <div class="header">
-  <img src="{{ url_for('static', filename='img/logoum.jpg') }}" alt="Universidad Mayor">
-  <div class="header-text">
-    <h1>Correos Frecuentes</h1>
-    <p>Plantillas de correo con envio directo &middot; Portal SAT &middot; Universidad Mayor</p>
+  <div class="header-left">
+    <img src="{{ url_for('static', filename='img/logoum.jpg') }}" alt="Universidad Mayor">
+    <div>
+      <h1>Correos Frecuentes</h1>
+      <p>Plantillas con envío directo · Portal SAT · Universidad Mayor</p>
+    </div>
   </div>
+  <a href="/" class="btn-volver"><i class="fa-solid fa-arrow-left"></i> Inicio</a>
 </div>
 
+<!-- ============================================================
+     TABS
+     ============================================================ -->
 <div class="tabs-nav">
-  <button class="tab-btn active" onclick="showTab(0)">&#128104;&#8205;&#128188; Derivar a Supervisor</button>
-  <button class="tab-btn" onclick="showTab(1)">&#128188; Derivar a Area Comercial</button>
+  <button class="tab-btn active" onclick="showTab(0)">
+    <i class="fa-solid fa-user-tie"></i> Derivar a Supervisor
+  </button>
+  <button class="tab-btn" onclick="showTab(1)">
+    <i class="fa-solid fa-briefcase"></i> Derivar a Área Comercial
+  </button>
 </div>
 
+<!-- ============================================================
+     CONTENIDO
+     ============================================================ -->
 <div class="content">
 
+  <!-- ==================== TAB 0: SUPERVISOR ==================== -->
   <div class="tab-panel active" id="panel0">
 
     <select class="asunto-select" id="asunto" onchange="cambiarAsunto()">
-      <option value="">-- Selecciona el asunto --</option>
-      <option value="escalamiento">IC - Escalamiento de caso</option>
-      <option value="ti">IC - Escalamiento caso TI</option>
-      <option value="info">Solicitud de informacion interna</option>
+      <option value="">— Selecciona el tipo de derivación —</option>
+      <option value="escalamiento">Escalamiento de caso a Supervisor</option>
+      <option value="ti">Escalamiento caso TI</option>
       <option value="turno">Solicitud cambio de turno</option>
-      <option value="feriado">Solicitud feriado legal / dia administrativo</option>
-      <option value="otro">Otro (especificar)</option>
+      <option value="feriado">Solicitud día administrativo / vacaciones</option>
     </select>
 
+    <!-- BLOQUE IC (escalamiento y TI) -->
     <div id="bloque-ic" class="form-section" style="display:none;">
-      <div class="form-section-title">Campos del asunto</div>
-      <div class="form-section-sub">Estos datos arman el asunto del correo automaticamente.</div>
+      <div class="form-section-title"><i class="fa-solid fa-file-lines"></i> Campos del asunto</div>
+      <div class="form-section-sub">Estos datos arman el asunto del correo automáticamente.</div>
       <div class="form-grid">
         <div class="form-field">
           <label>IC <span class="req">*</span></label>
           <input type="text" id="ic-num" placeholder="Ej: 55667788" oninput="actualizarAsunto()">
         </div>
         <div class="form-field">
-          <label>RUT <span class="req">*</span></label>
-          <input type="text" id="ic-rut" placeholder="Sin puntos ni guion" oninput="limpiarRut('ic-rut')">
-          <span class="field-hint">Sin puntos ni guion</span>
+          <label>RUT del solicitante <span class="req">*</span></label>
+          <input type="text" id="ic-rut" placeholder="Sin puntos ni guión" oninput="limpiarRut('ic-rut')">
+          <span class="field-hint">Sin puntos ni guión</span>
         </div>
         <div class="form-field">
           <label>Nombre del solicitante <span class="req">*</span></label>
-          <input type="text" id="ic-nombre" placeholder="Nombre completo" oninput="actualizarAsunto();sincronizarDatos()">
+          <input type="text" id="ic-nombre" placeholder="Nombre completo" oninput="actualizarAsunto(); sincronizarDatos()">
         </div>
         <div class="form-field">
           <label>Motivo <span class="req">*</span></label>
-          <input type="text" id="ic-motivo" placeholder="Ej: Consulta matricula" oninput="actualizarAsunto()">
+          <input type="text" id="ic-motivo" placeholder="Ej: Consulta matrícula" oninput="actualizarAsunto()">
         </div>
       </div>
     </div>
 
-    <div id="bloque-otro" style="display:none;margin-bottom:16px;">
+    <!-- VISTA PREVIA ASUNTO -->
+    <div id="preview-asunto" class="preview-asunto" style="display:none;">
+      <div class="preview-label"><i class="fa-regular fa-envelope"></i> Vista previa del asunto del correo</div>
+      <div class="preview-texto" id="asunto-generado">—</div>
+    </div>
+
+    <!-- CAJA COMENTARIOS (solo escalamiento) -->
+    <div id="bloque-resumen" class="form-section" style="display:none;">
+      <div class="form-section-title"><i class="fa-solid fa-comment-dots"></i> Resumen de la solicitud</div>
+      <div class="form-section-sub">Lo que el ejecutivo entendió — breve y concreto.</div>
       <div class="form-field">
-        <label>Especifica el asunto <span class="req">*</span></label>
-        <input type="text" id="otro-texto" placeholder="Escribe el asunto..." oninput="actualizarAsunto()">
+        <textarea id="resumen" placeholder="Describe brevemente el requerimiento..."></textarea>
       </div>
     </div>
 
-    <div id="preview-asunto" style="display:none;background:var(--preview-bg);border:0.5px solid var(--preview-borde);border-radius:8px;padding:12px 16px;margin-bottom:20px;">
-      <div style="font-size:11px;color:var(--preview-titulo);font-weight:700;margin-bottom:4px;">Vista previa del asunto del correo</div>
-      <div id="asunto-generado" style="font-size:13px;font-weight:700;color:var(--preview-texto);word-break:break-all;"></div>
-    </div>
-
-    <div id="bloque-resumen" style="display:none;margin-bottom:16px;">
-      <div class="form-field">
-        <label>Resumen de la solicitud</label>
-        <textarea id="resumen" placeholder="Describe brevemente tu solicitud..."></textarea>
-      </div>
-    </div>
-
-    <div id="bloque-turno" class="form-section" style="display:none;">
-      <div class="form-section-title">Detalles del Cambio de Turno</div>
-      <div class="form-section-sub">Completa las opciones para armar el correo de solicitud <span class="req">*</span></div>
-      <div class="form-grid">
-        <div class="form-field">
-          <label>Fecha del turno <span class="req">*</span></label>
-          <input type="date" id="turno-fecha" oninput="actualizarAsunto()">
-        </div>
-        <div class="form-field">
-          <label>Motivo <span class="req">*</span></label>
-          <select id="turno-motivo">
-            <option value="">-- Selecciona --</option>
-            <option>Personal</option>
-            <option>Médico</option>
-            <option>Académico</option>
-            <option>Otro</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <label>Tu turno original <span class="req">*</span></label>
-          <select id="turno-original-solicitante">
-            <option value="">-- Selecciona --</option>
-            <option>08:00 a 16:30</option>
-            <option>08:30 a 17:00</option>
-            <option>09:00 a 17:30</option>
-            <option>09:30 a 18:00</option>
-            <option>10:00 a 18:30</option>
-            <option>10:30 a 19:00</option>
-            <option>11:00 a 19:30</option>
-            <option>11:30 a 20:00</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <label>Turno original del reemplazo <span class="req">*</span></label>
-          <select id="turno-original-reemplazo">
-            <option value="">-- Selecciona --</option>
-            <option>08:00 a 16:30</option>
-            <option>08:30 a 17:00</option>
-            <option>09:00 a 17:30</option>
-            <option>09:30 a 18:00</option>
-            <option>10:00 a 18:30</option>
-            <option>10:30 a 19:00</option>
-            <option>11:00 a 19:30</option>
-            <option>11:30 a 20:00</option>
-          </select>
-        </div>
-        <div class="form-field span2">
-          <label>Ejecutivo que realizará el reemplazo <span class="req">*</span></label>
-          <select id="turno-reemplazo-nombre">
-            <option value="">-- Cargando ejecutivos... --</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <label>Turno que cubrirá el reemplazo <span class="req">*</span></label>
-          <select id="turno-nuevo-reemplazo">
-            <option value="">-- Selecciona --</option>
-            <option>08:00 a 16:30</option>
-            <option>08:30 a 17:00</option>
-            <option>09:00 a 17:30</option>
-            <option>09:30 a 18:00</option>
-            <option>10:00 a 18:30</option>
-            <option>10:30 a 19:00</option>
-            <option>11:00 a 19:30</option>
-            <option>11:30 a 20:00</option>
-          </select>
-        </div>
-        <div class="form-field">
-          </div>
-        <div class="form-field span2">
-          <label>Comentarios adicionales</label>
-          <textarea id="turno-comentarios" placeholder="Información adicional relevante..."></textarea>
-        </div>
-        <div class="form-field span2" style="flex-direction:row; align-items:flex-start; gap:8px; background:#fffbea; padding:12px; border:1px solid #f9a825; border-radius:6px; margin-top:8px;">
-          <input type="checkbox" id="turno-confirmacion" style="width:auto; margin-top:2px;">
-          <label for="turno-confirmacion" style="margin:0; font-size:11px; color:#7a5c00; font-weight:normal;">Confirmo que este cambio ya fue coordinado entre ambas partes y que ambos ejecutivos se comprometen a cumplir con el turno acordado, entendiendo su impacto en la continuidad operativa del servicio. <span class="req">*</span></label>
-        </div>
-      </div>
-    </div>
-    
+    <!-- DATOS DEL SOLICITANTE (escalamiento) -->
     <div id="bloque-solicitante" class="form-section" style="display:none;">
-      <div class="form-section-title">Datos del solicitante</div>
-      <div class="form-section-sub">Los cuatro campos son obligatorios <span class="req">*</span></div>
+      <div class="form-section-title"><i class="fa-solid fa-person"></i> Datos del solicitante</div>
+      <div class="form-section-sub">Nombre y RUT se sincronizan desde los campos del asunto. <span class="req">*</span></div>
       <div class="form-grid">
         <div class="form-field">
           <label>Nombre <span class="req">*</span></label>
-          <input type="text" id="sol-nombre" placeholder="Nombre completo">
+          <input type="text" id="sol-nombre" placeholder="Se sincroniza automáticamente" readonly style="background:#f0f4f8; color:#555;">
         </div>
         <div class="form-field">
           <label>RUT <span class="req">*</span></label>
-          <input type="text" id="sol-rut" placeholder="Sin puntos ni guion" oninput="limpiarRut('sol-rut')">
-          <span class="field-hint">Sin puntos ni guion</span>
+          <input type="text" id="sol-rut" placeholder="Se sincroniza automáticamente" readonly style="background:#f0f4f8; color:#555;">
         </div>
         <div class="form-field">
-          <label>Telefono <span class="req">*</span></label>
+          <label>Teléfono <span class="req">*</span></label>
           <input type="text" id="sol-tel" placeholder="Ej: 912345678">
         </div>
         <div class="form-field">
@@ -252,15 +291,16 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
           <input type="email" id="sol-correo" placeholder="correo@ejemplo.cl">
         </div>
         <div class="form-field span2">
-          <label>Comentario</label>
-          <textarea id="sol-comentario" placeholder="Observaciones adicionales"></textarea>
+          <label>Comentario adicional</label>
+          <textarea id="sol-comentario" placeholder="Transcribe casi textualmente lo que la persona necesita..."></textarea>
         </div>
       </div>
     </div>
 
+    <!-- DATOS DEL ALUMNO (escalamiento) -->
     <div id="bloque-alumno" class="form-section" style="display:none;">
-      <div class="form-section-title">Datos del alumno</div>
-      <div class="form-section-sub">Completar solo si corresponde. Si inicias este bloque, los datos de contacto son obligatorios.</div>
+      <div class="form-section-title"><i class="fa-solid fa-graduation-cap"></i> Datos del alumno</div>
+      <div class="form-section-sub">Completar solo si corresponde. Si inicias este bloque, nombre y RUT serán obligatorios.</div>
       <div class="form-grid">
         <div class="form-field">
           <label>Nombre <span id="alu-req-nombre"></span></label>
@@ -268,72 +308,74 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
         </div>
         <div class="form-field">
           <label>RUT <span id="alu-req-rut"></span></label>
-          <input type="text" id="alu-rut" placeholder="Sin puntos ni guion" oninput="checkAlumno();limpiarRut('alu-rut')">
-          <span class="field-hint">Sin puntos ni guion</span>
+          <input type="text" id="alu-rut" placeholder="Sin puntos ni guión" oninput="checkAlumno(); limpiarRut('alu-rut')">
+          <span class="field-hint">Sin puntos ni guión</span>
         </div>
         <div class="form-field">
-          <label>Telefono <span id="alu-req-tel"></span></label>
-          <input type="text" id="alu-tel" placeholder="Ej: 912345678" oninput="checkAlumno()">
+          <label>Teléfono</label>
+          <input type="text" id="alu-tel" placeholder="Ej: 912345678">
         </div>
         <div class="form-field">
-          <label>Correo <span id="alu-req-correo"></span></label>
-          <input type="email" id="alu-correo" placeholder="correo@ejemplo.cl" oninput="checkAlumno()">
+          <label>Correo</label>
+          <input type="email" id="alu-correo" placeholder="correo@ejemplo.cl">
         </div>
         <div class="form-field span2">
           <label>Comentario</label>
-          <textarea id="alu-comentario" placeholder="Observaciones adicionales"></textarea>
+          <textarea id="alu-comentario" placeholder="Observaciones adicionales sobre el alumno..."></textarea>
         </div>
       </div>
     </div>
 
+    <!-- DATOS CONTACTO TI -->
     <div id="bloque-contacto-ti" class="form-section" style="display:none;">
-      <div class="form-section-title">Datos de contacto</div>
-      <div class="form-section-sub">Nombre y RUT se sincronizan desde los campos del asunto. Completa telefono y correo <span class="req">*</span></div>
+      <div class="form-section-title"><i class="fa-solid fa-address-card"></i> Datos de contacto</div>
+      <div class="form-section-sub">Nombre y RUT se sincronizan desde los campos del asunto. <span class="req">*</span></div>
       <div class="form-grid">
         <div class="form-field">
           <label>Nombre <span class="req">*</span></label>
-          <input type="text" id="ti-nombre" placeholder="Se sincroniza automaticamente" readonly style="background:#f0f4f8;color:#555;">
+          <input type="text" id="ti-nombre" placeholder="Se sincroniza automáticamente" readonly style="background:#f0f4f8; color:#555;">
         </div>
         <div class="form-field">
           <label>RUT <span class="req">*</span></label>
-          <input type="text" id="ti-rut" placeholder="Se sincroniza automaticamente" readonly style="background:#f0f4f8;color:#555;">
-          <span class="field-hint">Sin puntos ni guion</span>
+          <input type="text" id="ti-rut" placeholder="Se sincroniza automáticamente" readonly style="background:#f0f4f8; color:#555;">
         </div>
         <div class="form-field">
-          <label>Telefono <span class="req">*</span></label>
+          <label>Teléfono <span class="req">*</span></label>
           <input type="text" id="ti-tel" placeholder="Ej: 912345678">
         </div>
         <div class="form-field">
           <label>Correo personal <span class="req">*</span></label>
           <input type="email" id="ti-correo-per" placeholder="correo@gmail.com">
+          <span class="field-hint">⚠ Correo personal, no institucional — si el problema es el correo UM, no llegaría el aviso ahí.</span>
         </div>
       </div>
     </div>
 
+    <!-- DETALLES CASO TI -->
     <div id="bloque-ti" class="form-section" style="display:none;">
-      <div class="form-section-title">Detalles del caso TI</div>
-      <div class="form-section-sub">Completar solo si corresponde</div>
+      <div class="form-section-title"><i class="fa-solid fa-computer"></i> Detalles del caso TI</div>
+      <div class="form-section-sub">Completa toda la información disponible antes de derivar.</div>
       <div class="form-grid">
         <div class="form-field">
-          <label>Correo institucional</label>
+          <label>Correo institucional <span class="req">*</span></label>
           <input type="text" id="ti-correo-inst" placeholder="rut@mayor.cl">
         </div>
         <div class="form-field">
-          <label>Tipo de contacto</label>
+          <label>Tipo de contacto <span class="req">*</span></label>
           <select id="ti-contacto">
-            <option value="">-- Selecciona --</option>
-            <option>Llamada telefonica</option>
-            <option>Correo</option>
-            <option>Whatsapp</option>
+            <option value="">— Selecciona —</option>
+            <option>Llamada telefónica</option>
+            <option>WhatsApp</option>
+            <option>Landing / formulario web</option>
           </select>
         </div>
         <div class="form-field">
           <label>Perfil con error</label>
           <select id="ti-perfil">
-            <option value="">-- Selecciona --</option>
+            <option value="">— Selecciona —</option>
             <option>Alumno</option>
             <option>Ex alumno</option>
-            <option>Colaborador / administrativo</option>
+            <option>Colaborador / Administrativo</option>
             <option>Docente</option>
           </select>
         </div>
@@ -342,136 +384,203 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
           <input type="text" id="ti-plataforma" placeholder="Correo / Campus Virtual / etc.">
         </div>
         <div class="form-field span2">
-          <label>Descripcion del error</label>
-          <textarea id="ti-desc" placeholder="Que ocurre exactamente?"></textarea>
+          <label>Descripción del error</label>
+          <textarea id="ti-desc" placeholder="¿Qué ocurre exactamente?"></textarea>
         </div>
         <div class="form-field span2">
           <label>Pruebas realizadas antes de derivar</label>
-          <textarea id="ti-pruebas" placeholder="Que intentaste antes de derivar?"></textarea>
-        </div>
-        <div class="form-field">
-          <label>Ingreso con rut@mayor.cl confirmado</label>
-          <select id="ti-ingreso">
-            <option value="">-- Selecciona --</option>
-            <option>Si</option><option>No</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <label>Acceso por intranet confirmado</label>
-          <select id="ti-intranet">
-            <option value="">-- Selecciona --</option>
-            <option>Si</option><option>No</option>
-          </select>
+          <textarea id="ti-pruebas" placeholder="¿Qué pasos intentaste? Ej: limpiar caché, cambiar navegador, etc."></textarea>
         </div>
       </div>
     </div>
 
-    <div id="bloque-ejecutivo" class="form-section" style="display:none;">
-      <div class="form-section-title">Datos del ejecutivo</div>
-      <div class="form-section-sub">Tu nombre y RUT son obligatorios para mantener el orden en el registro. <span class="req">*</span></div>
+    <!-- BLOQUE TURNO -->
+    <div id="bloque-turno" class="form-section" style="display:none;">
+      <div class="form-section-title"><i class="fa-regular fa-clock"></i> Detalles del cambio de turno</div>
+      <div class="form-section-sub">Completa las opciones para armar el correo de solicitud. <span class="req">*</span></div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Fecha del turno <span class="req">*</span></label>
+          <input type="date" id="turno-fecha" oninput="actualizarAsunto()">
+        </div>
+        <div class="form-field">
+          <label>Motivo <span class="req">*</span></label>
+          <select id="turno-motivo">
+            <option value="">— Selecciona —</option>
+            <option>Personal</option>
+            <option>Médico</option>
+            <option>Académico</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Tu nombre <span class="req">*</span></label>
+          <select id="turno-solicitante-nombre">
+            <option value="">— Cargando ejecutivos... —</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Tu turno original <span class="req">*</span></label>
+          <select id="turno-original-solicitante">
+            <option value="">— Selecciona —</option>
+            <option>08:00 a 16:30</option><option>08:30 a 17:00</option>
+            <option>09:00 a 17:30</option><option>09:30 a 18:00</option>
+            <option>10:00 a 18:30</option><option>10:30 a 19:00</option>
+            <option>11:00 a 19:30</option><option>11:30 a 20:00</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Ejecutivo que realiza el reemplazo <span class="req">*</span></label>
+          <select id="turno-reemplazo-nombre">
+            <option value="">— Cargando ejecutivos... —</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Turno original del reemplazo <span class="req">*</span></label>
+          <select id="turno-original-reemplazo">
+            <option value="">— Selecciona —</option>
+            <option>08:00 a 16:30</option><option>08:30 a 17:00</option>
+            <option>09:00 a 17:30</option><option>09:30 a 18:00</option>
+            <option>10:00 a 18:30</option><option>10:30 a 19:00</option>
+            <option>11:00 a 19:30</option><option>11:30 a 20:00</option>
+          </select>
+        </div>
+        <div class="form-field span2">
+          <label>Turno que cubrirá el reemplazo <span class="req">*</span></label>
+          <select id="turno-nuevo-reemplazo">
+            <option value="">— Selecciona —</option>
+            <option>08:00 a 16:30</option><option>08:30 a 17:00</option>
+            <option>09:00 a 17:30</option><option>09:30 a 18:00</option>
+            <option>10:00 a 18:30</option><option>10:30 a 19:00</option>
+            <option>11:00 a 19:30</option><option>11:30 a 20:00</option>
+          </select>
+        </div>
+        <div class="form-field span2">
+          <label>Comentarios adicionales</label>
+          <textarea id="turno-comentarios" placeholder="Información adicional relevante..."></textarea>
+        </div>
+        <div class="form-field span2" style="flex-direction:row; align-items:flex-start; gap:8px; background:#fffbea; padding:12px; border:1px solid var(--alerta-borde); border-radius:6px;">
+          <input type="checkbox" id="turno-confirmacion" style="width:auto; margin-top:2px; flex-shrink:0;">
+          <label for="turno-confirmacion" style="margin:0; font-size:11px; color:#7a5c00; font-weight:normal; cursor:pointer;">
+            Confirmo que este cambio ya fue coordinado entre ambas partes y que ambos ejecutivos se comprometen a cumplir con el turno acordado. <span class="req">*</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOQUE DÍA ADMINISTRATIVO -->
+    <div id="bloque-feriado" class="form-section" style="display:none;">
+      <div class="form-section-title"><i class="fa-regular fa-calendar-days"></i> Detalles de la solicitud</div>
+      <div class="form-section-sub">Completa los datos para la solicitud de día administrativo o vacaciones.</div>
       <div class="form-grid">
         <div class="form-field">
           <label>Tu nombre <span class="req">*</span></label>
-          <select id="ejec-nombre">
-            <option value="">-- Cargando ejecutivos... --</option>
+          <select id="feriado-solicitante-nombre">
+            <option value="">— Cargando ejecutivos... —</option>
           </select>
         </div>
         <div class="form-field">
-          <label>Tu RUT <span class="req">*</span></label>
-          <input type="text" id="ejec-rut" placeholder="123456789" oninput="limpiarRut('ejec-rut')">
-          <span class="field-hint">Sin puntos ni guion</span>
+          <label>Tipo de solicitud <span class="req">*</span></label>
+          <select id="feriado-tipo">
+            <option value="">— Selecciona —</option>
+            <option>Día administrativo</option>
+            <option>Feriado legal</option>
+            <option>Vacaciones</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Fecha solicitada <span class="req">*</span></label>
+          <input type="date" id="feriado-fecha" oninput="actualizarAsunto()">
+        </div>
+        <div class="form-field">
+          <label>Motivo</label>
+          <input type="text" id="feriado-motivo" placeholder="Opcional">
         </div>
         <div class="form-field span2">
-          <label>Tu correo institucional (Opcional)</label>
-          <input type="email" id="ejec-correo" placeholder="nombre@umayor.cl">
+          <label>Comentarios adicionales</label>
+          <textarea id="feriado-comentarios" placeholder="Información adicional relevante..."></textarea>
         </div>
       </div>
     </div>
 
-    <div id="aviso-firma" style="display:none;background:#fffbea;border:2px solid var(--alerta-borde);border-radius:8px;padding:14px 18px;margin-bottom:20px;">
-      <div style="display:flex;align-items:flex-start;gap:10px;">
-        <span style="font-size:20px;">&#9888;&#65039;</span>
-        <div>
-          <div style="font-size:13px;font-weight:700;color:#7a5c00;">Agrega tu firma e imágenes antes de enviar</div>
-          <div style="font-size:11px;color:#9a7800;margin-top:3px;">El correo se abrirá en Outlook. Recuerda insertar tu firma institucional y <strong>pegar (Ctrl+V) cualquier imagen o captura de pantalla</strong> necesaria antes de hacer clic en Enviar.</div>
-        </div>
+    <!-- AVISO FIRMA -->
+    <div id="aviso-firma" class="aviso-firma" style="display:none;">
+      <i class="fa-solid fa-triangle-exclamation aviso-firma-icon"></i>
+      <div>
+        <div class="aviso-firma-title">Agrega tu firma e imágenes antes de enviar</div>
+        <div class="aviso-firma-sub">El correo se abrirá en Outlook. Recuerda insertar tu firma institucional y pegar (Ctrl+V) cualquier imagen, captura de pantalla o archivo necesario antes de hacer clic en Enviar.</div>
       </div>
     </div>
 
     <div id="error-validacion" class="error-panel"></div>
 
-    <button id="btn-enviar" class="btn-enviar" onclick="validarYEnviar()">
-      &#9993;&#65039; Preparar y enviar correo
-    </button>
-    <button id="btn-limpiar" class="btn-enviar" style="background:#7f8c8d; margin-top:10px;" onclick="limpiarFormularioConAviso()">
-      &#128465;&#65039; Limpiar y Nueva Solicitud
+    <button id="btn-enviar" class="btn-enviar" style="display:none;" onclick="validarYEnviar()">
+      <i class="fa-regular fa-envelope"></i> Preparar y enviar correo
     </button>
 
   </div>
 
+  <!-- ==================== TAB 1: COMERCIAL ==================== -->
   <div class="tab-panel" id="panel1">
 
     <div class="form-section" style="margin-bottom:20px;">
       <select class="asunto-select" id="asunto-com" style="margin-bottom:0;" onchange="mostrarFormComercial()">
-        <option value="">-- Selecciona el asunto --</option>
-        <option value="prospecto">Derivacion de prospecto</option>
+        <option value="">— Selecciona el asunto —</option>
+        <option value="prospecto">Derivación de prospecto</option>
       </select>
     </div>
 
     <div id="bloque-comercial" style="display:none;">
 
       <div class="form-section">
-        <div class="form-section-title">Campos del asunto</div>
+        <div class="form-section-title"><i class="fa-solid fa-file-lines"></i> Campos del asunto</div>
         <div class="form-section-sub">Estos datos arman el asunto y se sincronizan con los datos de contacto.</div>
         <div class="form-grid">
           <div class="form-field">
             <label>RUT <span class="req">*</span></label>
-            <input type="text" id="com-rut-asunto" placeholder="Sin puntos ni guion" oninput="sincronizarComercial()">
-            <span class="field-hint">Sin puntos ni guion</span>
+            <input type="text" id="com-rut-asunto" placeholder="Sin puntos ni guión" oninput="sincronizarComercial()">
+            <span class="field-hint">Sin puntos ni guión</span>
           </div>
           <div class="form-field">
             <label>Nombre <span class="req">*</span></label>
             <input type="text" id="com-nombre-asunto" placeholder="Nombre completo" oninput="sincronizarComercial()">
           </div>
           <div class="form-field">
-            <label>Carrera de interes <span class="req">*</span></label>
+            <label>Carrera de interés <span class="req">*</span></label>
             <input type="text" id="com-carrera" placeholder="Nombre de la carrera" oninput="actualizarAsuntoComercial()">
           </div>
           <div class="form-field">
             <label>Jornada <span class="req">*</span></label>
             <select id="com-jornada" onchange="actualizarAsuntoComercial()">
-              <option value="">-- Selecciona --</option>
-              <option>Diurno</option>
-              <option>Vespertino</option>
-              <option>On line</option>
-              <option>Tec. Cont.</option>
+              <option value="">— Selecciona —</option>
+              <option>Diurno</option><option>Vespertino</option>
+              <option>On line</option><option>Tec. Cont.</option>
             </select>
           </div>
         </div>
       </div>
 
-      <div style="background:var(--preview-bg);border:0.5px solid var(--preview-borde);border-radius:8px;padding:12px 16px;margin-bottom:20px;">
-        <div style="font-size:11px;color:var(--preview-titulo);font-weight:700;margin-bottom:4px;">Vista previa del asunto del correo</div>
-        <div id="asunto-com-generado" style="font-size:13px;font-weight:700;color:var(--preview-texto);word-break:break-all;">RUT: XXXXXXXXX Nombre: NOMBRE Carrera de interes: CARRERA Jornada: JORNADA</div>
+      <div class="preview-asunto">
+        <div class="preview-label"><i class="fa-regular fa-envelope"></i> Vista previa del asunto del correo</div>
+        <div class="preview-texto" id="asunto-com-generado">RUT: XXXXXXXXX · Nombre: NOMBRE · Carrera: CARRERA · Jornada: JORNADA</div>
       </div>
 
       <div class="form-section">
-        <div class="form-section-title">Datos de contacto</div>
-        <div class="form-section-sub">Nombre y RUT se sincronizan desde el asunto. Completa telefono y correo <span class="req">*</span></div>
+        <div class="form-section-title"><i class="fa-solid fa-person"></i> Datos de contacto</div>
+        <div class="form-section-sub">Nombre y RUT se sincronizan desde el asunto. Completa teléfono y correo. <span class="req">*</span></div>
         <div class="form-grid">
           <div class="form-field">
             <label>Nombre <span class="req">*</span></label>
-            <input type="text" id="com-nombre" placeholder="Se sincroniza automaticamente" readonly style="background:#f0f4f8;color:#555;">
+            <input type="text" id="com-nombre" placeholder="Se sincroniza automáticamente" readonly style="background:#f0f4f8; color:#555;">
           </div>
           <div class="form-field">
             <label>RUT <span class="req">*</span></label>
-            <input type="text" id="com-rut" placeholder="Se sincroniza automaticamente" readonly style="background:#f0f4f8;color:#555;">
-            <span class="field-hint">Sin puntos ni guion</span>
+            <input type="text" id="com-rut" placeholder="Se sincroniza automáticamente" readonly style="background:#f0f4f8; color:#555;">
           </div>
           <div class="form-field">
-            <label>Telefono <span class="req">*</span></label>
+            <label>Teléfono <span class="req">*</span></label>
             <input type="text" id="com-tel" placeholder="Ej: 912345678">
-            <span class="field-hint">Asegurarse que reciba llamadas de numeros 600</span>
+            <span class="field-hint">Asegurarse que reciba llamadas de números 600.</span>
           </div>
           <div class="form-field">
             <label>Correo <span class="req">*</span></label>
@@ -481,65 +590,38 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
       </div>
 
       <div class="form-section">
-        <div class="form-section-title">Informacion adicional</div>
+        <div class="form-section-title"><i class="fa-solid fa-circle-info"></i> Información adicional</div>
         <div class="form-grid">
           <div class="form-field">
             <label>Tiene beneficios ministeriales</label>
             <select id="com-beneficios">
-              <option value="">-- No indicado --</option>
+              <option value="">— No indicado —</option>
               <option>No</option>
-              <option>Si - Gratuidad</option>
-              <option>Si - Beca</option>
-              <option>Si - CAE</option>
-              <option>Si - Otro</option>
+              <option>Sí - Gratuidad</option>
+              <option>Sí - Beca</option>
+              <option>Sí - CAE</option>
+              <option>Sí - Otro</option>
             </select>
           </div>
           <div class="form-field">
             <label>Comentarios adicionales</label>
-            <textarea id="com-comentario" placeholder="Informacion adicional relevante..."></textarea>
+            <textarea id="com-comentario" placeholder="Información adicional relevante..."></textarea>
           </div>
         </div>
       </div>
 
-      <div class="form-section">
-        <div class="form-section-title">Datos del ejecutivo</div>
-        <div class="form-section-sub">Tu nombre y RUT son obligatorios para registrar el caso. El correo es opcional. <span class="req">*</span></div>
-        <div class="form-grid">
-          <div class="form-field">
-            <label>Tu nombre <span class="req">*</span></label>
-            <select id="com-ejec-nombre">
-              <option value="">-- Cargando ejecutivos... --</option>
-            </select>
-          </div>
-          <div class="form-field">
-            <label>Tu RUT <span class="req">*</span></label>
-            <input type="text" id="com-ejec-rut" placeholder="123456789" oninput="limpiarRut('com-ejec-rut')">
-            <span class="field-hint">Sin puntos ni guion</span>
-          </div>
-          <div class="form-field span2">
-            <label>Tu correo institucional</label>
-            <input type="email" id="com-ejec-correo" placeholder="nombre@umayor.cl">
-          </div>
+      <div class="aviso-firma">
+        <i class="fa-solid fa-triangle-exclamation aviso-firma-icon"></i>
+        <div>
+          <div class="aviso-firma-title">Agrega tu firma institucional antes de enviar</div>
+          <div class="aviso-firma-sub">El correo se abrirá en Outlook. Recuerda insertar tu firma antes de hacer clic en Enviar.</div>
         </div>
       </div>
 
       <div id="error-com" class="error-panel"></div>
 
-      <div style="background:#fffbea;border:2px solid var(--alerta-borde);border-radius:8px;padding:14px 18px;margin-bottom:20px;">
-        <div style="display:flex;align-items:flex-start;gap:10px;">
-          <span style="font-size:20px;">&#9888;&#65039;</span>
-          <div>
-            <div style="font-size:13px;font-weight:700;color:#7a5c00;">Recuerda agregar tu firma institucional antes de enviar</div>
-            <div style="font-size:11px;color:#9a7800;margin-top:3px;">El correo se abrira en Outlook. Agrega tu firma antes de hacer clic en Enviar.</div>
-          </div>
-        </div>
-      </div>
-
-      <button class="btn-enviar" style="display:block;" onclick="enviarComercial()">
-        &#9993;&#65039; Preparar y enviar correo
-      </button>
-      <button class="btn-enviar" style="display:block; background:#7f8c8d; margin-top:10px;" onclick="limpiarFormularioConAviso()">
-        &#128465;&#65039; Limpiar y Nueva Solicitud
+      <button class="btn-enviar verde" onclick="enviarComercial()">
+        <i class="fa-regular fa-envelope"></i> Preparar y enviar correo
       </button>
 
     </div>
@@ -548,434 +630,413 @@ footer{text-align:center;font-size:12px;color:#999;margin:40px 0 20px;border-top
 </div>
 
 <footer>
-  Correos Frecuentes &middot; Portal SAT &middot; Universidad Mayor<br>
-  <span style="color:#bbb;">Desarrollado por Eduardo Ferrada &middot; Universidad Mayor &middot; Enero 2026</span>
+  Correos Frecuentes · Portal SAT · Universidad Mayor<br>
+  <span style="color:#bbb;">Desarrollado por Eduardo Ferrada · Universidad Mayor · Enero 2026</span>
 </footer>
 
-<div class="modal-overlay" id="modalExito">
-    <div class="modal-box">
-        <div style="font-size: 50px; margin-bottom: 5px;">✅</div>
-        <h3>¡Caso Registrado!</h3>
-        <p>El caso se ha guardado en la Base de Datos y tu Outlook se está abriendo.</p>
-        <p style="font-size: 11px; margin-top: 20px; color: #999;">Restableciendo formulario para la próxima solicitud...</p>
+<!-- ============================================================
+     SUB-MODAL CONFIRMACIÓN
+     ============================================================ -->
+<div class="submodal-overlay" id="submodalExito">
+  <div class="submodal-box">
+    <div class="submodal-icon">✅</div>
+    <div class="submodal-title">¡Correo preparado!</div>
+    <div class="submodal-msg">
+      Tu correo está listo en Outlook.<br>
+      Recuerda insertar tu <strong>firma institucional</strong> y adjuntar imágenes o archivos antes de hacer clic en Enviar.
     </div>
+    <div class="submodal-countdown" id="submodalCountdown">Cerrando en 5 segundos...</div>
+  </div>
 </div>
 
+<!-- ============================================================
+     SCRIPTS
+     ============================================================ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-function showTab(i) {
-  document.querySelectorAll('.tab-btn').forEach(function(b,j){ b.classList.toggle('active', i===j); });
-  document.querySelectorAll('.tab-panel').forEach(function(p,j){ p.classList.toggle('active', i===j); });
-}
+// ==========================================
+// SUPABASE
+// ==========================================
+const supabaseUrl = 'https://jxmrznqppddabuqtbufq.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTA4MTcsImV4cCI6MjA4ODEyNjgxN30.pqT_PlAAn3oR6g_0Iaa2fs6qV8M3RQFzNOCAssyZZh4';
+const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-document.addEventListener('DOMContentLoaded', function() {
+// ==========================================
+// UTILIDADES
+// ==========================================
+function showTab(i) {
+  document.querySelectorAll('.tab-btn').forEach((b, j) => b.classList.toggle('active', i === j));
+  document.querySelectorAll('.tab-panel').forEach((p, j) => p.classList.toggle('active', i === j));
+}
+document.addEventListener('DOMContentLoaded', () => {
   if (window.location.hash === '#comercial') showTab(1);
+  cargarEjecutivos();
 });
 
-function show(id) { var el = document.getElementById(id); if (el) el.style.display = 'block'; }
-function hide(id) { var el = document.getElementById(id); if (el) el.style.display = 'none'; }
-function val(id)  { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
-
-function cambiarAsunto() {
-  var v = document.getElementById('asunto').value;
-  ['bloque-ic','bloque-otro','bloque-resumen','bloque-solicitante','bloque-alumno',
-   'bloque-contacto-ti','bloque-ti', 'bloque-turno', 'preview-asunto','aviso-firma','btn-enviar', 'btn-limpiar',
-   'error-validacion','bloque-ejecutivo'].forEach(hide);
-  if (!v) return;
-  show('preview-asunto');
-  show('aviso-firma');
-  show('btn-enviar');
-  show('btn-limpiar');
-  show('bloque-ejecutivo');
-
-  if (v === 'escalamiento') {
-    show('bloque-ic'); show('bloque-resumen'); show('bloque-solicitante'); show('bloque-alumno');
-  } else if (v === 'ti') {
-    show('bloque-ic'); show('bloque-contacto-ti'); show('bloque-ti');
-  } else if (v === 'turno') {
-    show('bloque-turno');
-  } else if (v === 'otro') {
-    show('bloque-otro'); show('bloque-resumen');
-  } else {
-    show('bloque-resumen');
-  }
-  actualizarAsunto();
-}
+function show(id) { const el = document.getElementById(id); if (el) el.style.display = 'block'; }
+function hide(id) { const el = document.getElementById(id); if (el) el.style.display = 'none'; }
+function val(id)  { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
 
 function limpiarRut(id) {
-  var el = document.getElementById(id);
+  const el = document.getElementById(id);
   if (el) el.value = el.value.replace(/[.\-]/g, '');
   actualizarAsunto();
   sincronizarDatos();
 }
 
-function actualizarAsunto() {
-  var v = document.getElementById('asunto').value;
-  var texto = '';
-  var ic     = val('ic-num')    || 'XXXXX';
-  var rut    = val('ic-rut')    || 'XXXXXXXXX';
-  var nombre = val('ic-nombre') || 'NOMBRE';
-  var motivo = val('ic-motivo') || 'MOTIVO';
-  
+function marcarError(id)   { const el = document.getElementById(id); if (el) el.classList.add('field-error'); }
+function limpiarErrores()  { document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error')); }
+function validarTelefono(t){ return /^\d{9}$/.test(t.replace(/[\s\-]/g, '').replace(/^\+56/, '')); }
+function validarCorreo(c)  { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c); }
+
+// ==========================================
+// CAMBIAR ASUNTO SUPERVISOR
+// ==========================================
+function cambiarAsunto() {
+  const v = val('asunto');
+  ['bloque-ic','bloque-resumen','bloque-solicitante','bloque-alumno',
+   'bloque-contacto-ti','bloque-ti','bloque-turno','bloque-feriado',
+   'preview-asunto','aviso-firma','btn-enviar','error-validacion'].forEach(hide);
+
+  if (!v) return;
+
+  show('preview-asunto');
+  show('aviso-firma');
+  show('btn-enviar');
+
   if (v === 'escalamiento') {
-    texto = 'IC: ' + ic + ' RUT: ' + rut + ' Nombre: ' + nombre + ' Motivo: ' + motivo;
+    show('bloque-ic'); show('bloque-resumen');
+    show('bloque-solicitante'); show('bloque-alumno');
   } else if (v === 'ti') {
-    texto = 'IC: ' + ic + ' RUT: ' + rut + ' Nombre: ' + nombre + ' Motivo: ' + motivo + ' [TI]';
-  } else if (v === 'info') {
-    texto = 'Solicitud de informacion interna';
+    show('bloque-ic'); show('bloque-contacto-ti'); show('bloque-ti');
   } else if (v === 'turno') {
-    var f = val('turno-fecha');
-    var fFormat = '';
-    if (f) {
-      var p = f.split('-');
-      if(p.length === 3) fFormat = ' - ' + p[2] + '-' + p[1] + '-' + p[0];
-    }
-    texto = 'Solicitud de cambio de turno' + fFormat;
+    show('bloque-turno');
   } else if (v === 'feriado') {
-    texto = 'Solicitud feriado legal / dia administrativo';
-  } else if (v === 'otro') {
-    texto = val('otro-texto') || 'Especificar...';
+    show('bloque-feriado');
   }
-  
-  var el = document.getElementById('asunto-generado');
-  if (el) el.textContent = texto;
+  actualizarAsunto();
 }
 
+// ==========================================
+// ACTUALIZAR ASUNTO
+// ==========================================
+function actualizarAsunto() {
+  const v      = val('asunto');
+  const ic     = val('ic-num')    || 'XXXXX';
+  const rut    = val('ic-rut')    || 'XXXXXXXXX';
+  const nombre = val('ic-nombre') || 'NOMBRE';
+  const motivo = val('ic-motivo') || 'MOTIVO';
+  let texto = '';
+
+  if (v === 'escalamiento') {
+    texto = `IC: ${ic} RUT: ${rut} Nombre: ${nombre} Motivo: ${motivo}`;
+  } else if (v === 'ti') {
+    texto = `IC: ${ic} RUT: ${rut} Nombre: ${nombre} Motivo: ${motivo} [TI]`;
+  } else if (v === 'turno') {
+    const f = val('turno-fecha');
+    let fFormat = '';
+    if (f) { const p = f.split('-'); if (p.length === 3) fFormat = ` - ${p[2]}-${p[1]}-${p[0]}`; }
+    texto = `Solicitud de cambio de turno${fFormat}`;
+  } else if (v === 'feriado') {
+    const f = val('feriado-fecha');
+    let fFormat = '';
+    if (f) { const p = f.split('-'); if (p.length === 3) fFormat = ` - ${p[2]}-${p[1]}-${p[0]}`; }
+    const tipo = val('feriado-tipo') || 'Día administrativo / vacaciones';
+    texto = `${tipo}${fFormat}`;
+  }
+
+  const el = document.getElementById('asunto-generado');
+  if (el) el.textContent = texto || '—';
+}
+
+// ==========================================
+// SINCRONIZAR DATOS DESDE ASUNTO
+// ==========================================
 function sincronizarDatos() {
-  var nom = val('ic-nombre');
-  var rut = val('ic-rut');
-  
-  if (document.getElementById('ti-nombre')) document.getElementById('ti-nombre').value = nom;
-  if (document.getElementById('ti-rut'))    document.getElementById('ti-rut').value    = rut;
-  
-  if (document.getElementById('sol-nombre')) document.getElementById('sol-nombre').value = nom;
-  if (document.getElementById('sol-rut'))    document.getElementById('sol-rut').value    = rut;
+  const nom = val('ic-nombre');
+  const rut = val('ic-rut');
+  ['ti-nombre','sol-nombre'].forEach(id => { const el = document.getElementById(id); if (el) el.value = nom; });
+  ['ti-rut','sol-rut'].forEach(id => { const el = document.getElementById(id); if (el) el.value = rut; });
 }
 
+// ==========================================
+// LÓGICA ALUMNO — solo nombre y RUT obligatorios
+// ==========================================
 function checkAlumno() {
-  var campos = ['alu-nombre','alu-rut','alu-tel','alu-correo'];
-  var alguno = campos.some(function(id){ return val(id) !== ''; });
-  ['nombre','rut','tel','correo'].forEach(function(k) {
-    var req = document.getElementById('alu-req-' + k);
+  const alguno = ['alu-nombre','alu-rut','alu-tel','alu-correo'].some(id => val(id) !== '');
+  ['nombre','rut'].forEach(k => {
+    const req = document.getElementById('alu-req-' + k);
     if (req) req.innerHTML = alguno ? '<span class="req">*</span>' : '';
   });
 }
 
-function marcarError(id) { var el = document.getElementById(id); if (el) el.classList.add('field-error'); }
-function limpiarErrores() { document.querySelectorAll('.field-error').forEach(function(el){ el.classList.remove('field-error'); }); }
-function validarTelefono(tel) { return /^\d{9}$/.test(tel.replace(/[\s\-]/g, '').replace(/^\+56/, '')); }
-function validarCorreo(correo) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo); }
-
-function mostrarMensajeExito() {
-    const modal = document.getElementById('modalExito');
-    modal.style.display = 'flex';
-    setTimeout(() => {
-        modal.style.display = 'none';
-        limpiarFormularioSilencioso();
-    }, 3500);
+// ==========================================
+// SUB-MODAL CONFIRMACIÓN
+// ==========================================
+function mostrarSubModal(callback) {
+  const overlay = document.getElementById('submodalExito');
+  const countdown = document.getElementById('submodalCountdown');
+  overlay.classList.add('visible');
+  let seg = 5;
+  countdown.textContent = `Cerrando en ${seg} segundos...`;
+  const timer = setInterval(() => {
+    seg--;
+    if (seg <= 0) {
+      clearInterval(timer);
+      overlay.classList.remove('visible');
+      if (callback) callback();
+    } else {
+      countdown.textContent = `Cerrando en ${seg} segundo${seg !== 1 ? 's' : ''}...`;
+    }
+  }, 1000);
 }
 
-// ENVÍO DE SUPERVISOR / TI / TURNO //
+function limpiarFormulario() {
+  document.querySelectorAll('input, select, textarea').forEach(el => {
+    if (el.type === 'checkbox') el.checked = false;
+    else el.value = '';
+  });
+  cambiarAsunto();
+  mostrarFormComercial();
+}
+
+// ==========================================
+// VALIDAR Y ENVIAR SUPERVISOR
+// ==========================================
 async function validarYEnviar() {
   limpiarErrores();
   hide('error-validacion');
-  var v = document.getElementById('asunto').value;
-  var errores = [];
-  
+  const v = val('asunto');
+  const errores = [];
+
   if (v === 'escalamiento' || v === 'ti') {
     if (!val('ic-num'))    { marcarError('ic-num');    errores.push('IC'); }
     if (!val('ic-rut'))    { marcarError('ic-rut');    errores.push('RUT del asunto'); }
     if (!val('ic-nombre')) { marcarError('ic-nombre'); errores.push('Nombre'); }
     if (!val('ic-motivo')) { marcarError('ic-motivo'); errores.push('Motivo'); }
   }
-  
-  if (v === 'escalamiento') {
-    if (!val('sol-nombre')) { marcarError('sol-nombre'); errores.push('Nombre solicitante'); }
-    if (!val('sol-rut'))    { marcarError('sol-rut');    errores.push('RUT solicitante'); }
-    
-    if (!val('sol-tel')) { marcarError('sol-tel'); errores.push('Telefono solicitante'); }
-    else if (!validarTelefono(val('sol-tel'))) { marcarError('sol-tel'); errores.push('Telefono solicitante (debe tener 9 digitos)'); }
-    
-    if (!val('sol-correo')) { marcarError('sol-correo'); errores.push('Correo solicitante'); }
-    else if (!validarCorreo(val('sol-correo'))) { marcarError('sol-correo'); errores.push('Correo solicitante invalido (falta @)'); }
 
-    var aluCampos = ['alu-nombre','alu-rut','alu-tel','alu-correo'];
-    if (aluCampos.some(function(id){ return val(id) !== ''; })) {
+  if (v === 'escalamiento') {
+    if (!val('sol-tel')) { marcarError('sol-tel'); errores.push('Teléfono solicitante'); }
+    else if (!validarTelefono(val('sol-tel'))) { marcarError('sol-tel'); errores.push('Teléfono solicitante (debe tener 9 dígitos)'); }
+    if (!val('sol-correo')) { marcarError('sol-correo'); errores.push('Correo solicitante'); }
+    else if (!validarCorreo(val('sol-correo'))) { marcarError('sol-correo'); errores.push('Correo solicitante inválido'); }
+
+    // Alumno: solo nombre y RUT obligatorios si toca el bloque
+    if (['alu-nombre','alu-rut','alu-tel','alu-correo'].some(id => val(id) !== '')) {
       if (!val('alu-nombre')) { marcarError('alu-nombre'); errores.push('Nombre alumno'); }
-      if (!val('alu-rut')) { marcarError('alu-rut'); errores.push('RUT alumno'); }
-      if (!val('alu-tel') || !validarTelefono(val('alu-tel'))) { marcarError('alu-tel'); errores.push('Telefono alumno (debe tener 9 digitos)'); }
-      if (!val('alu-correo') || !validarCorreo(val('alu-correo'))) { marcarError('alu-correo'); errores.push('Correo alumno invalido'); }
+      if (!val('alu-rut'))   { marcarError('alu-rut');    errores.push('RUT alumno'); }
     }
   }
-  
+
   if (v === 'ti') {
-    if (!val('ti-tel')) { marcarError('ti-tel'); errores.push('Telefono contacto'); }
-    else if (!validarTelefono(val('ti-tel'))) { marcarError('ti-tel'); errores.push('Telefono contacto (debe tener 9 digitos)'); }
-    
+    if (!val('ti-tel')) { marcarError('ti-tel'); errores.push('Teléfono contacto'); }
+    else if (!validarTelefono(val('ti-tel'))) { marcarError('ti-tel'); errores.push('Teléfono (debe tener 9 dígitos)'); }
     if (!val('ti-correo-per')) { marcarError('ti-correo-per'); errores.push('Correo personal'); }
-    else if (!validarCorreo(val('ti-correo-per'))) { marcarError('ti-correo-per'); errores.push('Correo personal invalido'); }
+    else if (!validarCorreo(val('ti-correo-per'))) { marcarError('ti-correo-per'); errores.push('Correo personal inválido'); }
+    if (!val('ti-correo-inst')) { marcarError('ti-correo-inst'); errores.push('Correo institucional'); }
+    if (!val('ti-contacto'))    { marcarError('ti-contacto');    errores.push('Tipo de contacto'); }
   }
 
   if (v === 'turno') {
-    if (!val('turno-fecha')) { marcarError('turno-fecha'); errores.push('Fecha del turno'); }
-    if (!val('turno-original-solicitante')) { marcarError('turno-original-solicitante'); errores.push('Tu turno original'); }
-    if (!val('turno-reemplazo-nombre')) { marcarError('turno-reemplazo-nombre'); errores.push('Ejecutivo que reemplaza'); }
-    if (!val('turno-original-reemplazo')) { marcarError('turno-original-reemplazo'); errores.push('Turno original reemplazo'); }
-    if (!val('turno-nuevo-reemplazo')) { marcarError('turno-nuevo-reemplazo'); errores.push('Turno que cubrirá'); }
-    if (!val('turno-motivo')) { marcarError('turno-motivo'); errores.push('Motivo'); }
-    
-    var conf = document.getElementById('turno-confirmacion');
-    if (conf && !conf.checked) { errores.push('Confirmar coordinación de turno'); }
-    
-    if (val('ejec-nombre') !== '' && val('ejec-nombre') === val('turno-reemplazo-nombre')) {
-      marcarError('ejec-nombre');
-      marcarError('turno-reemplazo-nombre');
+    if (!val('turno-fecha'))               { marcarError('turno-fecha');               errores.push('Fecha del turno'); }
+    if (!val('turno-solicitante-nombre'))  { marcarError('turno-solicitante-nombre');  errores.push('Tu nombre'); }
+    if (!val('turno-original-solicitante')){ marcarError('turno-original-solicitante');errores.push('Tu turno original'); }
+    if (!val('turno-reemplazo-nombre'))    { marcarError('turno-reemplazo-nombre');    errores.push('Ejecutivo que reemplaza'); }
+    if (!val('turno-original-reemplazo')) { marcarError('turno-original-reemplazo'); errores.push('Turno original del reemplazo'); }
+    if (!val('turno-nuevo-reemplazo'))    { marcarError('turno-nuevo-reemplazo');    errores.push('Turno que cubrirá'); }
+    if (!val('turno-motivo'))             { marcarError('turno-motivo');             errores.push('Motivo'); }
+    if (!document.getElementById('turno-confirmacion').checked) errores.push('Confirmar coordinación de turno');
+    if (val('turno-solicitante-nombre') && val('turno-solicitante-nombre') === val('turno-reemplazo-nombre')) {
+      marcarError('turno-solicitante-nombre'); marcarError('turno-reemplazo-nombre');
       errores.push('Solicitante y reemplazo no pueden ser la misma persona');
     }
   }
 
-  // VALIDACIÓN OBLIGATORIA DEL EJECUTIVO (Nombre y RUT)
-  if (!val('ejec-nombre')) { 
-      marcarError('ejec-nombre'); 
-      errores.push('Tu nombre (Datos del ejecutivo)'); 
-  }
-  if (!val('ejec-rut')) { 
-      marcarError('ejec-rut'); 
-      errores.push('Tu RUT (Datos del ejecutivo)'); 
+  if (v === 'feriado') {
+    if (!val('feriado-solicitante-nombre')) { marcarError('feriado-solicitante-nombre'); errores.push('Tu nombre'); }
+    if (!val('feriado-tipo'))               { marcarError('feriado-tipo');               errores.push('Tipo de solicitud'); }
+    if (!val('feriado-fecha'))              { marcarError('feriado-fecha');              errores.push('Fecha solicitada'); }
   }
 
   if (errores.length > 0) {
-    var el = document.getElementById('error-validacion');
-    var unicos = errores.filter(function(e, i){ return errores.indexOf(e) === i; });
-    el.textContent = 'Faltan campos u obligatorios: ' + unicos.join(', ') + '.';
+    const el = document.getElementById('error-validacion');
+    el.textContent = 'Faltan campos obligatorios: ' + [...new Set(errores)].join(', ') + '.';
     show('error-validacion');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     return;
   }
 
-  var asuntoTexto = document.getElementById('asunto-generado').textContent;
-  var ejecutivoTextoAbajo = val('ejec-nombre') ? '\n\nEjecutivo que deriva: ' + val('ejec-nombre') + ' (RUT: ' + val('ejec-rut') + ')' + (val('ejec-correo') ? ' - ' + val('ejec-correo') : '') : '';
-  
-  var cuerpo = '';
+  const asuntoTexto = document.getElementById('asunto-generado').textContent;
+  let cuerpo = '';
+  const dest = 'johanna.escalona@umayor.cl;barbara.fernandez@umayor.cl';
+  const cc   = 'eduardo.ferrada@umayor.cl';
+  let rutRegistro = val('ic-rut') || val('sol-rut') || '-';
+  let nombreEjecutivo = '{{ session.get("nombre", "") }}';
 
   if (v === 'escalamiento') {
-    cuerpo = 'Estimados,\n\nNecesito su cooperacion con el siguiente caso:\n' + (val('resumen') || '[Resumen del requerimiento]') + '\n\n';
-    cuerpo += 'DATOS DEL SOLICITANTE\nNombre: ' + val('sol-nombre') + '\nRUT: ' + val('sol-rut') + '\nTelefono: ' + val('sol-tel') + '\nCorreo: ' + val('sol-correo') + '\nComentario: ' + (val('sol-comentario') || '-');
+    cuerpo  = `Estimados,\n\nNecesito su cooperación con el siguiente caso:\n${val('resumen') || '[Resumen del requerimiento]'}\n\n`;
+    cuerpo += `DATOS DEL SOLICITANTE\nNombre: ${val('sol-nombre')}\nRUT: ${val('sol-rut')}\nTeléfono: ${val('sol-tel')}\nCorreo: ${val('sol-correo')}`;
+    if (val('sol-comentario')) cuerpo += `\nComentario: ${val('sol-comentario')}`;
     if (val('alu-nombre')) {
-      cuerpo += '\n\nDATOS DEL ALUMNO\nNombre: ' + val('alu-nombre') + '\nRUT: ' + val('alu-rut') + '\nTelefono: ' + val('alu-tel') + '\nCorreo: ' + val('alu-correo') + '\nComentario: ' + (val('alu-comentario') || '-');
+      cuerpo += `\n\nDATOS DEL ALUMNO\nNombre: ${val('alu-nombre')}\nRUT: ${val('alu-rut')}`;
+      if (val('alu-tel'))       cuerpo += `\nTeléfono: ${val('alu-tel')}`;
+      if (val('alu-correo'))    cuerpo += `\nCorreo: ${val('alu-correo')}`;
+      if (val('alu-comentario'))cuerpo += `\nComentario: ${val('alu-comentario')}`;
     }
-    cuerpo += ejecutivoTextoAbajo;
     cuerpo += '\n\nAtte.\n\n[Insertar firma institucional]';
+
   } else if (v === 'ti') {
-    cuerpo = 'Estimados,\n\nNecesito apoyo con el siguiente caso TI:\n\nDATOS DE CONTACTO\nNombre: ' + val('ti-nombre') + '\nRUT: ' + val('ti-rut') + '\nTelefono: ' + val('ti-tel') + '\nCorreo personal: ' + val('ti-correo-per') + '\n\n';
-    cuerpo += 'CASO TI\nCorreo institucional: ' + (val('ti-correo-inst') || '-') + '\nTipo de contacto: ' + (val('ti-contacto') || '-') + '\nPerfil con error: ' + (val('ti-perfil') || '-') + '\nPlataforma con error: ' + (val('ti-plataforma') || '-') + '\nDescripcion del error: ' + (val('ti-desc') || '-') + '\nPruebas realizadas: ' + (val('ti-pruebas') || '-') + '\nIngreso con rut@mayor.cl confirmado: ' + (val('ti-ingreso') || '-') + '\nAcceso por intranet confirmado: ' + (val('ti-intranet') || '-');
-    cuerpo += ejecutivoTextoAbajo;
+    cuerpo  = `Estimados,\n\nNecesito apoyo con el siguiente caso TI:\n\nDATOS DE CONTACTO\nNombre: ${val('ti-nombre')}\nRUT: ${val('ti-rut')}\nTeléfono: ${val('ti-tel')}\nCorreo personal: ${val('ti-correo-per')}\n\n`;
+    cuerpo += `CASO TI\nCorreo institucional: ${val('ti-correo-inst') || '-'}\nTipo de contacto: ${val('ti-contacto') || '-'}\nPerfil con error: ${val('ti-perfil') || '-'}\nPlataforma con error: ${val('ti-plataforma') || '-'}\nDescripción del error: ${val('ti-desc') || '-'}\nPruebas realizadas: ${val('ti-pruebas') || '-'}`;
     cuerpo += '\n\nAtte.\n\n[Insertar firma institucional]';
+
   } else if (v === 'turno') {
-    var fechaCruda = val('turno-fecha');
-    var fechaLegible = fechaCruda;
-    if (fechaCruda) {
-      var partes = fechaCruda.split('-');
-      if (partes.length === 3) fechaLegible = partes[2] + '-' + partes[1] + '-' + partes[0];
-    }
-    cuerpo = 'Estimadas,\n\n' + 
-             'Les escribo para solicitar autorizacion de un cambio de turno el dia ' + fechaLegible + '.\n\n' +
-             '- Solicitante: ' + val('ejec-nombre') + ' (RUT: ' + val('ejec-rut') + '), actualmente asignado(a) al turno ' + val('turno-original-solicitante') + '.\n' +
-             '- Reemplazo: ' + val('turno-reemplazo-nombre') + ', originalmente con turno ' + val('turno-original-reemplazo') + ', quien asumira el turno ' + val('turno-nuevo-reemplazo') + ' en mi lugar.\n\n' +
-             'Motivo: ' + val('turno-motivo') + '.\n\n';
-    if (val('turno-comentarios')) {
-      cuerpo += 'Comentarios adicionales:\n' + val('turno-comentarios') + '\n\n';
-    }
-    cuerpo += 'Agradezco mucho su apoyo y quedo atenta(o) a la confirmacion.\n\nAtte.\n\n[Insertar firma institucional]';
-  } else {
-    cuerpo = 'Estimados,\n\n' + (val('resumen') || '[Completar descripcion de la solicitud]') + ejecutivoTextoAbajo + '\n\nAtte.\n\n[Insertar firma institucional]';
+    const f = val('turno-fecha');
+    let fLegible = f;
+    if (f) { const p = f.split('-'); if (p.length === 3) fLegible = `${p[2]}-${p[1]}-${p[0]}`; }
+    cuerpo  = `Estimadas,\n\nLes escribo para solicitar autorización de un cambio de turno el día ${fLegible}.\n\n`;
+    cuerpo += `- Solicitante: ${val('turno-solicitante-nombre')}, actualmente asignado(a) al turno ${val('turno-original-solicitante')}.\n`;
+    cuerpo += `- Reemplazo: ${val('turno-reemplazo-nombre')}, originalmente con turno ${val('turno-original-reemplazo')}, quien asumirá el turno ${val('turno-nuevo-reemplazo')} en mi lugar.\n\n`;
+    cuerpo += `Motivo: ${val('turno-motivo')}.`;
+    if (val('turno-comentarios')) cuerpo += `\n\nComentarios adicionales:\n${val('turno-comentarios')}`;
+    cuerpo += '\n\nAgradezco mucho su apoyo y quedo atento(a) a la confirmación.\n\nAtte.\n\n[Insertar firma institucional]';
+    rutRegistro = '-';
+    nombreEjecutivo = val('turno-solicitante-nombre');
+
+  } else if (v === 'feriado') {
+    const f = val('feriado-fecha');
+    let fLegible = f;
+    if (f) { const p = f.split('-'); if (p.length === 3) fLegible = `${p[2]}-${p[1]}-${p[0]}`; }
+    cuerpo  = `Estimadas,\n\nPor medio del presente, solicito formalmente ${val('feriado-tipo')} para el día ${fLegible}.`;
+    if (val('feriado-motivo')) cuerpo += `\nMotivo: ${val('feriado-motivo')}.`;
+    if (val('feriado-comentarios')) cuerpo += `\n\nComentarios adicionales:\n${val('feriado-comentarios')}`;
+    cuerpo += '\n\nQuedo atento(a) a la confirmación.\n\nAtte.\n\n[Insertar firma institucional]';
+    rutRegistro = '-';
+    nombreEjecutivo = val('feriado-solicitante-nombre');
   }
 
-  var dest = 'johanna.escalona@umayor.cl;barbara.fernandez@umayor.cl';
-  var cc   = 'eduardo.ferrada@umayor.cl';
-  
-  // LOGICA INTELIGENTE DE RUT PARA SUPABASE
-  var rutRegistro = '-';
-  if (['info', 'turno', 'feriado', 'otro'].includes(v)) {
-      // Si es interno, guarda el RUT del ejecutivo
-      rutRegistro = val('ejec-rut');
-  } else {
-      // Si es caso alumno/cliente, guarda el del alumno/cliente (y si falta, usa el del ejecutivo como respaldo)
-      rutRegistro = val('sol-rut') || val('ti-rut') || val('ic-rut') || val('ejec-rut');
-  }
-  
-  await registrarCasoSupabase('Supervisor/TI/Turno', asuntoTexto, rutRegistro, val('ejec-nombre'));
-  
-  window.location.href = 'mailto:' + dest + '?cc=' + cc + '&subject=' + encodeURIComponent(asuntoTexto) + '&body=' + encodeURIComponent(cuerpo);
-  mostrarMensajeExito();
+  await registrarCasoSupabase('Supervisor', asuntoTexto, rutRegistro, nombreEjecutivo);
+  window.location.href = `mailto:${dest}?cc=${cc}&subject=${encodeURIComponent(asuntoTexto)}&body=${encodeURIComponent(cuerpo)}`;
+  mostrarSubModal(limpiarFormulario);
 }
 
-// ÁREA COMERCIAL //
+// ==========================================
+// ENVIAR COMERCIAL
+// ==========================================
+async function enviarComercial() {
+  limpiarErrores();
+  hide('error-com');
+  const errores = [];
+
+  if (!val('com-rut-asunto'))    { marcarError('com-rut-asunto');    errores.push('RUT Prospecto'); }
+  if (!val('com-nombre-asunto')) { marcarError('com-nombre-asunto'); errores.push('Nombre Prospecto'); }
+  if (!val('com-carrera'))       { marcarError('com-carrera');       errores.push('Carrera de interés'); }
+  if (!val('com-jornada'))       { marcarError('com-jornada');       errores.push('Jornada'); }
+  if (!val('com-tel')) { marcarError('com-tel'); errores.push('Teléfono'); }
+  else if (!validarTelefono(val('com-tel'))) { marcarError('com-tel'); errores.push('Teléfono (debe tener 9 dígitos)'); }
+  if (!val('com-correo')) { marcarError('com-correo'); errores.push('Correo'); }
+  else if (!validarCorreo(val('com-correo'))) { marcarError('com-correo'); errores.push('Correo inválido'); }
+
+  if (errores.length > 0) {
+    const el = document.getElementById('error-com');
+    el.textContent = 'Faltan campos obligatorios: ' + [...new Set(errores)].join(', ') + '.';
+    show('error-com');
+    return;
+  }
+
+  const asunto = document.getElementById('asunto-com-generado').textContent;
+  const cuerpo =
+    `Estimados,\n\nPor favor solicito su colaboración con prospecto interesado en la carrera ${val('com-carrera')}.\nJornada: ${val('com-jornada')}\n\n` +
+    `DATOS DE CONTACTO\nNombre: ${val('com-nombre-asunto')}\nRUT: ${val('com-rut-asunto')}\nTeléfono: ${val('com-tel')}\nCorreo: ${val('com-correo')}\n\n` +
+    `Carrera de interés: ${val('com-carrera')}\nJornada: ${val('com-jornada')}\nTiene beneficios ministeriales: ${val('com-beneficios') || 'No indicado'}\nComentarios: ${val('com-comentario') || '-'}` +
+    '\n\nAtentamente.\n\n[Insertar firma institucional]';
+
+  const dest = 'marcelo.sepulveda@umayor.cl;francisca.castillo@umayor.cl';
+
+  await registrarCasoSupabase('Comercial', asunto, val('com-rut-asunto'), '{{ session.get("nombre", "") }}');
+  window.location.href = `mailto:${dest}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
+  mostrarSubModal(limpiarFormulario);
+}
+
+// ==========================================
+// COMERCIAL — sincronizar y asunto
+// ==========================================
 function mostrarFormComercial() {
-  var v = document.getElementById('asunto-com').value;
-  var b = document.getElementById('bloque-comercial');
+  const v = val('asunto-com');
+  const b = document.getElementById('bloque-comercial');
   if (b) b.style.display = v ? 'block' : 'none';
   if (v) actualizarAsuntoComercial();
 }
 
 function sincronizarComercial() {
-  var rutEl = document.getElementById('com-rut-asunto');
+  const rutEl = document.getElementById('com-rut-asunto');
   if (rutEl) rutEl.value = rutEl.value.replace(/[.\-]/g, '');
-  var comNombre = document.getElementById('com-nombre');
-  var comRut    = document.getElementById('com-rut');
+  const comNombre = document.getElementById('com-nombre');
+  const comRut    = document.getElementById('com-rut');
   if (comNombre) comNombre.value = val('com-nombre-asunto');
   if (comRut)    comRut.value    = val('com-rut-asunto');
   actualizarAsuntoComercial();
 }
 
 function actualizarAsuntoComercial() {
-  var rut     = val('com-rut-asunto')    || 'XXXXXXXXX';
-  var nombre  = val('com-nombre-asunto') || 'NOMBRE';
-  var carrera = val('com-carrera')       || 'CARRERA';
-  var jornada = val('com-jornada')       || 'JORNADA';
-  var el = document.getElementById('asunto-com-generado');
-  if (el) el.textContent = 'RUT: ' + rut + ' Nombre: ' + nombre + ' Carrera de interes: ' + carrera + ' Jornada: ' + jornada;
+  const rut     = val('com-rut-asunto')    || 'XXXXXXXXX';
+  const nombre  = val('com-nombre-asunto') || 'NOMBRE';
+  const carrera = val('com-carrera')       || 'CARRERA';
+  const jornada = val('com-jornada')       || 'JORNADA';
+  const el = document.getElementById('asunto-com-generado');
+  if (el) el.textContent = `RUT: ${rut} · Nombre: ${nombre} · Carrera: ${carrera} · Jornada: ${jornada}`;
 }
 
-async function enviarComercial() {
-  limpiarErrores();
-  hide('error-com');
-  var errores = [];
-  
-  if (!val('com-rut-asunto'))    { marcarError('com-rut-asunto');    errores.push('RUT Prospecto'); }
-  if (!val('com-nombre-asunto')) { marcarError('com-nombre-asunto'); errores.push('Nombre Prospecto'); }
-  if (!val('com-carrera'))       { marcarError('com-carrera');       errores.push('Carrera de interes'); }
-  if (!val('com-jornada'))       { marcarError('com-jornada');       errores.push('Jornada'); }
-  
-  if (!val('com-tel')) { marcarError('com-tel'); errores.push('Telefono'); }
-  else if (!validarTelefono(val('com-tel'))) { marcarError('com-tel'); errores.push('Telefono (debe tener 9 digitos)'); }
-  
-  if (!val('com-correo')) { marcarError('com-correo'); errores.push('Correo'); }
-  else if (!validarCorreo(val('com-correo'))) { marcarError('com-correo'); errores.push('Correo invalido (falta @)'); }
+// ==========================================
+// SUPABASE — CARGA DE EJECUTIVOS
+// ==========================================
+async function cargarEjecutivos() {
+  try {
+    const { data, error } = await _supabase.from('ejecutivos').select('nombre, rol').eq('activo', true).order('nombre');
+    if (data && !error) {
+      const apoyos      = data.filter(e => e.rol === 'apoyo');
+      const staffs      = data.filter(e => e.rol === 'staff');
+      const supervisores= data.filter(e => e.rol === 'supervisor');
 
-  // OBLIGATORIEDAD DEL EJECUTIVO EN COMERCIAL
-  if (!val('com-ejec-nombre')) { 
-      marcarError('com-ejec-nombre'); 
-      errores.push('Tu nombre (Datos del ejecutivo)'); 
-  }
-  if (!val('com-ejec-rut')) { 
-      marcarError('com-ejec-rut'); 
-      errores.push('Tu RUT (Datos del ejecutivo)'); 
-  }
-
-  if (errores.length > 0) {
-    var el = document.getElementById('error-com');
-    var unicos = errores.filter(function(e,i){ return errores.indexOf(e) === i; });
-    el.textContent = 'Faltan campos u obligatorios: ' + unicos.join(', ') + '.';
-    show('error-com');
-    return;
-  }
-  
-  var asunto = document.getElementById('asunto-com-generado').textContent;
-  
-  var ejecutivoTextoCom = val('com-ejec-nombre') ? '\n\nEjecutivo que deriva: ' + val('com-ejec-nombre') + ' (RUT: ' + val('com-ejec-rut') + ')' + (val('com-ejec-correo') ? ' - ' + val('com-ejec-correo') : '') : '';
-  
-  var cuerpo =
-    'Estimados,\n\nPor favor solicito su colaboracion con prospecto interesado en la carrera ' + val('com-carrera') + '.\nJornada: ' + val('com-jornada') + '\n\n' +
-    'DATOS DE CONTACTO\nNombre: ' + val('com-nombre-asunto') + '\nRUT: ' + val('com-rut-asunto') + '\nTelefono: ' + val('com-tel') + '\nCorreo: ' + val('com-correo') + '\n\n' +
-    'Carrera de interes: ' + val('com-carrera') + '\nJornada: ' + val('com-jornada') + '\nTiene beneficios ministeriales: ' + (val('com-beneficios') || 'No indicado') + '\nComentarios: ' + (val('com-comentario') || '-') + 
-    ejecutivoTextoCom + '\n\nAtentamente.\n\n[Insertar firma institucional]';
-    
-  var dest = 'marcelo.sepulveda@umayor.cl;francisca.castillo@umayor.cl';
-  
-  // Comercial siempre guarda el RUT del prospecto
-  await registrarCasoSupabase('Comercial', asunto, val('com-rut-asunto'), val('com-ejec-nombre'));
-  
-  window.location.href = 'mailto:' + dest + '?subject=' + encodeURIComponent(asunto) + '&body=' + encodeURIComponent(cuerpo);
-  mostrarMensajeExito();
+      const ids = ['turno-reemplazo-nombre','turno-solicitante-nombre','feriado-solicitante-nombre'];
+      ids.forEach(id => {
+        const sel = document.getElementById(id);
+        if (!sel) return;
+        sel.innerHTML = '<option value="">— Selecciona de la lista —</option>';
+        function agregarGrupo(titulo, lista) {
+          if (!lista.length) return;
+          const g = document.createElement('optgroup');
+          g.label = titulo;
+          lista.forEach(e => {
+            const opt = document.createElement('option');
+            opt.value = e.nombre; opt.textContent = e.nombre;
+            g.appendChild(opt);
+          });
+          sel.appendChild(g);
+        }
+        agregarGrupo('=== SUPERVISORES ===', supervisores);
+        agregarGrupo('=== STAFF ===', staffs);
+        agregarGrupo('=== EQUIPO DE APOYO ===', apoyos);
+      });
+    }
+  } catch(err) { console.error('Error cargando ejecutivos:', err); }
 }
 
-function limpiarFormularioSilencioso() {
-    document.querySelectorAll('input, select, textarea').forEach(function(el) {
-      if (el.type === 'checkbox') el.checked = false;
-      else el.value = '';
-    });
-    cambiarAsunto();
-    mostrarFormComercial();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function limpiarFormularioConAviso() {
-  if(confirm("¿Estás seguro de limpiar los datos para ingresar una nueva solicitud?")) {
-      limpiarFormularioSilencioso();
-  }
+// ==========================================
+// SUPABASE — REGISTRO DE CASO
+// ==========================================
+async function registrarCasoSupabase(area, tipoSolicitud, identificador, nombreEjecutivo) {
+  try {
+    await _supabase.from('registro_derivaciones').insert([{
+      ejecutivo:          nombreEjecutivo || 'No especificado',
+      area:               area,
+      tipo_de_solicitud:  tipoSolicitud,
+      identificador:      identificador || 'Sin RUT',
+      detalles_extras:    'Sin detalles'
+    }]);
+  } catch(err) { console.error('Error registrando caso:', err); }
 }
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const supabaseUrl = 'https://jxmrznqppddabuqtbufq.supabase.co';
-  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTA4MTcsImV4cCI6MjA4ODEyNjgxN30.pqT_PlAAn3oR6g_0Iaa2fs6qV8M3RQFzNOCAssyZZh4';
-  const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-  async function cargarEjecutivosDesdeBD() {
-      try {
-          const { data, error } = await _supabase.from('ejecutivos').select('nombre, rol').eq('activo', true).order('nombre');
-          
-          if (data && !error) {
-              const apoyos = data.filter(e => e.rol === 'apoyo');
-              const staffs = data.filter(e => e.rol === 'staff');
-              const supervisores = data.filter(e => e.rol === 'supervisor');
-
-              // Actualizado sin turno-solicitante
-              const idsSelect = ['turno-reemplazo-nombre', 'ejec-nombre', 'com-ejec-nombre'];
-              
-              idsSelect.forEach(id => {
-                  const selectEl = document.getElementById(id);
-                  if (selectEl) {
-                      selectEl.innerHTML = '<option value="">-- Selecciona de la lista --</option>';
-                      
-                      function agregarGrupo(titulo, lista) {
-                          if (lista.length > 0) {
-                              const grupo = document.createElement('optgroup');
-                              grupo.label = titulo;
-                              lista.forEach(e => {
-                                  const opt = document.createElement('option');
-                                  opt.value = e.nombre;
-                                  opt.textContent = e.nombre;
-                                  grupo.appendChild(opt);
-                              });
-                              selectEl.appendChild(grupo);
-                          }
-                      }
-
-                      agregarGrupo('=== SUPERVISORES ===', supervisores);
-                      agregarGrupo('=== STAFF ===', staffs);
-                      agregarGrupo('=== EQUIPO DE APOYO ===', apoyos);
-                  }
-              });
-          }
-      } catch (err) {
-          console.error("Error cargando antena Supabase:", err);
-      }
-  }
-
-  async function registrarCasoSupabase(areaTexto, tipoSolicitud, identificador, nombreEjecutivo) {
-      try {
-          const { data, error } = await _supabase.from('registro_derivaciones').insert([{
-              ejecutivo: nombreEjecutivo || 'No especificado',
-              area: areaTexto,
-              tipo_de_solicitud: tipoSolicitud,
-              identificador: identificador || 'Sin RUT',
-              detalles_extras: 'Sin detalles'
-          }]);
-          
-          if (error) {
-              console.error("🔴 Supabase rechazó el envío:", error.message);
-          } else {
-              console.log("🟢 Caso registrado en BD exitosamente.");
-          }
-      } catch (err) {
-          console.error("🔴 Error de conexión:", err);
-      }
-  }
-
-  document.addEventListener('DOMContentLoaded', cargarEjecutivosDesdeBD);
-</script>
-
 </body>
 </html>
-
