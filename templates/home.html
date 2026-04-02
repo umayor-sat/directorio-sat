@@ -7,43 +7,52 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
+/* ============================================================
+   VARIABLES Y MODO OSCURO
+   ============================================================ */
 :root {
   --um-amarillo: #f2b705;
-  --um-azul: #005aa9;
-  --um-verde: #1a5c38;
-  --um-gris: #f5f7fa;
-  --fondo: #f8f9fa;
-  --texto: #222222;
+  --um-azul:     #005aa9;
+  --um-verde:    #1a5c38;
+  --um-gris:     #f5f7fa;
+  --fondo:       #f0f2f5;
+  --texto:       #222222;
   --texto-suave: #666666;
-  --borde: #dde4ee;
-  --card-bg: #ffffff;
-  --card-hover: #f0f4f8;
-  --nota-bg: #fff9c4;
-  /* Color Grafito Anti-fatiga */
+  --borde:       #dde4ee;
+  --card-bg:     #ffffff;
+  --card-hover:  #f0f4f8;
+  --nota-bg:     #fff9c4;
   --btn-grafito: #4b535a;
   --btn-grafito-hover: #3a4147;
+  --sombra:      0 2px 8px rgba(0,0,0,0.06);
 }
 
-/* MODO OSCURO */
 body.dark-mode {
-  --fondo: #121212;
-  --texto: #e0e0e0;
+  --fondo:       #121212;
+  --texto:       #e0e0e0;
   --texto-suave: #aaaaaa;
-  --um-gris: #1e1e1e;
-  --borde: #333333;
-  --card-bg: #1e1e1e;
-  --card-hover: #2a2a2a;
-  --nota-bg: #5c5423;
+  --um-gris:     #1e1e1e;
+  --borde:       #333333;
+  --card-bg:     #1e1e1e;
+  --card-hover:  #2a2a2a;
+  --nota-bg:     #5c5423;
   --btn-grafito: #2c3136;
   --btn-grafito-hover: #1f2327;
+  --sombra:      0 2px 8px rgba(0,0,0,0.3);
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--fondo); color: var(--texto); transition: background 0.2s, color 0.2s; }
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--fondo);
+  color: var(--texto);
+  transition: background 0.2s, color 0.2s;
+}
 
-/* -------------------------------------------
-   MODAL AVISO EXTENDIDO
-------------------------------------------- */
+/* ============================================================
+   MODAL AVISO (INTACTO)
+   ============================================================ */
 .modal-aviso { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 9999; align-items: center; justify-content: center; opacity: 1; transition: opacity 0.4s ease-out; }
 .modal-aviso.oculto { pointer-events: none; }
 .modal-aviso-content { background: var(--fondo); width: 85%; max-width: 850px; padding: 40px; border-radius: 12px; border-top: 10px solid var(--um-amarillo); box-shadow: 0 15px 40px rgba(0,0,0,0.35); text-align: left; font-size: 15px; line-height: 1.6; color: var(--texto); position: relative; overflow: hidden; }
@@ -53,300 +62,422 @@ body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--f
 .progress-bar { height: 100%; background: var(--um-azul); width: 100%; animation: shrink 10s linear forwards; }
 @keyframes shrink { from { width: 100%; } to { width: 0%; } }
 
-/* -------------------------------------------
-   TOP BAR Y MEGA-MENÚ 
-------------------------------------------- */
-.top-bar { background: var(--um-amarillo); padding: 0 30px; display: flex; align-items: center; justify-content: space-between; font-size: 13.5px; height: 50px; z-index: 1000; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
-
-.links-container { display: flex; gap: 20px; height: 100%; align-items: center; flex-grow: 1; }
-.links-hover { position: relative; cursor: pointer; font-weight: 700; color: #222; height: 100%; display: flex; align-items: center; }
-.links-hover i { font-size: 14px; opacity: 0.8; margin-right: 4px; }
-
-.links-hover ul { 
-    list-style: none; margin: 0; padding: 20px; 
-    position: absolute; top: 100%; left: 0; 
-    background: #3d3d3d;
-    min-width: 400px; max-width: 800px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.15); 
-    border-radius: 0 0 8px 8px; 
-    border: 1px solid rgba(255,255,255,0.1); border-top: none; 
-    display: none; z-index: 9999; 
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-    gap: 10px 20px;
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+.top-bar {
+  background: var(--um-amarillo);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  position: relative;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
 }
-.links-hover:hover ul, .links-hover.activo ul { display: grid; } 
-.links-hover ul li { padding: 0; }
-.links-hover ul li a { 
-    text-decoration: none; color: #ffffff; 
-    display: flex; align-items: center; gap: 8px; 
-    padding: 8px 12px;
-    border-bottom: 1px solid rgba(255,255,255,0.08); 
-    transition: background 0.15s, color 0.15s, padding-left 0.15s; 
-    font-weight: normal; font-size: 13px;
+
+.links-container { display: flex; gap: 4px; height: 100%; align-items: center; flex-grow: 1; }
+
+.links-hover {
+  position: relative; cursor: pointer; font-weight: 700;
+  color: #1a1a1a; height: 100%; display: flex; align-items: center;
+  padding: 0 12px; font-size: 13px; border-radius: 6px;
+  transition: background 0.15s;
+  gap: 5px;
 }
-.links-hover ul li a i { font-size: 12px; color: rgba(255,255,255,0.4); transition: color 0.15s; }
-.links-hover ul li a:hover { background: rgba(255,255,255,0.1); color: #f2b705; font-weight: bold; padding-left: 16px; }
-.links-hover ul li a:hover i { color: #f2b705; }
+.links-hover:hover { background: rgba(0,0,0,0.1); }
+.links-hover i { font-size: 13px; }
 
-.top-actions-container { display: flex; align-items: center; gap: 12px; }
-.user-name-display { font-weight: 700; color: #222; font-size: 14px; margin-right: 5px; text-transform: uppercase; }
-body.dark-mode .user-name-display { color: #222; }
-
-.btn-dark-mode { background: rgba(0,0,0,0.1); color: #222; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; transition: background 0.2s; display:flex; align-items:center; gap:6px;}
-.btn-dark-mode:hover { background: rgba(0,0,0,0.2); }
-body.dark-mode .btn-dark-mode { background: #333; color: #fff; }
-
-.btn-salir { background-color: #e74c3c; color: white; text-decoration: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px; position: relative; z-index: 1001;}
-.btn-salir:hover { background-color: #c0392b; }
-
-/* -------------------------------------------
-   CENTRO DE CONTROL (WELCOME BAR) - COMPACTADO
-------------------------------------------- */
-.welcome-bar { 
-    background: var(--card-bg); border-bottom: 1px solid var(--borde); 
-    padding: 14px 25px;
-    display: grid; 
-    grid-template-columns: minmax(200px, 1fr) 2fr minmax(300px, 1fr); 
-    gap: 15px;
-    align-items: center; 
-    position: relative;
-    z-index: 100;
+.links-hover ul {
+  list-style: none; margin: 0; padding: 16px;
+  position: absolute; top: 100%; left: 0;
+  background: #2d3436;
+  min-width: 380px; max-width: 760px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+  border-radius: 0 0 10px 10px;
+  border: 1px solid rgba(255,255,255,0.08); border-top: none;
+  display: none; z-index: 9999;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px 16px;
 }
-@media (max-width: 950px) { .welcome-bar { grid-template-columns: 1fr; text-align: center; justify-items: center; gap: 10px;} }
+.links-hover:hover ul, .links-hover.activo ul { display: grid; }
+.links-hover ul li a {
+  text-decoration: none; color: #fff;
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  transition: background 0.15s, padding-left 0.15s;
+  font-size: 12.5px; font-weight: normal; border-radius: 4px;
+}
+.links-hover ul li a i { font-size: 11px; color: rgba(255,255,255,0.35); transition: color 0.15s; }
+.links-hover ul li a:hover { background: rgba(255,255,255,0.08); color: var(--um-amarillo); padding-left: 14px; }
+.links-hover ul li a:hover i { color: var(--um-amarillo); }
 
-.wb-left { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
-@media (max-width: 950px) { .wb-left { align-items: center; } }
-.reloj-destacado { background: var(--um-azul); color: white; padding: 5px 12px; border-radius: 8px; font-size: 24px; font-family: monospace; font-weight: bold; letter-spacing: 2px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); }
-.fecha-tarjeta { background: var(--fondo); border: 1px solid var(--borde); border-radius: 6px; padding: 4px 8px; font-size: 12px; font-weight: bold; color: var(--texto); display: inline-flex; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.top-actions { display: flex; align-items: center; gap: 8px; }
 
-.wb-center { text-align: center; display: flex; flex-direction: column; gap: 4px; }
-.wb-center h2 { margin: 0; color: var(--um-azul); font-size: 17px; display: flex; align-items: center; justify-content: center; gap: 6px; }
-.mensaje-dia { font-size: 14px; font-weight: 600; color: var(--texto); margin-bottom: 1px; }
-.recordatorios { font-size: 12px; color: var(--texto-suave); font-weight: 500; }
+.user-display {
+  font-weight: 700; color: #1a1a1a; font-size: 13px;
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(0,0,0,0.08); padding: 5px 10px;
+  border-radius: 6px;
+}
+.user-display .status-dot {
+  width: 7px; height: 7px; background: #1a5c38;
+  border-radius: 50%; display: inline-block;
+}
 
-.wb-right { display: flex; justify-content: flex-end; width: 100%; }
-.camino-casa-widget { width: 100%; max-width: 380px; background: var(--fondo); border: 1px solid var(--borde); border-radius: 12px; padding: 10px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+.btn-topbar {
+  border: none; border-radius: 6px; padding: 6px 12px;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; gap: 5px;
+  transition: background 0.15s;
+}
+.btn-dark { background: rgba(0,0,0,0.1); color: #1a1a1a; }
+.btn-dark:hover { background: rgba(0,0,0,0.18); }
+body.dark-mode .btn-dark { background: #333; color: #e0e0e0; }
+
+.btn-salir {
+  background: #c0392b; color: #fff;
+  text-decoration: none; padding: 6px 13px;
+  border-radius: 6px; font-size: 12px; font-weight: 700;
+  display: inline-flex; align-items: center; gap: 5px;
+  transition: background 0.15s;
+}
+.btn-salir:hover { background: #a93226; }
+
+/* ============================================================
+   WELCOME BAR
+   ============================================================ */
+.welcome-bar {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--borde);
+  padding: 12px 24px;
+  display: grid;
+  grid-template-columns: 190px 1fr 310px;
+  gap: 16px;
+  align-items: center;
+  position: relative; z-index: 100;
+}
+@media (max-width: 900px) { .welcome-bar { grid-template-columns: 1fr; text-align: center; } }
+
+.wb-left { display: flex; flex-direction: column; gap: 5px; }
+.reloj-destacado {
+  background: var(--um-azul); color: #fff;
+  padding: 5px 12px; border-radius: 8px;
+  font-size: 23px; font-family: monospace;
+  font-weight: 700; letter-spacing: 2px;
+  display: inline-block;
+  box-shadow: 0 3px 8px rgba(0,90,169,0.2);
+}
+.fecha-tarjeta {
+  background: var(--fondo); border: 1px solid var(--borde);
+  border-radius: 6px; padding: 4px 9px; font-size: 12px;
+  font-weight: 700; color: var(--texto);
+  display: inline-flex; align-items: center; gap: 6px;
+}
+
+.wb-center { text-align: center; }
+.wb-center h2 { margin: 0 0 4px; color: var(--um-azul); font-size: 16px; }
+.mensaje-dia { font-size: 13px; font-weight: 600; color: var(--texto); margin-bottom: 3px; }
+.recordatorios {
+  font-size: 12px; color: var(--texto-suave); font-weight: 500;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.geo-dot {
+  width: 7px; height: 7px; background: #e74c3c;
+  border-radius: 50%; display: inline-block;
+  animation: pulso 1.5s infinite;
+}
+@keyframes pulso { 0%,100%{opacity:1;} 50%{opacity:0.25;} }
+
+/* Minijuego camino a casa */
+.camino-casa-widget {
+  background: var(--fondo); border: 1px solid var(--borde);
+  border-radius: 12px; padding: 10px 14px;
+  box-shadow: var(--sombra);
+  transition: border-color 0.5s;
+}
+.camino-casa-widget.estado-ok    { border-color: var(--um-verde); }
+.camino-casa-widget.estado-alerta { border-color: var(--um-amarillo); }
+
 .camino-header { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 600; color: var(--texto-suave); }
 .camino-porcentaje { font-size: 15px; font-weight: 800; color: var(--um-azul); }
-
-.camino-track-container { margin-top: 10px; position: relative; }
+.camino-track-container { margin-top: 10px; }
 .camino-track { height: 7px; background: rgba(0,0,0,0.1); border-radius: 4px; position: relative; margin: 0 8px 8px; cursor: help; }
 body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
-.camino-progress { height: 100%; background: var(--um-verde); border-radius: 4px; width: 0%; transition: width 1s linear, background-color 0.5s; }
-.camino-monito { position: absolute; top: -14px; left: 0%; transform: translateX(-50%); color: var(--um-verde); font-size: 16px; transition: left 1s linear, color 0.5s; }
-.camino-casa { position: absolute; top: -14px; right: -10px; color: var(--texto-suave); font-size: 16px; transition: color 0.5s, transform 0.5s; }
-.camino-mensaje-final { text-align: center; font-size: 13px; font-weight: bold; color: var(--um-verde); display: none; margin-bottom: 8px; animation: latido 2s infinite; }
-
-.camino-controles { margin-top: 10px; background: var(--card-bg); border: 1px solid var(--borde); border-radius: 6px; padding: 6px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px; color: var(--texto-suave); box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
-.camino-controles input[type="time"] { border: 1px solid var(--borde); border-radius: 4px; padding: 3px 5px; font-family: monospace; font-size: 13px; color: var(--um-azul); font-weight: bold; background: var(--fondo); outline: none; cursor: pointer; transition: border-color 0.2s; position: relative; z-index: 10;}
+.camino-progress { height: 100%; background: var(--um-verde); border-radius: 4px; width: 0%; transition: width 1s linear; }
+.camino-monito { position: absolute; top: -13px; left: 0%; transform: translateX(-50%); color: var(--um-verde); font-size: 15px; transition: left 1s linear; }
+.camino-casa   { position: absolute; top: -13px; right: -8px; color: var(--texto-suave); font-size: 15px; }
+.camino-mensaje-final { text-align: center; font-size: 12px; font-weight: bold; color: var(--um-verde); display: none; margin-bottom: 6px; }
+.camino-controles { margin-top: 8px; background: var(--card-bg); border: 1px solid var(--borde); border-radius: 6px; padding: 5px 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 11px; color: var(--texto-suave); }
+.camino-controles input[type="time"] { border: 1px solid var(--borde); border-radius: 4px; padding: 2px 5px; font-family: monospace; font-size: 12px; color: var(--um-azul); font-weight: bold; background: var(--fondo); outline: none; cursor: pointer; }
 .camino-controles input[type="time"]:focus { border-color: var(--um-azul); }
-.btn-editar-hora { background: none; border: none; font-size: 11px; color: var(--um-azul); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 3px; transition: opacity 0.2s; position: relative; z-index: 10;}
+.btn-editar-hora { background: none; border: none; font-size: 11px; color: var(--um-azul); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 3px; }
 .btn-editar-hora:hover { opacity: 0.7; }
-.btn-logout-game { display: none; width: 100%; margin-top: 8px; background-color: var(--um-verde); color: white; text-align: center; text-decoration: none; padding: 6px; border-radius: 6px; font-size: 12px; font-weight: bold; transition: background 0.2s; animation: fadeIn 1s; position: relative; z-index: 10;}
+.btn-logout-game { display: none; width: 100%; margin-top: 7px; background-color: var(--um-verde); color: #fff; text-align: center; text-decoration: none; padding: 6px; border-radius: 6px; font-size: 12px; font-weight: bold; }
 .btn-logout-game:hover { background-color: #144a2d; }
 
-@keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-
-/* -------------------------------------------
-   ESTRUCTURA PRINCIPAL Y LAYOUT - COMPACTADO
-------------------------------------------- */
-.main-content { padding: 20px 15px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; }
-
-.layout-principal {  
-  display: grid;  
-  grid-template-columns: 1fr 1fr;  
-  grid-template-rows: auto auto;  
-  gap: 12px; 
-  margin-bottom: 18px;
+/* ============================================================
+   HERO BUSCADOR
+   ============================================================ */
+.search-hero {
+  background: var(--um-azul);
+  padding: 20px 24px 16px;
 }
-.col-accesos { display: flex; flex-direction: column; gap: 12px; }
-.col-contexto { display: flex; flex-direction: column; gap: 12px; }
-
-@media (max-width: 768px) { .layout-principal { grid-template-columns: 1fr; gap: 10px;} }
-
-.widget-box { background: var(--card-bg); border: 1px solid var(--borde); border-radius: 10px; padding: 15px 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: border-color 0.5s; }
-
-/* --- BOTONES PRIMARIOS --- */
-.btn-primary-item { 
-    background: var(--btn-grafito); 
-    border: 1px solid rgba(255,255,255,0.05); 
-    border-radius: 10px; 
-    padding: 15px 12px;
-    text-align: center; 
-    text-decoration: none; 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    transition: transform .15s, box-shadow .15s, background .15s; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    position: relative; 
-    z-index: 10;
+.search-hero-title {
+  text-align: center;
+  color: rgba(255,255,255,0.88);
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 0.3px; margin-bottom: 12px;
 }
-.btn-primary-item:hover { transform: translateY(-2px); background: var(--btn-grafito-hover); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
-.btn-primary-item .icono { font-size: 22px; margin-bottom: 6px; color: var(--um-amarillo); }
-.btn-primary-item .titulo { color: #ffffff; font-size: 14px; font-weight: 700; letter-spacing: 0.3px;}
-.btn-primary-item .desc { color: rgba(255,255,255,0.7); font-size: 11px; margin-top: 3px; }
-
-/* --- BOTONES DE CORREOS FRECUENTES --- */
-.grid-derivaciones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-@media (max-width: 768px) { .grid-derivaciones { grid-template-columns: 1fr; gap: 6px; } }
-
-.btn-correo-frecuente {
-    background: var(--btn-grafito);
-    border: 1px solid rgba(255,255,255,0.05);
-    border-radius: 10px;
-    padding: 12px 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    gap: 6px;
-    text-decoration: none;
-    color: #ffffff;
-    font-size: 12px;
-    font-weight: 700;
-    line-height: 1.2;
-    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+.search-box-wrap {
+  display: flex; max-width: 640px; margin: 0 auto;
+  border-radius: 9px; overflow: hidden;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.22);
 }
-.btn-correo-frecuente:hover { transform: translateY(-2px); background: var(--btn-grafito-hover); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
-.btn-correo-frecuente .icono { color: var(--um-amarillo); font-size: 20px; }
+.search-select {
+  padding: 11px 10px; border: none;
+  font-size: 12.5px; font-weight: 700;
+  background: var(--um-amarillo); color: #1a1a1a;
+  cursor: pointer; outline: none; min-width: 128px;
+}
+.search-input {
+  flex: 1; padding: 11px 15px; border: none;
+  font-size: 14px; color: #222; outline: none;
+  background: #fff;
+}
+.search-input::placeholder { color: #bbb; }
+.search-btn {
+  background: var(--um-verde); color: #fff;
+  border: none; padding: 11px 20px;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  transition: background 0.15s;
+}
+.search-btn:hover { background: #144a2d; }
 
-/* --- ZONA VIP CORE --- */
-.buttons-vip { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 24px; }
-.btn-vip-item { background: linear-gradient(135deg, var(--um-azul), #004080); border-radius: 10px; padding: 14px 10px; text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform .15s, box-shadow .15s; box-shadow: 0 4px 12px rgba(0,90,169,0.2); border: 1px solid rgba(255,255,255,0.1); position: relative; z-index: 10;}
-.btn-vip-item:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(0,90,169,0.3); }
-.btn-vip-item .icono { font-size: 24px; margin-bottom: 6px; color: var(--um-amarillo); }
-.btn-vip-item .titulo { color: #fff; font-size: 12px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; word-break: break-word; }
+.search-chips {
+  display: flex; gap: 6px; justify-content: center;
+  margin-top: 10px; flex-wrap: wrap;
+}
+.chip {
+  background: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.88);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 20px; padding: 3px 12px;
+  font-size: 11.5px; cursor: pointer;
+  transition: background 0.15s;
+}
+.chip:hover { background: rgba(255,255,255,0.22); }
 
-/* --- HERRAMIENTAS SECUNDARIAS --- */
-.buttons-secondary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 30px; }
-.btn-secondary-item { background: var(--card-bg); border: 1px solid var(--borde); border-radius: 8px; padding: 12px 6px; text-align: center; text-decoration: none; display: block; transition: background .15s, box-shadow .15s; position: relative; z-index: 10;}
-.btn-secondary-item:hover { background: var(--card-hover); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
-.btn-secondary-item .icono { font-size: 16px; margin-bottom: 4px; color: var(--texto-suave); }
-.btn-secondary-item .titulo { font-size: 12px; font-weight: 600; color: var(--texto); }
+/* Zona de resultados inline */
+.search-results {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--borde);
+  padding: 12px 24px;
+  display: none;
+}
+.search-results.visible { display: block; }
+.results-label {
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--texto-suave); margin-bottom: 10px;
+}
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px;
+}
+.result-card {
+  background: var(--fondo); border: 1px solid var(--borde);
+  border-radius: 8px; padding: 10px 12px;
+  cursor: pointer; transition: background 0.15s, box-shadow 0.15s;
+}
+.result-card:hover { background: var(--card-hover); box-shadow: var(--sombra); }
+.result-card .r-tag { font-size: 10px; font-weight: 700; color: var(--um-azul); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 3px; }
+.result-card .r-nombre { font-size: 13px; font-weight: 700; color: var(--texto); }
+.result-card .r-sub { font-size: 11px; color: var(--texto-suave); margin-top: 2px; }
+.results-loading { text-align: center; font-size: 13px; color: var(--texto-suave); padding: 12px 0; }
 
-/* -------------------------------------------
-   HERRAMIENTAS OPERATIVAS (APILADAS A LA DERECHA)
-------------------------------------------- */
-#calcBtn { position: fixed; bottom: 82px; right: 20px; background: #1a6fc4; color: #fff; border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 1.3rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.25); z-index: 400; display: flex; align-items: center; justify-content: center; transition: transform .15s ease; }
-#calcBtn:hover { transform: translateY(-2px); }
-#calcOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 10000; align-items: center; justify-content: center; }
+/* ============================================================
+   BODY PRINCIPAL
+   ============================================================ */
+.main-content { padding: 16px 24px; max-width: 1280px; margin: 0 auto; }
 
-.support-container { position: fixed; bottom: 20px; right: 20px; z-index: 400; }
-.support-main { background: #005aa9; color: #fff; border: none; border-radius: 28px; padding: 10px 16px; font-weight: 600; font-size: 13px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.25); display: flex; align-items: center; gap: 5px; transition: transform .15s; }
-.support-main:hover { transform: translateY(-2px); }
-.support-menu { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
-.support-menu a { display: flex; align-items: center; gap: 5px; background: var(--card-bg); padding: 9px 11px; border-radius: 8px; text-decoration: none; color: var(--texto); font-size: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); border: 1px solid var(--borde); position: relative; z-index: 10;}
-.support-menu a:hover { background: var(--card-hover); }
+.sec-label {
+  font-size: 10.5px; font-weight: 700; color: var(--texto-suave);
+  text-transform: uppercase; letter-spacing: 0.6px;
+  margin-bottom: 10px; margin-top: 18px;
+  display: flex; align-items: center; gap: 8px;
+}
+.sec-label::after { content: ''; flex: 1; height: 1px; background: var(--borde); }
+.sec-label:first-child { margin-top: 0; }
 
-/* --- BLOCK DE NOTAS (POST-IT) --- */
-.post-it-widget { position: fixed; bottom: 144px; right: 20px; z-index: 400; }
-.post-it-btn { background: #f1c40f; color: #333; border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 1.3rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; transition: transform 0.15s; }
-.post-it-btn:hover { transform: translateY(-2px); }
-.post-it-panel { display: none; position: absolute; bottom: 0; right: 58px; background: var(--nota-bg); width: 320px; padding: 12px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.25); border-top: 8px solid #f39c12; }
-.post-it-panel h4 { margin: 0 0 6px 0; font-size: 13px; color: #333; display: flex; justify-content: space-between; align-items: center; }
-.post-it-desc { font-size: 10px; color: #555; margin: 0 0 8px 0; line-height: 1.2; } 
-.post-it-panel textarea { width: 100%; height: 240px; background: transparent; border: none; resize: none; font-family: monospace; font-size: 12px; color: var(--texto); padding: 4px; outline: none; border-left: 2px solid rgba(0,0,0,0.05); }
+/* Alertas */
+.alertas-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 700px) { .alertas-row { grid-template-columns: 1fr; } }
 
-.post-it-actions { display: flex; gap: 6px; margin-top: 8px; }
-.btn-nota { flex: 1; padding: 7px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 11px; display: flex; align-items: center; justify-content: center; gap: 5px; transition: opacity 0.2s;}
-.btn-nota:hover { opacity: 0.8; }
-.btn-copiar { background: var(--um-azul); color: white; }
-.btn-limpiar { background: rgba(0,0,0,0.08); color: #333; }
-body.dark-mode .btn-limpiar { background: rgba(255,255,255,0.1); color: #ddd; }
-body.dark-mode .post-it-desc { color: #aaa; }
+.widget-box {
+  background: var(--card-bg); border: 1px solid var(--borde);
+  border-radius: 10px; padding: 13px 15px;
+  box-shadow: var(--sombra);
+}
+.widget-title { font-size: 13px; font-weight: 700; margin-bottom: 9px; display: flex; align-items: center; gap: 6px; }
+.msg-inner {
+  background: #e8f5e9; border-left: 3px solid #2e7d32;
+  border-radius: 0 6px 6px 0; padding: 9px 11px;
+  font-size: 13px; color: #1b5e20; font-weight: 500;
+  line-height: 1.5; min-height: 44px;
+  transition: opacity 0.5s ease-in-out;
+}
+.alr-inner {
+  border-left: 3px solid #c62828;
+  border-radius: 0 6px 6px 0; padding: 9px 11px;
+  font-size: 13px; font-weight: 500; line-height: 1.5;
+  transition: all 0.5s ease-in-out;
+}
 
-/* FOOTER */
-footer { text-align: center; font-size: 12px; color: var(--texto-suave); margin: 30px 0 15px; border-top: 1px solid var(--borde); padding-top: 15px; position: relative; z-index: 10;}
-.footer-links { margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 12px; font-weight: bold; font-size: 12px;}
+/* Correos frecuentes */
+.correos-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 700px) { .correos-row { grid-template-columns: 1fr; } }
+
+.btn-correo {
+  background: var(--btn-grafito); border-radius: 10px;
+  padding: 13px 16px; display: flex; align-items: center;
+  gap: 12px; text-decoration: none; cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+.btn-correo:hover { background: var(--btn-grafito-hover); transform: translateY(-1px); }
+.btn-correo .bc-icon { font-size: 20px; color: var(--um-amarillo); flex-shrink: 0; }
+.btn-correo .bc-titulo { color: #fff; font-size: 13px; font-weight: 700; }
+.btn-correo .bc-sub { color: rgba(255,255,255,0.5); font-size: 11px; margin-top: 2px; }
+
+/* Sistemas externos VIP */
+.vip-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+@media (max-width: 700px) { .vip-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.btn-vip {
+  background: var(--um-azul);
+  border-radius: 10px; padding: 14px 10px;
+  text-align: center; text-decoration: none;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 7px; cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 12px rgba(0,90,169,0.18);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.btn-vip:hover { transform: translateY(-2px); box-shadow: 0 7px 16px rgba(0,90,169,0.28); }
+.btn-vip .bv-icon { font-size: 22px; color: var(--um-amarillo); }
+.btn-vip .bv-titulo { color: #fff; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; line-height: 1.3; }
+
+/* Herramientas internas */
+.tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 700px) { .tools-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.btn-tool {
+  background: var(--card-bg); border: 1px solid var(--borde);
+  border-radius: 10px; padding: 13px 8px;
+  text-align: center; text-decoration: none;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 6px; cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+  box-shadow: var(--sombra);
+}
+.btn-tool:hover { background: var(--card-hover); transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+.btn-tool .bt-icon { font-size: 18px; color: var(--texto-suave); }
+.btn-tool .bt-titulo { font-size: 12px; font-weight: 700; color: var(--texto); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  text-align: center; font-size: 11.5px;
+  color: var(--texto-suave); padding: 20px 0 16px;
+  border-top: 1px solid var(--borde); margin-top: 24px;
+  line-height: 1.8;
+}
+.footer-links {
+  margin-top: 10px; display: flex; justify-content: center;
+  align-items: center; gap: 14px; font-weight: 700; font-size: 12px;
+}
 .footer-links a { color: var(--texto-suave); text-decoration: none; transition: color 0.2s; }
 .footer-links a:hover { color: var(--um-azul); }
 
+/* ============================================================
+   FABs (flotantes)
+   ============================================================ */
+#calcBtn {
+  position: fixed; bottom: 86px; right: 20px;
+  background: #1a6fc4; color: #fff; border: none;
+  width: 46px; height: 46px; border-radius: 50%;
+  font-size: 1.2rem; cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25); z-index: 400;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.15s;
+}
+#calcBtn:hover { transform: translateY(-2px); }
+
+.post-it-widget { position: fixed; bottom: 142px; right: 20px; z-index: 400; }
+.post-it-btn {
+  background: #f1c40f; color: #333; border: none;
+  width: 46px; height: 46px; border-radius: 50%;
+  font-size: 1.2rem; cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.15s;
+}
+.post-it-btn:hover { transform: translateY(-2px); }
+.post-it-panel {
+  display: none; position: absolute; bottom: 0; right: 56px;
+  background: var(--nota-bg); width: 310px; padding: 12px;
+  border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.22);
+  border-top: 7px solid #f39c12;
+}
+.post-it-panel h4 { margin: 0 0 5px; font-size: 13px; color: #333; display: flex; justify-content: space-between; align-items: center; }
+.post-it-desc { font-size: 10px; color: #555; margin: 0 0 7px; line-height: 1.2; }
+.post-it-panel textarea { width: 100%; height: 230px; background: transparent; border: none; resize: none; font-family: monospace; font-size: 12px; color: var(--texto); padding: 4px; outline: none; border-left: 2px solid rgba(0,0,0,0.05); }
+.post-it-actions { display: flex; gap: 6px; margin-top: 7px; }
+.btn-nota { flex: 1; padding: 7px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 11px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+.btn-nota:hover { opacity: 0.8; }
+.btn-copiar { background: var(--um-azul); color: #fff; }
+.btn-limpiar { background: rgba(0,0,0,0.08); color: #333; }
+body.dark-mode .btn-limpiar { background: rgba(255,255,255,0.1); color: #ddd; }
+
+.support-container { position: fixed; bottom: 20px; right: 20px; z-index: 400; }
+.support-main {
+  background: var(--um-azul); color: #fff; border: none;
+  border-radius: 28px; padding: 10px 16px; font-weight: 600;
+  font-size: 13px; cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  display: flex; align-items: center; gap: 5px;
+  transition: transform 0.15s;
+}
+.support-main:hover { transform: translateY(-2px); }
+.support-menu { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.support-menu a {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--card-bg); padding: 9px 11px;
+  border-radius: 8px; text-decoration: none;
+  color: var(--texto); font-size: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.14);
+  border: 1px solid var(--borde);
+}
+.support-menu a:hover { background: var(--card-hover); }
+
+/* Calculadora SLA overlay */
+#calcOverlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6); z-index: 10000;
+  align-items: center; justify-content: center;
+}
 </style>
 </head>
 <body>
 
-<div class="top-bar">
-  <div class="links-container" id="megaMenuContainer">
-      <span style="color: #222; font-weight: bold; font-size: 13px; opacity: 0.8;">
-          <i class="fa-solid fa-spinner fa-spin"></i> Cargando mega-menú...
-      </span>
-  </div>
-  
-  <div class="top-actions-container">
-    <span class="user-name-display"><i class="fa-solid fa-circle-user"></i> {{ session.get('nombre', 'Equipo SAT') }}</span>
-    <button class="btn-dark-mode" onclick="toggleDarkMode()" title="Cambiar contraste">
-        <i class="fa-solid fa-moon" id="iconoDark"></i> <span id="textoDarkMode">Modo Oscuro</span>
-    </button>
-    <a href="/logout" class="btn-salir" title="Finalizar sesión">
-        <i class="fa-solid fa-power-off"></i> Salir
-    </a>
-  </div>
-</div>
-
-<div class="welcome-bar">
-    
-    <div class="wb-left">
-        <div class="reloj-destacado" id="relojHora">00:00:00</div>
-        <div class="fecha-tarjeta">
-            <i class="fa-regular fa-calendar" style="margin-right:6px; color:var(--um-azul);"></i> 
-            <span id="fechaTexto">Cargando...</span>
-            <span id="climaTexto" style="display:none; margin-left:8px; border-left: 1px solid var(--borde); padding-left:8px; font-weight:normal;"></span>
-        </div>
-    </div>
-
-    <div class="wb-center">
-        <h2>
-            <span id="saludoHora">Buenos días,</span> {{ session.get('nombre', 'Equipo') }}.
-        </h2>
-        <div class="mensaje-dia" id="mensajeDia">Cargando mensaje...</div>
-        <div class="recordatorios">
-            No olvides marcar tu entrada en <a href="https://clients.geovictoria.com/account/login?idiom=es" target="_blank" style="color: var(--um-azul); font-weight: bold; text-decoration: none; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">GeoVictoria <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 11px;"></i></a>
-        </div>
-    </div>
-    
-    <div class="wb-right">
-        <div class="camino-casa-widget" id="caminoCasaWidget">
-            <div class="camino-header">
-                <span id="caminoTexto">Avance del Turno</span>
-                <div class="camino-porcentaje" id="caminoPorcentaje">0%</div>
-            </div>
-            
-            <div class="camino-track-container" id="caminoTrackContainer">
-                <div class="camino-track" id="pistaCamino" title="Calculando...">
-                    <div class="camino-progress" id="caminoProgress"></div>
-                    <i class="fa-solid fa-person-walking camino-monito" id="caminoMonito"></i>
-                    <i class="fa-solid fa-flag-checkered camino-casa" id="caminoCasa"></i>
-                </div>
-                
-                <div class="camino-mensaje-final" id="caminoMensajeFinal">
-                    🎉 ¡Turno finalizado! Misión cumplida. 
-                </div>
-
-                <div class="camino-controles">
-                    <label for="horaSalidaInput" style="font-weight: 600;">Salida:</label>
-                    <input type="time" id="horaSalidaInput" onchange="iniciarCamino()" title="Ingresa o modifica tu hora de salida">
-                    <button class="btn-editar-hora" onclick="document.getElementById('horaSalidaInput').focus()" title="Modificar hora de salida (incluye horas extras)">
-                        <i class="fa-solid fa-pencil"></i> Editar
-                    </button>
-                    <button class="btn-editar-hora" style="color: #e74c3c;" onclick="resetearTurno()" title="Borrar hora de salida">
-                        <i class="fa-solid fa-eraser"></i>
-                    </button>
-                </div>
-                <div id="caminoInvitacion" style="font-size: 12px; color: #7f8c8d; text-align: center; margin-top: 10px; font-weight: normal; line-height: 1.3;">
-                    ⏳ Fija tu hora de salida para iniciar el viaje
-                </div>
-                <a href="/logout" class="btn-logout-game" id="btnCerrarSesionJuego">
-                    <i class="fa-solid fa-power-off"></i> Finalizar Turno y Salir
-                </a>
-            </div>
-        </div>
-    </div>
-    
-</div>
-
+<!-- ============================================================
+     MODAL AVISO CONFIDENCIALIDAD
+     ============================================================ -->
 <div id="modalAviso" class="modal-aviso">
   <div class="modal-aviso-content">
     <h3><i class="fa-solid fa-shield-halved"></i> Aviso de uso y confidencialidad</h3>
@@ -364,113 +495,250 @@ footer { text-align: center; font-size: 12px; color: var(--texto-suave); margin:
   </div>
 </div>
 
-<div class="main-content">
+<!-- ============================================================
+     TOP BAR
+     ============================================================ -->
+<div class="top-bar">
+  <div class="links-container" id="megaMenuContainer">
+    <span style="color:#444; font-size:12px; font-weight:700;">
+      <i class="fa-solid fa-spinner fa-spin"></i> Cargando menú...
+    </span>
+  </div>
+  <div class="top-actions">
+    <span class="user-display">
+      <span class="status-dot"></span>
+      <i class="fa-solid fa-circle-user"></i>
+      {{ session.get('nombre', 'Equipo SAT') }}
+    </span>
+    <button class="btn-topbar btn-dark" onclick="toggleDarkMode()" title="Cambiar contraste">
+      <i class="fa-solid fa-moon" id="iconoDark"></i>
+      <span id="textoDarkMode">Modo Oscuro</span>
+    </button>
+    <a href="/logout" class="btn-salir">
+      <i class="fa-solid fa-power-off"></i> Salir
+    </a>
+  </div>
+</div>
 
-  <div class="layout-principal">
-    
-    <div class="col-accesos">
-      <a href="/escuelas" class="btn-primary-item">
-        <div class="icono"><i class="fa-solid fa-book-bookmark"></i></div>
-        <div class="titulo">Directorio de Escuelas</div>
-        <div class="desc">Busca por nombre, sede o cargo</div>
-      </a>
-      <a href="/contactos-administrativos" class="btn-primary-item">
-        <div class="icono"><i class="fa-solid fa-building-user"></i></div>
-        <div class="titulo">Contactos Administrativos</div>
-        <div class="desc">Áreas, roles y contactos internos</div>
-      </a>
-      
-      <div style="margin-top: 6px;">
-        <h4 style="margin-bottom: 9px; color: var(--texto-suave); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding-left: 4px;">
-            <i class="fa-regular fa-envelope"></i> Accesos Rápidos
-        </h4>
-        <div class="grid-derivaciones">
-            <a href="https://directorio-um-sat.onrender.com/correos-frecuentes#supervisor" class="btn-correo-frecuente">
-                <i class="fa-solid fa-user-tie icono"></i>
-                <span>Derivación a Supervisor</span>
-            </a>
-            <a href="https://directorio-um-sat.onrender.com/correos-frecuentes#comercial" class="btn-correo-frecuente">
-                <i class="fa-solid fa-briefcase icono"></i>
-                <span>Derivación Área Comercial</span>
-            </a>
-        </div>
-      </div>
-      
-    </div>
+<!-- ============================================================
+     WELCOME BAR
+     ============================================================ -->
+<div class="welcome-bar">
 
-    <div class="col-contexto">
-      
-      <div class="widget-box" style="border-top: 4px solid var(--um-verde);">
-        <h3 style="margin-bottom:0; color:var(--um-verde); font-size:15px;">✨ Para tener en cuenta</h3>
-        <div id="caja-mensajes" style="margin-top:10px; padding:12px; border-radius:6px; background:#e8f5e9; border-left:4px solid #2e7d32; min-height:48px; display: flex; align-items: center;">
-          <div id="texto-mensajes" style="color:#1b5e20; font-size:14px; font-weight:500; line-height:1.4; font-family:'Open Sans','Segoe UI',sans-serif; transition:opacity 0.5s ease-in-out; width: 100%;">
-            <i class="fa-solid fa-spinner fa-spin"></i> Buscando mensajes...
-          </div>
-        </div>
-      </div>
-
-      <div class="widget-box" id="contenedor-widget-alertas" style="border-top: 4px solid #e74c3c;">
-        <h3 style="margin-bottom:0; font-size:15px;">
-            <i class="fa-solid fa-triangle-exclamation" id="icono-alerta" style="color:#e74c3c; transition: color 0.5s;"></i> 
-            <span id="titulo-caja-alerta" style="color:#e74c3c;">Estado del Sistema</span>
-        </h3>
-        <div id="caja-alertas" style="margin-top:10px; padding:12px; border-radius:6px; background:#fdecea; border-left:4px solid #c62828; transition:all 1s ease-in-out;">
-          <div id="texto-alertas" style="color:#c62828; font-size:13px; font-weight:500; transition:opacity 0.5s;">
-            <i class="fa-solid fa-spinner fa-spin"></i> Conectando al panel de estado...
-          </div>
-        </div>
-      </div>
-      
+  <div class="wb-left">
+    <div class="reloj-destacado" id="relojHora">00:00:00</div>
+    <div class="fecha-tarjeta">
+      <i class="fa-regular fa-calendar" style="color:var(--um-azul);"></i>
+      <span id="fechaTexto">Cargando...</span>
     </div>
   </div>
 
-  <div class="buttons-vip">
-    <a href="https://umayor.crm2.dynamics.com/main.aspx?appid=3c5cf11d-3a1a-ec11-b6e6-002248373aeb" target="_blank" class="btn-vip-item">
-      <div class="icono"><i class="fa-solid fa-window-maximize"></i></div>
-      <div class="titulo">CRM 365</div>
-    </a>
-    <a href="https://umayor.crm2.dynamics.com/main.aspx?appid=edeec6c2-e064-40d8-83ae-a17a4954e519&pagetype=entitylist&etn=wit_matriculaweb&viewid=41b53211-9e6c-ec11-8943-00224837dae3&viewType=4230" target="_blank" class="btn-vip-item">
-      <div class="icono"><i class="fa-solid fa-desktop"></i></div>
-      <div class="titulo">CRM MW (matriculas)</div>
-    </a>
-    <a href="https://login.mypurecloud.com/#/authenticate" target="_blank" class="btn-vip-item">
-      <div class="icono"><i class="fa-solid fa-headset"></i></div>
-      <div class="titulo">Genesys</div>
-    </a>
-    <a href="https://miportal.umayor.cl/site" target="_blank" class="btn-vip-item">
-      <div class="icono"><i class="fa-solid fa-address-card"></i></div>
-      <div class="titulo">WEB MODULISTA</div>
-    </a>
+  <div class="wb-center">
+    <h2>
+      <i class="fa-solid fa-earth-americas" style="color:var(--um-azul); font-size:15px;"></i>
+      <span id="saludoHora">Buenos días,</span> {{ session.get('nombre', 'Equipo') }}.
+    </h2>
+    <div class="mensaje-dia" id="mensajeDia">Cargando mensaje...</div>
+    <div class="recordatorios">
+      <span class="geo-dot"></span>
+      Recuerda marcar tu entrada en
+      <a href="https://clients.geovictoria.com/account/login?idiom=es" target="_blank"
+         style="color:var(--um-azul); font-weight:700; text-decoration:none;">
+        GeoVictoria <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px;"></i>
+      </a>
+    </div>
   </div>
 
-  <div class="buttons-secondary">
-    <a href="/bitacora" class="btn-secondary-item">
-      <div class="icono"><i class="fa-solid fa-book-journal-whills"></i></div>
-      <div class="titulo">Bitácora SAT</div>
-    </a>
-    <a href="/temas-crm" class="btn-secondary-item">
-      <div class="icono"><i class="fa-solid fa-list-check"></i></div>
-      <div class="titulo">Clasificador CRM</div>
-    </a>
-    <a href="/pauta-pmcc" class="btn-secondary-item">
-      <div class="icono"><i class="fa-solid fa-clipboard-check"></i></div>
-      <div class="titulo">Pauta PMCC</div>
-    </a>
-    <a href="/academicos" class="btn-secondary-item">
-      <div class="icono"><i class="fa-solid fa-users-rectangle"></i></div>
-      <div class="titulo">Núcleos Académicos</div>
-    </a>
+  <div class="wb-right" style="display:flex; justify-content:flex-end; width:100%;">
+    <div class="camino-casa-widget" id="caminoCasaWidget" style="width:100%; max-width:320px;">
+      <div class="camino-header">
+        <span id="caminoTexto">Avance del Turno</span>
+        <div class="camino-porcentaje" id="caminoPorcentaje">0%</div>
+      </div>
+      <div class="camino-track-container" id="caminoTrackContainer">
+        <div class="camino-track" id="pistaCamino" title="Calculando...">
+          <div class="camino-progress" id="caminoProgress"></div>
+          <i class="fa-solid fa-person-walking camino-monito" id="caminoMonito"></i>
+          <i class="fa-solid fa-flag-checkered camino-casa" id="caminoCasa"></i>
+        </div>
+        <div class="camino-mensaje-final" id="caminoMensajeFinal">🎉 ¡Turno finalizado! Misión cumplida.</div>
+        <div class="camino-controles">
+          <label for="horaSalidaInput" style="font-weight:600;">Salida:</label>
+          <input type="time" id="horaSalidaInput" onchange="iniciarCamino()" title="Ingresa tu hora de salida">
+          <button class="btn-editar-hora" onclick="document.getElementById('horaSalidaInput').focus()">
+            <i class="fa-solid fa-pencil"></i> Editar
+          </button>
+          <button class="btn-editar-hora" style="color:#e74c3c;" onclick="resetearTurno()" title="Borrar">
+            <i class="fa-solid fa-eraser"></i>
+          </button>
+        </div>
+        <div id="caminoInvitacion" style="font-size:11px; color:var(--texto-suave); text-align:center; margin-top:8px; line-height:1.3;">
+          ⏳ Fija tu hora de salida para iniciar el viaje
+        </div>
+        <a href="/logout" class="btn-logout-game" id="btnCerrarSesionJuego">
+          <i class="fa-solid fa-power-off"></i> Finalizar Turno y Salir
+        </a>
+      </div>
+    </div>
   </div>
 
 </div>
 
-<button id="calcBtn" title="Calculadora de Plazos SLA" onclick="abrirCalc()"><i class="fa-solid fa-calculator"></i></button>
+<!-- ============================================================
+     HERO BUSCADOR UNIFICADO
+     ============================================================ -->
+<div class="search-hero">
+  <div class="search-hero-title">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    Buscador unificado &nbsp;·&nbsp; Escuelas &nbsp;·&nbsp; Académicos &nbsp;·&nbsp; Administrativos
+  </div>
+  <div class="search-box-wrap">
+    <select class="search-select" id="searchFiltro">
+      <option value="todo">Todo</option>
+      <option value="escuelas">Escuelas</option>
+      <option value="academicos">Académicos</option>
+      <option value="administrativos">Administrativos</option>
+    </select>
+    <input class="search-input" type="text" id="searchInput"
+           placeholder="Nombre, cargo, escuela, sede, correo..."
+           oninput="buscarUnificado()" onkeydown="if(event.key==='Enter') buscarUnificado()">
+    <button class="search-btn" onclick="buscarUnificado()">
+      <i class="fa-solid fa-magnifying-glass"></i> Buscar
+    </button>
+  </div>
+  <div class="search-chips" id="searchChips"></div>
+</div>
+
+<!-- Resultados inline -->
+<div class="search-results" id="searchResults">
+  <div class="results-label" id="resultsLabel">Resultados</div>
+  <div class="results-grid" id="resultsGrid"></div>
+</div>
+
+<!-- ============================================================
+     CUERPO PRINCIPAL
+     ============================================================ -->
+<div class="main-content">
+
+  <!-- ESTADO Y ALERTAS -->
+  <div class="sec-label"><i class="fa-solid fa-tower-broadcast" style="color:var(--um-azul);"></i> Estado y avisos</div>
+  <div class="alertas-row">
+
+    <div class="widget-box" id="contenedor-widget-mensajes" style="border-top: 3px solid var(--um-verde);">
+      <div class="widget-title" style="color:var(--um-verde);">
+        <i class="fa-solid fa-star"></i> Para tener en cuenta
+      </div>
+      <div class="msg-inner" id="texto-mensajes">
+        <i class="fa-solid fa-spinner fa-spin"></i> Buscando mensajes...
+      </div>
+    </div>
+
+    <div class="widget-box" id="contenedor-widget-alertas" style="border-top: 3px solid #e74c3c;">
+      <div class="widget-title">
+        <i class="fa-solid fa-triangle-exclamation" id="icono-alerta" style="color:#e74c3c;"></i>
+        <span id="titulo-caja-alerta" style="color:#e74c3c;">Estado del Sistema</span>
+      </div>
+      <div id="caja-alertas" class="alr-inner">
+        <div id="texto-alertas" style="font-size:13px; font-weight:500;">
+          <i class="fa-solid fa-spinner fa-spin"></i> Conectando al panel de estado...
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CORREOS FRECUENTES -->
+  <div class="sec-label"><i class="fa-regular fa-envelope" style="color:var(--um-azul);"></i> Accesos rápidos · Correos frecuentes</div>
+  <div class="correos-row">
+    <a href="https://directorio-um-sat.onrender.com/correos-frecuentes#supervisor" class="btn-correo">
+      <i class="fa-solid fa-user-tie bc-icon"></i>
+      <div>
+        <div class="bc-titulo">Derivación a Supervisor</div>
+        <div class="bc-sub">Plantilla lista para copiar</div>
+      </div>
+    </a>
+    <a href="https://directorio-um-sat.onrender.com/correos-frecuentes#comercial" class="btn-correo">
+      <i class="fa-solid fa-briefcase bc-icon"></i>
+      <div>
+        <div class="bc-titulo">Derivación Área Comercial</div>
+        <div class="bc-sub">Plantilla lista para copiar</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- SISTEMAS EXTERNOS VIP -->
+  <div class="sec-label"><i class="fa-solid fa-arrow-up-right-from-square" style="color:var(--um-azul);"></i> Sistemas externos</div>
+  <div class="vip-grid">
+    <a href="https://umayor.crm2.dynamics.com/main.aspx?appid=3c5cf11d-3a1a-ec11-b6e6-002248373aeb" target="_blank" class="btn-vip">
+      <i class="fa-solid fa-window-maximize bv-icon"></i>
+      <div class="bv-titulo">CRM 365</div>
+    </a>
+    <a href="https://umayor.crm2.dynamics.com/main.aspx?appid=edeec6c2-e064-40d8-83ae-a17a4954e519&pagetype=entitylist&etn=wit_matriculaweb&viewid=41b53211-9e6c-ec11-8943-00224837dae3&viewType=4230" target="_blank" class="btn-vip">
+      <i class="fa-solid fa-desktop bv-icon"></i>
+      <div class="bv-titulo">CRM MW Matrículas</div>
+    </a>
+    <a href="https://login.mypurecloud.com/#/authenticate" target="_blank" class="btn-vip">
+      <i class="fa-solid fa-headset bv-icon"></i>
+      <div class="bv-titulo">Genesys</div>
+    </a>
+    <a href="https://miportal.umayor.cl/site" target="_blank" class="btn-vip">
+      <i class="fa-solid fa-address-card bv-icon"></i>
+      <div class="bv-titulo">Web Modulista</div>
+    </a>
+  </div>
+
+  <!-- HERRAMIENTAS INTERNAS -->
+  <div class="sec-label"><i class="fa-solid fa-toolbox" style="color:var(--um-azul);"></i> Herramientas</div>
+  <div class="tools-grid">
+    <a href="/bitacora" class="btn-tool">
+      <i class="fa-solid fa-book-journal-whills bt-icon"></i>
+      <div class="bt-titulo">Bitácora SAT</div>
+    </a>
+    <a href="/temas-crm" class="btn-tool">
+      <i class="fa-solid fa-list-check bt-icon"></i>
+      <div class="bt-titulo">Clasificador CRM</div>
+    </a>
+    <a href="/pauta-pmcc" class="btn-tool">
+      <i class="fa-solid fa-clipboard-check bt-icon"></i>
+      <div class="bt-titulo">Pauta PMCC</div>
+    </a>
+
+  </div>
+
+</div>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer>
+  Desarrollado por <strong>Eduardo Ferrada</strong><br>
+  Universidad Mayor<br>
+  Enero 2026
+  {% if session.get('nivel_acceso') == 'admin' %}
+  <div class="footer-links">
+    <a href="/monitor-calidad"><i class="fa-solid fa-chart-line"></i> Monitor de Calidad</a>
+    <span>|</span>
+    <a href="/administracion"><i class="fa-solid fa-sliders"></i> Administración SAT</a>
+    <span>|</span>
+    <a href="/reporteria-sat"><i class="fa-solid fa-chart-pie"></i> Reportería SAT</a>
+  </div>
+  {% endif %}
+</footer>
+
+<!-- ============================================================
+     FABs FLOTANTES
+     ============================================================ -->
+<button id="calcBtn" title="Calculadora de Plazos SLA" onclick="abrirCalc()">
+  <i class="fa-solid fa-calculator"></i>
+</button>
 
 <div class="post-it-widget">
-  <button id="postItBtn" class="post-it-btn" onclick="togglePostIt()" title="Block de notas rápido"><i class="fa-solid fa-note-sticky"></i></button>
+  <button class="post-it-btn" onclick="togglePostIt()" title="Block de notas rápido">
+    <i class="fa-solid fa-note-sticky"></i>
+  </button>
   <div id="postItPanel" class="post-it-panel">
-    <h4>Block de Notas Rápidas <button onclick="togglePostIt()" style="background:none; border:none; color:#333; cursor:pointer; font-size:16px;">&times;</button></h4>
-    <p class="post-it-desc">Usa este espacio para tomar datos rápidos durante una llamada. Se guardan automáticamente en tu navegador.</p>
+    <h4>Block de Notas <button onclick="togglePostIt()" style="background:none; border:none; color:#333; cursor:pointer; font-size:16px;">&times;</button></h4>
+    <p class="post-it-desc">Datos rápidos durante una llamada. Se guardan automáticamente.</p>
     <textarea id="textoPostIt" placeholder="Escribe aquí tus apuntes..."></textarea>
     <div class="post-it-actions">
       <button class="btn-nota btn-copiar" onclick="copiarPostIt()"><i class="fa-regular fa-copy"></i> Copiar</button>
@@ -487,505 +755,535 @@ footer { text-align: center; font-size: 12px; color: var(--texto-suave); margin:
   <button id="supportBtn" class="support-main">🛟 Soporte SAT</button>
 </div>
 
+<!-- ============================================================
+     CALCULADORA SLA OVERLAY
+     ============================================================ -->
 <div id="calcOverlay">
-  <div style="background:var(--card-bg); width:90%; max-width:400px; padding:30px 25px; border-radius:14px; position:relative; box-shadow:0 15px 40px rgba(0,0,0,0.3); border-top:8px solid var(--um-azul);">
-    <button onclick="cerrarCalc()" style="position:absolute; top:15px; right:15px; background:none; border:none; font-size:22px; cursor:pointer; color:var(--texto-suave);">&times;</button>
-    <h3 style="margin-top:0; color:var(--um-azul); font-size:18px; text-align:center; margin-bottom:20px;"><i class="fa-solid fa-calculator"></i> Calculadora de Plazos SLA</h3>
-    <div style="margin-bottom:15px; display:flex; flex-direction:column; gap:6px;">
-      <label style="font-size:13px; font-weight:700; color:var(--texto-suave);">Fecha de Solicitud (Día Cero)</label>
+  <div style="background:var(--card-bg); width:90%; max-width:400px; padding:28px 24px; border-radius:14px; position:relative; box-shadow:0 15px 40px rgba(0,0,0,0.3); border-top:8px solid var(--um-azul);">
+    <button onclick="cerrarCalc()" style="position:absolute; top:14px; right:14px; background:none; border:none; font-size:22px; cursor:pointer; color:var(--texto-suave);">&times;</button>
+    <h3 style="margin-top:0; color:var(--um-azul); font-size:17px; text-align:center; margin-bottom:20px;">
+      <i class="fa-solid fa-calculator"></i> Calculadora de Plazos SLA
+    </h3>
+    <div style="margin-bottom:14px; display:flex; flex-direction:column; gap:5px;">
+      <label style="font-size:12px; font-weight:700; color:var(--texto-suave);">Fecha de Solicitud (Día Cero)</label>
       <input type="date" id="calcFechaInicio" style="padding:9px 12px; border:1.5px solid var(--borde); border-radius:8px; font-size:14px; background:var(--fondo); color:var(--texto); outline:none;" oninput="calcularDias()"/>
     </div>
-    <div style="margin-bottom:20px; display:flex; flex-direction:column; gap:6px;">
-      <label style="font-size:13px; font-weight:700; color:var(--texto-suave);">Fecha Actual / Resolución</label>
+    <div style="margin-bottom:18px; display:flex; flex-direction:column; gap:5px;">
+      <label style="font-size:12px; font-weight:700; color:var(--texto-suave);">Fecha Actual / Resolución</label>
       <input type="date" id="calcFechaFin" style="padding:9px 12px; border:1.5px solid var(--borde); border-radius:8px; font-size:14px; background:var(--fondo); color:var(--texto); outline:none;" oninput="calcularDias()"/>
     </div>
-    <div id="calcResultado" style="display:none; border-radius:10px; padding:18px 20px; text-align:center;">
+    <div id="calcResultado" style="display:none; border-radius:10px; padding:16px 18px; text-align:center;">
       <div id="calcEmoji" style="font-size:2rem; margin-bottom:4px;"></div>
-      <div id="calcDias" style="font-size:2.2rem; font-weight:800; margin-bottom:4px; color:var(--texto);"></div>
+      <div id="calcDias" style="font-size:2rem; font-weight:800; margin-bottom:4px; color:var(--texto);"></div>
       <div id="calcLabel" style="font-size:13px; font-weight:700; margin-bottom:8px;"></div>
       <div id="calcAccion" style="font-size:12px; padding:6px 12px; border-radius:6px; display:inline-block; font-weight:600;"></div>
     </div>
+    <button onclick="limpiarCalculadora()" style="width:100%; margin-top:10px; background:var(--fondo); border:1px solid var(--borde); border-radius:8px; padding:8px; font-size:13px; cursor:pointer; color:var(--texto-suave); font-weight:600;">
+      <i class="fa-solid fa-rotate-left"></i> Limpiar
+    </button>
   </div>
 </div>
 
-<footer>
-  Desarrollado por <strong>Eduardo Ferrada</strong><br>
-  Universidad Mayor · Enero 2026
-  {% if session.get('rol') == 'supervisor' %}
-  <div class="footer-links">
-    <a href="/monitor-calidad"><i class="fa-solid fa-chart-line"></i> Monitor de Calidad</a> <span>|</span>
-    <a href="/administracion"><i class="fa-solid fa-lock"></i> Administración SAT</a> <span>|</span>
-    <a href="/reporteria-sat"><i class="fa-solid fa-chart-pie"></i> Reportería SAT</a>
-  </div>
-  {% endif %}
-</footer>
-
+<!-- ============================================================
+     SCRIPTS
+     ============================================================ -->
 <script>
+
 // ==========================================
-// FASE 1: SINCRONIZACIÓN DE ALERTAS OPERATIVAS
+// BUSCADOR UNIFICADO (NUEVO)
 // ==========================================
-async function cargarAlertas() {
+let searchTimer = null;
+
+// ==========================================
+// CHIPS DINÁMICOS (BÚSQUEDAS RECIENTES)
+// ==========================================
+const MAX_CHIPS = 6;
+const CHIPS_KEY = 'sat_busquedas_recientes';
+
+function cargarChips() {
+  const zona = document.getElementById('searchChips');
+  const recientes = JSON.parse(localStorage.getItem(CHIPS_KEY) || '[]');
+  if (recientes.length === 0) {
+    zona.innerHTML = '<span style="color:rgba(255,255,255,0.45); font-size:11px; font-style:italic;">Tus búsquedas recientes aparecerán aquí</span>';
+    return;
+  }
+  zona.innerHTML = recientes.map(t =>
+    `<span class="chip" onclick="buscarChip('${t}')">${t}
+      <span onclick="eliminarChip(event,'${t}')" title="Quitar" style="margin-left:5px; opacity:0.5; font-size:10px;">✕</span>
+    </span>`
+  ).join('');
+}
+
+function guardarBusqueda(termino) {
+  if (!termino || termino.length < 2) return;
+  let recientes = JSON.parse(localStorage.getItem(CHIPS_KEY) || '[]');
+  recientes = recientes.filter(t => t.toLowerCase() !== termino.toLowerCase());
+  recientes.unshift(termino);
+  if (recientes.length > MAX_CHIPS) recientes = recientes.slice(0, MAX_CHIPS);
+  localStorage.setItem(CHIPS_KEY, JSON.stringify(recientes));
+  cargarChips();
+}
+
+function eliminarChip(e, termino) {
+  e.stopPropagation();
+  let recientes = JSON.parse(localStorage.getItem(CHIPS_KEY) || '[]');
+  recientes = recientes.filter(t => t.toLowerCase() !== termino.toLowerCase());
+  localStorage.setItem(CHIPS_KEY, JSON.stringify(recientes));
+  cargarChips();
+}
+
+function buscarChip(termino) {
+  document.getElementById('searchInput').value = termino;
+  buscarUnificado(true);
+}
+
+async function buscarUnificado(desdeChip = false) {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(async () => {
+    const q = document.getElementById('searchInput').value.trim();
+    const filtro = document.getElementById('searchFiltro').value;
+    const zona = document.getElementById('searchResults');
+    const grid = document.getElementById('resultsGrid');
+    const label = document.getElementById('resultsLabel');
+
+    if (q.length < 2) { zona.classList.remove('visible'); return; }
+
+    zona.classList.add('visible');
+    grid.innerHTML = '<div class="results-loading"><i class="fa-solid fa-spinner fa-spin"></i> Buscando...</div>';
+
     try {
-        const res = await fetch('/api/alertas-operativas');
-        const alertas = await res.json();
-        const caja = document.getElementById('caja-alertas');
-        const texto = document.getElementById('texto-alertas');
-        const icono = document.getElementById('icono-alerta');
-        const titulo = document.getElementById('titulo-caja-alerta');
-        const contenedorFondo = document.getElementById('contenedor-widget-alertas');
-        
-        if (!alertas || alertas.length === 0) {
-            aplicarEstiloTranquilidad();
-            return;
-        }
+      let resultados = [];
 
-        const a = alertas[0]; 
-        
-        if (a.es_default) {
-            aplicarEstiloTranquilidad(a.mensaje);
-        } else {
-            texto.innerHTML = `<strong>${a.categoria || 'Aviso'}:</strong> ${a.mensaje}`;
-            caja.style.background = '#fdecea';
-            caja.style.borderLeftColor = '#c62828';
-            texto.style.color = '#c62828';
-            icono.className = 'fa-solid fa-triangle-exclamation alerta-activa-icono';
-            icono.style.color = '#e74c3c';
-            if(titulo) { titulo.textContent = 'Estado del Sistema'; titulo.style.color = '#e74c3c'; }
-            contenedorFondo.style.borderTopColor = '#e74c3c';
-        }
-    } catch (e) {
-        aplicarEstiloTranquilidad();
+      if (filtro === 'todo' || filtro === 'escuelas') {
+        const r = await fetch(`/api/escuelas?q=${encodeURIComponent(q)}`);
+        const d = await r.json();
+        (d || []).forEach(x => resultados.push({ tipo: 'Escuela', nombre: x.nombre || x.escuela_busqueda || '—', sub: [x.cargo, x.sede].filter(Boolean).join(' · ') }));
+      }
+      if (filtro === 'todo' || filtro === 'academicos') {
+        const r = await fetch(`/api/academicos?q=${encodeURIComponent(q)}`);
+        const d = await r.json();
+        (d || []).forEach(x => resultados.push({ tipo: 'Académico', nombre: x.nombre || x.departamento_busqueda || '—', sub: x.cargo || x.departamento_busqueda || '' }));
+      }
+      if (filtro === 'todo' || filtro === 'administrativos') {
+        const r = await fetch(`/api/contactos-administrativos?q=${encodeURIComponent(q)}`);
+        const d = await r.json();
+        (d || []).forEach(x => resultados.push({ tipo: 'Administrativo', nombre: x.nombre || x.area_busqueda || '—', sub: x.cargo || x.area_busqueda || '' }));
+      }
+
+      // Guardar búsqueda exitosa en chips
+      if (resultados.length > 0) guardarBusqueda(q);
+
+      if (resultados.length === 0) {
+        grid.innerHTML = '<div class="results-loading">Sin resultados para esta búsqueda.</div>';
+        label.textContent = 'Sin resultados';
+        return;
+      }
+
+      label.textContent = `${resultados.length} resultado${resultados.length !== 1 ? 's' : ''} encontrado${resultados.length !== 1 ? 's' : ''}`;
+      grid.innerHTML = resultados.slice(0, 12).map(r => `
+        <div class="result-card">
+          <div class="r-tag">${r.tipo}</div>
+          <div class="r-nombre">${r.nombre}</div>
+          ${r.sub ? `<div class="r-sub">${r.sub}</div>` : ''}
+        </div>
+      `).join('');
+
+    } catch(e) {
+      grid.innerHTML = '<div class="results-loading">Error al buscar. Intenta nuevamente.</div>';
     }
+  }, desdeChip ? 0 : 350);
 }
 
-function aplicarEstiloTranquilidad(msj = "Está todo operativo") {
-    const caja = document.getElementById('caja-alertas');
-    const texto = document.getElementById('texto-alertas');
-    const icono = document.getElementById('icono-alerta');
-    const titulo = document.getElementById('titulo-caja-alerta');
-    const contenedorFondo = document.getElementById('contenedor-widget-alertas');
-
-    texto.innerHTML = msj;
-    caja.style.background = '#e8f5e9';
-    caja.style.borderLeftColor = '#2e7d32';
-    texto.style.color = '#1b5e20';
-    icono.className = 'fa-solid fa-circle-check';
-    icono.style.color = '#2e7d32';
-    icono.classList.remove('alerta-activa-icono');
-    if(titulo) { titulo.textContent = 'Estado del Sistema'; titulo.style.color = '#2e7d32'; }
-    contenedorFondo.style.borderTopColor = '#2e7d32';
-}
-
-// ==========================================
-// FASE 2: RESCATE CARRUSEL DE MENSAJES ROTATIVOS
-// ==========================================
-let listaMensajes = [];
-let indexMensaje = 0;
-let timerMensaje;
-
-async function iniciarMensajesRotativos() {
-    try {
-        const res = await fetch('/api/mensajes-rotativos');
-        const data = await res.json();
-        if (data && data.length > 0) {
-            listaMensajes = data;
-            rotarMensaje();
-        } else {
-            document.getElementById('texto-mensajes').innerHTML = "No hay novedades a destacar en este momento.";
-        }
-    } catch (error) {
-        document.getElementById('texto-mensajes').innerHTML = "Actualizando información de novedades...";
-    }
-}
-
-function rotarMensaje() {
-    if (listaMensajes.length === 0) return;
-    const msjActual = listaMensajes[indexMensaje];
-    const textoElement = document.getElementById('texto-mensajes');
-    
-    textoElement.style.opacity = 0;
-    setTimeout(() => {
-        textoElement.innerHTML = msjActual.mensaje;
-        textoElement.style.opacity = 1;
-        
-        const minutos = msjActual.duracion_min || 3;
-        const milisegundos = minutos * 60 * 1000;
-        
-        indexMensaje = (indexMensaje + 1) % listaMensajes.length;
-        clearTimeout(timerMensaje);
-        timerMensaje = setTimeout(rotarMensaje, milisegundos);
-    }, 400);
-}
-
-  
-
-// --- INICIALIZACIÓN DEL PORTAL ---
-document.addEventListener('DOMContentLoaded', function() {
-    iniciarPortal();
-    cargarMegaMenuDinámico();
-    cargarAlertas();
-    iniciarMensajesRotativos();
-    setInterval(cargarAlertas, 60000); 
+// Cerrar resultados al hacer clic fuera
+document.addEventListener('click', function(e) {
+  const hero = document.querySelector('.search-hero');
+  const results = document.getElementById('searchResults');
+  if (hero && !hero.contains(e.target) && results && !results.contains(e.target)) {
+    results.classList.remove('visible');
+  }
 });
 
-// --- COMPONENTES BÁSICOS ---
+// ==========================================
+// MEGA MENÚ DINÁMICO (INTACTO)
+// ==========================================
 async function cargarMegaMenuDinámico() {
-    const contenedor = document.getElementById('megaMenuContainer');
-    try {
-        const respuesta = await fetch('/api/enlaces');
-        const enlaces = await respuesta.json();
-        if (enlaces.error) { contenedor.innerHTML = '<span style="color:#e74c3c;">Error al cargar menú</span>'; return; }
-        const activos = enlaces.filter(link => link.activo === true);
-        const grupos = {};
-        activos.forEach(link => {
-            if (!grupos[link.categoria]) grupos[link.categoria] = [];
-            grupos[link.categoria].push(link);
-        });
-        const ordenDeseado = ["Links Frecuentes", "Turnos SAT", "Mesa TI", "Beneficios Ministeriales", "Otros Recursos"];
-        let htmlMegaMenu = '';
-        for (const cat of ordenDeseado) {
-            if (grupos[cat] && grupos[cat].length > 0) {
-                const configCat = { icono: "fa-link", tituloHover: cat };
-                if(cat === "Links Frecuentes") configCat.icono = "fa-link";
-                else if(cat === "Turnos SAT") configCat.icono = "fa-calendar-days";
-                else if(cat === "Mesa TI") configCat.icono = "fa-headset";
-                else if(cat === "Beneficios Ministeriales") configCat.icono = "fa-landmark";
-                else if(cat === "Otros Recursos") configCat.icono = "fa-box-open";
-                
-                htmlMegaMenu += `
-                <div class="links-hover" title="${configCat.tituloHover}">
-                    <i class="fa-solid ${configCat.icono}"></i> ${cat}
-                    <ul>
-                        ${grupos[cat].map(l => `<li><a href="${l.url}" target="_blank"><i class="fa-solid ${l.icono || 'fa-link'}"></i> ${l.nombre_link}</a></li>`).join('')}
-                    </ul>
-                </div>`;
-            }
-        }
-        if (htmlMegaMenu === '') contenedor.innerHTML = '<span style="color:#666; font-size:12px;">Sin enlaces activos</span>';
-        else { contenedor.innerHTML = htmlMegaMenu; atarEventosTouchMenu(); }
-    } catch (error) {
-        contenedor.innerHTML = '<span style="color:#e74c3c;">Error de conexión</span>';
+  const contenedor = document.getElementById('megaMenuContainer');
+  try {
+    const respuesta = await fetch('/api/enlaces');
+    const enlaces = await respuesta.json();
+    if (enlaces.error) { contenedor.innerHTML = '<span style="color:#c0392b;">Error al cargar menú</span>'; return; }
+    const activos = enlaces.filter(link => link.activo === true);
+    const grupos = {};
+    activos.forEach(link => {
+      if (!grupos[link.categoria]) grupos[link.categoria] = [];
+      grupos[link.categoria].push(link);
+    });
+    const ordenDeseado = ["Links Frecuentes", "Turnos SAT", "Mesa TI", "Beneficios Ministeriales", "Otros Recursos"];
+    const iconosCat = {
+      "Links Frecuentes": "fa-link",
+      "Turnos SAT": "fa-calendar-days",
+      "Mesa TI": "fa-headset",
+      "Beneficios Ministeriales": "fa-landmark",
+      "Otros Recursos": "fa-box-open"
+    };
+    let html = '';
+    for (const cat of ordenDeseado) {
+      if (grupos[cat] && grupos[cat].length > 0) {
+        html += `
+          <div class="links-hover" title="${cat}">
+            <i class="fa-solid ${iconosCat[cat] || 'fa-link'}"></i> ${cat}
+            <ul>
+              ${grupos[cat].map(l => `<li><a href="${l.url}" target="_blank"><i class="fa-solid ${l.icono || 'fa-link'}"></i> ${l.nombre_link}</a></li>`).join('')}
+            </ul>
+          </div>`;
+      }
     }
+    if (!html) contenedor.innerHTML = '<span style="color:#666; font-size:12px;">Sin enlaces activos</span>';
+    else { contenedor.innerHTML = html; atarEventosTouchMenu(); }
+  } catch(e) {
+    contenedor.innerHTML = '<span style="color:#c0392b;">Error de conexión</span>';
+  }
 }
 
 function atarEventosTouchMenu() {
-    document.querySelectorAll('.links-hover').forEach(item => {
-        item.addEventListener('click', function(e) {
-            if(e.target.tagName !== 'A' && e.target.parentElement.tagName !== 'A') { this.classList.toggle('activo'); }
-        });
+  document.querySelectorAll('.links-hover').forEach(item => {
+    item.addEventListener('click', function(e) {
+      if (e.target.tagName !== 'A' && e.target.parentElement.tagName !== 'A') {
+        this.classList.toggle('activo');
+      }
     });
-}
-
-function iniciarPortal() {
-    if (!sessionStorage.getItem('avisoSATVisto')) {
-        var modal = document.getElementById('modalAviso');
-        modal.style.display = 'flex';
-        modal.classList.remove('oculto');
-        const cerrarModal = () => {
-            if(modal.style.display !== 'none') {
-                modal.style.opacity = '0';
-                modal.classList.add('oculto');
-                setTimeout(() => { modal.style.display = 'none'; sessionStorage.setItem('avisoSATVisto', 'true'); }, 400);
-            }
-        };
-        modal.addEventListener('click', function(e) { if(e.target === modal) cerrarModal(); });
-        setTimeout(cerrarModal, 10000);
-    } else {
-        document.getElementById('modalAviso').classList.add('oculto');
-    }
+  });
 }
 
 document.addEventListener('click', function(e) {
-    document.querySelectorAll('.links-hover').forEach(item => {
-        if (!item.contains(e.target)) { item.classList.remove('activo'); }
-    });
+  document.querySelectorAll('.links-hover').forEach(item => {
+    if (!item.contains(e.target)) item.classList.remove('activo');
+  });
 });
 
+// ==========================================
+// ALERTAS OPERATIVAS (INTACTO)
+// ==========================================
+async function cargarAlertas() {
+  try {
+    const res = await fetch('/api/alertas-operativas');
+    const alertas = await res.json();
+    const caja   = document.getElementById('caja-alertas');
+    const texto  = document.getElementById('texto-alertas');
+    const icono  = document.getElementById('icono-alerta');
+    const titulo = document.getElementById('titulo-caja-alerta');
+    const contenedor = document.getElementById('contenedor-widget-alertas');
+
+    if (!alertas || alertas.length === 0) { aplicarEstiloTranquilidad(); return; }
+    const a = alertas[0];
+    if (a.es_default) {
+      aplicarEstiloTranquilidad(a.mensaje);
+    } else {
+      texto.innerHTML = `<strong>${a.categoria || 'Aviso'}:</strong> ${a.mensaje}`;
+      caja.style.background = '#fdecea'; caja.style.borderLeftColor = '#c62828';
+      texto.style.color = '#c62828';
+      icono.className = 'fa-solid fa-triangle-exclamation'; icono.style.color = '#e74c3c';
+      if (titulo) { titulo.textContent = 'Estado del Sistema'; titulo.style.color = '#e74c3c'; }
+      contenedor.style.borderTopColor = '#e74c3c';
+    }
+  } catch(e) { aplicarEstiloTranquilidad(); }
+}
+
+function aplicarEstiloTranquilidad(msj = "Está todo operativo") {
+  const caja   = document.getElementById('caja-alertas');
+  const texto  = document.getElementById('texto-alertas');
+  const icono  = document.getElementById('icono-alerta');
+  const titulo = document.getElementById('titulo-caja-alerta');
+  const contenedor = document.getElementById('contenedor-widget-alertas');
+  texto.innerHTML = msj; caja.style.background = '#e8f5e9'; caja.style.borderLeftColor = '#2e7d32';
+  texto.style.color = '#1b5e20'; icono.className = 'fa-solid fa-circle-check'; icono.style.color = '#2e7d32';
+  if (titulo) { titulo.textContent = 'Estado del Sistema'; titulo.style.color = '#2e7d32'; }
+  contenedor.style.borderTopColor = '#2e7d32';
+}
+
+// ==========================================
+// MENSAJES ROTATIVOS (INTACTO)
+// ==========================================
+let listaMensajes = [], indexMensaje = 0, timerMensaje;
+
+async function iniciarMensajesRotativos() {
+  try {
+    const res = await fetch('/api/mensajes-rotativos');
+    const data = await res.json();
+    if (data && data.length > 0) { listaMensajes = data; rotarMensaje(); }
+    else document.getElementById('texto-mensajes').innerHTML = "No hay novedades a destacar en este momento.";
+  } catch(e) {
+    document.getElementById('texto-mensajes').innerHTML = "Actualizando información de novedades...";
+  }
+}
+
+function rotarMensaje() {
+  if (!listaMensajes.length) return;
+  const msjActual = listaMensajes[indexMensaje];
+  const el = document.getElementById('texto-mensajes');
+  el.style.opacity = 0;
+  setTimeout(() => {
+    el.innerHTML = msjActual.mensaje;
+    el.style.opacity = 1;
+    const ms = (msjActual.duracion_min || 3) * 60 * 1000;
+    indexMensaje = (indexMensaje + 1) % listaMensajes.length;
+    clearTimeout(timerMensaje);
+    timerMensaje = setTimeout(rotarMensaje, ms);
+  }, 400);
+}
+
+// ==========================================
+// MODO OSCURO (INTACTO)
+// ==========================================
 function toggleDarkMode() {
-    const body = document.body;
-    body.classList.toggle('dark-mode');
-    const isDark = body.classList.contains('dark-mode');
-    localStorage.setItem('sat_darkmode', isDark ? 'yes' : 'no');
-    document.getElementById('iconoDark').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-    document.getElementById('textoDarkMode').textContent = isDark ? 'Modo Claro' : 'Modo Oscuro';
+  document.body.classList.toggle('dark-mode');
+  const isDark = document.body.classList.contains('dark-mode');
+  localStorage.setItem('sat_darkmode', isDark ? 'yes' : 'no');
+  document.getElementById('iconoDark').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+  document.getElementById('textoDarkMode').textContent = isDark ? 'Modo Claro' : 'Modo Oscuro';
 }
 if (localStorage.getItem('sat_darkmode') === 'yes') {
-    document.body.classList.add('dark-mode');
-    document.getElementById('iconoDark').className = 'fa-solid fa-sun';
-    document.getElementById('textoDarkMode').textContent = 'Modo Claro';
-} else { document.getElementById('textoDarkMode').textContent = 'Modo Oscuro'; }
-
-function inicializarFechaYContexto() {
-    const diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
-    const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-    const hoy = new Date();
-    document.getElementById('fechaTexto').textContent = `${diasSemana[hoy.getDay()]} ${hoy.getDate()} de ${meses[hoy.getMonth()]}`;
-    
-    // Aquí inyectamos el mensaje del día según el día de la semana (0 = Domingo, 1 = Lunes...)
-    const mensajesDia = [
-        "¡Feliz domingo! Que sea un turno tranquilo y excelente.",
-        "¡Con todo este lunes! Excelente inicio de semana.",
-        "¡Buen martes! A mantener el ritmo y la buena energía.",
-        "¡Mitad de semana! Vamos que se puede, gran miércoles.",
-        "¡Jueves! Ya queda menos, excelente jornada.",
-        "¡Por fin viernes! A cerrar la semana con broche de oro.",
-        "¡Feliz sábado! Mucho éxito en el turno de hoy."
-    ];
-    document.getElementById('mensajeDia').textContent = mensajesDia[hoy.getDay()];
+  document.body.classList.add('dark-mode');
+  document.getElementById('iconoDark').className = 'fa-solid fa-sun';
+  document.getElementById('textoDarkMode').textContent = 'Modo Claro';
 }
-inicializarFechaYContexto();
 
+// ==========================================
+// RELOJ Y FECHA (INTACTO)
+// ==========================================
 function actualizarReloj() {
-    const ahora = new Date();
-    const h = ahora.getHours();
-    const m = String(ahora.getMinutes()).padStart(2, '0');
-    const s = String(ahora.getSeconds()).padStart(2, '0');
-    document.getElementById('relojHora').textContent = `${String(h).padStart(2,'0')}:${m}:${s}`;
-    let saludo = "Buenas noches,";
-    if (h >= 6 && h < 12) saludo = "Buenos días,";
-    else if (h >= 12 && h < 20) saludo = "Buenas tardes,";
-    document.getElementById('saludoHora').textContent = saludo;
+  const ahora = new Date();
+  const h = String(ahora.getHours()).padStart(2,'0');
+  const m = String(ahora.getMinutes()).padStart(2,'0');
+  const s = String(ahora.getSeconds()).padStart(2,'0');
+  document.getElementById('relojHora').textContent = `${h}:${m}:${s}`;
+  let saludo = "Buenas noches,";
+  const hr = ahora.getHours();
+  if (hr >= 6  && hr < 12) saludo = "Buenos días,";
+  else if (hr >= 12 && hr < 20) saludo = "Buenas tardes,";
+  document.getElementById('saludoHora').textContent = saludo;
 }
 setInterval(actualizarReloj, 1000);
 actualizarReloj();
 
+function inicializarFechaYContexto() {
+  const diasSemana = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+  const meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+  const hoy = new Date();
+  document.getElementById('fechaTexto').textContent = `${diasSemana[hoy.getDay()]} ${hoy.getDate()} de ${meses[hoy.getMonth()]}`;
+  const mensajesDia = [
+    "¡Feliz domingo! Que sea un turno tranquilo y excelente.",
+    "¡Con todo este lunes! Excelente inicio de semana.",
+    "¡Buen martes! A mantener el ritmo y la buena energía.",
+    "¡Mitad de semana! Vamos que se puede, gran miércoles.",
+    "¡Jueves! Ya queda menos, excelente jornada.",
+    "¡Por fin viernes! A cerrar la semana con broche de oro.",
+    "¡Feliz sábado! Mucho éxito en el turno de hoy."
+  ];
+  document.getElementById('mensajeDia').textContent = mensajesDia[hoy.getDay()];
+}
+inicializarFechaYContexto();
+
 // ==========================================
-// FASE 4: MINIJUEGO CON MEMORIA SUPERIOR (localStorage)
+// MINIJUEGO CAMINO A CASA (INTACTO)
 // ==========================================
 const hoyDate = new Date();
-const fechaDeHoyStr = hoyDate.getFullYear() + "-" + String(hoyDate.getMonth() + 1).padStart(2, '0') + "-" + String(hoyDate.getDate()).padStart(2, '0');
+const fechaDeHoyStr = hoyDate.getFullYear() + "-" + String(hoyDate.getMonth()+1).padStart(2,'0') + "-" + String(hoyDate.getDate()).padStart(2,'0');
 
 if (localStorage.getItem('fecha_ultimo_juego') !== fechaDeHoyStr) {
-    localStorage.removeItem('horaInicioTurno');
-    localStorage.removeItem('horaSalidaGuardada');
-    localStorage.setItem('fecha_ultimo_juego', fechaDeHoyStr);
+  localStorage.removeItem('horaInicioTurno');
+  localStorage.removeItem('horaSalidaGuardada');
+  localStorage.setItem('fecha_ultimo_juego', fechaDeHoyStr);
 }
+if (!localStorage.getItem('horaInicioTurno')) localStorage.setItem('horaInicioTurno', new Date().getTime());
 
-if (!localStorage.getItem('horaInicioTurno')) {
-    localStorage.setItem('horaInicioTurno', new Date().getTime());
-}
-
-const inputSalida = document.getElementById('horaSalidaInput');
-const progreso = document.getElementById('caminoProgress');
-const monito = document.getElementById('caminoMonito');
-const porcentajeTexto = document.getElementById('caminoPorcentaje');
-const widgetCasa = document.getElementById('caminoCasaWidget');
-const msjFinal = document.getElementById('caminoMensajeFinal');
-const pistaCamino = document.getElementById('pistaCamino');
-const btnCerrarSesion = document.getElementById('btnCerrarSesionJuego');
-
+const inputSalida      = document.getElementById('horaSalidaInput');
+const progreso         = document.getElementById('caminoProgress');
+const monito           = document.getElementById('caminoMonito');
+const porcentajeTexto  = document.getElementById('caminoPorcentaje');
+const widgetCasa       = document.getElementById('caminoCasaWidget');
+const msjFinal         = document.getElementById('caminoMensajeFinal');
+const pistaCamino      = document.getElementById('pistaCamino');
+const btnCerrarSesion  = document.getElementById('btnCerrarSesionJuego');
 let intervaloCamino;
 
 if (localStorage.getItem('horaSalidaGuardada')) {
-    inputSalida.value = localStorage.getItem('horaSalidaGuardada');
-    iniciarCamino();
+  inputSalida.value = localStorage.getItem('horaSalidaGuardada');
+  iniciarCamino();
 } else {
-    const invitacion = document.getElementById('caminoInvitacion');
-    if(invitacion) invitacion.style.display = 'block';
+  const inv = document.getElementById('caminoInvitacion');
+  if (inv) inv.style.display = 'block';
 }
 
 function iniciarCamino() {
-    if (!inputSalida.value) return;
-    localStorage.setItem('horaSalidaGuardada', inputSalida.value);
-    msjFinal.style.display = 'none';
-    pistaCamino.style.display = 'block';
-    monito.style.display = 'block';
-    btnCerrarSesion.style.display = 'none';
-    document.getElementById('caminoCasa').className = "fa-solid fa-flag-checkered camino-casa";
-    widgetCasa.classList.remove('estado-alerta', 'estado-ok');
-    
-    const invitacion = document.getElementById('caminoInvitacion');
-    if(invitacion) invitacion.style.display = 'none';
-
-    clearInterval(intervaloCamino);
-    intervaloCamino = setInterval(actualizarCamino, 30000);
-    actualizarCamino();
+  if (!inputSalida.value) return;
+  localStorage.setItem('horaSalidaGuardada', inputSalida.value);
+  msjFinal.style.display = 'none'; pistaCamino.style.display = 'block';
+  monito.style.display = 'block'; btnCerrarSesion.style.display = 'none';
+  document.getElementById('caminoCasa').className = "fa-solid fa-flag-checkered camino-casa";
+  widgetCasa.classList.remove('estado-alerta','estado-ok');
+  const inv = document.getElementById('caminoInvitacion');
+  if (inv) inv.style.display = 'none';
+  clearInterval(intervaloCamino);
+  intervaloCamino = setInterval(actualizarCamino, 30000);
+  actualizarCamino();
 }
 
 function resetearTurno() {
-    localStorage.removeItem('horaSalidaGuardada');
-    inputSalida.value = '';
-    clearInterval(intervaloCamino);
-    
-    progreso.style.width = '0%';
-    monito.style.left = '0%';
-    porcentajeTexto.textContent = '0%';
-    monito.className = "fa-solid fa-person-walking camino-monito";
-    document.getElementById('caminoCasa').className = "fa-solid fa-flag-checkered camino-casa";
-    widgetCasa.classList.remove('estado-alerta', 'estado-ok');
-    
-    pistaCamino.style.display = 'block';
-    msjFinal.style.display = 'none';
-    btnCerrarSesion.style.display = 'none';
-    
-    const invitacion = document.getElementById('caminoInvitacion');
-    if(invitacion) invitacion.style.display = 'block';
+  localStorage.removeItem('horaSalidaGuardada');
+  inputSalida.value = ''; clearInterval(intervaloCamino);
+  progreso.style.width = '0%'; monito.style.left = '0%'; porcentajeTexto.textContent = '0%';
+  monito.className = "fa-solid fa-person-walking camino-monito";
+  document.getElementById('caminoCasa').className = "fa-solid fa-flag-checkered camino-casa";
+  widgetCasa.classList.remove('estado-alerta','estado-ok');
+  pistaCamino.style.display = 'block'; msjFinal.style.display = 'none'; btnCerrarSesion.style.display = 'none';
+  const inv = document.getElementById('caminoInvitacion');
+  if (inv) inv.style.display = 'block';
 }
 
 function actualizarCamino() {
-    if (!inputSalida.value) return;
-    const ahora = new Date();
-    const salidaStr = inputSalida.value.split(':');
-    const dSalida = new Date();
-    dSalida.setHours(parseInt(salidaStr[0]), parseInt(salidaStr[1]), 0, 0);
-
-    const horaInicio = parseInt(localStorage.getItem('horaInicioTurno'));
-    const totalMs = dSalida.getTime() - horaInicio;
-    const transcurridoMs = ahora.getTime() - horaInicio;
-    
-    let porcentaje = (transcurridoMs / totalMs) * 100;
-    
-    if (porcentaje < 0 || totalMs < 0) porcentaje = 0;
-    if (porcentaje > 100) porcentaje = 100;
-    
-    const pctInt = Math.floor(porcentaje);
-    
-    progreso.style.width = pctInt + '%';
-    monito.style.left = pctInt + '%';
-    porcentajeTexto.textContent = pctInt + '%';
-    pistaCamino.title = "Salida estimada: " + inputSalida.value;
-    
-    if (pctInt < 50) {
-        monito.className = "fa-solid fa-person-walking camino-monito";
-    } else if (pctInt >= 50 && pctInt < 100) {
-        monito.className = "fa-solid fa-person-running camino-monito";
-    }
-    
-    if (pctInt >= 100) {
-        widgetCasa.classList.add('estado-ok');
-        widgetCasa.classList.remove('estado-alerta');
-        document.getElementById('caminoCasa').className = "fa-solid fa-medal camino-casa";
-        porcentajeTexto.textContent = "100%";
-        pistaCamino.style.display = 'none';
-        msjFinal.style.display = 'block';
-        btnCerrarSesion.style.display = 'block';
-        clearInterval(intervaloCamino);
-    } else if (pctInt >= 90) {
-        widgetCasa.classList.add('estado-alerta');
-    } else {
-        widgetCasa.classList.remove('estado-alerta');
-    }
+  if (!inputSalida.value) return;
+  const ahora = new Date();
+  const salidaStr = inputSalida.value.split(':');
+  const dSalida = new Date();
+  dSalida.setHours(parseInt(salidaStr[0]), parseInt(salidaStr[1]), 0, 0);
+  const horaInicio = parseInt(localStorage.getItem('horaInicioTurno'));
+  const totalMs = dSalida.getTime() - horaInicio;
+  const transcurridoMs = ahora.getTime() - horaInicio;
+  let porcentaje = (transcurridoMs / totalMs) * 100;
+  if (porcentaje < 0 || totalMs < 0) porcentaje = 0;
+  if (porcentaje > 100) porcentaje = 100;
+  const pctInt = Math.floor(porcentaje);
+  progreso.style.width = pctInt + '%';
+  monito.style.left = pctInt + '%';
+  porcentajeTexto.textContent = pctInt + '%';
+  pistaCamino.title = "Salida estimada: " + inputSalida.value;
+  if (pctInt < 50) monito.className = "fa-solid fa-person-walking camino-monito";
+  else if (pctInt < 100) monito.className = "fa-solid fa-person-running camino-monito";
+  if (pctInt >= 100) {
+    widgetCasa.classList.add('estado-ok'); widgetCasa.classList.remove('estado-alerta');
+    document.getElementById('caminoCasa').className = "fa-solid fa-medal camino-casa";
+    porcentajeTexto.textContent = "100%"; pistaCamino.style.display = 'none';
+    msjFinal.style.display = 'block'; btnCerrarSesion.style.display = 'block';
+    clearInterval(intervaloCamino);
+  } else if (pctInt >= 90) {
+    widgetCasa.classList.add('estado-alerta');
+  } else {
+    widgetCasa.classList.remove('estado-alerta');
+  }
 }
 
-// --- BLOCK DE NOTAS ---
+// ==========================================
+// BLOCK DE NOTAS POST-IT (INTACTO)
+// ==========================================
 const txtPostIt = document.getElementById('textoPostIt');
 const plantillaMultiple = "Nombre solicitante:\nRUT: \nCorreo:\nTeléfono:\nComentario:\n\n----------------------\nNombre Alumno:\nRUT alumno:\nCorreo institucional:\nComentarios adicionales:\n";
 let savedPostIt = localStorage.getItem('sat_postit');
 if (!savedPostIt || savedPostIt.trim() === '') { txtPostIt.value = plantillaMultiple; } else { txtPostIt.value = savedPostIt; }
 txtPostIt.addEventListener('input', function() { localStorage.setItem('sat_postit', this.value); });
-function togglePostIt() { const panel = document.getElementById('postItPanel'); panel.style.display = (panel.style.display === 'block') ? 'none' : 'block'; }
-function copiarPostIt() { txtPostIt.select(); document.execCommand('copy'); const btn = document.querySelector('.btn-copiar'); const oldHtml = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!'; setTimeout(() => { btn.innerHTML = oldHtml; }, 2000); }
+function togglePostIt() { const p = document.getElementById('postItPanel'); p.style.display = (p.style.display === 'block') ? 'none' : 'block'; }
+function copiarPostIt() { txtPostIt.select(); document.execCommand('copy'); const btn = document.querySelector('.btn-copiar'); const old = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!'; setTimeout(() => btn.innerHTML = old, 2000); }
 function limpiarPostIt() { if(confirm("¿Seguro que deseas borrar tus apuntes?")) { txtPostIt.value = plantillaMultiple; localStorage.setItem('sat_postit', plantillaMultiple); } }
 
 document.getElementById('supportBtn').addEventListener('click', function() {
-    var menu = document.getElementById('supportMenu');
-    menu.style.display = (menu.style.display === 'none' || menu.style.display === '') ? 'flex' : 'none';
+  const menu = document.getElementById('supportMenu');
+  menu.style.display = (menu.style.display === 'none' || !menu.style.display) ? 'flex' : 'none';
 });
 
 // ==========================================
-// CALCULADORA DE PLAZOS (INTACTA Y BLINDADA)
+// CALCULADORA SLA (INTACTA)
 // ==========================================
-document.getElementById('calcOverlay').addEventListener('click', function(e) {
-    if (e.target === this) {
-        cerrarCalc();
-    }
-});
+document.getElementById('calcOverlay').addEventListener('click', function(e) { if(e.target===this) cerrarCalc(); });
 
 function esFeriado(d) {
-    var f = d.toISOString().split('T')[0];
-    var feriados = [
-        "2025-01-01", "2025-04-18", "2025-04-19", "2025-05-01", "2025-05-21",
-        "2025-06-20", "2025-07-16", "2025-08-15", "2025-09-18", "2025-09-19",
-        "2025-10-12", "2025-10-31", "2025-11-01", "2025-12-08", "2025-12-25",
-        "2026-01-01", "2026-04-03", "2026-04-04", "2026-05-01", "2026-05-21",
-        "2026-06-21", "2026-06-29", "2026-07-16", "2026-08-15", "2026-09-18",
-        "2026-09-19", "2026-10-12", "2026-10-31", "2026-11-01", "2026-12-08", "2026-12-25"
-    ];
-    return feriados.includes(f);
+  const f = d.toISOString().split('T')[0];
+  const feriados = [
+    "2025-01-01","2025-04-18","2025-04-19","2025-05-01","2025-05-21",
+    "2025-06-20","2025-07-16","2025-08-15","2025-09-18","2025-09-19",
+    "2025-10-12","2025-10-31","2025-11-01","2025-12-08","2025-12-25",
+    "2026-01-01","2026-04-03","2026-04-04","2026-05-01","2026-05-21",
+    "2026-06-21","2026-06-29","2026-07-16","2026-08-15","2026-09-18",
+    "2026-09-19","2026-10-12","2026-10-31","2026-11-01","2026-12-08","2026-12-25"
+  ];
+  return feriados.includes(f);
 }
-
-function esHabil(d) {
-    var day = d.getDay();
-    if (day === 0 || day === 6) return false;
-    return !esFeriado(d);
-}
-
+function esHabil(d) { const day = d.getDay(); if(day===0||day===6) return false; return !esFeriado(d); }
 function diasHabiles(inicio, fin) {
-    var count = 0;
-    var cur = new Date(inicio);
-    cur.setDate(cur.getDate() + 1);
-    var end = new Date(fin);
-    while (cur <= end) {
-        if (esHabil(cur)) count++;
-        cur.setDate(cur.getDate() + 1);
-    }
-    return count;
+  let count = 0, cur = new Date(inicio);
+  cur.setDate(cur.getDate()+1);
+  const end = new Date(fin);
+  while(cur<=end) { if(esHabil(cur)) count++; cur.setDate(cur.getDate()+1); }
+  return count;
 }
-
 function abrirCalc() {
-    var overlay = document.getElementById("calcOverlay");
-    overlay.style.display = "flex";
-    var hoy = new Date().toISOString().split("T")[0];
-    document.getElementById("calcFechaFin").value = hoy;
-    document.getElementById("calcFechaInicio").value = "";
-    document.getElementById("calcResultado").style.display = "none";
+  document.getElementById('calcOverlay').style.display = 'flex';
+  document.getElementById('calcFechaFin').value = new Date().toISOString().split('T')[0];
+  document.getElementById('calcFechaInicio').value = '';
+  document.getElementById('calcResultado').style.display = 'none';
 }
-
-function cerrarCalc() {
-    document.getElementById("calcOverlay").style.display = "none";
-}
-
+function cerrarCalc() { document.getElementById('calcOverlay').style.display = 'none'; }
 function limpiarCalculadora() {
-    var hoy = new Date().toISOString().split("T")[0];
-    document.getElementById("calcFechaFin").value = hoy;
-    document.getElementById("calcFechaInicio").value = "";
-    document.getElementById("calcResultado").style.display = "none";
+  document.getElementById('calcFechaFin').value = new Date().toISOString().split('T')[0];
+  document.getElementById('calcFechaInicio').value = '';
+  document.getElementById('calcResultado').style.display = 'none';
+}
+function calcularDias() {
+  const startVal = document.getElementById('calcFechaInicio').value;
+  const endVal   = document.getElementById('calcFechaFin').value;
+  if (!startVal || !endVal) { document.getElementById('calcResultado').style.display = 'none'; return; }
+  const d1 = new Date(startVal+'T00:00:00'), d2 = new Date(endVal+'T00:00:00');
+  if (d1>d2) { document.getElementById('calcResultado').style.display = 'none'; return; }
+  const dias = diasHabiles(d1, d2);
+  const res = document.getElementById('calcResultado');
+  document.getElementById('calcDias').textContent = dias + (dias===1 ? " día hábil" : " días hábiles");
+  res.style.display = 'block';
+  if (dias <= 3) {
+    res.style.background='#e8f5e9'; document.getElementById('calcEmoji').textContent='🟢';
+    document.getElementById('calcLabel').style.color='#2e7d32'; document.getElementById('calcLabel').textContent='Dentro del plazo';
+    document.getElementById('calcAccion').style.background='#c8e6c9'; document.getElementById('calcAccion').style.color='#1b5e20'; document.getElementById('calcAccion').textContent='Sin acción requerida';
+  } else if (dias <= 5) {
+    res.style.background='#fff8e1'; document.getElementById('calcEmoji').textContent='🟡';
+    document.getElementById('calcLabel').style.color='#856404'; document.getElementById('calcLabel').textContent='Plazo vencido';
+    document.getElementById('calcAccion').style.background='#fff3cd'; document.getElementById('calcAccion').style.color='#856404'; document.getElementById('calcAccion').textContent='Derivar por Customer';
+  } else {
+    res.style.background='#fdecea'; document.getElementById('calcEmoji').textContent='🔴';
+    document.getElementById('calcLabel').style.color='#c62828'; document.getElementById('calcLabel').textContent='Fuera de SLA';
+    document.getElementById('calcAccion').style.background='#f5c6cb'; document.getElementById('calcAccion').style.color='#721c24'; document.getElementById('calcAccion').textContent='Escalar a Jefatura';
+  }
 }
 
-function calcularDias() {
-    var startVal = document.getElementById("calcFechaInicio").value;
-    var endVal = document.getElementById("calcFechaFin").value;
-    if (!startVal || !endVal) {
-        document.getElementById("calcResultado").style.display = "none";
-        return;
-    }
-    var d1 = new Date(startVal + "T00:00:00");
-    var d2 = new Date(endVal + "T00:00:00");
-    if (d1 > d2) { document.getElementById("calcResultado").style.display = "none"; return; }
-    var dias = diasHabiles(d1, d2);
-    var res = document.getElementById("calcResultado");
-    var emoji = document.getElementById("calcEmoji");
-    var num = document.getElementById("calcDias");
-    var label = document.getElementById("calcLabel");
-    var accion = document.getElementById("calcAccion");
-    num.textContent = dias + (dias === 1 ? " día hábil" : " días hábiles");
-    res.style.display = "block";
-    if (dias <= 3) {
-        res.style.background = "#e8f5e9";
-        emoji.textContent = "🟢";
-        label.style.color = "#2e7d32";
-        label.textContent = "Dentro del plazo";
-        accion.style.background = "#c8e6c9";
-        accion.style.color = "#1b5e20";
-        accion.textContent = "Sin acción requerida";
-    } else if (dias <= 5) {
-        res.style.background = "#fff8e1";
-        emoji.textContent = "🟡";
-        label.style.color = "#856404";
-        label.textContent = "Plazo vencido";
-        accion.style.background = "#fff3cd";
-        accion.style.color = "#856404";
-        accion.textContent = "Derivar por Customer";
-    } else {
-        res.style.background = "#fdecea";
-        emoji.textContent = "🔴";
-        label.style.color = "#c62828";
-        label.textContent = "Fuera de SLA";
-        accion.style.background = "#f5c6cb";
-        accion.style.color = "#721c24";
-        accion.textContent = "Escalar a Jefatura";
-    }
+// ==========================================
+// MODAL AVISO (INTACTO)
+// ==========================================
+function iniciarPortal() {
+  if (!sessionStorage.getItem('avisoSATVisto')) {
+    const modal = document.getElementById('modalAviso');
+    modal.style.display = 'flex'; modal.classList.remove('oculto');
+    const cerrar = () => {
+      if (modal.style.display !== 'none') {
+        modal.style.opacity = '0'; modal.classList.add('oculto');
+        setTimeout(() => { modal.style.display = 'none'; sessionStorage.setItem('avisoSATVisto','true'); }, 400);
+      }
+    };
+    modal.addEventListener('click', function(e) { if(e.target===modal) cerrar(); });
+    setTimeout(cerrar, 10000);
+  } else {
+    document.getElementById('modalAviso').classList.add('oculto');
+  }
 }
+
+// ==========================================
+// INICIALIZACIÓN
+// ==========================================
+document.addEventListener('DOMContentLoaded', function() {
+  iniciarPortal();
+  cargarMegaMenuDinámico();
+  cargarAlertas();
+  iniciarMensajesRotativos();
+  cargarChips();
+  setInterval(cargarAlertas, 60000);
+});
+
 </script>
 </body>
 </html>
