@@ -451,6 +451,183 @@ def eliminar_alerta(id):
     except Exception as e: return jsonify({"error": str(e)}), 500
 
 # ==========================================
+# BUSCADOR UNIVERSAL
+# ==========================================
+@app.route('/api/buscar-universal', methods=['GET'])
+@login_required
+def buscar_universal():
+    q = request.args.get('q', '').strip().lower()
+    filtro = request.args.get('filtro', 'todo').strip().lower()
+
+    if len(q) < 2:
+        return jsonify([])
+
+    resultados = []
+
+    try:
+        # --- ESCUELAS ---
+        if filtro in ('todo', 'escuelas'):
+            res = supabase.table("directorio_escuelas_umayor").select("*").or_(
+                f"nombre.ilike.%{q}%,"
+                f"cargo.ilike.%{q}%,"
+                f"escuela_busqueda.ilike.%{q}%,"
+                f"secretaria.ilike.%{q}%,"
+                f"sede.ilike.%{q}%"
+            ).execute()
+
+            filas = res.data or []
+
+            # Agrupamos por escuela_busqueda para mostrar ficha completa
+            grupos = {}
+            for fila in filas:
+                clave = (fila.get('escuela_busqueda') or fila.get('escuela') or 'sin_escuela').strip()
+                if clave not in grupos:
+                    grupos[clave] = []
+                grupos[clave].append(fila)
+
+            for clave, contactos in grupos.items():
+                # Usamos el primer registro como cabecera de la ficha
+                primero = contactos[0]
+                restriccion = primero.get('consultar_antes_de_entregar_contactos') or ''
+
+                ficha = {
+                    'tipo': 'Escuela',
+                    'titulo': primero.get('escuela') or clave,
+                    'sede': primero.get('sede') or '',
+                    'campus': primero.get('campus') or '',
+                    'restriccion': restriccion,
+                    'contactos': []
+                }
+
+                for c in contactos:
+                    # Persona principal (director, coordinador, etc.)
+                    nombre = (c.get('nombre') or '').strip()
+                    cargo  = (c.get('cargo') or '').strip()
+                    correo = (c.get('correo_director') or '').strip()
+                    anexo  = (c.get('anexo_director') or '').strip()
+
+                    if nombre and nombre.lower() not in ('no informado', ''):
+                        ficha['contactos'].append({
+                            'nombre': nombre,
+                            'cargo': cargo,
+                            'correo': correo if correo.lower() != 'no informado' else '',
+                            'anexo': anexo if anexo.lower() != 'no informado' else '',
+                            'rol': 'director'
+                        })
+
+                    # Secretaria
+                    sec_nombre = (c.get('secretaria') or '').strip()
+                    sec_correo = (c.get('correo_secretaria') or '').strip()
+                    sec_anexo  = (c.get('anexo_secretaria') or '').strip()
+
+                    if sec_nombre and sec_nombre.lower() not in ('no informado', ''):
+                        # Evitar duplicar secretarias que aparecen en múltiples filas
+                        ya_existe = any(
+                            ct['nombre'].lower() == sec_nombre.lower() and ct['rol'] == 'secretaria'
+                            for ct in ficha['contactos']
+                        )
+                        if not ya_existe:
+                            ficha['contactos'].append({
+                                'nombre': sec_nombre,
+                                'cargo': 'Secretaria',
+                                'correo': sec_correo if sec_correo.lower() != 'no informado' else '',
+                                'anexo': sec_anexo if sec_anexo.lower() != 'no informado' else '',
+                                'rol': 'secretaria'
+                            })
+
+                resultados.append(ficha)
+
+        # --- ACADÉMICOS (otros_contactos_academicos) ---
+        if filtro in ('todo', 'academicos'):
+            res = supabase.table("otros_contactos_academicos").select("*").or_(
+                f"nombre.ilike.%{q}%,"
+                f"departamento_busqueda.ilike.%{q}%,"
+                f"nombre_busqueda.ilike.%{q}%,"
+                f"cargo.ilike.%{q}%"
+            ).execute()
+
+            for r in (res.data or []):
+                restriccion = r.get('consultar_antes_de_entregar_contactos') or ''
+                contactos = []
+
+                nombre = (r.get('nombre') or '').strip()
+                cargo  = (r.get('cargo') or '').strip()
+                correo = (r.get('correo_director') or '').strip()
+                anexo  = str(r.get('anexo director') or '').strip()
+
+                if nombre and nombre.lower() != 'no informado':
+                    contactos.append({
+                        'nombre': nombre,
+                        'cargo': cargo,
+                        'correo': correo if correo.lower() != 'no informado' else '',
+                        'anexo': anexo if anexo.lower() != 'no informado' else '',
+                        'rol': 'director'
+                    })
+
+                sec_nombre = (r.get('secretaria_nombre') or '').strip()
+                sec_correo = (r.get('secretaria_correo') or '').strip()
+                sec_anexo  = str(r.get('secretaria_anexo') or '').strip()
+
+                if sec_nombre and sec_nombre.lower() not in ('no informado', ''):
+                    contactos.append({
+                        'nombre': sec_nombre,
+                        'cargo': 'Secretaria',
+                        'correo': sec_correo if sec_correo.lower() != 'no informado' else '',
+                        'anexo': sec_anexo if sec_anexo.lower() != 'no informado' else '',
+                        'rol': 'secretaria'
+                    })
+
+                resultados.append({
+                    'tipo': 'Académico',
+                    'titulo': r.get('departamento') or r.get('departamento_busqueda') or '',
+                    'sede': r.get('sede') or '',
+                    'campus': '',
+                    'restriccion': restriccion,
+                    'contactos': contactos
+                })
+
+        # --- ADMINISTRATIVOS ---
+        if filtro in ('todo', 'administrativos'):
+            # Búsqueda flexible por nombre y área
+            res = supabase.table("contactos_administrativos").select("*").or_(
+                f"nombre.ilike.%{q}%,"
+                f"area_busqueda.ilike.%{q}%"
+            ).execute()
+
+            for r in (res.data or []):
+                restriccion = r.get('consultar_antes_de_entregar_contactos') or ''
+                contactos = []
+
+                nombre = (r.get('nombre') or '').strip()
+                cargo  = (r.get('cargo') or '').strip()
+                correo = (r.get('correo') or '').strip()
+                anexo  = str(r.get('anexo') or '').strip()
+
+                if nombre and nombre.lower() != 'no informado':
+                    contactos.append({
+                        'nombre': nombre,
+                        'cargo': cargo,
+                        'correo': correo if correo.lower() != 'no informado' else '',
+                        'anexo': anexo if anexo.lower() != 'no informado' else '',
+                        'rol': 'contacto'
+                    })
+
+                resultados.append({
+                    'tipo': 'Administrativo',
+                    'titulo': r.get('area') or r.get('area_busqueda') or '',
+                    'sede': r.get('sede') or '',
+                    'campus': '',
+                    'restriccion': restriccion,
+                    'contactos': contactos
+                })
+
+        return jsonify(resultados)
+
+    except Exception as e:
+        print(f"Error buscar-universal: {e}")
+        return jsonify({"error": str(e)}), 500
+
+# ==========================================
 # RUTAS DE ADMINISTRACIÓN
 # ==========================================
 @app.route('/administracion')
@@ -462,3 +639,4 @@ def administracion():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+
