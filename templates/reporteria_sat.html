@@ -200,6 +200,32 @@ input:checked + .slider:before { transform: translateX(20px); }
   .modal-actions { flex-direction: column; gap: 12px; align-items: stretch; text-align: center;}
 }
 </style>
+
+<style media="print">
+  /* Ocultar todo excepto el dashboard */
+  #login-overlay, #loader-overlay, .topbar-info,
+  .tabs-container, .btn-floating, footer,
+  #modal-overlay, .control-bar,
+  #view-top, #view-historico { display: none !important; }
+
+  /* Mostrar solo resumen */
+  body { background: #fff !important; }
+  .header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .main-content { display: block !important; padding: 16px !important; max-width: 100% !important; }
+  #view-resumen { display: block !important; }
+
+  /* Tarjetas con colores exactos */
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+  /* Sin saltos de página dentro de tarjetas */
+  .kpi-card, .global-panel, .global-comp { break-inside: avoid; }
+
+  /* Ajuste de grids para impresión */
+  .grid-lvl-1, .grid-lvl-2 { grid-template-columns: repeat(3, 1fr) !important; gap: 16px !important; }
+
+  /* Sin sombras para impresión limpia */
+  .kpi-card, .global-panel { box-shadow: none !important; border: 1px solid #dde4ee !important; }
+</style>
 </head>
 <body>
 
@@ -678,75 +704,13 @@ function exportarExcel() {
 /* ========================================================================== */
 /* 6. EXPORTAR DASHBOARD A PDF                                                 */
 /* ========================================================================== */
-async function exportarPDF() {
-  const btnPdf = document.querySelector('.btn-floating[onclick="exportarPDF()"]');
-  const originalHtml = btnPdf.innerHTML;
-  btnPdf.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generando...';
-  btnPdf.disabled = true;
-
-  // Asegurar pestaña Resumen activa
+function exportarPDF() {
+  // Asegurar pestaña Resumen activa antes de imprimir
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
   document.querySelector('.tab-btn').classList.add('active');
   document.getElementById('view-resumen').classList.add('active');
-  await new Promise(r => setTimeout(r, 300));
-
-  // Carga dinámica html2canvas
-  if (!window.html2canvas) {
-    await new Promise((res, rej) => {
-      const s = document.createElement('script');
-      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-      s.onload = res; s.onerror = rej;
-      document.head.appendChild(s);
-    });
-  }
-  // Carga dinámica jsPDF
-  if (!window.jspdf) {
-    await new Promise((res, rej) => {
-      const s = document.createElement('script');
-      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-      s.onload = res; s.onerror = rej;
-      document.head.appendChild(s);
-    });
-  }
-
-  try {
-    const dashboard = document.getElementById('view-resumen');
-    const canvas = await html2canvas(dashboard, {
-      scale: 3,
-      useCORS: true,
-      backgroundColor: '#ffffff',
-      scrollX: 0,
-      scrollY: -window.scrollY,
-      windowWidth: 1400,
-      logging: false
-    });
-
-    const imgData = canvas.toDataURL('image/jpeg', 0.97);
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4', compress: true });
-    const pdfW = pdf.internal.pageSize.getWidth();
-    const pdfH = pdf.internal.pageSize.getHeight();
-    const canvasRatio = canvas.height / canvas.width;
-    const imgH = pdfW * canvasRatio;
-
-    // Si cabe en una página úsala completa, si no escala para que entre
-    if (imgH <= pdfH) {
-      pdf.addImage(imgData, 'JPEG', 0, 0, pdfW, imgH);
-    } else {
-      const scale = pdfH / imgH;
-      pdf.addImage(imgData, 'JPEG', 0, 0, pdfW * scale, pdfH);
-    }
-
-    const hoy = new Date();
-    const fecha = `${hoy.getDate()}-${hoy.getMonth()+1}-${hoy.getFullYear()}`;
-    pdf.save(`Dashboard_SAT_${fecha}.pdf`);
-  } catch(e) {
-    alert('Error al generar PDF. Intenta nuevamente.');
-  }
-
-  btnPdf.innerHTML = originalHtml;
-  btnPdf.disabled = false;
+  setTimeout(() => window.print(), 200);
 }
 </script>
 </body>
