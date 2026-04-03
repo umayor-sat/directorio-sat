@@ -193,23 +193,59 @@ body.dark-mode .btn-dark { background: #333; color: #e0e0e0; }
 
 /* Minijuego camino a casa */
 .camino-casa-widget {
-  background: var(--fondo); border: 1px solid var(--borde);
+  background: var(--fondo); border: 2px solid var(--borde);
   border-radius: 12px; padding: 10px 14px;
   box-shadow: var(--sombra);
-  transition: border-color 0.5s;
+  transition: border-color 0.8s, box-shadow 0.8s;
 }
-.camino-casa-widget.estado-ok    { border-color: var(--um-verde); }
-.camino-casa-widget.estado-alerta { border-color: var(--um-amarillo); }
+.camino-casa-widget.estado-ok {
+  border-color: var(--um-amarillo);
+  box-shadow: 0 0 0 3px rgba(242,183,5,0.15);
+}
+.camino-casa-widget.estado-pulso {
+  border-color: var(--um-amarillo);
+  animation: borderPulso 1.2s ease-in-out infinite;
+}
+@keyframes borderPulso {
+  0%,100% { box-shadow: 0 0 0 2px rgba(242,183,5,0.2); }
+  50%      { box-shadow: 0 0 0 6px rgba(242,183,5,0.45); }
+}
 
 .camino-header { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 600; color: var(--texto-suave); }
-.camino-porcentaje { font-size: 15px; font-weight: 800; color: var(--um-azul); }
+.camino-porcentaje { font-size: 15px; font-weight: 800; color: var(--um-azul); transition: color 0.5s; }
+.camino-porcentaje.tramo-amarillo { color: var(--um-amarillo); }
+
 .camino-track-container { margin-top: 10px; }
 .camino-track { height: 7px; background: rgba(0,0,0,0.1); border-radius: 4px; position: relative; margin: 0 8px 8px; cursor: help; }
 body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
-.camino-progress { height: 100%; background: var(--um-verde); border-radius: 4px; width: 0%; transition: width 1s linear; }
-.camino-monito { position: absolute; top: -13px; left: 0%; transform: translateX(-50%); color: var(--um-verde); font-size: 15px; transition: left 1s linear; }
-.camino-casa   { position: absolute; top: -13px; right: -8px; color: var(--texto-suave); font-size: 15px; }
-.camino-mensaje-final { text-align: center; font-size: 12px; font-weight: bold; color: var(--um-verde); display: none; margin-bottom: 6px; }
+
+.camino-progress {
+  height: 100%; border-radius: 4px; width: 0%;
+  background: var(--um-azul);
+  transition: width 1s linear, background-color 0.8s ease;
+}
+.camino-progress.tramo-amarillo { background: var(--um-amarillo); }
+
+.camino-monito {
+  position: absolute; top: -13px; left: 0%;
+  transform: translateX(-50%); font-size: 15px;
+  color: var(--um-azul);
+  transition: left 1s linear, color 0.8s;
+}
+.camino-monito.tramo-amarillo { color: var(--um-amarillo); }
+
+.camino-casa { position: absolute; top: -13px; right: -8px; color: var(--texto-suave); font-size: 15px; }
+
+.camino-mensaje-final {
+  text-align: center; font-size: 12px; font-weight: bold;
+  color: var(--um-azul); display: none; margin-bottom: 6px;
+  animation: mensajePulso 1.4s ease-in-out infinite;
+}
+@keyframes mensajePulso {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.7; transform: scale(1.03); }
+}
+
 .camino-controles { margin-top: 8px; background: var(--card-bg); border: 1px solid var(--borde); border-radius: 6px; padding: 5px 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 11px; color: var(--texto-suave); }
 .camino-controles input[type="time"] { border: 1px solid var(--borde); border-radius: 4px; padding: 2px 5px; font-family: monospace; font-size: 12px; color: var(--um-azul); font-weight: bold; background: var(--fondo); outline: none; cursor: pointer; }
 .camino-controles input[type="time"]:focus { border-color: var(--um-azul); }
@@ -289,14 +325,42 @@ body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
   gap: 8px;
 }
 .result-card {
-  background: var(--fondo); border: 1px solid var(--borde);
-  border-radius: 8px; padding: 10px 12px;
-  cursor: pointer; transition: background 0.15s, box-shadow 0.15s;
+  background: var(--card-bg); border: 1px solid var(--borde);
+  border-radius: 10px; padding: 12px 14px;
+  transition: box-shadow 0.15s;
+  box-shadow: var(--sombra);
 }
-.result-card:hover { background: var(--card-hover); box-shadow: var(--sombra); }
-.result-card .r-tag { font-size: 10px; font-weight: 700; color: var(--um-azul); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 3px; }
-.result-card .r-nombre { font-size: 13px; font-weight: 700; color: var(--texto); }
-.result-card .r-sub { font-size: 11px; color: var(--texto-suave); margin-top: 2px; }
+.result-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.1); }
+.r-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; gap: 8px; }
+.r-tag { font-size: 10px; font-weight: 700; color: #fff; background: var(--um-azul); text-transform: uppercase; letter-spacing: 0.3px; padding: 2px 7px; border-radius: 4px; display: inline-block; flex-shrink: 0; }
+.r-tag.academico { background: var(--um-verde); }
+.r-tag.administrativo { background: var(--btn-grafito); }
+.r-titulo { font-size: 13px; font-weight: 700; color: var(--texto); flex: 1; line-height: 1.3; }
+.r-sede { font-size: 11px; color: var(--texto-suave); margin-bottom: 8px; display: flex; align-items: center; gap: 4px; }
+.r-contactos { display: flex; flex-direction: column; gap: 6px; }
+.r-contacto { background: var(--fondo); border-radius: 6px; padding: 7px 9px; font-size: 12px; }
+.r-contacto .rc-nombre { font-weight: 700; color: var(--texto); margin-bottom: 2px; }
+.r-contacto .rc-cargo { font-size: 11px; color: var(--texto-suave); margin-bottom: 4px; }
+.r-contacto .rc-dato { display: flex; align-items: center; gap: 5px; color: var(--texto-suave); font-size: 11px; margin-top: 2px; }
+.r-contacto .rc-dato i { width: 12px; color: var(--um-azul); font-size: 11px; }
+.r-contacto .rc-dato a { color: var(--um-azul); text-decoration: none; }
+.r-contacto .rc-dato a:hover { text-decoration: underline; }
+.btn-copiar-correo { background: none; border: 1px solid var(--um-azul); border-radius: 3px; color: var(--um-azul); font-size: 10px; padding: 1px 5px; cursor: pointer; margin-left: 4px; transition: background 0.15s; }
+.btn-copiar-correo:hover { background: var(--um-azul); color: #fff; }
+.restriccion-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: #fff8e1; border: 1px solid #f0a500;
+  color: #856404; font-size: 10px; font-weight: 700;
+  padding: 2px 7px; border-radius: 4px; margin-top: 8px;
+  cursor: help; position: relative;
+}
+.restriccion-badge:hover .restriccion-tooltip { display: block; }
+.restriccion-tooltip {
+  display: none; position: absolute; bottom: 110%; left: 0;
+  background: #333; color: #fff; font-size: 11px; font-weight: 400;
+  padding: 5px 9px; border-radius: 5px; white-space: nowrap;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2); z-index: 100;
+}
 .results-loading { text-align: center; font-size: 13px; color: var(--texto-suave); padding: 12px 0; }
 
 /* ============================================================
@@ -471,6 +535,140 @@ body.dark-mode .btn-limpiar { background: rgba(255,255,255,0.1); color: #ddd; }
   background: rgba(0,0,0,0.6); z-index: 10000;
   align-items: center; justify-content: center;
 }
+
+/* ============================================================
+   MODAL CORREOS FRECUENTES
+   ============================================================ */
+.modal-correo-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.72); z-index: 9000;
+  align-items: flex-start; justify-content: center;
+  padding: 24px 16px; overflow-y: auto;
+}
+.modal-correo-overlay.visible { display: flex; }
+
+.modal-correo-box {
+  background: var(--card-bg); border-radius: 14px;
+  width: 100%; max-width: 780px;
+  min-height: 60vh; position: relative;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+  animation: modalSlide 0.3s ease-out;
+  margin: auto;
+}
+@keyframes modalSlide {
+  from { transform: translateY(-24px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+.modal-correo-header {
+  background: var(--um-amarillo); border-radius: 14px 14px 0 0;
+  padding: 14px 20px; display: flex; align-items: center;
+  justify-content: space-between; position: sticky; top: 0; z-index: 10;
+}
+.modal-correo-titulo {
+  font-size: 15px; font-weight: 700; color: #1a1a1a;
+  display: flex; align-items: center; gap: 8px;
+}
+.modal-correo-cerrar {
+  background: rgba(0,0,0,0.12); border: none; border-radius: 8px;
+  width: 34px; height: 34px; font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: #1a1a1a; font-weight: 700; transition: background 0.15s;
+  flex-shrink: 0;
+}
+.modal-correo-cerrar:hover { background: rgba(0,0,0,0.22); }
+
+.modal-correo-body {
+  padding: 20px 24px 28px;
+}
+
+/* Reutiliza estilos de correos_frecuentes dentro del modal */
+.modal-correo-body .asunto-select {
+  width: 100%; padding: 11px 14px; border: 1.5px solid var(--borde);
+  border-radius: 9px; font-size: 14px; font-family: Arial, Helvetica, sans-serif;
+  background: var(--card-bg); color: var(--texto);
+  margin-bottom: 18px; cursor: pointer;
+}
+.modal-correo-body .asunto-select:focus { border-color: var(--um-azul); outline: none; }
+.modal-correo-body .form-section {
+  background: var(--um-gris); border-radius: 10px;
+  padding: 14px 16px; margin-bottom: 12px; border: 1px solid var(--borde);
+}
+.modal-correo-body .form-section-title {
+  font-size: 13px; font-weight: 700; color: var(--um-azul);
+  margin-bottom: 3px; display: flex; align-items: center; gap: 6px;
+}
+.modal-correo-body .form-section-sub {
+  font-size: 11px; color: var(--texto-suave); margin-bottom: 10px;
+}
+.modal-correo-body .form-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+}
+@media (max-width: 600px) { .modal-correo-body .form-grid { grid-template-columns: 1fr; } }
+.modal-correo-body .form-field { display: flex; flex-direction: column; gap: 4px; }
+.modal-correo-body .form-field.span2 { grid-column: 1 / -1; }
+.modal-correo-body label { font-size: 11px; color: var(--texto-suave); font-weight: 600; }
+.modal-correo-body .req { color: #c0392b; }
+.modal-correo-body input[type="text"],
+.modal-correo-body input[type="email"],
+.modal-correo-body input[type="date"],
+.modal-correo-body select,
+.modal-correo-body textarea {
+  width: 100%; padding: 8px 10px; border: 1px solid var(--borde);
+  border-radius: 6px; font-size: 13px; font-family: Arial, Helvetica, sans-serif;
+  background: var(--card-bg); color: var(--texto); transition: border-color 0.15s;
+}
+.modal-correo-body input:focus,
+.modal-correo-body select:focus,
+.modal-correo-body textarea:focus { border-color: var(--um-azul); outline: none; }
+.modal-correo-body textarea { resize: vertical; min-height: 65px; }
+.modal-correo-body .field-hint { font-size: 10px; color: var(--texto-suave); margin-top: 2px; }
+.modal-correo-body .field-error { border-color: #c0392b !important; background: #fff8f8 !important; }
+.modal-correo-body .preview-asunto {
+  background: #e8f0fb; border: 0.5px solid #b5d4f4;
+  border-radius: 8px; padding: 10px 14px; margin-bottom: 14px;
+}
+.modal-correo-body .preview-label { font-size: 11px; color: #185fa5; font-weight: 700; margin-bottom: 3px; }
+.modal-correo-body .preview-texto { font-size: 13px; font-weight: 700; color: #0c447c; word-break: break-all; }
+.modal-correo-body .error-panel {
+  display: none; background: #fdecea; border-left: 3px solid #c0392b;
+  border-radius: 0 6px 6px 0; padding: 9px 12px; margin-bottom: 12px;
+  font-size: 12px; color: #8b1a1a;
+}
+.modal-correo-body .aviso-firma {
+  background: #fffbea; border: 2px solid #f9a825;
+  border-radius: 8px; padding: 12px 14px; margin-bottom: 16px;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.modal-correo-body .aviso-firma-title { font-size: 13px; font-weight: 700; color: #7a5c00; }
+.modal-correo-body .aviso-firma-sub { font-size: 11px; color: #9a7800; margin-top: 3px; line-height: 1.4; }
+.modal-correo-body .btn-enviar-modal {
+  width: 100%; background: var(--um-azul); color: #fff;
+  border: none; border-radius: 8px; padding: 13px 24px;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: opacity 0.15s;
+}
+.modal-correo-body .btn-enviar-modal:hover { opacity: 0.9; }
+.modal-correo-body .btn-enviar-modal.verde { background: var(--um-verde); }
+
+/* Sub-modal confirmación dentro del modal */
+.submodal-correo {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5); z-index: 9999;
+  align-items: center; justify-content: center;
+}
+.submodal-correo.visible { display: flex; }
+.submodal-correo-box {
+  background: var(--card-bg); border-top: 6px solid var(--um-verde);
+  border-radius: 14px; padding: 32px 28px; max-width: 380px; width: 90%;
+  text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+  animation: modalSlide 0.3s ease-out;
+}
+.submodal-correo-icon { font-size: 44px; margin-bottom: 10px; }
+.submodal-correo-title { font-size: 19px; font-weight: 700; color: var(--um-azul); margin-bottom: 8px; }
+.submodal-correo-msg { font-size: 13px; color: var(--texto-suave); line-height: 1.5; }
+.submodal-correo-countdown { font-size: 11px; color: #bbb; margin-top: 14px; }
 </style>
 </head>
 <body>
@@ -650,20 +848,20 @@ body.dark-mode .btn-limpiar { background: rgba(255,255,255,0.1); color: #ddd; }
   <!-- CORREOS FRECUENTES -->
   <div class="sec-label"><i class="fa-regular fa-envelope" style="color:var(--um-azul);"></i> Accesos rápidos · Correos frecuentes</div>
   <div class="correos-row">
-    <a href="https://directorio-um-sat.onrender.com/correos-frecuentes#supervisor" class="btn-correo">
+    <div class="btn-correo" onclick="abrirModalCorreo('supervisor')" style="cursor:pointer;">
       <i class="fa-solid fa-user-tie bc-icon"></i>
       <div>
         <div class="bc-titulo">Derivación a Supervisor</div>
-        <div class="bc-sub">Plantilla lista para copiar</div>
+        <div class="bc-sub">Se abre aquí mismo · Sin salir del portal</div>
       </div>
-    </a>
-    <a href="https://directorio-um-sat.onrender.com/correos-frecuentes#comercial" class="btn-correo">
+    </div>
+    <div class="btn-correo" onclick="abrirModalCorreo('comercial')" style="cursor:pointer;">
       <i class="fa-solid fa-briefcase bc-icon"></i>
       <div>
         <div class="bc-titulo">Derivación Área Comercial</div>
-        <div class="bc-sub">Plantilla lista para copiar</div>
+        <div class="bc-sub">Se abre aquí mismo · Sin salir del portal</div>
       </div>
-    </a>
+    </div>
   </div>
 
   <!-- SISTEMAS EXTERNOS VIP -->
@@ -787,6 +985,441 @@ body.dark-mode .btn-limpiar { background: rgba(255,255,255,0.1); color: #ddd; }
 <!-- ============================================================
      SCRIPTS
      ============================================================ -->
+<!-- ============================================================
+     MODAL DERIVAR A SUPERVISOR
+     ============================================================ -->
+<div class="modal-correo-overlay" id="modalSupervisor">
+  <div class="modal-correo-box">
+    <div class="modal-correo-header">
+      <div class="modal-correo-titulo">
+        <i class="fa-solid fa-user-tie"></i> Derivar a Supervisor
+      </div>
+      <button class="modal-correo-cerrar" onclick="cerrarModalCorreo('supervisor')" title="Cerrar">✕</button>
+    </div>
+    <div class="modal-correo-body">
+
+      <select class="asunto-select" id="m-asunto" onchange="mCambiarAsunto()">
+        <option value="">— Selecciona el tipo de derivación —</option>
+        <option value="escalamiento">Escalamiento de caso a Supervisor</option>
+        <option value="ti">Escalamiento caso TI</option>
+        <option value="turno">Solicitud cambio de turno</option>
+        <option value="feriado">Solicitud día administrativo / vacaciones</option>
+      </select>
+
+      <!-- Vista previa asunto -->
+      <div id="m-preview-asunto" class="preview-asunto" style="display:none;">
+        <div class="preview-label"><i class="fa-regular fa-envelope"></i> Vista previa del asunto</div>
+        <div class="preview-texto" id="m-asunto-generado">—</div>
+      </div>
+
+      <!-- IC -->
+      <div id="m-bloque-ic" class="form-section" style="display:none;">
+        <div class="form-section-title"><i class="fa-solid fa-file-lines"></i> Campos del asunto</div>
+        <div class="form-section-sub">Estos datos arman el asunto automáticamente.</div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>IC <span class="req">*</span></label>
+            <input type="text" id="m-ic-num" placeholder="Ej: 55667788" oninput="mActualizarAsunto()">
+          </div>
+          <div class="form-field">
+            <label>RUT del solicitante <span class="req">*</span></label>
+            <input type="text" id="m-ic-rut" placeholder="Sin puntos ni guión" oninput="mLimpiarRut('m-ic-rut')">
+          </div>
+          <div class="form-field">
+            <label>Nombre del solicitante <span class="req">*</span></label>
+            <input type="text" id="m-ic-nombre" placeholder="Nombre completo" oninput="mActualizarAsunto(); mSincronizarDatos()">
+          </div>
+          <div class="form-field">
+            <label>Motivo <span class="req">*</span></label>
+            <input type="text" id="m-ic-motivo" placeholder="Ej: Consulta matrícula" oninput="mActualizarAsunto()">
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumen -->
+      <div id="m-bloque-resumen" class="form-section" style="display:none;">
+        <div class="form-section-title"><i class="fa-solid fa-comment-dots"></i> Resumen de la solicitud</div>
+        <div class="form-section-sub">Lo que el ejecutivo entendió — breve y concreto.</div>
+        <div class="form-field">
+          <textarea id="m-resumen" placeholder="Describe brevemente el requerimiento..."></textarea>
+        </div>
+      </div>
+
+      <!-- Datos solicitante -->
+      <div id="m-bloque-solicitante" class="form-section" style="display:none;">
+        <div class="form-section-title"><i class="fa-solid fa-person"></i> Datos del solicitante</div>
+        <div class="form-section-sub">Nombre y RUT se sincronizan desde el asunto. <span class="req">*</span></div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Nombre <span class="req">*</span></label>
+            <input type="text" id="m-sol-nombre" readonly style="background:#f0f4f8; color:#555;" placeholder="Se sincroniza automáticamente">
+          </div>
+          <div class="form-field">
+            <label>RUT <span class="req">*</span></label>
+            <input type="text" id="m-sol-rut" readonly style="background:#f0f4f8; color:#555;" placeholder="Se sincroniza automáticamente">
+          </div>
+          <div class="form-field">
+            <label>Teléfono <span class="req">*</span></label>
+            <input type="text" id="m-sol-tel" placeholder="Ej: 912345678">
+          </div>
+          <div class="form-field">
+            <label>Correo <span class="req">*</span></label>
+            <input type="email" id="m-sol-correo" placeholder="correo@ejemplo.cl">
+          </div>
+          <div class="form-field span2">
+            <label>Comentario adicional</label>
+            <textarea id="m-sol-comentario" placeholder="Transcribe casi textualmente lo que la persona necesita..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Datos alumno -->
+      <div id="m-bloque-alumno" class="form-section" style="display:none;">
+        <div class="form-section-title"><i class="fa-solid fa-graduation-cap"></i> Datos del alumno</div>
+        <div class="form-section-sub">Completar solo si corresponde. Si inicias este bloque, nombre y RUT serán obligatorios.</div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Nombre <span id="m-alu-req-nombre"></span></label>
+            <input type="text" id="m-alu-nombre" placeholder="Nombre completo" oninput="mCheckAlumno()">
+          </div>
+          <div class="form-field">
+            <label>RUT <span id="m-alu-req-rut"></span></label>
+            <input type="text" id="m-alu-rut" placeholder="Sin puntos ni guión" oninput="mCheckAlumno(); mLimpiarRut('m-alu-rut')">
+          </div>
+          <div class="form-field">
+            <label>Teléfono</label>
+            <input type="text" id="m-alu-tel" placeholder="Ej: 912345678">
+          </div>
+          <div class="form-field">
+            <label>Correo</label>
+            <input type="email" id="m-alu-correo" placeholder="correo@ejemplo.cl">
+          </div>
+          <div class="form-field span2">
+            <label>Comentario</label>
+            <textarea id="m-alu-comentario" placeholder="Observaciones adicionales..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- TI contacto -->
+      <div id="m-bloque-contacto-ti" class="form-section" style="display:none;">
+        <div class="form-section-title"><i class="fa-solid fa-address-card"></i> Datos de contacto</div>
+        <div class="form-section-sub">Nombre y RUT se sincronizan desde el asunto. <span class="req">*</span></div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Nombre <span class="req">*</span></label>
+            <input type="text" id="m-ti-nombre" readonly style="background:#f0f4f8; color:#555;" placeholder="Se sincroniza automáticamente">
+          </div>
+          <div class="form-field">
+            <label>RUT <span class="req">*</span></label>
+            <input type="text" id="m-ti-rut" readonly style="background:#f0f4f8; color:#555;" placeholder="Se sincroniza automáticamente">
+          </div>
+          <div class="form-field">
+            <label>Teléfono <span class="req">*</span></label>
+            <input type="text" id="m-ti-tel" placeholder="Ej: 912345678">
+          </div>
+          <div class="form-field">
+            <label>Correo personal <span class="req">*</span></label>
+            <input type="email" id="m-ti-correo-per" placeholder="correo@gmail.com">
+            <span class="field-hint">⚠ Correo personal, no institucional.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TI detalles -->
+      <div id="m-bloque-ti" class="form-section" style="display:none;">
+        <div class="form-section-title"><i class="fa-solid fa-computer"></i> Detalles del caso TI</div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Correo institucional <span class="req">*</span></label>
+            <input type="text" id="m-ti-correo-inst" placeholder="rut@mayor.cl">
+          </div>
+          <div class="form-field">
+            <label>Tipo de contacto <span class="req">*</span></label>
+            <select id="m-ti-contacto">
+              <option value="">— Selecciona —</option>
+              <option>Llamada telefónica</option>
+              <option>WhatsApp</option>
+              <option>Landing / formulario web</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Perfil con error</label>
+            <select id="m-ti-perfil">
+              <option value="">— Selecciona —</option>
+              <option>Alumno</option><option>Ex alumno</option>
+              <option>Colaborador / Administrativo</option><option>Docente</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Plataforma con error</label>
+            <input type="text" id="m-ti-plataforma" placeholder="Correo / Campus Virtual / etc.">
+          </div>
+          <div class="form-field span2">
+            <label>Descripción del error</label>
+            <textarea id="m-ti-desc" placeholder="¿Qué ocurre exactamente?"></textarea>
+          </div>
+          <div class="form-field span2">
+            <label>Pruebas realizadas antes de derivar</label>
+            <textarea id="m-ti-pruebas" placeholder="¿Qué pasos intentaste?"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Turno -->
+      <div id="m-bloque-turno" class="form-section" style="display:none;">
+        <div class="form-section-title"><i class="fa-regular fa-clock"></i> Detalles del cambio de turno</div>
+        <div class="form-section-sub"><span class="req">*</span> Todos los campos son obligatorios.</div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Fecha del turno <span class="req">*</span></label>
+            <input type="date" id="m-turno-fecha" oninput="mActualizarAsunto()">
+          </div>
+          <div class="form-field">
+            <label>Motivo <span class="req">*</span></label>
+            <select id="m-turno-motivo">
+              <option value="">— Selecciona —</option>
+              <option>Personal</option><option>Médico</option>
+              <option>Académico</option><option>Otro</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Tu nombre <span class="req">*</span></label>
+            <select id="m-turno-solicitante">
+              <option value="">— Cargando ejecutivos... —</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Tu turno original <span class="req">*</span></label>
+            <select id="m-turno-original-sol">
+              <option value="">— Selecciona —</option>
+              <option>08:00 a 16:30</option><option>08:30 a 17:00</option>
+              <option>09:00 a 17:30</option><option>09:30 a 18:00</option>
+              <option>10:00 a 18:30</option><option>10:30 a 19:00</option>
+              <option>11:00 a 19:30</option><option>11:30 a 20:00</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Ejecutivo que reemplaza <span class="req">*</span></label>
+            <select id="m-turno-reemplazo">
+              <option value="">— Cargando ejecutivos... —</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Turno original del reemplazo <span class="req">*</span></label>
+            <select id="m-turno-original-rem">
+              <option value="">— Selecciona —</option>
+              <option>08:00 a 16:30</option><option>08:30 a 17:00</option>
+              <option>09:00 a 17:30</option><option>09:30 a 18:00</option>
+              <option>10:00 a 18:30</option><option>10:30 a 19:00</option>
+              <option>11:00 a 19:30</option><option>11:30 a 20:00</option>
+            </select>
+          </div>
+          <div class="form-field span2">
+            <label>Turno que cubrirá el reemplazo <span class="req">*</span></label>
+            <select id="m-turno-nuevo-rem">
+              <option value="">— Selecciona —</option>
+              <option>08:00 a 16:30</option><option>08:30 a 17:00</option>
+              <option>09:00 a 17:30</option><option>09:30 a 18:00</option>
+              <option>10:00 a 18:30</option><option>10:30 a 19:00</option>
+              <option>11:00 a 19:30</option><option>11:30 a 20:00</option>
+            </select>
+          </div>
+          <div class="form-field span2">
+            <label>Comentarios adicionales</label>
+            <textarea id="m-turno-comentarios" placeholder="Información adicional..."></textarea>
+          </div>
+          <div class="form-field span2" style="flex-direction:row; align-items:flex-start; gap:8px; background:#fffbea; padding:10px; border:1px solid #f9a825; border-radius:6px;">
+            <input type="checkbox" id="m-turno-confirmacion" style="width:auto; margin-top:2px; flex-shrink:0;">
+            <label for="m-turno-confirmacion" style="margin:0; font-size:11px; color:#7a5c00; font-weight:normal; cursor:pointer;">
+              Confirmo que este cambio ya fue coordinado entre ambas partes. <span class="req">*</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feriado / Día administrativo -->
+      <div id="m-bloque-feriado" class="form-section" style="display:none;">
+        <div class="form-section-title"><i class="fa-regular fa-calendar-days"></i> Detalles de la solicitud</div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Tu nombre <span class="req">*</span></label>
+            <select id="m-feriado-solicitante">
+              <option value="">— Cargando ejecutivos... —</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Tipo de solicitud <span class="req">*</span></label>
+            <select id="m-feriado-tipo">
+              <option value="">— Selecciona —</option>
+              <option>Día administrativo</option>
+              <option>Feriado legal</option>
+              <option>Vacaciones</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Fecha solicitada <span class="req">*</span></label>
+            <input type="date" id="m-feriado-fecha" oninput="mActualizarAsunto()">
+          </div>
+          <div class="form-field">
+            <label>Motivo</label>
+            <input type="text" id="m-feriado-motivo" placeholder="Opcional">
+          </div>
+          <div class="form-field span2">
+            <label>Comentarios adicionales</label>
+            <textarea id="m-feriado-comentarios" placeholder="Información adicional..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aviso firma -->
+      <div id="m-aviso-firma" class="aviso-firma" style="display:none;">
+        <i class="fa-solid fa-triangle-exclamation" style="font-size:18px; color:#7a5c00; flex-shrink:0; margin-top:1px;"></i>
+        <div>
+          <div class="aviso-firma-title">Agrega tu firma e imágenes antes de enviar</div>
+          <div class="aviso-firma-sub">El correo se abrirá en Outlook. Inserta tu firma institucional y adjunta capturas o archivos antes de hacer clic en Enviar.</div>
+        </div>
+      </div>
+
+      <div id="m-error-validacion" class="error-panel"></div>
+
+      <button id="m-btn-enviar" class="btn-enviar-modal" style="display:none;" onclick="mValidarYEnviar()">
+        <i class="fa-regular fa-envelope"></i> Preparar y enviar correo
+      </button>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MODAL DERIVAR ÁREA COMERCIAL
+     ============================================================ -->
+<div class="modal-correo-overlay" id="modalComercial">
+  <div class="modal-correo-box">
+    <div class="modal-correo-header" style="background: var(--um-azul);">
+      <div class="modal-correo-titulo" style="color:#fff;">
+        <i class="fa-solid fa-briefcase"></i> Derivar a Área Comercial
+      </div>
+      <button class="modal-correo-cerrar" onclick="cerrarModalCorreo('comercial')" title="Cerrar" style="background:rgba(255,255,255,0.15); color:#fff;">✕</button>
+    </div>
+    <div class="modal-correo-body">
+
+      <div class="form-section" style="margin-bottom:16px;">
+        <select class="asunto-select" id="m-asunto-com" style="margin-bottom:0;" onchange="mMostrarFormComercial()">
+          <option value="">— Selecciona el asunto —</option>
+          <option value="prospecto">Derivación de prospecto</option>
+        </select>
+      </div>
+
+      <div id="m-bloque-comercial" style="display:none;">
+
+        <div class="form-section">
+          <div class="form-section-title"><i class="fa-solid fa-file-lines"></i> Campos del asunto</div>
+          <div class="form-section-sub">Arman el asunto y se sincronizan con datos de contacto.</div>
+          <div class="form-grid">
+            <div class="form-field">
+              <label>RUT <span class="req">*</span></label>
+              <input type="text" id="m-com-rut-asunto" placeholder="Sin puntos ni guión" oninput="mSincronizarComercial()">
+            </div>
+            <div class="form-field">
+              <label>Nombre <span class="req">*</span></label>
+              <input type="text" id="m-com-nombre-asunto" placeholder="Nombre completo" oninput="mSincronizarComercial()">
+            </div>
+            <div class="form-field">
+              <label>Carrera de interés <span class="req">*</span></label>
+              <input type="text" id="m-com-carrera" placeholder="Nombre de la carrera" oninput="mActualizarAsuntoComercial()">
+            </div>
+            <div class="form-field">
+              <label>Jornada <span class="req">*</span></label>
+              <select id="m-com-jornada" onchange="mActualizarAsuntoComercial()">
+                <option value="">— Selecciona —</option>
+                <option>Diurno</option><option>Vespertino</option>
+                <option>On line</option><option>Tec. Cont.</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="preview-asunto">
+          <div class="preview-label"><i class="fa-regular fa-envelope"></i> Vista previa del asunto</div>
+          <div class="preview-texto" id="m-asunto-com-generado">RUT: XXXXXXXXX · Nombre: NOMBRE · Carrera: CARRERA · Jornada: JORNADA</div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title"><i class="fa-solid fa-person"></i> Datos de contacto</div>
+          <div class="form-section-sub">Nombre y RUT se sincronizan. Completa teléfono y correo. <span class="req">*</span></div>
+          <div class="form-grid">
+            <div class="form-field">
+              <label>Nombre <span class="req">*</span></label>
+              <input type="text" id="m-com-nombre" readonly style="background:#f0f4f8; color:#555;">
+            </div>
+            <div class="form-field">
+              <label>RUT <span class="req">*</span></label>
+              <input type="text" id="m-com-rut" readonly style="background:#f0f4f8; color:#555;">
+            </div>
+            <div class="form-field">
+              <label>Teléfono <span class="req">*</span></label>
+              <input type="text" id="m-com-tel" placeholder="Ej: 912345678">
+              <span class="field-hint">Asegurarse que reciba llamadas de números 600.</span>
+            </div>
+            <div class="form-field">
+              <label>Correo <span class="req">*</span></label>
+              <input type="email" id="m-com-correo" placeholder="correo@ejemplo.cl">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title"><i class="fa-solid fa-circle-info"></i> Información adicional</div>
+          <div class="form-grid">
+            <div class="form-field">
+              <label>Tiene beneficios ministeriales</label>
+              <select id="m-com-beneficios">
+                <option value="">— No indicado —</option>
+                <option>No</option>
+                <option>Sí - Gratuidad</option><option>Sí - Beca</option>
+                <option>Sí - CAE</option><option>Sí - Otro</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Comentarios adicionales</label>
+              <textarea id="m-com-comentario" placeholder="Información adicional relevante..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="aviso-firma">
+          <i class="fa-solid fa-triangle-exclamation" style="font-size:18px; color:#7a5c00; flex-shrink:0; margin-top:1px;"></i>
+          <div>
+            <div class="aviso-firma-title">Agrega tu firma institucional antes de enviar</div>
+            <div class="aviso-firma-sub">El correo se abrirá en Outlook. Recuerda insertar tu firma antes de hacer clic en Enviar.</div>
+          </div>
+        </div>
+
+        <div id="m-error-com" class="error-panel"></div>
+
+        <button class="btn-enviar-modal verde" onclick="mEnviarComercial()">
+          <i class="fa-regular fa-envelope"></i> Preparar y enviar correo
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sub-modal confirmación correos -->
+<div class="submodal-correo" id="submodalCorreo">
+  <div class="submodal-correo-box">
+    <div class="submodal-correo-icon">✅</div>
+    <div class="submodal-correo-title">¡Correo preparado!</div>
+    <div class="submodal-correo-msg">
+      Tu correo está listo en Outlook.<br>
+      Recuerda insertar tu <strong>firma institucional</strong> y adjuntar imágenes o archivos antes de enviar.
+    </div>
+    <div class="submodal-correo-countdown" id="submodalCorreoCountdown">Cerrando en 5 segundos...</div>
+  </div>
+</div>
+
 <script>
 
 // ==========================================
@@ -842,9 +1475,9 @@ async function buscarUnificado(desdeChip = false) {
   searchTimer = setTimeout(async () => {
     const q = document.getElementById('searchInput').value.trim();
     const filtro = document.getElementById('searchFiltro').value;
-    const zona = document.getElementById('searchResults');
-    const grid = document.getElementById('resultsGrid');
-    const label = document.getElementById('resultsLabel');
+    const zona   = document.getElementById('searchResults');
+    const grid   = document.getElementById('resultsGrid');
+    const label  = document.getElementById('resultsLabel');
 
     if (q.length < 2) { zona.classList.remove('visible'); return; }
 
@@ -852,46 +1485,81 @@ async function buscarUnificado(desdeChip = false) {
     grid.innerHTML = '<div class="results-loading"><i class="fa-solid fa-spinner fa-spin"></i> Buscando...</div>';
 
     try {
-      let resultados = [];
+      const res = await fetch(`/api/buscar-universal?q=${encodeURIComponent(q)}&filtro=${encodeURIComponent(filtro)}`);
+      const resultados = await res.json();
 
-      if (filtro === 'todo' || filtro === 'escuelas') {
-        const r = await fetch(`/api/escuelas?q=${encodeURIComponent(q)}`);
-        const d = await r.json();
-        (d || []).forEach(x => resultados.push({ tipo: 'Escuela', nombre: x.nombre || x.escuela_busqueda || '—', sub: [x.cargo, x.sede].filter(Boolean).join(' · ') }));
-      }
-      if (filtro === 'todo' || filtro === 'academicos') {
-        const r = await fetch(`/api/academicos?q=${encodeURIComponent(q)}`);
-        const d = await r.json();
-        (d || []).forEach(x => resultados.push({ tipo: 'Académico', nombre: x.nombre || x.departamento_busqueda || '—', sub: x.cargo || x.departamento_busqueda || '' }));
-      }
-      if (filtro === 'todo' || filtro === 'administrativos') {
-        const r = await fetch(`/api/contactos-administrativos?q=${encodeURIComponent(q)}`);
-        const d = await r.json();
-        (d || []).forEach(x => resultados.push({ tipo: 'Administrativo', nombre: x.nombre || x.area_busqueda || '—', sub: x.cargo || x.area_busqueda || '' }));
-      }
-
-      // Guardar búsqueda exitosa en chips
-      if (resultados.length > 0) guardarBusqueda(q);
-
-      if (resultados.length === 0) {
+      if (!resultados || resultados.length === 0) {
         grid.innerHTML = '<div class="results-loading">Sin resultados para esta búsqueda.</div>';
         label.textContent = 'Sin resultados';
         return;
       }
 
+      if (resultados.length > 0) guardarBusqueda(q);
+
       label.textContent = `${resultados.length} resultado${resultados.length !== 1 ? 's' : ''} encontrado${resultados.length !== 1 ? 's' : ''}`;
-      grid.innerHTML = resultados.slice(0, 12).map(r => `
-        <div class="result-card">
-          <div class="r-tag">${r.tipo}</div>
-          <div class="r-nombre">${r.nombre}</div>
-          ${r.sub ? `<div class="r-sub">${r.sub}</div>` : ''}
-        </div>
-      `).join('');
+
+      grid.innerHTML = resultados.slice(0, 12).map(r => {
+        const tagClass = r.tipo === 'Académico' ? 'academico' : r.tipo === 'Administrativo' ? 'administrativo' : '';
+        const sede = [r.sede, r.campus].filter(s => s && s.toLowerCase() !== 'no informado').join(' · ');
+
+        const contactosHtml = (r.contactos || []).map(c => {
+          const correoHtml = c.correo
+            ? `<div class="rc-dato">
+                <i class="fa-solid fa-envelope"></i>
+                <a href="mailto:${c.correo}">${c.correo}</a>
+                <button class="btn-copiar-correo" onclick="copiarDato(event,'${c.correo}')">Copiar</button>
+               </div>`
+            : '';
+          const anexoHtml = c.anexo
+            ? `<div class="rc-dato"><i class="fa-solid fa-phone"></i> Anexo ${c.anexo}</div>`
+            : '';
+          return `<div class="r-contacto">
+            <div class="rc-nombre">${c.nombre}</div>
+            <div class="rc-cargo">${c.cargo}</div>
+            ${correoHtml}${anexoHtml}
+          </div>`;
+        }).join('');
+
+        const restriccionHtml = r.restriccion && r.restriccion.toLowerCase() !== 'no informado'
+          ? `<div class="restriccion-badge">
+               <i class="fa-solid fa-triangle-exclamation"></i> Verificar antes de entregar
+               <span class="restriccion-tooltip">${r.restriccion}</span>
+             </div>`
+          : '';
+
+        return `<div class="result-card">
+          <div class="r-header">
+            <span class="r-tag ${tagClass}">${r.tipo}</span>
+          </div>
+          <div class="r-titulo">${r.titulo}</div>
+          ${sede ? `<div class="r-sede"><i class="fa-solid fa-location-dot" style="color:var(--um-azul);font-size:10px;"></i> ${sede}</div>` : ''}
+          <div class="r-contactos">${contactosHtml}</div>
+          ${restriccionHtml}
+        </div>`;
+      }).join('');
 
     } catch(e) {
       grid.innerHTML = '<div class="results-loading">Error al buscar. Intenta nuevamente.</div>';
     }
   }, desdeChip ? 0 : 350);
+}
+
+function copiarDato(e, texto) {
+  e.stopPropagation();
+  navigator.clipboard.writeText(texto).then(() => {
+    const btn = e.target;
+    const original = btn.textContent;
+    btn.textContent = '✓ Copiado';
+    btn.style.background = '#1a5c38';
+    btn.style.color = '#fff';
+    btn.style.borderColor = '#1a5c38';
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }, 2000);
+  });
 }
 
 // Cerrar resultados al hacer clic fuera
@@ -1133,9 +1801,12 @@ function resetearTurno() {
   localStorage.removeItem('horaSalidaGuardada');
   inputSalida.value = ''; clearInterval(intervaloCamino);
   progreso.style.width = '0%'; monito.style.left = '0%'; porcentajeTexto.textContent = '0%';
+  progreso.classList.remove('tramo-amarillo');
+  monito.classList.remove('tramo-amarillo');
+  porcentajeTexto.classList.remove('tramo-amarillo');
   monito.className = "fa-solid fa-person-walking camino-monito";
   document.getElementById('caminoCasa').className = "fa-solid fa-flag-checkered camino-casa";
-  widgetCasa.classList.remove('estado-alerta','estado-ok');
+  widgetCasa.classList.remove('estado-pulso', 'estado-ok');
   pistaCamino.style.display = 'block'; msjFinal.style.display = 'none'; btnCerrarSesion.style.display = 'none';
   const inv = document.getElementById('caminoInvitacion');
   if (inv) inv.style.display = 'block';
@@ -1154,22 +1825,46 @@ function actualizarCamino() {
   if (porcentaje < 0 || totalMs < 0) porcentaje = 0;
   if (porcentaje > 100) porcentaje = 100;
   const pctInt = Math.floor(porcentaje);
+
   progreso.style.width = pctInt + '%';
   monito.style.left = pctInt + '%';
   porcentajeTexto.textContent = pctInt + '%';
   pistaCamino.title = "Salida estimada: " + inputSalida.value;
-  if (pctInt < 50) monito.className = "fa-solid fa-person-walking camino-monito";
-  else if (pctInt < 100) monito.className = "fa-solid fa-person-running camino-monito";
+
+  // --- TRAMOS DE COLOR ---
+  // 0-50%: azul (default)
+  // 51-85%: amarillo
+  // 86-100%: amarillo (se mantiene)
+  const esAmarillo = pctInt > 50;
+  progreso.classList.toggle('tramo-amarillo', esAmarillo);
+  monito.classList.toggle('tramo-amarillo', esAmarillo);
+  porcentajeTexto.classList.toggle('tramo-amarillo', esAmarillo);
+
+  // --- ICONO DEL MONITO ---
+  if (pctInt < 50) {
+    monito.className = "fa-solid fa-person-walking camino-monito" + (esAmarillo ? " tramo-amarillo" : "");
+  } else if (pctInt < 100) {
+    monito.className = "fa-solid fa-person-running camino-monito tramo-amarillo";
+  }
+
+  // --- PULSO DEL BORDE desde 95% ---
+  if (pctInt >= 95 && pctInt < 100) {
+    widgetCasa.classList.add('estado-pulso');
+    widgetCasa.classList.remove('estado-ok');
+  }
+
+  // --- META CUMPLIDA ---
   if (pctInt >= 100) {
-    widgetCasa.classList.add('estado-ok'); widgetCasa.classList.remove('estado-alerta');
+    widgetCasa.classList.remove('estado-pulso');
+    widgetCasa.classList.add('estado-ok');
     document.getElementById('caminoCasa').className = "fa-solid fa-medal camino-casa";
-    porcentajeTexto.textContent = "100%"; pistaCamino.style.display = 'none';
-    msjFinal.style.display = 'block'; btnCerrarSesion.style.display = 'block';
+    porcentajeTexto.textContent = "100%";
+    pistaCamino.style.display = 'none';
+    msjFinal.style.display = 'block';
+    btnCerrarSesion.style.display = 'block';
     clearInterval(intervaloCamino);
-  } else if (pctInt >= 90) {
-    widgetCasa.classList.add('estado-alerta');
-  } else {
-    widgetCasa.classList.remove('estado-alerta');
+  } else if (pctInt < 95) {
+    widgetCasa.classList.remove('estado-pulso', 'estado-ok');
   }
 }
 
@@ -1273,8 +1968,308 @@ function iniciarPortal() {
 }
 
 // ==========================================
-// INICIALIZACIÓN
+// MODALES DE CORREOS FRECUENTES
 // ==========================================
+function abrirModalCorreo(tipo) {
+  const id = tipo === 'supervisor' ? 'modalSupervisor' : 'modalComercial';
+  document.getElementById(id).classList.add('visible');
+  document.body.style.overflow = 'hidden';
+  if (tipo === 'supervisor') mCargarEjecutivos();
+}
+
+function cerrarModalCorreo(tipo) {
+  const id = tipo === 'supervisor' ? 'modalSupervisor' : 'modalComercial';
+  document.getElementById(id).classList.remove('visible');
+  document.body.style.overflow = '';
+}
+
+// Utilidades modal
+function mShow(id) { const el = document.getElementById(id); if (el) el.style.display = 'block'; }
+function mHide(id) { const el = document.getElementById(id); if (el) el.style.display = 'none'; }
+function mVal(id)  { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function mMarcarError(id)  { const el = document.getElementById(id); if (el) el.classList.add('field-error'); }
+function mLimpiarErrores() { document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error')); }
+function mValidarTel(t)    { return /^\d{9}$/.test(t.replace(/[\s\-]/g, '').replace(/^\+56/, '')); }
+function mValidarCorreo(c) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c); }
+
+function mLimpiarRut(id) {
+  const el = document.getElementById(id);
+  if (el) el.value = el.value.replace(/[.\-]/g, '');
+  mActualizarAsunto();
+  mSincronizarDatos();
+}
+
+// Cambiar asunto supervisor
+function mCambiarAsunto() {
+  const v = mVal('m-asunto');
+  ['m-bloque-ic','m-bloque-resumen','m-bloque-solicitante','m-bloque-alumno',
+   'm-bloque-contacto-ti','m-bloque-ti','m-bloque-turno','m-bloque-feriado',
+   'm-preview-asunto','m-aviso-firma','m-btn-enviar','m-error-validacion'].forEach(mHide);
+  if (!v) return;
+  mShow('m-preview-asunto'); mShow('m-aviso-firma'); mShow('m-btn-enviar');
+  if (v === 'escalamiento')  { mShow('m-bloque-ic'); mShow('m-bloque-resumen'); mShow('m-bloque-solicitante'); mShow('m-bloque-alumno'); }
+  else if (v === 'ti')       { mShow('m-bloque-ic'); mShow('m-bloque-contacto-ti'); mShow('m-bloque-ti'); }
+  else if (v === 'turno')    { mShow('m-bloque-turno'); }
+  else if (v === 'feriado')  { mShow('m-bloque-feriado'); }
+  mActualizarAsunto();
+}
+
+function mActualizarAsunto() {
+  const v = mVal('m-asunto');
+  const ic = mVal('m-ic-num') || 'XXXXX', rut = mVal('m-ic-rut') || 'XXXXXXXXX';
+  const nombre = mVal('m-ic-nombre') || 'NOMBRE', motivo = mVal('m-ic-motivo') || 'MOTIVO';
+  let texto = '';
+  if (v === 'escalamiento') texto = `IC: ${ic} RUT: ${rut} Nombre: ${nombre} Motivo: ${motivo}`;
+  else if (v === 'ti')      texto = `IC: ${ic} RUT: ${rut} Nombre: ${nombre} Motivo: ${motivo} [TI]`;
+  else if (v === 'turno')   {
+    const f = mVal('m-turno-fecha');
+    let fF = ''; if (f) { const p = f.split('-'); if (p.length===3) fF=` - ${p[2]}-${p[1]}-${p[0]}`; }
+    texto = `Solicitud de cambio de turno${fF}`;
+  } else if (v === 'feriado') {
+    const f = mVal('m-feriado-fecha');
+    let fF = ''; if (f) { const p = f.split('-'); if (p.length===3) fF=` - ${p[2]}-${p[1]}-${p[0]}`; }
+    texto = `${mVal('m-feriado-tipo') || 'Día administrativo / vacaciones'}${fF}`;
+  }
+  const el = document.getElementById('m-asunto-generado');
+  if (el) el.textContent = texto || '—';
+}
+
+function mSincronizarDatos() {
+  const nom = mVal('m-ic-nombre'), rut = mVal('m-ic-rut');
+  ['m-ti-nombre','m-sol-nombre'].forEach(id => { const el = document.getElementById(id); if (el) el.value = nom; });
+  ['m-ti-rut','m-sol-rut'].forEach(id => { const el = document.getElementById(id); if (el) el.value = rut; });
+}
+
+function mCheckAlumno() {
+  const alguno = ['m-alu-nombre','m-alu-rut','m-alu-tel','m-alu-correo'].some(id => mVal(id) !== '');
+  ['nombre','rut'].forEach(k => {
+    const req = document.getElementById('m-alu-req-' + k);
+    if (req) req.innerHTML = alguno ? '<span style="color:#c0392b;">*</span>' : '';
+  });
+}
+
+// Sub-modal confirmación
+function mMostrarSubModal(callbackCerrar) {
+  const overlay = document.getElementById('submodalCorreo');
+  const countdown = document.getElementById('submodalCorreoCountdown');
+  overlay.classList.add('visible');
+  let seg = 5;
+  countdown.textContent = `Cerrando en ${seg} segundos...`;
+  const timer = setInterval(() => {
+    seg--;
+    if (seg <= 0) {
+      clearInterval(timer);
+      overlay.classList.remove('visible');
+      if (callbackCerrar) callbackCerrar();
+    } else {
+      countdown.textContent = `Cerrando en ${seg} segundo${seg !== 1 ? 's' : ''}...`;
+    }
+  }, 1000);
+}
+
+function mLimpiarFormulario() {
+  ['modalSupervisor','modalComercial'].forEach(id => {
+    const modal = document.getElementById(id);
+    if (modal) {
+      modal.querySelectorAll('input, select, textarea').forEach(el => {
+        if (el.type === 'checkbox') el.checked = false;
+        else el.value = '';
+      });
+    }
+  });
+  mCambiarAsunto();
+  mMostrarFormComercial();
+  cerrarModalCorreo('supervisor');
+  cerrarModalCorreo('comercial');
+  document.body.style.overflow = '';
+}
+
+// Validar y enviar supervisor
+async function mValidarYEnviar() {
+  mLimpiarErrores();
+  mHide('m-error-validacion');
+  const v = mVal('m-asunto');
+  const errores = [];
+
+  if (v === 'escalamiento' || v === 'ti') {
+    if (!mVal('m-ic-num'))    { mMarcarError('m-ic-num');    errores.push('IC'); }
+    if (!mVal('m-ic-rut'))    { mMarcarError('m-ic-rut');    errores.push('RUT del asunto'); }
+    if (!mVal('m-ic-nombre')) { mMarcarError('m-ic-nombre'); errores.push('Nombre'); }
+    if (!mVal('m-ic-motivo')) { mMarcarError('m-ic-motivo'); errores.push('Motivo'); }
+  }
+  if (v === 'escalamiento') {
+    if (!mVal('m-sol-tel'))    { mMarcarError('m-sol-tel');    errores.push('Teléfono solicitante'); }
+    else if (!mValidarTel(mVal('m-sol-tel'))) { mMarcarError('m-sol-tel'); errores.push('Teléfono (debe tener 9 dígitos)'); }
+    if (!mVal('m-sol-correo')) { mMarcarError('m-sol-correo'); errores.push('Correo solicitante'); }
+    else if (!mValidarCorreo(mVal('m-sol-correo'))) { mMarcarError('m-sol-correo'); errores.push('Correo solicitante inválido'); }
+    if (['m-alu-nombre','m-alu-rut','m-alu-tel','m-alu-correo'].some(id => mVal(id) !== '')) {
+      if (!mVal('m-alu-nombre')) { mMarcarError('m-alu-nombre'); errores.push('Nombre alumno'); }
+      if (!mVal('m-alu-rut'))   { mMarcarError('m-alu-rut');    errores.push('RUT alumno'); }
+    }
+  }
+  if (v === 'ti') {
+    if (!mVal('m-ti-tel'))        { mMarcarError('m-ti-tel');        errores.push('Teléfono contacto'); }
+    else if (!mValidarTel(mVal('m-ti-tel'))) { mMarcarError('m-ti-tel'); errores.push('Teléfono (debe tener 9 dígitos)'); }
+    if (!mVal('m-ti-correo-per')) { mMarcarError('m-ti-correo-per'); errores.push('Correo personal'); }
+    else if (!mValidarCorreo(mVal('m-ti-correo-per'))) { mMarcarError('m-ti-correo-per'); errores.push('Correo personal inválido'); }
+    if (!mVal('m-ti-correo-inst')){ mMarcarError('m-ti-correo-inst'); errores.push('Correo institucional'); }
+    if (!mVal('m-ti-contacto'))   { mMarcarError('m-ti-contacto');   errores.push('Tipo de contacto'); }
+  }
+  if (v === 'turno') {
+    if (!mVal('m-turno-fecha'))         { mMarcarError('m-turno-fecha');         errores.push('Fecha del turno'); }
+    if (!mVal('m-turno-solicitante'))   { mMarcarError('m-turno-solicitante');   errores.push('Tu nombre'); }
+    if (!mVal('m-turno-original-sol'))  { mMarcarError('m-turno-original-sol');  errores.push('Tu turno original'); }
+    if (!mVal('m-turno-reemplazo'))     { mMarcarError('m-turno-reemplazo');     errores.push('Ejecutivo que reemplaza'); }
+    if (!mVal('m-turno-original-rem'))  { mMarcarError('m-turno-original-rem');  errores.push('Turno original del reemplazo'); }
+    if (!mVal('m-turno-nuevo-rem'))     { mMarcarError('m-turno-nuevo-rem');     errores.push('Turno que cubrirá'); }
+    if (!mVal('m-turno-motivo'))        { mMarcarError('m-turno-motivo');        errores.push('Motivo'); }
+    if (!document.getElementById('m-turno-confirmacion').checked) errores.push('Confirmar coordinación de turno');
+    if (mVal('m-turno-solicitante') && mVal('m-turno-solicitante') === mVal('m-turno-reemplazo')) {
+      mMarcarError('m-turno-solicitante'); mMarcarError('m-turno-reemplazo');
+      errores.push('Solicitante y reemplazo no pueden ser la misma persona');
+    }
+  }
+  if (v === 'feriado') {
+    if (!mVal('m-feriado-solicitante')) { mMarcarError('m-feriado-solicitante'); errores.push('Tu nombre'); }
+    if (!mVal('m-feriado-tipo'))        { mMarcarError('m-feriado-tipo');        errores.push('Tipo de solicitud'); }
+    if (!mVal('m-feriado-fecha'))       { mMarcarError('m-feriado-fecha');       errores.push('Fecha solicitada'); }
+  }
+
+  if (errores.length > 0) {
+    const el = document.getElementById('m-error-validacion');
+    el.textContent = 'Faltan campos obligatorios: ' + [...new Set(errores)].join(', ') + '.';
+    mShow('m-error-validacion');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const asuntoTexto = document.getElementById('m-asunto-generado').textContent;
+  const dest = 'johanna.escalona@umayor.cl;barbara.fernandez@umayor.cl';
+  const cc   = 'eduardo.ferrada@umayor.cl';
+  let cuerpo = '', rutRegistro = mVal('m-ic-rut') || mVal('m-sol-rut') || '-';
+
+  if (v === 'escalamiento') {
+    cuerpo  = `Estimados,\n\nNecesito su cooperación con el siguiente caso:\n${mVal('m-resumen') || '[Resumen del requerimiento]'}\n\n`;
+    cuerpo += `DATOS DEL SOLICITANTE\nNombre: ${mVal('m-sol-nombre')}\nRUT: ${mVal('m-sol-rut')}\nTeléfono: ${mVal('m-sol-tel')}\nCorreo: ${mVal('m-sol-correo')}`;
+    if (mVal('m-sol-comentario')) cuerpo += `\nComentario: ${mVal('m-sol-comentario')}`;
+    if (mVal('m-alu-nombre')) {
+      cuerpo += `\n\nDATOS DEL ALUMNO\nNombre: ${mVal('m-alu-nombre')}\nRUT: ${mVal('m-alu-rut')}`;
+      if (mVal('m-alu-tel'))    cuerpo += `\nTeléfono: ${mVal('m-alu-tel')}`;
+      if (mVal('m-alu-correo')) cuerpo += `\nCorreo: ${mVal('m-alu-correo')}`;
+      if (mVal('m-alu-comentario')) cuerpo += `\nComentario: ${mVal('m-alu-comentario')}`;
+    }
+    cuerpo += '\n\nAtte.\n\n[Insertar firma institucional]';
+  } else if (v === 'ti') {
+    cuerpo  = `Estimados,\n\nNecesito apoyo con el siguiente caso TI:\n\nDATOS DE CONTACTO\nNombre: ${mVal('m-ti-nombre')}\nRUT: ${mVal('m-ti-rut')}\nTeléfono: ${mVal('m-ti-tel')}\nCorreo personal: ${mVal('m-ti-correo-per')}\n\n`;
+    cuerpo += `CASO TI\nCorreo institucional: ${mVal('m-ti-correo-inst') || '-'}\nTipo de contacto: ${mVal('m-ti-contacto') || '-'}\nPerfil con error: ${mVal('m-ti-perfil') || '-'}\nPlataforma: ${mVal('m-ti-plataforma') || '-'}\nDescripción: ${mVal('m-ti-desc') || '-'}\nPruebas realizadas: ${mVal('m-ti-pruebas') || '-'}`;
+    cuerpo += '\n\nAtte.\n\n[Insertar firma institucional]';
+  } else if (v === 'turno') {
+    const f = mVal('m-turno-fecha');
+    let fL = f; if (f) { const p = f.split('-'); if (p.length===3) fL=`${p[2]}-${p[1]}-${p[0]}`; }
+    cuerpo  = `Estimadas,\n\nLes escribo para solicitar autorización de un cambio de turno el día ${fL}.\n\n`;
+    cuerpo += `- Solicitante: ${mVal('m-turno-solicitante')}, turno ${mVal('m-turno-original-sol')}.\n`;
+    cuerpo += `- Reemplazo: ${mVal('m-turno-reemplazo')}, turno original ${mVal('m-turno-original-rem')}, asumirá turno ${mVal('m-turno-nuevo-rem')}.\n\nMotivo: ${mVal('m-turno-motivo')}.`;
+    if (mVal('m-turno-comentarios')) cuerpo += `\n\nComentarios: ${mVal('m-turno-comentarios')}`;
+    cuerpo += '\n\nAgradezco su apoyo.\n\nAtte.\n\n[Insertar firma institucional]';
+    rutRegistro = '-';
+  } else if (v === 'feriado') {
+    const f = mVal('m-feriado-fecha');
+    let fL = f; if (f) { const p = f.split('-'); if (p.length===3) fL=`${p[2]}-${p[1]}-${p[0]}`; }
+    cuerpo = `Estimadas,\n\nSolicito formalmente ${mVal('m-feriado-tipo')} para el día ${fL}.`;
+    if (mVal('m-feriado-motivo')) cuerpo += `\nMotivo: ${mVal('m-feriado-motivo')}.`;
+    if (mVal('m-feriado-comentarios')) cuerpo += `\n\nComentarios: ${mVal('m-feriado-comentarios')}`;
+    cuerpo += '\n\nQuedo atento(a) a la confirmación.\n\nAtte.\n\n[Insertar firma institucional]';
+    rutRegistro = '-';
+  }
+
+  window.location.href = `mailto:${dest}?cc=${cc}&subject=${encodeURIComponent(asuntoTexto)}&body=${encodeURIComponent(cuerpo)}`;
+  mMostrarSubModal(mLimpiarFormulario);
+}
+
+// Enviar comercial desde modal
+async function mEnviarComercial() {
+  mLimpiarErrores();
+  mHide('m-error-com');
+  const errores = [];
+  if (!mVal('m-com-rut-asunto'))    { mMarcarError('m-com-rut-asunto');    errores.push('RUT Prospecto'); }
+  if (!mVal('m-com-nombre-asunto')) { mMarcarError('m-com-nombre-asunto'); errores.push('Nombre Prospecto'); }
+  if (!mVal('m-com-carrera'))       { mMarcarError('m-com-carrera');       errores.push('Carrera de interés'); }
+  if (!mVal('m-com-jornada'))       { mMarcarError('m-com-jornada');       errores.push('Jornada'); }
+  if (!mVal('m-com-tel'))  { mMarcarError('m-com-tel');  errores.push('Teléfono'); }
+  else if (!mValidarTel(mVal('m-com-tel'))) { mMarcarError('m-com-tel'); errores.push('Teléfono (debe tener 9 dígitos)'); }
+  if (!mVal('m-com-correo')) { mMarcarError('m-com-correo'); errores.push('Correo'); }
+  else if (!mValidarCorreo(mVal('m-com-correo'))) { mMarcarError('m-com-correo'); errores.push('Correo inválido'); }
+
+  if (errores.length > 0) {
+    const el = document.getElementById('m-error-com');
+    el.textContent = 'Faltan campos obligatorios: ' + [...new Set(errores)].join(', ') + '.';
+    mShow('m-error-com');
+    return;
+  }
+
+  const asunto = document.getElementById('m-asunto-com-generado').textContent;
+  const cuerpo =
+    `Estimados,\n\nSolicito su colaboración con prospecto interesado en la carrera ${mVal('m-com-carrera')}.\nJornada: ${mVal('m-com-jornada')}\n\n` +
+    `DATOS DE CONTACTO\nNombre: ${mVal('m-com-nombre-asunto')}\nRUT: ${mVal('m-com-rut-asunto')}\nTeléfono: ${mVal('m-com-tel')}\nCorreo: ${mVal('m-com-correo')}\n\n` +
+    `Carrera: ${mVal('m-com-carrera')}\nJornada: ${mVal('m-com-jornada')}\nBeneficios ministeriales: ${mVal('m-com-beneficios') || 'No indicado'}\nComentarios: ${mVal('m-com-comentario') || '-'}` +
+    '\n\nAtentamente.\n\n[Insertar firma institucional]';
+
+  const dest = 'marcelo.sepulveda@umayor.cl;francisca.castillo@umayor.cl';
+  window.location.href = `mailto:${dest}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
+  mMostrarSubModal(mLimpiarFormulario);
+}
+
+// Comercial sincronizar
+function mMostrarFormComercial() {
+  const v = mVal('m-asunto-com');
+  const b = document.getElementById('m-bloque-comercial');
+  if (b) b.style.display = v ? 'block' : 'none';
+  if (v) mActualizarAsuntoComercial();
+}
+function mSincronizarComercial() {
+  const rutEl = document.getElementById('m-com-rut-asunto');
+  if (rutEl) rutEl.value = rutEl.value.replace(/[.\-]/g, '');
+  const n = document.getElementById('m-com-nombre'), r = document.getElementById('m-com-rut');
+  if (n) n.value = mVal('m-com-nombre-asunto');
+  if (r) r.value = mVal('m-com-rut-asunto');
+  mActualizarAsuntoComercial();
+}
+function mActualizarAsuntoComercial() {
+  const el = document.getElementById('m-asunto-com-generado');
+  if (el) el.textContent = `RUT: ${mVal('m-com-rut-asunto')||'XXXXXXXXX'} · Nombre: ${mVal('m-com-nombre-asunto')||'NOMBRE'} · Carrera: ${mVal('m-com-carrera')||'CARRERA'} · Jornada: ${mVal('m-com-jornada')||'JORNADA'}`;
+}
+
+// Cargar ejecutivos en selects del modal
+async function mCargarEjecutivos() {
+  const SURL = 'https://jxmrznqppddabuqtbufq.supabase.co';
+  const SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTA4MTcsImV4cCI6MjA4ODEyNjgxN30.pqT_PlAAn3oR6g_0Iaa2fs6qV8M3RQFzNOCAssyZZh4';
+  try {
+    const res = await fetch(`${SURL}/rest/v1/ejecutivos?select=nombre,rol&activo=eq.true&order=nombre`, {
+      headers: { 'apikey': SKEY, 'Authorization': `Bearer ${SKEY}` }
+    });
+    const data = await res.json();
+    if (!data || !Array.isArray(data)) return;
+    const apoyos = data.filter(e => e.rol === 'apoyo');
+    const staffs = data.filter(e => e.rol === 'staff');
+    const supervisores = data.filter(e => e.rol === 'supervisor');
+    const ids = ['m-turno-solicitante','m-turno-reemplazo','m-feriado-solicitante'];
+    ids.forEach(id => {
+      const sel = document.getElementById(id);
+      if (!sel) return;
+      sel.innerHTML = '<option value="">— Selecciona de la lista —</option>';
+      function ag(titulo, lista) {
+        if (!lista.length) return;
+        const g = document.createElement('optgroup'); g.label = titulo;
+        lista.forEach(e => { const o = document.createElement('option'); o.value = e.nombre; o.textContent = e.nombre; g.appendChild(o); });
+        sel.appendChild(g);
+      }
+      ag('=== SUPERVISORES ===', supervisores);
+      ag('=== STAFF ===', staffs);
+      ag('=== EQUIPO DE APOYO ===', apoyos);
+    });
+  } catch(err) { console.error('Error cargando ejecutivos modal:', err); }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   iniciarPortal();
   cargarMegaMenuDinámico();
