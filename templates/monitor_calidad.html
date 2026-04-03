@@ -143,7 +143,7 @@
 
 </div>
 
-<a href="/cdn-cgi/l/email-protection#147170617566707b3a72716666757075546179756d7b663a77782b6761767e71776029e48b848f344671647b666071347071347166667b6634f6948734597b7a7d607b66345775787d70757032767b706d295166667b663470716071776075707b2e" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
+<a href="/cdn-cgi/l/email-protection#402524352132242f6e2625323221242100352d21392f326e232c7f3335222a2523347db0dfd0db601225302f323425602425602532322f3260a2c0d3600d2f2e29342f326003212c2924212466222f24397d0532322f326024253425233421242f7a" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
 
 <div id="toast">✅ Evaluación copiada al portapapeles</div>
 
@@ -164,10 +164,8 @@
       const data = await res.json();
       const container = document.getElementById('exec-chips');
       container.innerHTML = '';
-
       const orden = ['supervisor', 'staff', 'apoyo'];
       const sorted = data.sort((a, b) => orden.indexOf(a.rol) - orden.indexOf(b.rol) || a.nombre.localeCompare(b.nombre));
-
       sorted.forEach(e => {
         const iniciales = e.nombre.split(' ').map(p => p[0]).join('').substring(0, 2).toUpperCase();
         const chip = document.createElement('div');
@@ -226,4 +224,16 @@
     document.getElementById('nombre_solicitante').value = '';
     document.getElementById('rut').value = '';
     document.getElementById('resumen').value = '';
-    document.getElementById('transcripcion').va
+    document.getElementById('transcripcion').value = '';
+    
+    document.querySelectorAll('.exec-chip').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('input[type=radio]').forEach(function(r) {
+      if(r.value === 'Sí') r.checked = true;
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
