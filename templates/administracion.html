@@ -119,9 +119,7 @@
       <button class="tab-btn" onclick="switchTab('mensajes', this)"><i class="fa-solid fa-message"></i> 2. Catálogo de Alertas y Mensajes</button>
       <button class="tab-btn" onclick="switchTab('enlaces', this)"><i class="fa-solid fa-link"></i> 3. Gestión de Enlaces</button>
       <button class="tab-btn" onclick="switchTab('casos', this)"><i class="fa-solid fa-clipboard-list"></i> 4. Reporte de Casos</button>
-      <button class="tab-btn" onclick="switchTab('gestor-escuelas', this)"><i class="fa-solid fa-book-bookmark"></i> 5. Directorio Escuelas</button>
-      <button class="tab-btn" onclick="switchTab('gestor-academicos', this)"><i class="fa-solid fa-users-rectangle"></i> 6. Contactos Académicos</button>
-      <button class="tab-btn" onclick="switchTab('gestor-administrativos', this)"><i class="fa-solid fa-building-user"></i> 7. Contactos Administrativos</button>
+      <button class="tab-btn" onclick="switchTab('gestores', this)"><i class="fa-solid fa-folder-open"></i> 5. Edición de Directorio</button>
     </div>
 
     <div class="content">
@@ -416,7 +414,7 @@
         </div>
 
         <div id="tab-casos" class="tab-panel">
-            <h2>Exportación y Reporte de Casos</h2>
+            <h2>Exportación y Reporte de Casos <button class="btn-accion btn-filtrar" onclick="cargarRegistros()" style="font-size:12px; height:auto; padding:6px 14px;"><i class="fa-solid fa-rotate-right"></i> Actualizar</button></h2>
             <div class="filtros">
                 <div class="campo">
                     <label>Fecha Desde</label>
@@ -455,36 +453,38 @@
         </div>
 
 
-        <div id="tab-gestor-escuelas" class="tab-panel">
-            <div style="text-align:center; padding:60px 20px;">
-                <i class="fa-solid fa-book-bookmark" style="font-size:48px; color:var(--um-azul); margin-bottom:20px; display:block;"></i>
-                <h2 style="border:none; font-size:20px; margin-bottom:10px;">Directorio de Escuelas</h2>
-                <p style="color:var(--texto-suave); margin-bottom:30px; font-size:14px;">Gestiona los registros del directorio — agrega, edita y elimina contactos de directores y secretarias.</p>
-                <a href="/escuelas" target="_blank" style="background:var(--um-azul); color:#fff; border:none; padding:14px 32px; border-radius:8px; font-size:15px; font-weight:700; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:10px;">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Directorio de Escuelas
-                </a>
-            </div>
-        </div>
+        <div id="tab-gestores" class="tab-panel">
+            <h2>Edición de Directorio</h2>
+            <p style="color:var(--texto-suave); font-size:13px; margin-bottom:28px;">Selecciona el módulo que deseas gestionar. Cada uno se abrirá en una nueva pestaña.</p>
+            <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:20px;">
 
-        <div id="tab-gestor-academicos" class="tab-panel">
-            <div style="text-align:center; padding:60px 20px;">
-                <i class="fa-solid fa-users-rectangle" style="font-size:48px; color:var(--um-azul); margin-bottom:20px; display:block;"></i>
-                <h2 style="border:none; font-size:20px; margin-bottom:10px;">Contactos Académicos</h2>
-                <p style="color:var(--texto-suave); margin-bottom:30px; font-size:14px;">Gestiona los registros de contactos académicos — agrega, edita y elimina.</p>
-                <a href="/academicos" target="_blank" style="background:var(--um-azul); color:#fff; border:none; padding:14px 32px; border-radius:8px; font-size:15px; font-weight:700; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:10px;">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Contactos Académicos
-                </a>
-            </div>
-        </div>
+                <div style="background:var(--um-gris); border:1px solid var(--borde); border-radius:12px; padding:32px 20px; text-align:center;">
+                    <i class="fa-solid fa-book-bookmark" style="font-size:40px; color:var(--um-azul); margin-bottom:16px; display:block;"></i>
+                    <div style="font-size:15px; font-weight:700; color:var(--texto); margin-bottom:8px;">Directorio de Escuelas</div>
+                    <div style="font-size:12px; color:var(--texto-suave); margin-bottom:20px;">Directores, docentes y secretarias por escuela y sede.</div>
+                    <a href="/escuelas" target="_blank" style="background:var(--um-azul); color:#fff; border:none; padding:10px 22px; border-radius:8px; font-size:13px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir
+                    </a>
+                </div>
 
-        <div id="tab-gestor-administrativos" class="tab-panel">
-            <div style="text-align:center; padding:60px 20px;">
-                <i class="fa-solid fa-building-user" style="font-size:48px; color:var(--um-azul); margin-bottom:20px; display:block;"></i>
-                <h2 style="border:none; font-size:20px; margin-bottom:10px;">Contactos Administrativos</h2>
-                <p style="color:var(--texto-suave); margin-bottom:30px; font-size:14px;">Gestiona los registros de contactos administrativos — agrega, edita y elimina.</p>
-                <a href="/contactos-administrativos" target="_blank" style="background:var(--um-azul); color:#fff; border:none; padding:14px 32px; border-radius:8px; font-size:15px; font-weight:700; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:10px;">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Contactos Administrativos
-                </a>
+                <div style="background:var(--um-gris); border:1px solid var(--borde); border-radius:12px; padding:32px 20px; text-align:center;">
+                    <i class="fa-solid fa-users-rectangle" style="font-size:40px; color:var(--um-azul); margin-bottom:16px; display:block;"></i>
+                    <div style="font-size:15px; font-weight:700; color:var(--texto); margin-bottom:8px;">Contactos Académicos</div>
+                    <div style="font-size:12px; color:var(--texto-suave); margin-bottom:20px;">Académicos y coordinadores por escuela.</div>
+                    <a href="/academicos" target="_blank" style="background:var(--um-azul); color:#fff; border:none; padding:10px 22px; border-radius:8px; font-size:13px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir
+                    </a>
+                </div>
+
+                <div style="background:var(--um-gris); border:1px solid var(--borde); border-radius:12px; padding:32px 20px; text-align:center;">
+                    <i class="fa-solid fa-building-user" style="font-size:40px; color:var(--um-azul); margin-bottom:16px; display:block;"></i>
+                    <div style="font-size:15px; font-weight:700; color:var(--texto); margin-bottom:8px;">Contactos Administrativos</div>
+                    <div style="font-size:12px; color:var(--texto-suave); margin-bottom:20px;">Administrativos y personal de apoyo por área.</div>
+                    <a href="/contactos-administrativos" target="_blank" style="background:var(--um-azul); color:#fff; border:none; padding:10px 22px; border-radius:8px; font-size:13px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir
+                    </a>
+                </div>
+
             </div>
         </div>
 
