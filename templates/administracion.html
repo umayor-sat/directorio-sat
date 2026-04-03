@@ -441,8 +441,9 @@
                             <th>Fecha y Hora</th>
                             <th>Ejecutivo</th>
                             <th>Área</th>
-                            <th>Solicitud</th>
-                            <th>RUT Registro</th>
+                            <th>Asunto</th>
+                            <th>Nombre Solicitante</th>
+                            <th>RUT Solicitante</th>
                             <th style="text-align:center;" class="columna-acciones">Acción</th>
                         </tr>
                     </thead>
@@ -452,6 +453,7 @@
                 </table>
             </div>
         </div>
+
 
         <div id="tab-gestor-escuelas" class="tab-panel">
             <div style="text-align:center; padding:60px 20px;">
@@ -573,9 +575,9 @@
 
     async function cargarRegistros() {
         const cuerpo = document.getElementById('tablaCasos');
-        cuerpo.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px;">Cargando...</td></tr>`;
+        cuerpo.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px;">Cargando...</td></tr>`;
         
-        let query = _supabase.from('registro_derivaciones').select('*').order('created_at', { ascending: false });
+        let query = _supabase.from('registro_derivaciones').select('*').order('Fecha', { ascending: false });
         
         const ejec = document.getElementById('filtroEjecutivo').value;
         if (ejec) query = query.ilike('ejecutivo', `%${ejec}%`);
@@ -590,19 +592,21 @@
 
         cuerpo.innerHTML = '';
         if(data.length === 0){
-            cuerpo.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px; color:#888;">No hay registros</td></tr>`;
+            cuerpo.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; color:#888;">No hay registros</td></tr>`;
             return;
         }
 
         data.forEach(r => {
-            const fecha = new Date(r.created_at).toLocaleString('es-CL', { timeZone: 'America/Santiago' });
+            const fecha = new Date(r.Fecha || r.created_at).toLocaleString('es-CL', { timeZone: 'America/Santiago' });
+            const areaBadgeColor = r.area === 'Comercial' ? '#005aa9' : r.area === 'SAT' ? '#1a5c38' : '#555';
             cuerpo.innerHTML += `
             <tr>
-                <td>${fecha}</td>
-                <td><strong>${r.ejecutivo}</strong></td>
-                <td><span class="badge" style="background:#555;">${r.area_derivacion}</span></td>
-                <td>${r.solicitud}</td>
-                <td>${r.rut_alumno || '-'}</td>
+                <td style="white-space:nowrap;">${fecha}</td>
+                <td><strong>${r.ejecutivo || '-'}</strong></td>
+                <td><span class="badge" style="background:${areaBadgeColor};">${r.area || '-'}</span></td>
+                <td style="font-size:12px;">${r.asunto || '-'}</td>
+                <td>${r.nombre_solicitante || '-'}</td>
+                <td>${r.rut_solicitante || '-'}</td>
                 <td style="text-align:center;"><button class="btn-tabla btn-borrar" onclick="borrarCaso(${r.id})"><i class="fa-solid fa-trash"></i></button></td>
             </tr>`;
         });
