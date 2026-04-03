@@ -202,29 +202,33 @@ input:checked + .slider:before { transform: translateX(20px); }
 </style>
 
 <style media="print">
-  /* Ocultar todo excepto el dashboard */
-  #login-overlay, #loader-overlay, .topbar-info,
-  .tabs-container, .btn-floating, footer,
-  #modal-overlay, .control-bar,
-  #view-top, #view-historico { display: none !important; }
+  /* OCULTAR TODO por defecto */
+  body > * { display: none !important; }
 
-  /* Mostrar solo resumen */
-  body { background: #fff !important; }
-  .header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .main-content { display: block !important; padding: 16px !important; max-width: 100% !important; }
+  /* MOSTRAR solo header y main-content */
+  header.header { display: flex !important; }
+  #main-content { display: block !important; }
+
+  /* Ocultar dentro del main lo que no es resumen */
+  .tabs-container, .topbar-info, .btn-floating,
+  footer, #modal-overlay, #view-top, #view-historico { display: none !important; }
+
+  /* Mostrar solo resumen ejecutivo */
   #view-resumen { display: block !important; }
 
-  /* Tarjetas con colores exactos */
+  /* Colores exactos */
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
-  /* Sin saltos de página dentro de tarjetas */
-  .kpi-card, .global-panel, .global-comp { break-inside: avoid; }
-
-  /* Ajuste de grids para impresión */
+  /* Layout */
+  body { background: #fff !important; margin: 0; }
+  .main-content { padding: 16px !important; max-width: 100% !important; }
   .grid-lvl-1, .grid-lvl-2 { grid-template-columns: repeat(3, 1fr) !important; gap: 16px !important; }
 
-  /* Sin sombras para impresión limpia */
-  .kpi-card, .global-panel { box-shadow: none !important; border: 1px solid #dde4ee !important; }
+  /* Sin sombras */
+  .kpi-card, .global-panel { box-shadow: none !important; }
+
+  /* Sin saltos dentro de tarjetas */
+  .kpi-card, .global-panel { break-inside: avoid; }
 </style>
 </head>
 <body>
@@ -281,6 +285,9 @@ input:checked + .slider:before { transform: translateX(20px); }
 
 <div class="topbar-info">
   <div class="last-update">Datos actualizados al: <span id="ui-fecha-act"><i class="far fa-clock"></i> --/--/---- --:--</span></div>
+  <button onclick="location.reload();" style="background:var(--um-amarillo); color:#111; border:none; border-radius:6px; padding:7px 16px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; transition:background 0.15s;" onmouseover="this.style.background='var(--um-amarillo-hover)'" onmouseout="this.style.background='var(--um-amarillo)'">
+    <i class="fas fa-sync-alt"></i> Actualizar
+  </button>
 </div>
 
 
