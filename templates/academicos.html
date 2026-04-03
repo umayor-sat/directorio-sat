@@ -130,7 +130,7 @@ th { background: #005baa; color: white; text-align: left; }
 <button class="btn-admin-flotante" onclick="abrirAgregar()" title="Administración">➕</button>
 {% endif %}
 
-<a href="/cdn-cgi/l/email-protection#93f6f7e6f2e1f7fcbdf5f6e1e1f2f7f2d3e6fef2eafce1bdf0fface0e6f1f9f6f0e7ae630c0308b3c1f6e3fce1e7f6b3f7f6b3f6e1e1fce1b3711300b3d7fae1f6f0e7fce1fafcb3c0d2c7b5f1fcf7eaaec35032f4fafdf2b3f7fcfdf7f6b3fcf0e6e1e1fa5020b3f6ffb3f6e1e1fce1a9b6a3d2b6a3d2d7f6e0f0e1fae3f0fa5020fdb3f7f6ffb3e3e1fcf1fff6fef2a9b6a3d2b6a3d2bbd2f4e1f6f4f2b3f2e2e6503eb3f0e6f2ffe2e6faf6e1b3f7f6e7f2fffff6b3f2f7faf0fafcfdf2ffba" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
+<a href="/cdn-cgi/l/email-protection#096c6d7c687b6d66276f6c7b7b686d68497c646870667b276a65367a7c6b636c6a7d34f9969992295b6c79667b7d6c296d6c296c7b7b667b29eb899a294d607b6c6a7d667b6066295a485d2f6b666d703459caa86e606768296d66676d6c29666a7c7b7b60caba296c65296c7b7b667b332c39482c39484d6c7a6a7b60796a60caba67296d6c6529797b666b656c6468332c39482c394821486e7b6c6e682968787ccaa4296a7c6865787c606c7b296d6c7d6865656c29686d606a606667686520" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
 
 <div id="modalAyuda" class="modal">
   <div class="modal-content">
@@ -592,4 +592,15 @@ async function eliminarRegistro(id, btn) {
 
 // AYUDA
 function abrirAyuda() { document.getElementById("modalAyuda").style.display = "block"; }
-function cerrarAyuda() { document.ge
+function cerrarAyuda() { document.getElement("modalAyuda").style.display = "none"; }
+
+    // Cerrar formulario y login al hacer click fuera del modal
+    window.addEventListener("click", function(e) {
+      if (e.target.id === "modalAgregar") cerrarAgregar();
+      if (e.target.id === "modalLogin")   cerrarLogin();
+    });
+  </script>
+
+
+</body>
+</html>
