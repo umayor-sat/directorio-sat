@@ -48,6 +48,13 @@
   .btn-secondary:hover { background: #d0d0d0; }
   .btn-home { background: var(--azul); color: white; margin-left: auto; }
 
+  /* CHIPS EJECUTIVO */
+  .exec-chip { display:inline-flex; align-items:center; gap:7px; padding:6px 12px; border:1px solid #d8d8d8; border-radius:20px; cursor:pointer; font-size:12px; font-weight:600; color:#3d3d3d; background:#fff; transition:all 0.15s; }
+  .exec-chip:hover { border-color:#005baa; color:#005baa; }
+  .exec-chip.active { background:#005baa; color:#fff; border-color:#005baa; }
+  .exec-avatar { width:22px; height:22px; border-radius:50%; background:#e6f1fb; color:#0c447c; font-size:9px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .exec-chip.active .exec-avatar { background:rgba(255,255,255,0.25); color:#fff; }
+
   /* TOAST */
   #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 25px; border-radius: 50px; font-size: 14px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1000; }
   #toast.show { opacity: 1; }
@@ -71,21 +78,17 @@
   <div class="grid">
     <div class="field">
       <label>Ejecutivo/a Evaluado</label>
-      <select id="ejecutivo">
-        <option value="">Seleccione ejecutivo...</option>
-        <option value="Bárbara Fernandez">Bárbara Fernandez</option>
-        <option value="Johanna Escalona">Johanna Escalona</option>
-        <option value="Maria Jesus Serrano">Maria Jesus Serrano</option>
-        <option value="Eduardo Ferrada">Eduardo Ferrada</option>
-        <option value="Apoyo Externo">Apoyo Externo / Staff</option>
-      </select>
+      <div id="exec-chips" style="display:flex; flex-wrap:wrap; gap:8px; padding:8px; background:#f3f6f9; border-radius:8px; border:1px solid #d8d8d8; min-height:44px;">
+        <span style="font-size:12px; color:#999; align-self:center;">Cargando ejecutivos...</span>
+      </div>
+      <input type="hidden" id="ejecutivo" value="">
     </div>
     <div class="field">
       <label>Nombre Solicitante</label>
       <input type="text" id="nombre_solicitante" placeholder="Quien llama">
     </div>
     <div class="field">
-      <label>RUT Solicitante (Opcional)</label>
+      <label>RUT Solicitante</label>
       <input type="text" id="rut" placeholder="123456789">
     </div>
     <div class="field">
@@ -140,17 +143,51 @@
 
 </div>
 
-<a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de error – Monitor Calidad&body=Error detectado:" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
+<a href="/cdn-cgi/l/email-protection#147170617566707b3a72716666757075546179756d7b663a77782b6761767e71776029e48b848f344671647b666071347071347166667b6634f6948734597b7a7d607b66345775787d70757032767b706d295166667b663470716071776075707b2e" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
 
 <div id="toast">✅ Evaluación copiada al portapapeles</div>
 
-<script>
-  // Autocompletar fecha (No editable por el usuario)
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Autocompletar fecha
   const hoy = new Date();
   document.getElementById('fecha_actual').value = hoy.toLocaleDateString('es-CL');
 
+  // Cargar ejecutivos desde Supabase
+  const SURL = 'https://jxmrznqppddabuqtbufq.supabase.co';
+  const SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjU1MDgxNywiZXhwIjoyMDg4MTI2ODE3fQ.EopCzL9iTQ0ujKFWNi4aqVUhTDeYp4_0nt8wcdk67Mo';
+
+  async function cargarEjecutivos() {
+    try {
+      const res = await fetch(`${SURL}/rest/v1/ejecutivos?select=nombre,rol&activo=eq.true&order=nombre`, {
+        headers: { 'apikey': SKEY, 'Authorization': `Bearer ${SKEY}` }
+      });
+      const data = await res.json();
+      const container = document.getElementById('exec-chips');
+      container.innerHTML = '';
+
+      const orden = ['supervisor', 'staff', 'apoyo'];
+      const sorted = data.sort((a, b) => orden.indexOf(a.rol) - orden.indexOf(b.rol) || a.nombre.localeCompare(b.nombre));
+
+      sorted.forEach(e => {
+        const iniciales = e.nombre.split(' ').map(p => p[0]).join('').substring(0, 2).toUpperCase();
+        const chip = document.createElement('div');
+        chip.className = 'exec-chip';
+        chip.innerHTML = `<div class="exec-avatar">${iniciales}</div>${e.nombre}`;
+        chip.onclick = () => {
+          document.querySelectorAll('.exec-chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          document.getElementById('ejecutivo').value = e.nombre;
+        };
+        container.appendChild(chip);
+      });
+    } catch(err) {
+      document.getElementById('exec-chips').innerHTML = '<span style="font-size:12px;color:#c0392b;">Error cargando ejecutivos</span>';
+    }
+  }
+  cargarEjecutivos();
+
   function copiarTodo() {
-    var ej = document.getElementById('ejecutivo').value || '—';
+    var ej = document.getElementById('ejecutivo').value || '— Sin seleccionar —';
     var nom = document.getElementById('nombre_solicitante').value.trim();
     var rut = document.getElementById('rut').value.trim();
     var sal = document.querySelector('input[name="saludo"]:checked').value;
@@ -189,15 +226,4 @@
     document.getElementById('nombre_solicitante').value = '';
     document.getElementById('rut').value = '';
     document.getElementById('resumen').value = '';
-    document.getElementById('transcripcion').value = '';
-    
-    document.querySelectorAll('input[type=radio]').forEach(function(r) { 
-      if(r.value === 'Sí') r.checked = true;
-    });
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-</script>
-
-</body>
-</html>
+    document.getElementById('transcripcion').va
