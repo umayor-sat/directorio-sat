@@ -372,6 +372,32 @@ body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
 }
 .results-loading { text-align: center; font-size: 13px; color: var(--texto-suave); padding: 12px 0; }
 
+/* Ficha con header azul y bloques por rol */
+.ficha-card { background: var(--card-bg); border: 1px solid var(--borde); border-radius: 10px; overflow: hidden; box-shadow: var(--sombra); }
+.ficha-card-header { background: var(--um-azul); padding: 10px 14px; display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.ficha-card-badge { font-size: 10px; font-weight: 700; color: #fff; background: rgba(255,255,255,0.18); padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.3px; flex-shrink: 0; }
+.ficha-card-titulo { font-size: 13px; font-weight: 700; color: #fff; margin-top: 2px; }
+.ficha-card-sede { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 3px; display: flex; align-items: center; gap: 4px; }
+.ficha-restriccion-badge { background: #f9a825; color: #5c3d00; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; display: flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0; cursor: help; position: relative; }
+.ficha-restriccion-badge:hover .ficha-restriccion-tooltip { display: block; }
+.ficha-restriccion-tooltip { display: none; position: absolute; top: 110%; right: 0; background: #333; color: #fff; font-size: 11px; font-weight: 400; padding: 5px 9px; border-radius: 5px; white-space: nowrap; z-index: 100; }
+.ficha-card-body { padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+.bloque-rol { background: var(--fondo); border-radius: 8px; padding: 9px 11px; border: 0.5px solid var(--borde); }
+.bloque-rol-titulo { font-size: 10px; font-weight: 700; color: var(--texto-suave); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 7px; }
+.bloque-persona { margin-bottom: 6px; }
+.bloque-persona:last-of-type { margin-bottom: 0; }
+.bloque-nombre { font-size: 12px; font-weight: 700; color: var(--texto); }
+.bloque-cargo { font-size: 11px; color: var(--texto-suave); margin-bottom: 3px; }
+.bloque-dato { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--texto-suave); margin-top: 2px; }
+.bloque-dato i { color: var(--um-azul); font-size: 11px; width: 12px; }
+.bloque-dato a { color: var(--um-azul); text-decoration: none; }
+.bloque-dato a:hover { text-decoration: underline; }
+.bloque-sep { height: 0.5px; background: var(--borde); margin: 7px 0; }
+.btn-copiar-bloque { width: 100%; margin-top: 7px; background: none; border: 1px solid var(--borde); border-radius: 6px; padding: 5px 10px; font-size: 11px; font-weight: 700; color: var(--um-azul); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: background 0.15s, color 0.15s; }
+.btn-copiar-bloque:hover { background: var(--um-azul); color: #fff; border-color: var(--um-azul); }
+.btn-copiar-bloque.verde { color: var(--um-verde); border-color: var(--um-verde); }
+.btn-copiar-bloque.verde:hover { background: var(--um-verde); color: #fff; border-color: var(--um-verde); }
+
 /* ============================================================
    BODY PRINCIPAL
    ============================================================ */
@@ -818,7 +844,7 @@ body.dark-mode .btn-limpiar { background: rgba(255,255,255,0.1); color: #ddd; }
     <span class="sede-chip activo" onclick="seleccionarSede('todo', this)">Todo</span>
     <span class="sede-chip" onclick="seleccionarSede('santiago', this)">Santiago</span>
     <span class="sede-chip" onclick="seleccionarSede('temuco', this)">Temuco</span>
-    <button class="btn-limpiar-busqueda visible" id="btnLimpiarBusqueda" onclick="limpiarBusqueda()">
+    <button class="btn-limpiar-busqueda" id="btnLimpiarBusqueda" onclick="limpiarBusqueda()">
       <i class="fa-solid fa-xmark"></i> Limpiar
     </button>
   </div>
@@ -1511,38 +1537,76 @@ async function buscarUnificado() {
       label.textContent = `${resultados.length} resultado${resultados.length !== 1 ? 's' : ''} encontrado${resultados.length !== 1 ? 's' : ''}`;
 
       grid.innerHTML = resultados.slice(0, 12).map(r => {
-        const tagClass = r.tipo === 'Académico' ? 'academico' : r.tipo === 'Administrativo' ? 'administrativo' : '';
-        const sede = [r.sede, r.campus].filter(s => s && s.toLowerCase() !== 'no informado').join(' · ');
-
-        const contactosHtml = (r.contactos || []).map(c => {
-          const correoHtml = c.correo
-            ? `<div class="rc-dato">
-                <i class="fa-solid fa-envelope"></i>
-                <a href="mailto:${c.correo}">${c.correo}</a>
-                <button class="btn-copiar-correo" onclick="copiarDato(event,'${c.correo}')">Copiar</button>
-               </div>`
-            : '';
-          const anexoHtml = c.anexo
-            ? `<div class="rc-dato"><i class="fa-solid fa-phone"></i> Anexo ${c.anexo}</div>`
-            : '';
-          return `<div class="r-contacto">
-            <div class="rc-nombre">${c.nombre}</div>
-            <div class="rc-cargo">${c.cargo}</div>
-            ${correoHtml}${anexoHtml}
-          </div>`;
-        }).join('');
-
-        const restriccionHtml = r.restriccion && r.restriccion.toLowerCase() !== 'no informado'
-          ? `<div class="restriccion-badge">
-               <i class="fa-solid fa-triangle-exclamation"></i> Verificar antes de entregar
-               <span class="restriccion-tooltip">${r.restriccion}</span>
+        const sede = [r.sede, r.campus].filter(s => s && s.trim() !== '' && !['no informado','-'].includes(s.toLowerCase())).join(' · ');
+        const restriccionHtml = r.restriccion && !['no informado','-',''].includes(r.restriccion.toLowerCase())
+          ? `<div class="ficha-restriccion-badge">
+               <i class="fa-solid fa-triangle-exclamation" style="font-size:10px;"></i> Verificar antes de entregar
+               <span class="ficha-restriccion-tooltip">${r.restriccion}</span>
              </div>`
           : '';
 
+        // Para ESCUELAS: bloques por rol
+        if (r.tipo === 'Escuela') {
+          const directores = (r.contactos || []).filter(c => c.rol === 'director');
+          const secretarias = (r.contactos || []).filter(c => c.rol === 'secretaria');
+
+          // Separar director de escuela vs director docente
+          const dirEscuela = directores.filter(c => c.cargo && (c.cargo.toLowerCase().includes('director de escuela') || c.cargo.toLowerCase().includes('directora de escuela') || c.cargo.toLowerCase().includes('director carrera') || c.cargo.toLowerCase().includes('director(a) de escuela')));
+          const dirDocente  = directores.filter(c => !dirEscuela.includes(c));
+
+          function renderPersona(c) {
+            const correoHtml = c.correo ? `<div class="bloque-dato"><i class="fa-solid fa-envelope"></i><a href="mailto:${c.correo}">${c.correo}</a><button class="btn-copiar-correo" onclick="copiarDato(event,'${c.correo}')">Copiar</button></div>` : '';
+            const anexoHtml  = c.anexo  ? `<div class="bloque-dato"><i class="fa-solid fa-phone"></i> Anexo ${c.anexo}</div>` : '';
+            return `<div class="bloque-persona"><div class="bloque-nombre">${c.nombre || ''}</div><div class="bloque-cargo">${c.cargo || ''}</div>${correoHtml}${anexoHtml}</div>`;
+          }
+
+          function renderBloque(personas, titulo, btnLabel, btnVerde) {
+            if (!personas.length) return '';
+            // Buscar secretaria asociada (misma secretaria del primer director del bloque)
+            const secNombre = personas[0]._sec_nombre || '';
+            const sec = secNombre ? secretarias.find(s => s.nombre && s.nombre.toLowerCase().includes(secNombre.toLowerCase().split(' ')[0])) : secretarias[0];
+            const personasHtml = personas.map(renderPersona).join('');
+            const secHtml = sec ? `<div class="bloque-sep"></div>${renderPersona(sec)}` : '';
+            const textosCopia = [...personas, ...(sec ? [sec] : [])].map(p => `${p.nombre || ''} · ${p.cargo || ''}${p.correo ? ' · ' + p.correo : ''}${p.anexo ? ' · Anexo ' + p.anexo : ''}`).join('
+');
+            return `<div class="bloque-rol">
+              <div class="bloque-rol-titulo">${titulo}</div>
+              ${personasHtml}${secHtml}
+              <button class="btn-copiar-bloque ${btnVerde ? 'verde' : ''}" onclick="copiarTexto(event, \`${textosCopia.replace(/`/g, "'")}\`)">
+                <i class="fa-regular fa-copy"></i> ${btnLabel}
+              </button>
+            </div>`;
+          }
+
+          const bloqueDir    = renderBloque(dirEscuela.length ? dirEscuela : directores.slice(0,1), 'Director de escuela', 'Copiar Director + Secretaria', true);
+          const bloqueDocente = dirDocente.length ? renderBloque(dirDocente, 'Director docente', 'Copiar Docente + Secretaria', false) : '';
+
+          return `<div class="ficha-card">
+            <div class="ficha-card-header">
+              <div>
+                <div class="ficha-card-badge">Escuela</div>
+                <div class="ficha-card-titulo">${r.titulo}</div>
+                ${sede ? `<div class="ficha-card-sede"><i class="fa-solid fa-location-dot" style="font-size:10px;"></i> ${sede}</div>` : ''}
+              </div>
+              ${restriccionHtml}
+            </div>
+            <div class="ficha-card-body">
+              ${bloqueDir}${bloqueDocente}
+            </div>
+          </div>`;
+        }
+
+        // Para ACADÉMICOS y ADMINISTRATIVOS: tarjeta simple
+        const contactosHtml = (r.contactos || []).map(c => {
+          const correoHtml = c.correo ? `<div class="rc-dato"><i class="fa-solid fa-envelope"></i><a href="mailto:${c.correo}">${c.correo}</a><button class="btn-copiar-correo" onclick="copiarDato(event,'${c.correo}')">Copiar</button></div>` : '';
+          const anexoHtml  = c.anexo  ? `<div class="rc-dato"><i class="fa-solid fa-phone"></i> Anexo ${c.anexo}</div>` : '';
+          const nombreHtml = c.nombre ? `<div class="rc-nombre">${c.nombre}</div>` : '';
+          return `<div class="r-contacto">${nombreHtml}<div class="rc-cargo">${c.cargo || ''}</div>${correoHtml}${anexoHtml}</div>`;
+        }).join('');
+
+        const tagClass = r.tipo === 'Académico' ? 'academico' : 'administrativo';
         return `<div class="result-card">
-          <div class="r-header">
-            <span class="r-tag ${tagClass}">${r.tipo}</span>
-          </div>
+          <div class="r-header"><span class="r-tag ${tagClass}">${r.tipo}</span></div>
           <div class="r-titulo">${r.titulo}</div>
           ${sede ? `<div class="r-sede"><i class="fa-solid fa-location-dot" style="color:var(--um-azul);font-size:10px;"></i> ${sede}</div>` : ''}
           <div class="r-contactos">${contactosHtml}</div>
@@ -1554,6 +1618,17 @@ async function buscarUnificado() {
       grid.innerHTML = '<div class="results-loading">Error al buscar. Intenta nuevamente.</div>';
     }
   }, 350);
+}
+
+function copiarTexto(e, texto) {
+  e.stopPropagation();
+  navigator.clipboard.writeText(texto).then(() => {
+    const btn = e.target.closest('button');
+    const original = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!';
+    btn.style.background = '#1a5c38'; btn.style.color = '#fff';
+    setTimeout(() => { btn.innerHTML = original; btn.style.background = ''; btn.style.color = ''; }, 2000);
+  });
 }
 
 function copiarDato(e, texto) {
