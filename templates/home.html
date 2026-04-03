@@ -292,19 +292,28 @@ body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
 }
 .search-btn:hover { background: #144a2d; }
 
-.search-chips {
-  display: flex; gap: 6px; justify-content: center;
-  margin-top: 10px; flex-wrap: wrap;
+.sede-filtros {
+  display: none; gap: 6px; justify-content: center;
+  margin-top: 10px; flex-wrap: wrap; align-items: center;
 }
-.chip {
+.sede-filtros.visible { display: flex; }
+.sede-chip {
   background: rgba(255,255,255,0.12);
   color: rgba(255,255,255,0.88);
   border: 1px solid rgba(255,255,255,0.22);
-  border-radius: 20px; padding: 3px 12px;
+  border-radius: 20px; padding: 3px 14px;
   font-size: 11.5px; cursor: pointer;
   transition: background 0.15s;
 }
-.chip:hover { background: rgba(255,255,255,0.22); }
+.sede-chip:hover { background: rgba(255,255,255,0.22); }
+.sede-chip.activo { background: var(--um-amarillo); color: #1a1a1a; border-color: var(--um-amarillo); font-weight: 700; }
+.btn-limpiar-busqueda {
+  background: none; border: none; color: rgba(255,255,255,0.7);
+  font-size: 11px; cursor: pointer; padding: 3px 8px;
+  border-radius: 4px; display: none; align-items: center; gap: 4px;
+}
+.btn-limpiar-busqueda.visible { display: flex; }
+.btn-limpiar-busqueda:hover { color: #fff; }
 
 /* Zona de resultados inline */
 .search-results {
@@ -791,7 +800,7 @@ body.dark-mode .btn-limpiar { background: rgba(255,255,255,0.1); color: #ddd; }
     Buscador unificado &nbsp;·&nbsp; Escuelas &nbsp;·&nbsp; Académicos &nbsp;·&nbsp; Administrativos
   </div>
   <div class="search-box-wrap">
-    <select class="search-select" id="searchFiltro">
+    <select class="search-select" id="searchFiltro" onchange="onFiltroChange()">
       <option value="todo">Todo</option>
       <option value="escuelas">Escuelas</option>
       <option value="academicos">Académicos</option>
@@ -799,12 +808,20 @@ body.dark-mode .btn-limpiar { background: rgba(255,255,255,0.1); color: #ddd; }
     </select>
     <input class="search-input" type="text" id="searchInput"
            placeholder="Nombre, cargo, escuela, sede, correo..."
-           oninput="buscarUnificado()" onkeydown="if(event.key==='Enter') buscarUnificado()">
+           oninput="onSearchInput()" onkeydown="if(event.key==='Enter') buscarUnificado()">
     <button class="search-btn" onclick="buscarUnificado()">
       <i class="fa-solid fa-magnifying-glass"></i> Buscar
     </button>
   </div>
-  <div class="search-chips" id="searchChips"></div>
+  <div class="sede-filtros" id="sedeFiltros">
+    <span style="color:rgba(255,255,255,0.7); font-size:11px; font-weight:600;">Sede:</span>
+    <span class="sede-chip activo" onclick="seleccionarSede('todo', this)">Todo</span>
+    <span class="sede-chip" onclick="seleccionarSede('santiago', this)">Santiago</span>
+    <span class="sede-chip" onclick="seleccionarSede('temuco', this)">Temuco</span>
+    <button class="btn-limpiar-busqueda visible" id="btnLimpiarBusqueda" onclick="limpiarBusqueda()">
+      <i class="fa-solid fa-xmark"></i> Limpiar
+    </button>
+  </div>
 </div>
 
 <!-- Resultados inline -->
@@ -1428,49 +1445,46 @@ body.dark-mode .btn-limpiar { background: rgba(255,255,255,0.1); color: #ddd; }
 let searchTimer = null;
 
 // ==========================================
-// CHIPS DINÁMICOS (BÚSQUEDAS RECIENTES)
+// BUSCADOR — LIMPIAR, SEDE, FILTRO
 // ==========================================
-const MAX_CHIPS = 6;
-const CHIPS_KEY = 'sat_busquedas_recientes';
+let sedeSeleccionada = 'todo';
 
-function cargarChips() {
-  const zona = document.getElementById('searchChips');
-  const recientes = JSON.parse(localStorage.getItem(CHIPS_KEY) || '[]');
-  if (recientes.length === 0) {
-    zona.innerHTML = '<span style="color:rgba(255,255,255,0.45); font-size:11px; font-style:italic;">Tus búsquedas recientes aparecerán aquí</span>';
-    return;
+function onSearchInput() {
+  const q = document.getElementById('searchInput').value.trim();
+  const btn = document.getElementById('btnLimpiarBusqueda');
+  if (btn) btn.classList.toggle('visible', q.length > 0);
+  buscarUnificado();
+}
+
+function onFiltroChange() {
+  const filtro = document.getElementById('searchFiltro').value;
+  const sedeFiltros = document.getElementById('sedeFiltros');
+  if (filtro === 'escuelas') {
+    sedeFiltros.classList.add('visible');
+  } else {
+    sedeFiltros.classList.remove('visible');
+    sedeSeleccionada = 'todo';
+    document.querySelectorAll('.sede-chip').forEach(c => c.classList.remove('activo'));
+    document.querySelector('.sede-chip').classList.add('activo');
   }
-  zona.innerHTML = recientes.map(t =>
-    `<span class="chip" onclick="buscarChip('${t}')">${t}
-      <span onclick="eliminarChip(event,'${t}')" title="Quitar" style="margin-left:5px; opacity:0.5; font-size:10px;">✕</span>
-    </span>`
-  ).join('');
+  buscarUnificado();
 }
 
-function guardarBusqueda(termino) {
-  if (!termino || termino.length < 2) return;
-  let recientes = JSON.parse(localStorage.getItem(CHIPS_KEY) || '[]');
-  recientes = recientes.filter(t => t.toLowerCase() !== termino.toLowerCase());
-  recientes.unshift(termino);
-  if (recientes.length > MAX_CHIPS) recientes = recientes.slice(0, MAX_CHIPS);
-  localStorage.setItem(CHIPS_KEY, JSON.stringify(recientes));
-  cargarChips();
+function seleccionarSede(sede, el) {
+  sedeSeleccionada = sede;
+  document.querySelectorAll('.sede-chip').forEach(c => c.classList.remove('activo'));
+  el.classList.add('activo');
+  buscarUnificado();
 }
 
-function eliminarChip(e, termino) {
-  e.stopPropagation();
-  let recientes = JSON.parse(localStorage.getItem(CHIPS_KEY) || '[]');
-  recientes = recientes.filter(t => t.toLowerCase() !== termino.toLowerCase());
-  localStorage.setItem(CHIPS_KEY, JSON.stringify(recientes));
-  cargarChips();
+function limpiarBusqueda() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchResults').classList.remove('visible');
+  const btn = document.getElementById('btnLimpiarBusqueda');
+  if (btn) btn.classList.remove('visible');
 }
 
-function buscarChip(termino) {
-  document.getElementById('searchInput').value = termino;
-  buscarUnificado(true);
-}
-
-async function buscarUnificado(desdeChip = false) {
+async function buscarUnificado() {
   clearTimeout(searchTimer);
   searchTimer = setTimeout(async () => {
     const q = document.getElementById('searchInput').value.trim();
@@ -1485,7 +1499,7 @@ async function buscarUnificado(desdeChip = false) {
     grid.innerHTML = '<div class="results-loading"><i class="fa-solid fa-spinner fa-spin"></i> Buscando...</div>';
 
     try {
-      const res = await fetch(`/api/buscar-universal?q=${encodeURIComponent(q)}&filtro=${encodeURIComponent(filtro)}`);
+      const res = await fetch(`/api/buscar-universal?q=${encodeURIComponent(q)}&filtro=${encodeURIComponent(filtro)}&sede=${encodeURIComponent(sedeSeleccionada)}`);
       const resultados = await res.json();
 
       if (!resultados || resultados.length === 0) {
@@ -1493,8 +1507,6 @@ async function buscarUnificado(desdeChip = false) {
         label.textContent = 'Sin resultados';
         return;
       }
-
-      if (resultados.length > 0) guardarBusqueda(q);
 
       label.textContent = `${resultados.length} resultado${resultados.length !== 1 ? 's' : ''} encontrado${resultados.length !== 1 ? 's' : ''}`;
 
@@ -1541,7 +1553,7 @@ async function buscarUnificado(desdeChip = false) {
     } catch(e) {
       grid.innerHTML = '<div class="results-loading">Error al buscar. Intenta nuevamente.</div>';
     }
-  }, desdeChip ? 0 : 350);
+  }, 350);
 }
 
 function copiarDato(e, texto) {
@@ -2275,7 +2287,6 @@ document.addEventListener('DOMContentLoaded', function() {
   cargarMegaMenuDinámico();
   cargarAlertas();
   iniciarMensajesRotativos();
-  cargarChips();
   setInterval(cargarAlertas, 60000);
 });
 
