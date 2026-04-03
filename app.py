@@ -641,33 +641,54 @@ def buscar_universal():
             res = supabase.table("contactos_administrativos").select("*").or_(
                 f"nombre.ilike.%{q}%,"
                 f"area_busqueda.ilike.%{q}%,"
+                f"area.ilike.%{q}%,"
+                f"cargo_rol.ilike.%{q}%,"
                 f"nombre.ilike.%{q_norm}%,"
-                f"area_busqueda.ilike.%{q_norm}%"
+                f"area_busqueda.ilike.%{q_norm}%,"
+                f"area.ilike.%{q_norm}%"
             ).execute()
 
             for r in (res.data or []):
-                restriccion = r.get('consultar_antes_de_entregar_contactos') or ''
+                restriccion = r.get('restricciones') or ''
+                campus = (r.get('campus') or '').strip()
                 contactos = []
 
                 nombre = (r.get('nombre') or '').strip()
-                cargo  = (r.get('cargo') or '').strip()
+                cargo  = (r.get('cargo_rol') or '').strip()
                 correo = (r.get('correo') or '').strip()
                 anexo  = str(r.get('anexo') or '').strip()
 
-                if nombre and nombre.lower() != 'no informado':
+                # Mostrar contacto aunque no tenga nombre — igual tiene anexo útil
+                nombre_display = nombre if nombre and nombre.lower() not in ('no informado', '-', '') else ''
+                correo_display = correo if correo and correo.lower() not in ('no informado', '-', '') else ''
+                anexo_display  = anexo  if anexo  and anexo.lower()  not in ('no informado', '-', '') else ''
+
+                contactos.append({
+                    'nombre': nombre_display,
+                    'cargo': cargo,
+                    'correo': correo_display,
+                    'anexo': anexo_display,
+                    'rol': 'contacto'
+                })
+
+                # Asistente/secretaria si existe
+                asistente = (r.get('asistente_secretaria') or '').strip()
+                correo_as = (r.get('correo_asistente') or '').strip()
+                anexo_as  = str(r.get('anexo_asistente') or '').strip()
+                if asistente and asistente.lower() not in ('no informado', '-', ''):
                     contactos.append({
-                        'nombre': nombre,
-                        'cargo': cargo,
-                        'correo': correo if correo.lower() != 'no informado' else '',
-                        'anexo': anexo if anexo.lower() != 'no informado' else '',
-                        'rol': 'contacto'
+                        'nombre': asistente,
+                        'cargo': 'Asistente / Secretaria',
+                        'correo': correo_as if correo_as.lower() not in ('no informado', '-', '') else '',
+                        'anexo': anexo_as  if anexo_as.lower()  not in ('no informado', '-', '') else '',
+                        'rol': 'asistente'
                     })
 
                 resultados.append({
                     'tipo': 'Administrativo',
                     'titulo': r.get('area') or r.get('area_busqueda') or '',
-                    'sede': r.get('sede') or '',
-                    'campus': '',
+                    'sede': '',
+                    'campus': campus,
                     'restriccion': restriccion,
                     'contactos': contactos
                 })
