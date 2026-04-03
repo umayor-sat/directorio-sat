@@ -293,10 +293,9 @@ body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
 .search-btn:hover { background: #144a2d; }
 
 .sede-filtros {
-  display: none; gap: 6px; justify-content: center;
+  display: flex; gap: 6px; justify-content: center;
   margin-top: 10px; flex-wrap: wrap; align-items: center;
 }
-.sede-filtros.visible { display: flex; }
 .sede-chip {
   background: rgba(255,255,255,0.12);
   color: rgba(255,255,255,0.88);
@@ -310,9 +309,8 @@ body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
 .btn-limpiar-busqueda {
   background: none; border: none; color: rgba(255,255,255,0.7);
   font-size: 11px; cursor: pointer; padding: 3px 8px;
-  border-radius: 4px; display: none; align-items: center; gap: 4px;
+  border-radius: 4px; display: flex; align-items: center; gap: 4px;
 }
-.btn-limpiar-busqueda.visible { display: flex; }
 .btn-limpiar-busqueda:hover { color: #fff; }
 
 /* Zona de resultados inline */
@@ -1471,23 +1469,10 @@ let searchTimer = null;
 let sedeSeleccionada = 'todo';
 
 function onSearchInput() {
-  const q = document.getElementById('searchInput').value.trim();
-  const btn = document.getElementById('btnLimpiarBusqueda');
-  if (btn) btn.classList.toggle('visible', q.length > 0);
   buscarUnificado();
 }
 
 function onFiltroChange() {
-  const filtro = document.getElementById('searchFiltro').value;
-  const sedeFiltros = document.getElementById('sedeFiltros');
-  if (filtro === 'escuelas') {
-    sedeFiltros.classList.add('visible');
-  } else {
-    sedeFiltros.classList.remove('visible');
-    sedeSeleccionada = 'todo';
-    document.querySelectorAll('.sede-chip').forEach(c => c.classList.remove('activo'));
-    document.querySelector('.sede-chip').classList.add('activo');
-  }
   buscarUnificado();
 }
 
@@ -2361,4 +2346,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
- 
