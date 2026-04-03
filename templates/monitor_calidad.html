@@ -48,13 +48,6 @@
   .btn-secondary:hover { background: #d0d0d0; }
   .btn-home { background: var(--azul); color: white; margin-left: auto; }
 
-  /* CHIPS EJECUTIVO */
-  .exec-chip { display:inline-flex; align-items:center; gap:7px; padding:6px 12px; border:1px solid #d8d8d8; border-radius:20px; cursor:pointer; font-size:12px; font-weight:600; color:#3d3d3d; background:#fff; transition:all 0.15s; }
-  .exec-chip:hover { border-color:#005baa; color:#005baa; }
-  .exec-chip.active { background:#005baa; color:#fff; border-color:#005baa; }
-  .exec-avatar { width:22px; height:22px; border-radius:50%; background:#e6f1fb; color:#0c447c; font-size:9px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-  .exec-chip.active .exec-avatar { background:rgba(255,255,255,0.25); color:#fff; }
-
   /* TOAST */
   #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 25px; border-radius: 50px; font-size: 14px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1000; }
   #toast.show { opacity: 1; }
@@ -78,10 +71,9 @@
   <div class="grid">
     <div class="field">
       <label>Ejecutivo/a Evaluado</label>
-      <div id="exec-chips" style="display:flex; flex-wrap:wrap; gap:8px; padding:8px; background:#f3f6f9; border-radius:8px; border:1px solid #d8d8d8; min-height:44px;">
-        <span style="font-size:12px; color:#999; align-self:center;">Cargando ejecutivos...</span>
-      </div>
-      <input type="hidden" id="ejecutivo" value="">
+      <select id="ejecutivo">
+        <option value="">Cargando ejecutivos...</option>
+      </select>
     </div>
     <div class="field">
       <label>Nombre Solicitante</label>
@@ -162,24 +154,27 @@
         headers: { 'apikey': SKEY, 'Authorization': `Bearer ${SKEY}` }
       });
       const data = await res.json();
-      const container = document.getElementById('exec-chips');
-      container.innerHTML = '';
+      const sel = document.getElementById('ejecutivo');
+      sel.innerHTML = '<option value="">— Seleccione ejecutivo —</option>';
       const orden = ['supervisor', 'staff', 'apoyo'];
       const sorted = data.sort((a, b) => orden.indexOf(a.rol) - orden.indexOf(b.rol) || a.nombre.localeCompare(b.nombre));
+      const grupos = { supervisor: '— Supervisores —', staff: '— Staff —', apoyo: '— Equipo de Apoyo —' };
+      let rolActual = '';
       sorted.forEach(e => {
-        const iniciales = e.nombre.split(' ').map(p => p[0]).join('').substring(0, 2).toUpperCase();
-        const chip = document.createElement('div');
-        chip.className = 'exec-chip';
-        chip.innerHTML = `<div class="exec-avatar">${iniciales}</div>${e.nombre}`;
-        chip.onclick = () => {
-          document.querySelectorAll('.exec-chip').forEach(c => c.classList.remove('active'));
-          chip.classList.add('active');
-          document.getElementById('ejecutivo').value = e.nombre;
-        };
-        container.appendChild(chip);
+        if (e.rol !== rolActual) {
+          const og = document.createElement('optgroup');
+          og.label = grupos[e.rol] || e.rol;
+          sel.appendChild(og);
+          rolActual = e.rol;
+        }
+        const opt = document.createElement('option');
+        opt.value = e.nombre;
+        opt.textContent = e.nombre;
+        sel.lastElementChild.appendChild(opt);
       });
     } catch(err) {
-      document.getElementById('exec-chips').innerHTML = '<span style="font-size:12px;color:#c0392b;">Error cargando ejecutivos</span>';
+      const sel = document.getElementById('ejecutivo');
+      sel.innerHTML = '<option value="">Error al cargar ejecutivos</option>';
     }
   }
   cargarEjecutivos();
@@ -226,7 +221,6 @@
     document.getElementById('resumen').value = '';
     document.getElementById('transcripcion').value = '';
     
-    document.querySelectorAll('.exec-chip').forEach(c => c.classList.remove('active'));
     document.querySelectorAll('input[type=radio]').forEach(function(r) {
       if(r.value === 'Sí') r.checked = true;
     });
