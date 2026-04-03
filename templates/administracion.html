@@ -119,7 +119,9 @@
       <button class="tab-btn" onclick="switchTab('mensajes', this)"><i class="fa-solid fa-message"></i> 2. Catálogo de Alertas y Mensajes</button>
       <button class="tab-btn" onclick="switchTab('enlaces', this)"><i class="fa-solid fa-link"></i> 3. Gestión de Enlaces</button>
       <button class="tab-btn" onclick="switchTab('casos', this)"><i class="fa-solid fa-clipboard-list"></i> 4. Reporte de Casos</button>
-      <button class="tab-btn" onclick="switchTab('gestores', this)"><i class="fa-solid fa-folder-open"></i> 5. Edición de Directorio</button>
+      <button class="tab-btn" onclick="switchTab('gestor-escuelas', this)"><i class="fa-solid fa-book-bookmark"></i> 5. Directorio Escuelas</button>
+      <button class="tab-btn" onclick="switchTab('gestor-academicos', this)"><i class="fa-solid fa-users-rectangle"></i> 6. Contactos Académicos</button>
+      <button class="tab-btn" onclick="switchTab('gestor-administrativos', this)"><i class="fa-solid fa-building-user"></i> 7. Contactos Administrativos</button>
     </div>
 
     <div class="content">
@@ -414,7 +416,7 @@
         </div>
 
         <div id="tab-casos" class="tab-panel">
-            <h2>Exportación y Reporte de Casos <button class="btn-accion btn-filtrar" onclick="cargarRegistros()" style="font-size:12px; height:auto; padding:6px 14px;"><i class="fa-solid fa-rotate-right"></i> Actualizar</button></h2>
+            <h2>Exportación y Reporte de Casos</h2>
             <div class="filtros">
                 <div class="campo">
                     <label>Fecha Desde</label>
@@ -453,43 +455,59 @@
         </div>
 
 
-        <div id="tab-gestores" class="tab-panel">
-            <h2>Edición de Directorio</h2>
-            <p style="color:var(--texto-suave); font-size:13px; margin-bottom:28px;">Selecciona el módulo que deseas gestionar. Cada uno se abrirá en una nueva pestaña.</p>
-            <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:20px;">
+        <div id="tab-gestor-escuelas" class="tab-panel">
+            <div style="text-align:center; padding:60px 20px;">
+                <i class="fa-solid fa-book-bookmark" style="font-size:48px; color:var(--um-azul); margin-bottom:20px; display:block;"></i>
+                <h2 style="border:none; font-size:20px; margin-bottom:10px;">Directorio de Escuelas</h2>
+                <p style="color:var(--texto-suave); margin-bottom:30px; font-size:14px;">Gestiona los registros del directorio — agrega, edita y elimina contactos de directores y secretarias.</p>
+                <a href="/escuelas" target="_blank" style="background:var(--um-azul); color:#fff; border:none; padding:14px 32px; border-radius:8px; font-size:15px; font-weight:700; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:10px;">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Directorio de Escuelas
+                </a>
+            </div>
+        </div>
 
-                <div style="background:var(--um-gris); border:1px solid var(--borde); border-radius:12px; padding:32px 20px; text-align:center;">
-                    <i class="fa-solid fa-book-bookmark" style="font-size:40px; color:var(--um-azul); margin-bottom:16px; display:block;"></i>
-                    <div style="font-size:15px; font-weight:700; color:var(--texto); margin-bottom:8px;">Directorio de Escuelas</div>
-                    <div style="font-size:12px; color:var(--texto-suave); margin-bottom:20px;">Directores, docentes y secretarias por escuela y sede.</div>
-                    <a href="/escuelas" target="_blank" style="background:var(--um-azul); color:#fff; border:none; padding:10px 22px; border-radius:8px; font-size:13px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir
-                    </a>
-                </div>
+        <div id="tab-gestor-academicos" class="tab-panel">
+            <div style="text-align:center; padding:60px 20px;">
+                <i class="fa-solid fa-users-rectangle" style="font-size:48px; color:var(--um-azul); margin-bottom:20px; display:block;"></i>
+                <h2 style="border:none; font-size:20px; margin-bottom:10px;">Contactos Académicos</h2>
+                <p style="color:var(--texto-suave); margin-bottom:30px; font-size:14px;">Gestiona los registros de contactos académicos — agrega, edita y elimina.</p>
+                <a href="/academicos" target="_blank" style="background:var(--um-azul); color:#fff; border:none; padding:14px 32px; border-radius:8px; font-size:15px; font-weight:700; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:10px;">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Contactos Académicos
+                </a>
+            </div>
+        </div>
 
-                <div style="background:var(--um-gris); border:1px solid var(--borde); border-radius:12px; padding:32px 20px; text-align:center;">
-                    <i class="fa-solid fa-users-rectangle" style="font-size:40px; color:var(--um-azul); margin-bottom:16px; display:block;"></i>
-                    <div style="font-size:15px; font-weight:700; color:var(--texto); margin-bottom:8px;">Contactos Académicos</div>
-                    <div style="font-size:12px; color:var(--texto-suave); margin-bottom:20px;">Académicos y coordinadores por escuela.</div>
-                    <a href="/academicos" target="_blank" style="background:var(--um-azul); color:#fff; border:none; padding:10px 22px; border-radius:8px; font-size:13px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir
-                    </a>
-                </div>
-
-                <div style="background:var(--um-gris); border:1px solid var(--borde); border-radius:12px; padding:32px 20px; text-align:center;">
-                    <i class="fa-solid fa-building-user" style="font-size:40px; color:var(--um-azul); margin-bottom:16px; display:block;"></i>
-                    <div style="font-size:15px; font-weight:700; color:var(--texto); margin-bottom:8px;">Contactos Administrativos</div>
-                    <div style="font-size:12px; color:var(--texto-suave); margin-bottom:20px;">Administrativos y personal de apoyo por área.</div>
-                    <a href="/contactos-administrativos" target="_blank" style="background:var(--um-azul); color:#fff; border:none; padding:10px 22px; border-radius:8px; font-size:13px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir
-                    </a>
-                </div>
-
+        <div id="tab-gestor-administrativos" class="tab-panel">
+            <div style="text-align:center; padding:60px 20px;">
+                <i class="fa-solid fa-building-user" style="font-size:48px; color:var(--um-azul); margin-bottom:20px; display:block;"></i>
+                <h2 style="border:none; font-size:20px; margin-bottom:10px;">Contactos Administrativos</h2>
+                <p style="color:var(--texto-suave); margin-bottom:30px; font-size:14px;">Gestiona los registros de contactos administrativos — agrega, edita y elimina.</p>
+                <a href="/contactos-administrativos" target="_blank" style="background:var(--um-azul); color:#fff; border:none; padding:14px 32px; border-radius:8px; font-size:15px; font-weight:700; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:10px;">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Contactos Administrativos
+                </a>
             </div>
         </div>
 
     </div>
     <footer>Portal SAT &middot; Universidad Mayor &middot; 2026</footer>
+</div>
+
+<div id="modalActivarMotiv" class="modal-overlay">
+    <div class="modal-box" style="border-top: 6px solid var(--um-verde);">
+        <h3 style="color:var(--um-verde); margin-top:0; font-size:18px;"><i class="fa-solid fa-clock"></i> Duración del mensaje</h3>
+        <p style="font-size:13px; color:#555; margin-top:5px;">¿Cuántos minutos quieres que dure este mensaje en el carrusel del Home?</p>
+        <div style="display:flex; justify-content:center; align-items:center; gap:15px; margin: 25px 0; background:#f9f9f9; padding:20px; border-radius:8px;">
+            <div class="campo" style="margin:0;">
+                <input type="number" id="tiempoMotiv" value="3" min="1" max="60" style="font-size:24px; text-align:center; height:50px; width:100px; font-weight:bold; color:var(--um-verde);">
+            </div>
+            <span style="font-size:16px; color:#555;">minutos</span>
+        </div>
+        <input type="hidden" id="tempMotivId">
+        <div style="display:flex; gap:10px; justify-content:flex-end;">
+            <button class="btn-accion btn-limpiar" onclick="cerrarModalMotiv()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+            <button class="btn-accion btn-filtrar" style="background:var(--um-verde);" onclick="confirmarActivarMotiv()"><i class="fa-solid fa-power-off"></i> Activar Mensaje</button>
+        </div>
+    </div>
 </div>
 
 <div id="modalActivarAlerta" class="modal-overlay">
@@ -757,7 +775,7 @@
     // ==========================================
     async function cargarAlertas() {
         try {
-            const { data, error } = await _supabase.from('alertas_operativas').select('*').order('prioridad');
+            const { data, error } = await _supabase.from('alertas_operativas').select('*').order('created_at', { ascending: false });
             const tbody = document.getElementById('tbodyAlertas');
             if(!tbody) return;
             tbody.innerHTML = '';
@@ -890,19 +908,26 @@
 
         try {
             if (id) {
+                // Edición — solo actualiza, sin pedir tiempo
                 await _supabase.from('alertas_operativas').update(paquete).eq('id', id);
+                limpiarFormularioAlerta();
+                cargarAlertas();
+                const btn = document.getElementById('tituloFormularioAlerta');
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = `<span style="color:var(--um-verde);"><i class="fa-solid fa-check"></i> ¡Guardada en el catálogo!</span>`;
+                setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
             } else {
+                // Nueva alerta — insertar y abrir modal de tiempo de inmediato
                 paquete.prioridad = paquete.color === 'rojo' ? 1 : (paquete.color === 'amarillo' ? 2 : 3);
-                await _supabase.from('alertas_operativas').insert([paquete]);
+                const { data: nuevaAlerta, error: insertError } = await _supabase
+                    .from('alertas_operativas').insert([paquete]).select().single();
+                if (insertError) throw insertError;
+                limpiarFormularioAlerta();
+                cargarAlertas();
+                // Abrir modal de tiempo apuntando al nuevo id
+                document.getElementById('tempAlertaId').value = nuevaAlerta.id;
+                document.getElementById('modalActivarAlerta').style.display = 'flex';
             }
-            limpiarFormularioAlerta();
-            cargarAlertas();
-            
-            const btn = document.getElementById('tituloFormularioAlerta');
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = `<span style="color:var(--um-verde);"><i class="fa-solid fa-check"></i> ¡Guardada en el catálogo!</span>`;
-            setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
-            
         } catch (e) { alert("Error guardando en el catálogo."); }
     }
 
@@ -918,7 +943,7 @@
     // ==========================================
     async function cargarMotivacionales() {
         try {
-            const { data, error } = await _supabase.from('mensajes_rotativos').select('*').order('id', { ascending: true });
+            const { data, error } = await _supabase.from('mensajes_rotativos').select('*').order('id', { ascending: false });
             const tbody = document.getElementById('tbodyMotivacionales');
             if(!tbody) return;
             tbody.innerHTML = '';
@@ -992,17 +1017,26 @@
         if (!paquete.mensaje) return alert("Debe escribir un mensaje.");
 
         try {
-            if (id) await _supabase.from('mensajes_rotativos').update(paquete).eq('id', id);
-            else await _supabase.from('mensajes_rotativos').insert([paquete]);
-            
-            limpiarFormularioMotiv();
-            cargarMotivacionales();
-            
-            const btn = document.getElementById('tituloFormularioMotiv');
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = `<span style="color:var(--um-verde);"><i class="fa-solid fa-check"></i> ¡Frase guardada!</span>`;
-            setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
-            
+            if (id) {
+                // Edición — solo actualiza
+                await _supabase.from('mensajes_rotativos').update(paquete).eq('id', id);
+                limpiarFormularioMotiv();
+                cargarMotivacionales();
+                const btn = document.getElementById('tituloFormularioMotiv');
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = `<span style="color:var(--um-verde);"><i class="fa-solid fa-check"></i> ¡Frase guardada!</span>`;
+                setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
+            } else {
+                // Nuevo mensaje — insertar y pedir duración
+                paquete.estado = true; // activo de inmediato
+                const { data: nuevoMotiv, error: insertError } = await _supabase
+                    .from('mensajes_rotativos').insert([paquete]).select().single();
+                if (insertError) throw insertError;
+                limpiarFormularioMotiv();
+                cargarMotivacionales();
+                document.getElementById('tempMotivId').value = nuevoMotiv.id;
+                document.getElementById('modalActivarMotiv').style.display = 'flex';
+            }
         } catch (err) { alert("⚠️ La Base de Datos rechazó la carga."); }
     }
 
@@ -1134,6 +1168,27 @@
         document.getElementById('tituloFormularioEnlace').innerHTML = `<span><i class="fa-solid fa-link"></i> Registrar Nuevo Link</span>`;
         document.getElementById('panelFormularioEnlace').style.border = "2px solid var(--um-azul)";
         document.getElementById('btnCancelarEnlace').style.display = "none";
+    }
+
+    // ==========================================
+    // LÓGICA: MODAL DURACIÓN MENSAJE MOTIVACIONAL
+    // ==========================================
+    function cerrarModalMotiv() {
+        document.getElementById('modalActivarMotiv').style.display = 'none';
+        document.getElementById('tempMotivId').value = '';
+    }
+
+    async function confirmarActivarMotiv() {
+        const id = document.getElementById('tempMotivId').value;
+        const mins = parseInt(document.getElementById('tiempoMotiv').value) || 3;
+        try {
+            await _supabase.from('mensajes_rotativos').update({
+                estado: true,
+                duracion_min: mins
+            }).eq('id', id);
+            cerrarModalMotiv();
+            cargarMotivacionales();
+        } catch (e) { alert("Error activando mensaje"); }
     }
 
     // ==========================================
