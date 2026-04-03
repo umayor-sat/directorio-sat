@@ -1549,8 +1549,8 @@ async function buscarUnificado() {
             var textoBtn = esVerde ? 'btn-copiar-bloque verde' : 'btn-copiar-bloque';
             var txtCopia = personas.concat(sec ? [sec] : []).map(function(p){
               return (p.nombre||'') + (p.cargo ? ' · ' + p.cargo : '') + (p.correo ? ' · ' + p.correo : '') + (p.anexo ? ' · Anexo ' + p.anexo : '');
-            }).join('\n').replace(/'/g, "\'");
-            html += '<button class="' + textoBtn + '" onclick="copiarTexto(event,\'' + txtCopia + '\')"><i class="fa-regular fa-copy"></i> ' + btnLabel + '</button>';
+            }).join('\n').replace(/"/g, '&quot;');
+            html += '<button class="' + textoBtn + '" data-texto="' + txtCopia + '" onclick="copiarTexto(event)"><i class="fa-regular fa-copy"></i> ' + btnLabel + '</button>';
             html += '</div>';
             return html;
           }
@@ -1597,11 +1597,11 @@ async function buscarUnificado() {
   }, 350);
 }
 
-function copiarTexto(e, texto) {
+function copiarTexto(e) {
   e.stopPropagation();
-  var txtLimpio = texto.replace(/\\n/g, '\n');
-  navigator.clipboard.writeText(txtLimpio).then(function() {
-    var btn = e.target.closest ? e.target.closest('button') : e.target;
+  var btn = e.target.closest ? e.target.closest('button') : e.target;
+  var texto = btn.getAttribute('data-texto') || '';
+  navigator.clipboard.writeText(texto).then(function() {
     var orig = btn.innerHTML;
     btn.innerHTML = '<i class="fa-solid fa-check"></i> Copiado';
     btn.style.background = '#1a5c38'; btn.style.color = '#fff';
