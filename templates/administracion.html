@@ -40,8 +40,6 @@
         .tab-panel { display:none; }
         .tab-panel.active { display:block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-        .iframe-gestor { width:100%; height:80vh; border:none; border-radius:8px; display:block; }
-        .iframe-wrap { margin:-32px -20px -32px -20px; overflow:hidden; border-radius:0 0 10px 10px; }
 
         h2 { color:var(--um-azul); border-bottom:3px solid var(--um-amarillo); padding-bottom:10px; margin-top:0; font-size: 18px; display: flex; justify-content: space-between; align-items: center;}
         
@@ -111,8 +109,8 @@
 <div id="main-system">
     <div class="header">
       <div class="header-text">
-        <h1>Panel de Administración SAT</h1>
-        <p>Gestión de contenidos, staff y configuración del portal &middot; Universidad Mayor</p>
+        <h1>Centro de Comando SAT</h1>
+        <p>Módulo de Administración Seguro &middot; Universidad Mayor</p>
       </div>
     </div>
 
@@ -456,20 +454,35 @@
         </div>
 
         <div id="tab-gestor-escuelas" class="tab-panel">
-            <div class="iframe-wrap">
-                <iframe class="iframe-gestor" id="iframe-escuelas" src="" data-src="/escuelas" title="Directorio de Escuelas"></iframe>
+            <div style="text-align:center; padding:60px 20px;">
+                <i class="fa-solid fa-book-bookmark" style="font-size:48px; color:var(--um-azul); margin-bottom:20px; display:block;"></i>
+                <h2 style="border:none; font-size:20px; margin-bottom:10px;">Directorio de Escuelas</h2>
+                <p style="color:var(--texto-suave); margin-bottom:30px; font-size:14px;">Gestiona los registros del directorio — agrega, edita y elimina contactos de directores y secretarias.</p>
+                <a href="/escuelas" target="_blank" style="background:var(--um-azul); color:#fff; border:none; padding:14px 32px; border-radius:8px; font-size:15px; font-weight:700; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:10px;">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Directorio de Escuelas
+                </a>
             </div>
         </div>
 
         <div id="tab-gestor-academicos" class="tab-panel">
-            <div class="iframe-wrap">
-                <iframe class="iframe-gestor" id="iframe-academicos" src="" data-src="/academicos" title="Contactos Académicos"></iframe>
+            <div style="text-align:center; padding:60px 20px;">
+                <i class="fa-solid fa-users-rectangle" style="font-size:48px; color:var(--um-azul); margin-bottom:20px; display:block;"></i>
+                <h2 style="border:none; font-size:20px; margin-bottom:10px;">Contactos Académicos</h2>
+                <p style="color:var(--texto-suave); margin-bottom:30px; font-size:14px;">Gestiona los registros de contactos académicos — agrega, edita y elimina.</p>
+                <a href="/academicos" target="_blank" style="background:var(--um-azul); color:#fff; border:none; padding:14px 32px; border-radius:8px; font-size:15px; font-weight:700; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:10px;">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Contactos Académicos
+                </a>
             </div>
         </div>
 
         <div id="tab-gestor-administrativos" class="tab-panel">
-            <div class="iframe-wrap">
-                <iframe class="iframe-gestor" id="iframe-administrativos" src="" data-src="/contactos-administrativos" title="Contactos Administrativos"></iframe>
+            <div style="text-align:center; padding:60px 20px;">
+                <i class="fa-solid fa-building-user" style="font-size:48px; color:var(--um-azul); margin-bottom:20px; display:block;"></i>
+                <h2 style="border:none; font-size:20px; margin-bottom:10px;">Contactos Administrativos</h2>
+                <p style="color:var(--texto-suave); margin-bottom:30px; font-size:14px;">Gestiona los registros de contactos administrativos — agrega, edita y elimina.</p>
+                <a href="/contactos-administrativos" target="_blank" style="background:var(--um-azul); color:#fff; border:none; padding:14px 32px; border-radius:8px; font-size:15px; font-weight:700; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:10px;">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Contactos Administrativos
+                </a>
             </div>
         </div>
 
@@ -514,14 +527,8 @@
     function switchTab(tabId, btnElement) {
         document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('tab-' + tabId).classList.add('active');
+        document.getElementById(`tab-${tabId}`).classList.add('active');
         btnElement.classList.add('active');
-        // Carga lazy de iframes — solo carga cuando se abre la pestaña
-        var iframeKey = tabId.replace('gestor-', '');
-        var iframe = document.getElementById('iframe-' + iframeKey);
-        if (iframe && !iframe.src && iframe.getAttribute('data-src')) {
-            iframe.src = iframe.getAttribute('data-src');
-        }
     }
 
     function exportarTablaLimpia(tablaId, nombreArchivo) {
