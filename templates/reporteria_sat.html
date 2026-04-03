@@ -239,7 +239,10 @@ input:checked + .slider:before { transform: translateX(20px); }
     <h1>Universidad Mayor</h1>
     <p>Reportería SAT · Consolidado Ejecutivo</p>
   </div>
-  <div class="header-controls">
+  <div class="header-controls" style="display:flex; align-items:center; gap:12px;">
+    <button onclick="window.location.href='/'" style="background:rgba(0,0,0,0.12); color:#111; border:none; border-radius:6px; padding:6px 14px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; transition:background 0.15s;" onmouseover="this.style.background='rgba(0,0,0,0.22)'" onmouseout="this.style.background='rgba(0,0,0,0.12)'">
+      <i class="fas fa-arrow-left"></i> Volver al Portal
+    </button>
     <label class="switch-container">
       Modo oscuro
       <div class="switch">
@@ -254,23 +257,7 @@ input:checked + .slider:before { transform: translateX(20px); }
   <div class="last-update">Datos actualizados al: <span id="ui-fecha-act"><i class="far fa-clock"></i> --/--/---- --:--</span></div>
 </div>
 
-<style>
-  .control-bar { padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; background: var(--fondo); border-bottom: 1px solid var(--borde); }
-  .btn-static { border-radius: 8px; padding: 10px 20px; font-weight: bold; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
-  .btn-static-home { background: var(--card-bg); color: var(--texto); border: 2px solid var(--borde); }
-  .btn-static-home:hover { border-color: var(--um-amarillo); transform: translateY(-2px); }
-  .btn-static-refresh { background: var(--um-amarillo); color: #111; border: none; box-shadow: 0 4px 10px rgba(242, 183, 5, 0.2); }
-  .btn-static-refresh:hover { background: var(--um-amarillo-hover); transform: translateY(-2px); }
-  @media (max-width: 768px) { .control-bar { flex-direction: column; gap: 12px; align-items: stretch; } .btn-static { justify-content: center; } }
-</style>
-<div class="control-bar">
-    <button onclick="window.location.href='/'" class="btn-static btn-static-home">
-        <i class="fas fa-arrow-left"></i> Volver al Menú Principal
-    </button>
-    <button onclick="location.reload();" class="btn-static btn-static-refresh">
-        <i class="fas fa-sync-alt"></i> Actualizar Gráficos
-    </button>
-</div>
+
 <div class="tabs-container">
   <button class="tab-btn active" onclick="switchTab('resumen')">Resumen Ejecutivo</button>
   <button class="tab-btn" onclick="switchTab('top')">Top 5 por Tema</button>
@@ -344,6 +331,9 @@ input:checked + .slider:before { transform: translateX(20px); }
   </div>
 </div>
 
+<button class="btn-floating" onclick="exportarPDF()" style="bottom:80px;" title="Exportar dashboard a PDF">
+  <i class="fas fa-file-pdf" style="color:#c0392b;"></i> Exportar PDF
+</button>
 <button class="btn-floating btn-up" onclick="window.scrollTo({top:0, behavior:'smooth'})"><i class="fas fa-arrow-up"></i></button>
 
 <footer class="footer">
@@ -571,8 +561,8 @@ function construirDashboard() {
   if(ytd25.length > 0) {
     const p = ((ytd26.length - ytd25.length) / ytd25.length) * 100;
     const abs = Math.abs(p).toFixed(1) + "%";
-    if(p > 0) { gt.className="pill bad"; gt.innerHTML = `<i class="fas fa-arrow-up"></i> ${abs}`; }
-    else if(p < 0) { gt.className="pill good"; gt.innerHTML = `<i class="fas fa-arrow-down"></i> ${abs}`; }
+    if(p > 0) { gt.className="pill neutral"; gt.innerHTML = `<i class="fas fa-arrow-up"></i> ${abs}`; }
+    else if(p < 0) { gt.className="pill neutral"; gt.innerHTML = `<i class="fas fa-arrow-down"></i> ${abs}`; }
     else { gt.className="pill neutral"; gt.innerText = `= 0%`; }
   } else { gt.className="pill neutral"; gt.innerText = `S/D`; }
 
@@ -683,6 +673,70 @@ function exportarExcel() {
   XLSX.utils.book_append_sheet(libro, hoja, "Desglose");
   
   XLSX.writeFile(libro, `Desglose_${catActiva}_${anioActivo}.xlsx`);
+}
+
+/* ========================================================================== */
+/* 6. EXPORTAR DASHBOARD A PDF                                                 */
+/* ========================================================================== */
+async function exportarPDF() {
+  const btnPdf = document.querySelector('.btn-floating[onclick="exportarPDF()"]');
+  const originalHtml = btnPdf.innerHTML;
+  btnPdf.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generando...';
+  btnPdf.disabled = true;
+
+  // Asegurar pestaña Resumen activa
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+  document.querySelector('.tab-btn').classList.add('active');
+  document.getElementById('view-resumen').classList.add('active');
+  await new Promise(r => setTimeout(r, 300));
+
+  // Carga dinámica html2canvas
+  if (!window.html2canvas) {
+    await new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+      s.onload = res; s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
+  // Carga dinámica jsPDF
+  if (!window.jspdf) {
+    await new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+      s.onload = res; s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
+
+  try {
+    const dashboard = document.getElementById('view-resumen');
+    const canvas = await html2canvas(dashboard, {
+      scale: 1.5,
+      useCORS: true,
+      backgroundColor: '#ffffff',
+      scrollX: 0,
+      scrollY: -window.scrollY,
+      windowWidth: document.documentElement.scrollWidth
+    });
+
+    const imgData = canvas.toDataURL('image/png');
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+    const pdfW = pdf.internal.pageSize.getWidth();
+    const pdfH = (canvas.height * pdfW) / canvas.width;
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfW, pdfH);
+
+    const hoy = new Date();
+    const fecha = `${hoy.getDate()}-${hoy.getMonth()+1}-${hoy.getFullYear()}`;
+    pdf.save(`Dashboard_SAT_${fecha}.pdf`);
+  } catch(e) {
+    alert('Error al generar PDF. Intenta nuevamente.');
+  }
+
+  btnPdf.innerHTML = originalHtml;
+  btnPdf.disabled = false;
 }
 </script>
 </body>
