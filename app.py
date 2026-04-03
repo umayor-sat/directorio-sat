@@ -474,6 +474,7 @@ def buscar_universal():
     q = q_raw.lower()
     q_norm = normalizar(q_raw)  # versión sin tildes para búsqueda flexible
     filtro = request.args.get('filtro', 'todo').strip().lower()
+    sede_filtro = request.args.get('sede', '').strip().lower()  # filtro opcional de sede
 
     if len(q) < 2:
         return jsonify([])
@@ -506,32 +507,35 @@ def buscar_universal():
                     ids_vistos.add(fid)
                     filas_unicas.append(fila)
 
-            # Agrupamos por escuela_busqueda para mostrar ficha completa
+            # Agrupamos por escuela_busqueda + sede para separar fichas por sede
             grupos = {}
             for fila in filas_unicas:
-                clave = (fila.get('escuela_busqueda') or fila.get('escuela') or 'sin_escuela').strip()
+                escuela_key = (fila.get('escuela_busqueda') or fila.get('escuela') or 'sin_escuela').strip().lower()
+                sede_key = (fila.get('sede') or 'sin_sede').strip().lower()
+                clave = f"{escuela_key}||{sede_key}"
                 if clave not in grupos:
                     grupos[clave] = []
                 grupos[clave].append(fila)
 
             for clave, contactos in grupos.items():
                 primero = contactos[0]
+                sede_ficha = (primero.get('sede') or '').strip().lower()
+
+                # Aplicar filtro de sede si viene del frontend
+                if sede_filtro and sede_filtro not in ('todo', '') and sede_filtro not in sede_ficha:
+                    continue
+
                 restriccion = primero.get('consultar_antes_de_entregar_contactos') or ''
 
-                # Título legible: usar 'escuela' si existe, si no buscar en otros campos
+                # Titulo legible por ficha
                 titulo_legible = ''
                 for c in contactos:
                     t = (c.get('escuela') or '').strip()
-                    if t and t.lower() not in ('no informado', ''):
+                    if t and t.lower() not in ('no informado', '') and len(t) > 2:
                         titulo_legible = t
                         break
                 if not titulo_legible:
-                    titulo_legible = clave  # fallback a escuela_busqueda
-
-            for clave, contactos in grupos.items():
-                # Usamos el primer registro como cabecera de la ficha
-                primero = contactos[0]
-                restriccion = primero.get('consultar_antes_de_entregar_contactos') or ''
+                    titulo_legible = clave.split('||')[0]
 
                 ficha = {
                     'tipo': 'Escuela',
