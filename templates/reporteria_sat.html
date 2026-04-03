@@ -713,20 +713,30 @@ async function exportarPDF() {
   try {
     const dashboard = document.getElementById('view-resumen');
     const canvas = await html2canvas(dashboard, {
-      scale: 1.5,
+      scale: 3,
       useCORS: true,
       backgroundColor: '#ffffff',
       scrollX: 0,
       scrollY: -window.scrollY,
-      windowWidth: document.documentElement.scrollWidth
+      windowWidth: 1400,
+      logging: false
     });
 
-    const imgData = canvas.toDataURL('image/png');
+    const imgData = canvas.toDataURL('image/jpeg', 0.97);
     const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+    const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4', compress: true });
     const pdfW = pdf.internal.pageSize.getWidth();
-    const pdfH = (canvas.height * pdfW) / canvas.width;
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfW, pdfH);
+    const pdfH = pdf.internal.pageSize.getHeight();
+    const canvasRatio = canvas.height / canvas.width;
+    const imgH = pdfW * canvasRatio;
+
+    // Si cabe en una página úsala completa, si no escala para que entre
+    if (imgH <= pdfH) {
+      pdf.addImage(imgData, 'JPEG', 0, 0, pdfW, imgH);
+    } else {
+      const scale = pdfH / imgH;
+      pdf.addImage(imgData, 'JPEG', 0, 0, pdfW * scale, pdfH);
+    }
 
     const hoy = new Date();
     const fecha = `${hoy.getDate()}-${hoy.getMonth()+1}-${hoy.getFullYear()}`;
