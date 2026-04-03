@@ -40,6 +40,8 @@
         .tab-panel { display:none; }
         .tab-panel.active { display:block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+        .iframe-gestor { width:100%; height:80vh; border:none; border-radius:8px; display:block; }
+        .iframe-wrap { margin:-32px -20px -32px -20px; overflow:hidden; border-radius:0 0 10px 10px; }
 
         h2 { color:var(--um-azul); border-bottom:3px solid var(--um-amarillo); padding-bottom:10px; margin-top:0; font-size: 18px; display: flex; justify-content: space-between; align-items: center;}
         
@@ -109,8 +111,8 @@
 <div id="main-system">
     <div class="header">
       <div class="header-text">
-        <h1>Centro de Comando SAT</h1>
-        <p>Módulo de Administración Seguro &middot; Universidad Mayor</p>
+        <h1>Panel de Administración SAT</h1>
+        <p>Gestión de contenidos, staff y configuración del portal &middot; Universidad Mayor</p>
       </div>
     </div>
 
@@ -119,6 +121,9 @@
       <button class="tab-btn" onclick="switchTab('mensajes', this)"><i class="fa-solid fa-message"></i> 2. Catálogo de Alertas y Mensajes</button>
       <button class="tab-btn" onclick="switchTab('enlaces', this)"><i class="fa-solid fa-link"></i> 3. Gestión de Enlaces</button>
       <button class="tab-btn" onclick="switchTab('casos', this)"><i class="fa-solid fa-clipboard-list"></i> 4. Reporte de Casos</button>
+      <button class="tab-btn" onclick="switchTab('gestor-escuelas', this)"><i class="fa-solid fa-book-bookmark"></i> 5. Directorio Escuelas</button>
+      <button class="tab-btn" onclick="switchTab('gestor-academicos', this)"><i class="fa-solid fa-users-rectangle"></i> 6. Contactos Académicos</button>
+      <button class="tab-btn" onclick="switchTab('gestor-administrativos', this)"><i class="fa-solid fa-building-user"></i> 7. Contactos Administrativos</button>
     </div>
 
     <div class="content">
@@ -450,6 +455,24 @@
             </div>
         </div>
 
+        <div id="tab-gestor-escuelas" class="tab-panel">
+            <div class="iframe-wrap">
+                <iframe class="iframe-gestor" id="iframe-escuelas" src="" data-src="/escuelas" title="Directorio de Escuelas"></iframe>
+            </div>
+        </div>
+
+        <div id="tab-gestor-academicos" class="tab-panel">
+            <div class="iframe-wrap">
+                <iframe class="iframe-gestor" id="iframe-academicos" src="" data-src="/academicos" title="Contactos Académicos"></iframe>
+            </div>
+        </div>
+
+        <div id="tab-gestor-administrativos" class="tab-panel">
+            <div class="iframe-wrap">
+                <iframe class="iframe-gestor" id="iframe-administrativos" src="" data-src="/contactos-administrativos" title="Contactos Administrativos"></iframe>
+            </div>
+        </div>
+
     </div>
     <footer>Portal SAT &middot; Universidad Mayor &middot; 2026</footer>
 </div>
@@ -491,8 +514,14 @@
     function switchTab(tabId, btnElement) {
         document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(`tab-${tabId}`).classList.add('active');
+        document.getElementById('tab-' + tabId).classList.add('active');
         btnElement.classList.add('active');
+        // Carga lazy de iframes — solo carga cuando se abre la pestaña
+        var iframeKey = tabId.replace('gestor-', '');
+        var iframe = document.getElementById('iframe-' + iframeKey);
+        if (iframe && !iframe.src && iframe.getAttribute('data-src')) {
+            iframe.src = iframe.getAttribute('data-src');
+        }
     }
 
     function exportarTablaLimpia(tablaId, nombreArchivo) {
