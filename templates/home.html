@@ -371,32 +371,27 @@ body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
   box-shadow: 0 3px 8px rgba(0,0,0,0.2); z-index: 100;
 }
 .results-loading { text-align: center; font-size: 13px; color: var(--texto-suave); padding: 12px 0; }
-
-/* Ficha con header azul y bloques por rol */
 .ficha-card { background: var(--card-bg); border: 1px solid var(--borde); border-radius: 10px; overflow: hidden; box-shadow: var(--sombra); }
 .ficha-card-header { background: var(--um-azul); padding: 10px 14px; display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
 .ficha-card-badge { font-size: 10px; font-weight: 700; color: #fff; background: rgba(255,255,255,0.18); padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.3px; flex-shrink: 0; }
 .ficha-card-titulo { font-size: 13px; font-weight: 700; color: #fff; margin-top: 2px; }
-.ficha-card-sede { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 3px; display: flex; align-items: center; gap: 4px; }
-.ficha-restriccion-badge { background: #f9a825; color: #5c3d00; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; display: flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0; cursor: help; position: relative; }
-.ficha-restriccion-badge:hover .ficha-restriccion-tooltip { display: block; }
-.ficha-restriccion-tooltip { display: none; position: absolute; top: 110%; right: 0; background: #333; color: #fff; font-size: 11px; font-weight: 400; padding: 5px 9px; border-radius: 5px; white-space: nowrap; z-index: 100; }
+.ficha-card-sede { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 3px; }
+.ficha-restriccion-hdr { background: #f9a825; color: #5c3d00; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
 .ficha-card-body { padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
 .bloque-rol { background: var(--fondo); border-radius: 8px; padding: 9px 11px; border: 0.5px solid var(--borde); }
 .bloque-rol-titulo { font-size: 10px; font-weight: 700; color: var(--texto-suave); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 7px; }
-.bloque-persona { margin-bottom: 6px; }
-.bloque-persona:last-of-type { margin-bottom: 0; }
+.bloque-persona { margin-bottom: 7px; padding-bottom: 7px; border-bottom: 0.5px solid var(--borde); }
+.bloque-persona:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
 .bloque-nombre { font-size: 12px; font-weight: 700; color: var(--texto); }
 .bloque-cargo { font-size: 11px; color: var(--texto-suave); margin-bottom: 3px; }
 .bloque-dato { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--texto-suave); margin-top: 2px; }
 .bloque-dato i { color: var(--um-azul); font-size: 11px; width: 12px; }
 .bloque-dato a { color: var(--um-azul); text-decoration: none; }
 .bloque-dato a:hover { text-decoration: underline; }
-.bloque-sep { height: 0.5px; background: var(--borde); margin: 7px 0; }
-.btn-copiar-bloque { width: 100%; margin-top: 7px; background: none; border: 1px solid var(--borde); border-radius: 6px; padding: 5px 10px; font-size: 11px; font-weight: 700; color: var(--um-azul); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: background 0.15s, color 0.15s; }
+.btn-copiar-bloque { width: 100%; margin-top: 8px; background: none; border: 1px solid var(--borde); border-radius: 6px; padding: 6px 10px; font-size: 11px; font-weight: 700; color: var(--um-azul); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: background 0.15s, color 0.15s; }
 .btn-copiar-bloque:hover { background: var(--um-azul); color: #fff; border-color: var(--um-azul); }
 .btn-copiar-bloque.verde { color: var(--um-verde); border-color: var(--um-verde); }
-.btn-copiar-bloque.verde:hover { background: var(--um-verde); color: #fff; border-color: var(--um-verde); }
+.btn-copiar-bloque.verde:hover { background: var(--um-verde); color: #fff; }
 
 /* ============================================================
    BODY PRINCIPAL
@@ -844,7 +839,7 @@ body.dark-mode .btn-limpiar { background: rgba(255,255,255,0.1); color: #ddd; }
     <span class="sede-chip activo" onclick="seleccionarSede('todo', this)">Todo</span>
     <span class="sede-chip" onclick="seleccionarSede('santiago', this)">Santiago</span>
     <span class="sede-chip" onclick="seleccionarSede('temuco', this)">Temuco</span>
-    <button class="btn-limpiar-busqueda" id="btnLimpiarBusqueda" onclick="limpiarBusqueda()">
+    <button class="btn-limpiar-busqueda visible" id="btnLimpiarBusqueda" onclick="limpiarBusqueda()">
       <i class="fa-solid fa-xmark"></i> Limpiar
     </button>
   </div>
@@ -1536,82 +1531,79 @@ async function buscarUnificado() {
 
       label.textContent = `${resultados.length} resultado${resultados.length !== 1 ? 's' : ''} encontrado${resultados.length !== 1 ? 's' : ''}`;
 
-      grid.innerHTML = resultados.slice(0, 12).map(r => {
-        const sede = [r.sede, r.campus].filter(s => s && s.trim() !== '' && !['no informado','-'].includes(s.toLowerCase())).join(' · ');
-        const restriccionHtml = r.restriccion && !['no informado','-',''].includes(r.restriccion.toLowerCase())
-          ? `<div class="ficha-restriccion-badge">
-               <i class="fa-solid fa-triangle-exclamation" style="font-size:10px;"></i> Verificar antes de entregar
-               <span class="ficha-restriccion-tooltip">${r.restriccion}</span>
-             </div>`
+      grid.innerHTML = resultados.slice(0, 12).map(function(r) {
+        var sede = [r.sede, r.campus].filter(function(s){ return s && s.trim() !== '' && s.toLowerCase() !== 'no informado' && s !== '-'; }).join(' · ');
+        var sedeHtml = sede ? '<div class="ficha-card-sede"><i class="fa-solid fa-location-dot" style="font-size:10px;margin-right:4px;"></i>' + sede + '</div>' : '';
+        var restriccionHtml = (r.restriccion && r.restriccion.toLowerCase() !== 'no informado' && r.restriccion !== '-')
+          ? '<div class="ficha-restriccion-hdr"><i class="fa-solid fa-triangle-exclamation" style="font-size:10px;margin-right:3px;"></i>Verificar antes de entregar</div>'
           : '';
 
-        // Para ESCUELAS: bloques por rol
         if (r.tipo === 'Escuela') {
-          const directores = (r.contactos || []).filter(c => c.rol === 'director');
-          const secretarias = (r.contactos || []).filter(c => c.rol === 'secretaria');
+          var directores  = (r.contactos || []).filter(function(c){ return c.rol === 'director'; });
+          var secretarias = (r.contactos || []).filter(function(c){ return c.rol === 'secretaria'; });
+          var cargosDir   = ['director de escuela','directora de escuela','director(a) de escuela','director carrera','director(a) de carrera'];
+          var dirEscuela  = directores.filter(function(c){ return cargosDir.some(function(x){ return c.cargo && c.cargo.toLowerCase().indexOf(x) !== -1; }); });
+          var dirDocente  = directores.filter(function(c){ return dirEscuela.indexOf(c) === -1; });
 
-          // Separar director de escuela vs director docente
-          const dirEscuela = directores.filter(c => c.cargo && (c.cargo.toLowerCase().includes('director de escuela') || c.cargo.toLowerCase().includes('directora de escuela') || c.cargo.toLowerCase().includes('director carrera') || c.cargo.toLowerCase().includes('director(a) de escuela')));
-          const dirDocente  = directores.filter(c => !dirEscuela.includes(c));
-
-          function renderPersona(c) {
-            const correoHtml = c.correo ? `<div class="bloque-dato"><i class="fa-solid fa-envelope"></i><a href="mailto:${c.correo}">${c.correo}</a><button class="btn-copiar-correo" onclick="copiarDato(event,'${c.correo}')">Copiar</button></div>` : '';
-            const anexoHtml  = c.anexo  ? `<div class="bloque-dato"><i class="fa-solid fa-phone"></i> Anexo ${c.anexo}</div>` : '';
-            return `<div class="bloque-persona"><div class="bloque-nombre">${c.nombre || ''}</div><div class="bloque-cargo">${c.cargo || ''}</div>${correoHtml}${anexoHtml}</div>`;
+          function personaHtml(c) {
+            var h = '<div class="bloque-persona">';
+            if (c.nombre) h += '<div class="bloque-nombre">' + c.nombre + '</div>';
+            if (c.cargo)  h += '<div class="bloque-cargo">' + c.cargo + '</div>';
+            if (c.correo) h += '<div class="bloque-dato"><i class="fa-solid fa-envelope"></i><a href="mailto:' + c.correo + '">' + c.correo + '</a><button class="btn-copiar-correo" onclick="copiarDato(event,\'' + c.correo + '\')">Copiar</button></div>';
+            if (c.anexo)  h += '<div class="bloque-dato"><i class="fa-solid fa-phone"></i> Anexo ' + c.anexo + '</div>';
+            h += '</div>';
+            return h;
           }
 
-          function renderBloque(personas, titulo, btnLabel, btnVerde) {
+          function bloqueHtml(personas, titulo, btnLabel, esVerde) {
             if (!personas.length) return '';
-            // Buscar secretaria asociada (misma secretaria del primer director del bloque)
-            const secNombre = personas[0]._sec_nombre || '';
-            const sec = secNombre ? secretarias.find(s => s.nombre && s.nombre.toLowerCase().includes(secNombre.toLowerCase().split(' ')[0])) : secretarias[0];
-            const personasHtml = personas.map(renderPersona).join('');
-            const secHtml = sec ? `<div class="bloque-sep"></div>${renderPersona(sec)}` : '';
-            const textosCopia = [...personas, ...(sec ? [sec] : [])].map(p => `${p.nombre || ''} · ${p.cargo || ''}${p.correo ? ' · ' + p.correo : ''}${p.anexo ? ' · Anexo ' + p.anexo : ''}`).join('
-');
-            return `<div class="bloque-rol">
-              <div class="bloque-rol-titulo">${titulo}</div>
-              ${personasHtml}${secHtml}
-              <button class="btn-copiar-bloque ${btnVerde ? 'verde' : ''}" onclick="copiarTexto(event, \`${textosCopia.replace(/`/g, "'")}\`)">
-                <i class="fa-regular fa-copy"></i> ${btnLabel}
-              </button>
-            </div>`;
+            var sec = secretarias.length ? secretarias[0] : null;
+            var html = '<div class="bloque-rol"><div class="bloque-rol-titulo">' + titulo + '</div>';
+            personas.forEach(function(p){ html += personaHtml(p); });
+            if (sec) html += personaHtml(sec);
+            var textoBtn = esVerde ? 'btn-copiar-bloque verde' : 'btn-copiar-bloque';
+            var txtCopia = personas.concat(sec ? [sec] : []).map(function(p){
+              return (p.nombre||'') + (p.cargo ? ' · ' + p.cargo : '') + (p.correo ? ' · ' + p.correo : '') + (p.anexo ? ' · Anexo ' + p.anexo : '');
+            }).join('\n').replace(/'/g, "\'");
+            html += '<button class="' + textoBtn + '" onclick="copiarTexto(event,\'' + txtCopia + '\')"><i class="fa-regular fa-copy"></i> ' + btnLabel + '</button>';
+            html += '</div>';
+            return html;
           }
 
-          const bloqueDir    = renderBloque(dirEscuela.length ? dirEscuela : directores.slice(0,1), 'Director de escuela', 'Copiar Director + Secretaria', true);
-          const bloqueDocente = dirDocente.length ? renderBloque(dirDocente, 'Director docente', 'Copiar Docente + Secretaria', false) : '';
+          var bloqueDir     = bloqueHtml(dirEscuela.length ? dirEscuela : directores.slice(0,1), 'Director de escuela', 'Copiar Director + Secretaria', true);
+          var bloqueDocente = dirDocente.length ? bloqueHtml(dirDocente, 'Director docente', 'Copiar Docente + Secretaria', false) : '';
 
-          return `<div class="ficha-card">
-            <div class="ficha-card-header">
-              <div>
-                <div class="ficha-card-badge">Escuela</div>
-                <div class="ficha-card-titulo">${r.titulo}</div>
-                ${sede ? `<div class="ficha-card-sede"><i class="fa-solid fa-location-dot" style="font-size:10px;"></i> ${sede}</div>` : ''}
-              </div>
-              ${restriccionHtml}
-            </div>
-            <div class="ficha-card-body">
-              ${bloqueDir}${bloqueDocente}
-            </div>
-          </div>`;
+          return '<div class="ficha-card">'
+            + '<div class="ficha-card-header"><div><div class="ficha-card-badge">Escuela</div>'
+            + '<div class="ficha-card-titulo">' + r.titulo + '</div>' + sedeHtml + '</div>'
+            + restriccionHtml + '</div>'
+            + '<div class="ficha-card-body">' + bloqueDir + bloqueDocente + '</div>'
+            + '</div>';
         }
 
-        // Para ACADÉMICOS y ADMINISTRATIVOS: tarjeta simple
-        const contactosHtml = (r.contactos || []).map(c => {
-          const correoHtml = c.correo ? `<div class="rc-dato"><i class="fa-solid fa-envelope"></i><a href="mailto:${c.correo}">${c.correo}</a><button class="btn-copiar-correo" onclick="copiarDato(event,'${c.correo}')">Copiar</button></div>` : '';
-          const anexoHtml  = c.anexo  ? `<div class="rc-dato"><i class="fa-solid fa-phone"></i> Anexo ${c.anexo}</div>` : '';
-          const nombreHtml = c.nombre ? `<div class="rc-nombre">${c.nombre}</div>` : '';
-          return `<div class="r-contacto">${nombreHtml}<div class="rc-cargo">${c.cargo || ''}</div>${correoHtml}${anexoHtml}</div>`;
+        // ACADÉMICOS y ADMINISTRATIVOS
+        var tagClass = r.tipo === 'Académico' ? 'academico' : 'administrativo';
+        var contactosHtml = (r.contactos || []).map(function(c) {
+          var h = '<div class="r-contacto">';
+          if (c.nombre) h += '<div class="rc-nombre">' + c.nombre + '</div>';
+          if (c.cargo)  h += '<div class="rc-cargo">' + c.cargo + '</div>';
+          if (c.correo) h += '<div class="rc-dato"><i class="fa-solid fa-envelope"></i><a href="mailto:' + c.correo + '">' + c.correo + '</a><button class="btn-copiar-correo" onclick="copiarDato(event,\'' + c.correo + '\')">Copiar</button></div>';
+          if (c.anexo)  h += '<div class="rc-dato"><i class="fa-solid fa-phone"></i> Anexo ' + c.anexo + '</div>';
+          h += '</div>';
+          return h;
         }).join('');
 
-        const tagClass = r.tipo === 'Académico' ? 'academico' : 'administrativo';
-        return `<div class="result-card">
-          <div class="r-header"><span class="r-tag ${tagClass}">${r.tipo}</span></div>
-          <div class="r-titulo">${r.titulo}</div>
-          ${sede ? `<div class="r-sede"><i class="fa-solid fa-location-dot" style="color:var(--um-azul);font-size:10px;"></i> ${sede}</div>` : ''}
-          <div class="r-contactos">${contactosHtml}</div>
-          ${restriccionHtml}
-        </div>`;
+        var restriccionBadge = (r.restriccion && r.restriccion.toLowerCase() !== 'no informado' && r.restriccion !== '-')
+          ? '<div class="restriccion-badge"><i class="fa-solid fa-triangle-exclamation"></i> Verificar antes de entregar<span class="restriccion-tooltip">' + r.restriccion + '</span></div>'
+          : '';
+
+        return '<div class="result-card">'
+          + '<div class="r-header"><span class="r-tag ' + tagClass + '">' + r.tipo + '</span></div>'
+          + '<div class="r-titulo">' + r.titulo + '</div>'
+          + (sede ? '<div class="r-sede"><i class="fa-solid fa-location-dot" style="color:var(--um-azul);font-size:10px;"></i> ' + sede + '</div>' : '')
+          + '<div class="r-contactos">' + contactosHtml + '</div>'
+          + restriccionBadge
+          + '</div>';
       }).join('');
 
     } catch(e) {
@@ -1622,12 +1614,13 @@ async function buscarUnificado() {
 
 function copiarTexto(e, texto) {
   e.stopPropagation();
-  navigator.clipboard.writeText(texto).then(() => {
-    const btn = e.target.closest('button');
-    const original = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!';
+  var txtLimpio = texto.replace(/\\n/g, '\n');
+  navigator.clipboard.writeText(txtLimpio).then(function() {
+    var btn = e.target.closest ? e.target.closest('button') : e.target;
+    var orig = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> Copiado';
     btn.style.background = '#1a5c38'; btn.style.color = '#fff';
-    setTimeout(() => { btn.innerHTML = original; btn.style.background = ''; btn.style.color = ''; }, 2000);
+    setTimeout(function(){ btn.innerHTML = orig; btn.style.background = ''; btn.style.color = ''; }, 2000);
   });
 }
 
@@ -2368,3 +2361,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
+ 
