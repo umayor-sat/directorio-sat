@@ -130,7 +130,7 @@ th { background: #005baa; color: white; text-align: left; }
 <button class="btn-admin-flotante" onclick="abrirAgregar()" title="Administración">➕</button>
 {% endif %}
 
-<a href="mailto:eduardo.ferrada@umayor.cl?subject=🐛 Reporte de error – Directorio SAT&body=Página donde ocurrió el error:%0A%0ADescripción del problema:%0A%0A(Agrega aquí cualquier detalle adicional)" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
+<a href="/cdn-cgi/l/email-protection#93f6f7e6f2e1f7fcbdf5f6e1e1f2f7f2d3e6fef2eafce1bdf0fface0e6f1f9f6f0e7ae630c0308b3c1f6e3fce1e7f6b3f7f6b3f6e1e1fce1b3711300b3d7fae1f6f0e7fce1fafcb3c0d2c7b5f1fcf7eaaec35032f4fafdf2b3f7fcfdf7f6b3fcf0e6e1e1fa5020b3f6ffb3f6e1e1fce1a9b6a3d2b6a3d2d7f6e0f0e1fae3f0fa5020fdb3f7f6ffb3e3e1fcf1fff6fef2a9b6a3d2b6a3d2bbd2f4e1f6f4f2b3f2e2e6503eb3f0e6f2ffe2e6faf6e1b3f7f6e7f2fffff6b3f2f7faf0fafcfdf2ffba" class="btn-reporte-flotante" title="Reportar un error">🐛</a>
 
 <div id="modalAyuda" class="modal">
   <div class="modal-content">
@@ -255,9 +255,9 @@ th { background: #005baa; color: white; text-align: left; }
 </div>
 {% endif %}
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const SUPABASE_URL = "https://jxmrznqppddabuqtbufq.supabase.co";
-const SUPABASE_KEY = "sb_publishable_3Shj63dB3uBAL_TVvqfBRw_3RyTRZ1U";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjU1MDgxNywiZXhwIjoyMDg4MTI2ODE3fQ.EopCzL9iTQ0ujKFWNi4aqVUhTDeYp4_0nt8wcdk67Mo";
 
 // MAGIA JINJA: Define dinámicamente el rol
 let modoAdmin = {% if session.get('rol') == 'supervisor' %}true{% else %}false{% endif %};
@@ -592,15 +592,4 @@ async function eliminarRegistro(id, btn) {
 
 // AYUDA
 function abrirAyuda() { document.getElementById("modalAyuda").style.display = "block"; }
-function cerrarAyuda() { document.getElementById("modalAyuda").style.display = "none"; }
-
-    // Cerrar formulario y login al hacer click fuera del modal
-    window.addEventListener("click", function(e) {
-      if (e.target.id === "modalAgregar") cerrarAgregar();
-      if (e.target.id === "modalLogin")   cerrarLogin();
-    });
-  </script>
-
-
-</body>
-</html>
+function cerrarAyuda() { document.ge
