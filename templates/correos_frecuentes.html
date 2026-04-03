@@ -1030,10 +1030,9 @@ async function registrarCasoSupabase(area, tipoSolicitud, identificador, nombreE
   try {
     await _supabase.from('registro_derivaciones').insert([{
       ejecutivo:          nombreEjecutivo || 'No especificado',
-      area:               area,
-      tipo_de_solicitud:  tipoSolicitud,
-      identificador:      identificador || 'Sin RUT',
-      detalles_extras:    'Sin detalles'
+      area_derivacion:    area,
+      solicitud:          tipoSolicitud,
+      rut_alumno:         identificador || 'Sin RUT'
     }]);
   } catch(err) { console.error('Error registrando caso:', err); }
 }
