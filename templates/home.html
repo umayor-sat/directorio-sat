@@ -293,9 +293,10 @@ body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
 .search-btn:hover { background: #144a2d; }
 
 .sede-filtros {
-  display: flex; gap: 6px; justify-content: center;
+  display: none; gap: 6px; justify-content: center;
   margin-top: 10px; flex-wrap: wrap; align-items: center;
 }
+.sede-filtros.visible { display: flex; }
 .sede-chip {
   background: rgba(255,255,255,0.12);
   color: rgba(255,255,255,0.88);
@@ -309,8 +310,9 @@ body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
 .btn-limpiar-busqueda {
   background: none; border: none; color: rgba(255,255,255,0.7);
   font-size: 11px; cursor: pointer; padding: 3px 8px;
-  border-radius: 4px; display: flex; align-items: center; gap: 4px;
+  border-radius: 4px; display: none; align-items: center; gap: 4px;
 }
+.btn-limpiar-busqueda.visible { display: flex; }
 .btn-limpiar-busqueda:hover { color: #fff; }
 
 /* Zona de resultados inline */
@@ -369,27 +371,6 @@ body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
   box-shadow: 0 3px 8px rgba(0,0,0,0.2); z-index: 100;
 }
 .results-loading { text-align: center; font-size: 13px; color: var(--texto-suave); padding: 12px 0; }
-.ficha-card { background: var(--card-bg); border: 1px solid var(--borde); border-radius: 10px; overflow: hidden; box-shadow: var(--sombra); }
-.ficha-card-header { background: var(--um-azul); padding: 10px 14px; display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
-.ficha-card-badge { font-size: 10px; font-weight: 700; color: #fff; background: rgba(255,255,255,0.18); padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.3px; flex-shrink: 0; }
-.ficha-card-titulo { font-size: 13px; font-weight: 700; color: #fff; margin-top: 2px; }
-.ficha-card-sede { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 3px; }
-.ficha-restriccion-hdr { background: #f9a825; color: #5c3d00; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
-.ficha-card-body { padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
-.bloque-rol { background: var(--fondo); border-radius: 8px; padding: 9px 11px; border: 0.5px solid var(--borde); }
-.bloque-rol-titulo { font-size: 10px; font-weight: 700; color: var(--texto-suave); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 7px; }
-.bloque-persona { margin-bottom: 7px; padding-bottom: 7px; border-bottom: 0.5px solid var(--borde); }
-.bloque-persona:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-.bloque-nombre { font-size: 12px; font-weight: 700; color: var(--texto); }
-.bloque-cargo { font-size: 11px; color: var(--texto-suave); margin-bottom: 3px; }
-.bloque-dato { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--texto-suave); margin-top: 2px; }
-.bloque-dato i { color: var(--um-azul); font-size: 11px; width: 12px; }
-.bloque-dato a { color: var(--um-azul); text-decoration: none; }
-.bloque-dato a:hover { text-decoration: underline; }
-.btn-copiar-bloque { width: 100%; margin-top: 8px; background: none; border: 1px solid var(--borde); border-radius: 6px; padding: 6px 10px; font-size: 11px; font-weight: 700; color: var(--um-azul); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: background 0.15s, color 0.15s; }
-.btn-copiar-bloque:hover { background: var(--um-azul); color: #fff; border-color: var(--um-azul); }
-.btn-copiar-bloque.verde { color: var(--um-verde); border-color: var(--um-verde); }
-.btn-copiar-bloque.verde:hover { background: var(--um-verde); color: #fff; }
 
 /* ============================================================
    BODY PRINCIPAL
@@ -1226,6 +1207,10 @@ body.dark-mode .btn-limpiar { background: rgba(255,255,255,0.1); color: #ddd; }
             </select>
           </div>
           <div class="form-field">
+            <label>Tu RUT <span class="req">*</span></label>
+            <input type="text" id="m-turno-rut-sol" placeholder="Sin puntos ni guión">
+          </div>
+          <div class="form-field">
             <label>Tu turno original <span class="req">*</span></label>
             <select id="m-turno-original-sol">
               <option value="">— Selecciona —</option>
@@ -1285,6 +1270,10 @@ body.dark-mode .btn-limpiar { background: rgba(255,255,255,0.1); color: #ddd; }
             </select>
           </div>
           <div class="form-field">
+            <label>Tu RUT <span class="req">*</span></label>
+            <input type="text" id="m-feriado-rut-sol" placeholder="Sin puntos ni guión">
+          </div>
+          <div class="form-field">
             <label>Tipo de solicitud <span class="req">*</span></label>
             <select id="m-feriado-tipo">
               <option value="">— Selecciona —</option>
@@ -1296,6 +1285,11 @@ body.dark-mode .btn-limpiar { background: rgba(255,255,255,0.1); color: #ddd; }
           <div class="form-field">
             <label>Fecha solicitada <span class="req">*</span></label>
             <input type="date" id="m-feriado-fecha" oninput="mActualizarAsunto()">
+          </div>
+          <div class="form-field">
+            <label>Fecha de regreso</label>
+            <input type="date" id="m-feriado-fecha-regreso">
+            <span style="font-size:10px; color:var(--texto-suave); margin-top:2px;">Solo para el correo</span>
           </div>
           <div class="form-field">
             <label>Motivo</label>
@@ -1469,10 +1463,23 @@ let searchTimer = null;
 let sedeSeleccionada = 'todo';
 
 function onSearchInput() {
+  const q = document.getElementById('searchInput').value.trim();
+  const btn = document.getElementById('btnLimpiarBusqueda');
+  if (btn) btn.classList.toggle('visible', q.length > 0);
   buscarUnificado();
 }
 
 function onFiltroChange() {
+  const filtro = document.getElementById('searchFiltro').value;
+  const sedeFiltros = document.getElementById('sedeFiltros');
+  if (filtro === 'escuelas') {
+    sedeFiltros.classList.add('visible');
+  } else {
+    sedeFiltros.classList.remove('visible');
+    sedeSeleccionada = 'todo';
+    document.querySelectorAll('.sede-chip').forEach(c => c.classList.remove('activo'));
+    document.querySelector('.sede-chip').classList.add('activo');
+  }
   buscarUnificado();
 }
 
@@ -1516,97 +1523,50 @@ async function buscarUnificado() {
 
       label.textContent = `${resultados.length} resultado${resultados.length !== 1 ? 's' : ''} encontrado${resultados.length !== 1 ? 's' : ''}`;
 
-      grid.innerHTML = resultados.slice(0, 12).map(function(r) {
-        var sede = [r.sede, r.campus].filter(function(s){ return s && s.trim() !== '' && s.toLowerCase() !== 'no informado' && s !== '-'; }).join(' · ');
-        var sedeHtml = sede ? '<div class="ficha-card-sede"><i class="fa-solid fa-location-dot" style="font-size:10px;margin-right:4px;"></i>' + sede + '</div>' : '';
-        var restriccionHtml = (r.restriccion && r.restriccion.toLowerCase() !== 'no informado' && r.restriccion !== '-')
-          ? '<div class="ficha-restriccion-hdr"><i class="fa-solid fa-triangle-exclamation" style="font-size:10px;margin-right:3px;"></i>Verificar antes de entregar</div>'
-          : '';
+      grid.innerHTML = resultados.slice(0, 12).map(r => {
+        const tagClass = r.tipo === 'Académico' ? 'academico' : r.tipo === 'Administrativo' ? 'administrativo' : '';
+        const sede = [r.sede, r.campus].filter(s => s && s.toLowerCase() !== 'no informado').join(' · ');
 
-        if (r.tipo === 'Escuela') {
-          var directores  = (r.contactos || []).filter(function(c){ return c.rol === 'director'; });
-          var secretarias = (r.contactos || []).filter(function(c){ return c.rol === 'secretaria'; });
-          var cargosDir   = ['director de escuela','directora de escuela','director(a) de escuela','director carrera','director(a) de carrera'];
-          var dirEscuela  = directores.filter(function(c){ return cargosDir.some(function(x){ return c.cargo && c.cargo.toLowerCase().indexOf(x) !== -1; }); });
-          var dirDocente  = directores.filter(function(c){ return dirEscuela.indexOf(c) === -1; });
-
-          function personaHtml(c) {
-            var h = '<div class="bloque-persona">';
-            if (c.nombre) h += '<div class="bloque-nombre">' + c.nombre + '</div>';
-            if (c.cargo)  h += '<div class="bloque-cargo">' + c.cargo + '</div>';
-            if (c.correo) h += '<div class="bloque-dato"><i class="fa-solid fa-envelope"></i><a href="mailto:' + c.correo + '">' + c.correo + '</a><button class="btn-copiar-correo" onclick="copiarDato(event,\'' + c.correo + '\')">Copiar</button></div>';
-            if (c.anexo)  h += '<div class="bloque-dato"><i class="fa-solid fa-phone"></i> Anexo ' + c.anexo + '</div>';
-            h += '</div>';
-            return h;
-          }
-
-          function bloqueHtml(personas, titulo, btnLabel, esVerde) {
-            if (!personas.length) return '';
-            var sec = secretarias.length ? secretarias[0] : null;
-            var html = '<div class="bloque-rol"><div class="bloque-rol-titulo">' + titulo + '</div>';
-            personas.forEach(function(p){ html += personaHtml(p); });
-            if (sec) html += personaHtml(sec);
-            var textoBtn = esVerde ? 'btn-copiar-bloque verde' : 'btn-copiar-bloque';
-            var txtCopia = personas.concat(sec ? [sec] : []).map(function(p){
-              return (p.nombre||'') + (p.cargo ? ' · ' + p.cargo : '') + (p.correo ? ' · ' + p.correo : '') + (p.anexo ? ' · Anexo ' + p.anexo : '');
-            }).join('\n').replace(/"/g, '&quot;');
-            html += '<button class="' + textoBtn + '" data-texto="' + txtCopia + '" onclick="copiarTexto(event)"><i class="fa-regular fa-copy"></i> ' + btnLabel + '</button>';
-            html += '</div>';
-            return html;
-          }
-
-          var bloqueDir     = bloqueHtml(dirEscuela.length ? dirEscuela : directores.slice(0,1), 'Director de escuela', 'Copiar Director + Secretaria', true);
-          var bloqueDocente = dirDocente.length ? bloqueHtml(dirDocente, 'Director docente', 'Copiar Docente + Secretaria', false) : '';
-
-          return '<div class="ficha-card">'
-            + '<div class="ficha-card-header"><div><div class="ficha-card-badge">Escuela</div>'
-            + '<div class="ficha-card-titulo">' + r.titulo + '</div>' + sedeHtml + '</div>'
-            + restriccionHtml + '</div>'
-            + '<div class="ficha-card-body">' + bloqueDir + bloqueDocente + '</div>'
-            + '</div>';
-        }
-
-        // ACADÉMICOS y ADMINISTRATIVOS
-        var tagClass = r.tipo === 'Académico' ? 'academico' : 'administrativo';
-        var contactosHtml = (r.contactos || []).map(function(c) {
-          var h = '<div class="r-contacto">';
-          if (c.nombre) h += '<div class="rc-nombre">' + c.nombre + '</div>';
-          if (c.cargo)  h += '<div class="rc-cargo">' + c.cargo + '</div>';
-          if (c.correo) h += '<div class="rc-dato"><i class="fa-solid fa-envelope"></i><a href="mailto:' + c.correo + '">' + c.correo + '</a><button class="btn-copiar-correo" onclick="copiarDato(event,\'' + c.correo + '\')">Copiar</button></div>';
-          if (c.anexo)  h += '<div class="rc-dato"><i class="fa-solid fa-phone"></i> Anexo ' + c.anexo + '</div>';
-          h += '</div>';
-          return h;
+        const contactosHtml = (r.contactos || []).map(c => {
+          const correoHtml = c.correo
+            ? `<div class="rc-dato">
+                <i class="fa-solid fa-envelope"></i>
+                <a href="mailto:${c.correo}">${c.correo}</a>
+                <button class="btn-copiar-correo" onclick="copiarDato(event,'${c.correo}')">Copiar</button>
+               </div>`
+            : '';
+          const anexoHtml = c.anexo
+            ? `<div class="rc-dato"><i class="fa-solid fa-phone"></i> Anexo ${c.anexo}</div>`
+            : '';
+          return `<div class="r-contacto">
+            <div class="rc-nombre">${c.nombre}</div>
+            <div class="rc-cargo">${c.cargo}</div>
+            ${correoHtml}${anexoHtml}
+          </div>`;
         }).join('');
 
-        var restriccionBadge = (r.restriccion && r.restriccion.toLowerCase() !== 'no informado' && r.restriccion !== '-')
-          ? '<div class="restriccion-badge"><i class="fa-solid fa-triangle-exclamation"></i> Verificar antes de entregar<span class="restriccion-tooltip">' + r.restriccion + '</span></div>'
+        const restriccionHtml = r.restriccion && r.restriccion.toLowerCase() !== 'no informado'
+          ? `<div class="restriccion-badge">
+               <i class="fa-solid fa-triangle-exclamation"></i> Verificar antes de entregar
+               <span class="restriccion-tooltip">${r.restriccion}</span>
+             </div>`
           : '';
 
-        return '<div class="result-card">'
-          + '<div class="r-header"><span class="r-tag ' + tagClass + '">' + r.tipo + '</span></div>'
-          + '<div class="r-titulo">' + r.titulo + '</div>'
-          + (sede ? '<div class="r-sede"><i class="fa-solid fa-location-dot" style="color:var(--um-azul);font-size:10px;"></i> ' + sede + '</div>' : '')
-          + '<div class="r-contactos">' + contactosHtml + '</div>'
-          + restriccionBadge
-          + '</div>';
+        return `<div class="result-card">
+          <div class="r-header">
+            <span class="r-tag ${tagClass}">${r.tipo}</span>
+          </div>
+          <div class="r-titulo">${r.titulo}</div>
+          ${sede ? `<div class="r-sede"><i class="fa-solid fa-location-dot" style="color:var(--um-azul);font-size:10px;"></i> ${sede}</div>` : ''}
+          <div class="r-contactos">${contactosHtml}</div>
+          ${restriccionHtml}
+        </div>`;
       }).join('');
 
     } catch(e) {
       grid.innerHTML = '<div class="results-loading">Error al buscar. Intenta nuevamente.</div>';
     }
   }, 350);
-}
-
-function copiarTexto(e) {
-  e.stopPropagation();
-  var btn = e.target.closest ? e.target.closest('button') : e.target;
-  var texto = btn.getAttribute('data-texto') || '';
-  navigator.clipboard.writeText(texto).then(function() {
-    var orig = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-check"></i> Copiado';
-    btn.style.background = '#1a5c38'; btn.style.color = '#fff';
-    setTimeout(function(){ btn.innerHTML = orig; btn.style.background = ''; btn.style.color = ''; }, 2000);
-  });
 }
 
 function copiarDato(e, texto) {
@@ -1713,11 +1673,20 @@ async function cargarAlertas() {
       aplicarEstiloTranquilidad(a.mensaje);
     } else {
       texto.innerHTML = `<strong>${a.categoria || 'Aviso'}:</strong> ${a.mensaje}`;
-      caja.style.background = '#fdecea'; caja.style.borderLeftColor = '#c62828';
-      texto.style.color = '#c62828';
-      icono.className = 'fa-solid fa-triangle-exclamation'; icono.style.color = '#e74c3c';
-      if (titulo) { titulo.textContent = 'Estado del Sistema'; titulo.style.color = '#e74c3c'; }
-      contenedor.style.borderTopColor = '#e74c3c';
+      // Semáforo: aplicar color según a.color
+      let bgColor = '#fdecea', borderColor = '#c62828', textColor = '#c62828', iconColor = '#e74c3c', iconClass = 'fa-solid fa-triangle-exclamation';
+      if (a.color === 'amarillo') {
+        bgColor = '#fffbea'; borderColor = '#f0a500'; textColor = '#7a5c00'; iconColor = '#f0a500';
+        iconClass = 'fa-solid fa-triangle-exclamation';
+      } else if (a.color === 'verde') {
+        bgColor = '#e8f5e9'; borderColor = '#2e7d32'; textColor = '#1b5e20'; iconColor = '#2e7d32';
+        iconClass = 'fa-solid fa-circle-check';
+      }
+      caja.style.background = bgColor; caja.style.borderLeftColor = borderColor;
+      texto.style.color = textColor;
+      icono.className = iconClass; icono.style.color = iconColor;
+      if (titulo) { titulo.textContent = 'Estado del Sistema'; titulo.style.color = iconColor; }
+      contenedor.style.borderTopColor = iconColor;
     }
   } catch(e) { aplicarEstiloTranquilidad(); }
 }
@@ -2044,8 +2013,17 @@ function abrirModalCorreo(tipo) {
 
 function cerrarModalCorreo(tipo) {
   const id = tipo === 'supervisor' ? 'modalSupervisor' : 'modalComercial';
-  document.getElementById(id).classList.remove('visible');
+  const modal = document.getElementById(id);
+  if (modal) {
+    modal.querySelectorAll('input, select, textarea').forEach(el => {
+      if (el.type === 'checkbox') el.checked = false;
+      else el.value = '';
+    });
+  }
+  modal.classList.remove('visible');
   document.body.style.overflow = '';
+  mCambiarAsunto();
+  mMostrarFormComercial();
 }
 
 // Utilidades modal
@@ -2183,6 +2161,7 @@ async function mValidarYEnviar() {
   if (v === 'turno') {
     if (!mVal('m-turno-fecha'))         { mMarcarError('m-turno-fecha');         errores.push('Fecha del turno'); }
     if (!mVal('m-turno-solicitante'))   { mMarcarError('m-turno-solicitante');   errores.push('Tu nombre'); }
+    if (!mVal('m-turno-rut-sol'))       { mMarcarError('m-turno-rut-sol');       errores.push('Tu RUT'); }
     if (!mVal('m-turno-original-sol'))  { mMarcarError('m-turno-original-sol');  errores.push('Tu turno original'); }
     if (!mVal('m-turno-reemplazo'))     { mMarcarError('m-turno-reemplazo');     errores.push('Ejecutivo que reemplaza'); }
     if (!mVal('m-turno-original-rem'))  { mMarcarError('m-turno-original-rem');  errores.push('Turno original del reemplazo'); }
@@ -2196,6 +2175,7 @@ async function mValidarYEnviar() {
   }
   if (v === 'feriado') {
     if (!mVal('m-feriado-solicitante')) { mMarcarError('m-feriado-solicitante'); errores.push('Tu nombre'); }
+    if (!mVal('m-feriado-rut-sol'))     { mMarcarError('m-feriado-rut-sol');     errores.push('Tu RUT'); }
     if (!mVal('m-feriado-tipo'))        { mMarcarError('m-feriado-tipo');        errores.push('Tipo de solicitud'); }
     if (!mVal('m-feriado-fecha'))       { mMarcarError('m-feriado-fecha');       errores.push('Fecha solicitada'); }
   }
@@ -2235,18 +2215,30 @@ async function mValidarYEnviar() {
     cuerpo += `- Solicitante: ${mVal('m-turno-solicitante')}, turno ${mVal('m-turno-original-sol')}.\n`;
     cuerpo += `- Reemplazo: ${mVal('m-turno-reemplazo')}, turno original ${mVal('m-turno-original-rem')}, asumirá turno ${mVal('m-turno-nuevo-rem')}.\n\nMotivo: ${mVal('m-turno-motivo')}.`;
     if (mVal('m-turno-comentarios')) cuerpo += `\n\nComentarios: ${mVal('m-turno-comentarios')}`;
+    cuerpo += `\nRUT ejecutivo solicitante: ${mVal('m-turno-rut-sol')}`;
     cuerpo += '\n\nAgradezco su apoyo.\n\nAtte.\n\n[Insertar firma institucional]';
-    rutRegistro = '-';
+    rutRegistro = mVal('m-turno-rut-sol') || '-';
   } else if (v === 'feriado') {
     const f = mVal('m-feriado-fecha');
     let fL = f; if (f) { const p = f.split('-'); if (p.length===3) fL=`${p[2]}-${p[1]}-${p[0]}`; }
     cuerpo = `Estimadas,\n\nSolicito formalmente ${mVal('m-feriado-tipo')} para el día ${fL}.`;
     if (mVal('m-feriado-motivo')) cuerpo += `\nMotivo: ${mVal('m-feriado-motivo')}.`;
+    if (mVal('m-feriado-fecha-regreso')) {
+      const fr = mVal('m-feriado-fecha-regreso');
+      const frP = fr.split('-');
+      const frL = frP.length === 3 ? frP[2] + '-' + frP[1] + '-' + frP[0] : fr;
+      cuerpo += `\nFecha de regreso: ${frL}`;
+    }
+    cuerpo += `\nRUT ejecutivo solicitante: ${mVal('m-feriado-rut-sol')}`;
     if (mVal('m-feriado-comentarios')) cuerpo += `\n\nComentarios: ${mVal('m-feriado-comentarios')}`;
     cuerpo += '\n\nQuedo atento(a) a la confirmación.\n\nAtte.\n\n[Insertar firma institucional]';
-    rutRegistro = '-';
+    rutRegistro = mVal('m-feriado-rut-sol') || '-';
   }
 
+  const mNombreSolicitante = mVal('m-ic-nombre') || mVal('m-sol-nombre') || mVal('m-turno-solicitante') || mVal('m-feriado-solicitante') || '-';
+  const mNombreEjecutivo   = mVal('m-turno-solicitante') || mVal('m-feriado-solicitante') || '{{ session.get("nombre", "") }}';
+  const mAreaFinal = v === 'ti' ? 'TI' : 'SAT';
+  await mRegistrarCaso(mAreaFinal, asuntoTexto, rutRegistro, mNombreEjecutivo, mNombreSolicitante);
   window.location.href = `mailto:${dest}?cc=${cc}&subject=${encodeURIComponent(asuntoTexto)}&body=${encodeURIComponent(cuerpo)}`;
   mMostrarSubModal(mLimpiarFormulario);
 }
@@ -2280,6 +2272,7 @@ async function mEnviarComercial() {
     '\n\nAtentamente.\n\n[Insertar firma institucional]';
 
   const dest = 'marcelo.sepulveda@umayor.cl;francisca.castillo@umayor.cl';
+  await mRegistrarCaso('Comercial', asunto, mVal('m-com-rut-asunto'), '{{ session.get("nombre", "") }}', mVal('m-com-nombre-asunto'));
   window.location.href = `mailto:${dest}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
   mMostrarSubModal(mLimpiarFormulario);
 }
@@ -2304,10 +2297,36 @@ function mActualizarAsuntoComercial() {
   if (el) el.textContent = `RUT: ${mVal('m-com-rut-asunto')||'XXXXXXXXX'} · Nombre: ${mVal('m-com-nombre-asunto')||'NOMBRE'} · Carrera: ${mVal('m-com-carrera')||'CARRERA'} · Jornada: ${mVal('m-com-jornada')||'JORNADA'}`;
 }
 
+// ==========================================
+// SUPABASE — REGISTRO DE CASO DESDE MODAL
+// ==========================================
+async function mRegistrarCaso(area, asunto, rutSolicitante, nombreEjecutivo, nombreSolicitante) {
+  const SURL = 'https://jxmrznqppddabuqtbufq.supabase.co';
+  const SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjU1MDgxNywiZXhwIjoyMDg4MTI2ODE3fQ.EopCzL9iTQ0ujKFWNi4aqVUhTDeYp4_0nt8wcdk67Mo';
+  try {
+    await fetch(`${SURL}/rest/v1/registro_derivaciones`, {
+      method: 'POST',
+      headers: {
+        'apikey': SKEY,
+        'Authorization': `Bearer ${SKEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        ejecutivo:          nombreEjecutivo   || 'No especificado',
+        area:               area,
+        asunto:             asunto            || '-',
+        rut_solicitante:    rutSolicitante    || '-',
+        nombre_solicitante: nombreSolicitante || '-'
+      })
+    });
+  } catch(err) { console.error('Error registrando caso:', err); }
+}
+
 // Cargar ejecutivos en selects del modal
 async function mCargarEjecutivos() {
   const SURL = 'https://jxmrznqppddabuqtbufq.supabase.co';
-  const SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NTA4MTcsImV4cCI6MjA4ODEyNjgxN30.pqT_PlAAn3oR6g_0Iaa2fs6qV8M3RQFzNOCAssyZZh4';
+  const SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjU1MDgxNywiZXhwIjoyMDg4MTI2ODE3fQ.EopCzL9iTQ0ujKFWNi4aqVUhTDeYp4_0nt8wcdk67Mo';
   try {
     const res = await fetch(`${SURL}/rest/v1/ejecutivos?select=nombre,rol&activo=eq.true&order=nombre`, {
       headers: { 'apikey': SKEY, 'Authorization': `Bearer ${SKEY}` }
