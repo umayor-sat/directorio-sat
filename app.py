@@ -14,6 +14,12 @@ except ImportError:
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "directorio-sat-clave-2026")
 
+# Permitir carga en iframe desde el mismo origen (para panel admin)
+@app.after_request
+def allow_iframe_same_origin(response):
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    return response
+
 # =========================
 # CONFIGURACIÓN SUPABASE
 # =========================
