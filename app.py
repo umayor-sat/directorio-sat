@@ -453,10 +453,26 @@ def eliminar_alerta(id):
 # ==========================================
 # BUSCADOR UNIVERSAL
 # ==========================================
+def normalizar(texto):
+    """Elimina tildes y convierte a minúsculas para búsqueda flexible."""
+    reemplazos = {
+        'á':'a','é':'e','í':'i','ó':'o','ú':'u',
+        'ä':'a','ë':'e','ï':'i','ö':'o','ü':'u',
+        'à':'a','è':'e','ì':'i','ò':'o','ù':'u',
+        'â':'a','ê':'e','î':'i','ô':'o','û':'u',
+        'ñ':'n'
+    }
+    t = texto.lower()
+    for k, v in reemplazos.items():
+        t = t.replace(k, v)
+    return t
+
 @app.route('/api/buscar-universal', methods=['GET'])
 @login_required
 def buscar_universal():
-    q = request.args.get('q', '').strip().lower()
+    q_raw = request.args.get('q', '').strip()
+    q = q_raw.lower()
+    q_norm = normalizar(q_raw)  # versión sin tildes para búsqueda flexible
     filtro = request.args.get('filtro', 'todo').strip().lower()
 
     if len(q) < 2:
@@ -467,23 +483,50 @@ def buscar_universal():
     try:
         # --- ESCUELAS ---
         if filtro in ('todo', 'escuelas'):
+            # Búsqueda con tilde Y sin tilde para cubrir ambos casos
             res = supabase.table("directorio_escuelas_umayor").select("*").or_(
                 f"nombre.ilike.%{q}%,"
                 f"cargo.ilike.%{q}%,"
                 f"escuela_busqueda.ilike.%{q}%,"
                 f"secretaria.ilike.%{q}%,"
-                f"sede.ilike.%{q}%"
+                f"sede.ilike.%{q}%,"
+                f"nombre.ilike.%{q_norm}%,"
+                f"escuela_busqueda.ilike.%{q_norm}%,"
+                f"secretaria.ilike.%{q_norm}%"
             ).execute()
 
             filas = res.data or []
 
+            # Deduplicar por si la búsqueda doble trae duplicados
+            ids_vistos = set()
+            filas_unicas = []
+            for fila in filas:
+                fid = fila.get('id')
+                if fid not in ids_vistos:
+                    ids_vistos.add(fid)
+                    filas_unicas.append(fila)
+
             # Agrupamos por escuela_busqueda para mostrar ficha completa
             grupos = {}
-            for fila in filas:
+            for fila in filas_unicas:
                 clave = (fila.get('escuela_busqueda') or fila.get('escuela') or 'sin_escuela').strip()
                 if clave not in grupos:
                     grupos[clave] = []
                 grupos[clave].append(fila)
+
+            for clave, contactos in grupos.items():
+                primero = contactos[0]
+                restriccion = primero.get('consultar_antes_de_entregar_contactos') or ''
+
+                # Título legible: usar 'escuela' si existe, si no buscar en otros campos
+                titulo_legible = ''
+                for c in contactos:
+                    t = (c.get('escuela') or '').strip()
+                    if t and t.lower() not in ('no informado', ''):
+                        titulo_legible = t
+                        break
+                if not titulo_legible:
+                    titulo_legible = clave  # fallback a escuela_busqueda
 
             for clave, contactos in grupos.items():
                 # Usamos el primer registro como cabecera de la ficha
@@ -492,7 +535,7 @@ def buscar_universal():
 
                 ficha = {
                     'tipo': 'Escuela',
-                    'titulo': primero.get('escuela') or clave,
+                    'titulo': titulo_legible,
                     'sede': primero.get('sede') or '',
                     'campus': primero.get('campus') or '',
                     'restriccion': restriccion,
@@ -543,7 +586,10 @@ def buscar_universal():
                 f"nombre.ilike.%{q}%,"
                 f"departamento_busqueda.ilike.%{q}%,"
                 f"nombre_busqueda.ilike.%{q}%,"
-                f"cargo.ilike.%{q}%"
+                f"cargo.ilike.%{q}%,"
+                f"nombre.ilike.%{q_norm}%,"
+                f"departamento_busqueda.ilike.%{q_norm}%,"
+                f"nombre_busqueda.ilike.%{q_norm}%"
             ).execute()
 
             for r in (res.data or []):
@@ -588,10 +634,11 @@ def buscar_universal():
 
         # --- ADMINISTRATIVOS ---
         if filtro in ('todo', 'administrativos'):
-            # Búsqueda flexible por nombre y área
             res = supabase.table("contactos_administrativos").select("*").or_(
                 f"nombre.ilike.%{q}%,"
-                f"area_busqueda.ilike.%{q}%"
+                f"area_busqueda.ilike.%{q}%,"
+                f"nombre.ilike.%{q_norm}%,"
+                f"area_busqueda.ilike.%{q_norm}%"
             ).execute()
 
             for r in (res.data or []):
