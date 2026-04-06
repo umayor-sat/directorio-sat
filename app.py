@@ -549,44 +549,47 @@ def buscar_universal():
                     'sede': primero.get('sede') or '',
                     'campus': primero.get('campus') or '',
                     'restriccion': restriccion,
-                    'contactos': []
+                    'bloques': []
                 }
 
+                secretarias_usadas = set()
+
                 for c in contactos:
-                    # Persona principal (director, coordinador, etc.)
                     nombre = (c.get('nombre') or '').strip()
                     cargo  = (c.get('cargo') or '').strip()
                     correo = (c.get('correo_director') or '').strip()
                     anexo  = (c.get('anexo_director') or '').strip()
 
-                    if nombre and nombre.lower() not in ('no informado', ''):
-                        ficha['contactos'].append({
-                            'nombre': nombre,
-                            'cargo': cargo,
-                            'correo': correo if correo.lower() != 'no informado' else '',
-                            'anexo': anexo if anexo.lower() != 'no informado' else '',
-                            'rol': 'director'
-                        })
+                    if not nombre or nombre.lower() in ('no informado', ''):
+                        continue
 
-                    # Secretaria
+                    director = {
+                        'nombre': nombre,
+                        'cargo':  cargo,
+                        'correo': correo if correo.lower() not in ('no informado', '') else '',
+                        'anexo':  anexo  if anexo.lower()  not in ('no informado', '') else '',
+                    }
+
                     sec_nombre = (c.get('secretaria') or '').strip()
                     sec_correo = (c.get('correo_secretaria') or '').strip()
                     sec_anexo  = (c.get('anexo_secretaria') or '').strip()
 
+                    secretaria = None
                     if sec_nombre and sec_nombre.lower() not in ('no informado', ''):
-                        # Evitar duplicar secretarias que aparecen en múltiples filas
-                        ya_existe = any(
-                            ct['nombre'].lower() == sec_nombre.lower() and ct['rol'] == 'secretaria'
-                            for ct in ficha['contactos']
-                        )
-                        if not ya_existe:
-                            ficha['contactos'].append({
+                        clave_sec = sec_nombre.lower()
+                        if clave_sec not in secretarias_usadas:
+                            secretarias_usadas.add(clave_sec)
+                            secretaria = {
                                 'nombre': sec_nombre,
-                                'cargo': 'Secretaria',
-                                'correo': sec_correo if sec_correo.lower() != 'no informado' else '',
-                                'anexo': sec_anexo if sec_anexo.lower() != 'no informado' else '',
-                                'rol': 'secretaria'
-                            })
+                                'cargo':  'Secretaria',
+                                'correo': sec_correo if sec_correo.lower() not in ('no informado', '') else '',
+                                'anexo':  sec_anexo  if sec_anexo.lower()  not in ('no informado', '') else '',
+                            }
+
+                    ficha['bloques'].append({
+                        'director':   director,
+                        'secretaria': secretaria
+                    })
 
                 resultados.append(ficha)
 
