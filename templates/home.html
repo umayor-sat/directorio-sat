@@ -1618,54 +1618,8 @@ function renderEscuela(r) {
        </div>`
     : '';
 
-  // Separar contactos por rol
-  const ROLES_DIRECTOR_ESC = ['director de escuela','directora de escuela','director(a) de escuela','director carrera','directora carrera','director de carrera','directora de carrera'];
-  const ROLES_DIRECTOR_DOC = ['director docente','directora docente','director(a) docente','coordinador docente','coordinadora docente','coord doc multicarrera','coordinador','coordinadora','jefe de carrera','jefa de carrera'];
-  const ROLES_SECRETARIA   = ['secretaria','secretario','asistente'];
-
-  const contactos = r.contactos || [];
-
-  // Director de Escuela y su secretaria
-  const dirEsc = contactos.filter(c => ROLES_DIRECTOR_ESC.some(rol => (c.cargo||'').toLowerCase().includes(rol)));
-  // Director Docente y su secretaria (excluyendo los ya clasificados como dirEsc)
-  const dirDoc = contactos.filter(c => !ROLES_DIRECTOR_ESC.some(rol => (c.cargo||'').toLowerCase().includes(rol))
-    && ROLES_DIRECTOR_DOC.some(rol => (c.cargo||'').toLowerCase().includes(rol)));
-  // Secretarias sueltas (las que no calzaron con ningún director principal)
-  const secretarias = contactos.filter(c =>
-    !ROLES_DIRECTOR_ESC.some(rol => (c.cargo||'').toLowerCase().includes(rol)) &&
-    !ROLES_DIRECTOR_DOC.some(rol => (c.cargo||'').toLowerCase().includes(rol)) &&
-    ROLES_SECRETARIA.some(rol => (c.cargo||'').toLowerCase().includes(rol))
-  );
-  // Resto no clasificado
-  const resto = contactos.filter(c =>
-    !ROLES_DIRECTOR_ESC.some(rol => (c.cargo||'').toLowerCase().includes(rol)) &&
-    !ROLES_DIRECTOR_DOC.some(rol => (c.cargo||'').toLowerCase().includes(rol)) &&
-    !ROLES_SECRETARIA.some(rol => (c.cargo||'').toLowerCase().includes(rol))
-  );
-
-  // Asignar secretaria al bloque de director de escuela si hay solo una
-  let secEsc = [], secDoc = [];
-  if (dirEsc.length > 0 && dirDoc.length > 0 && secretarias.length >= 2) {
-    secEsc = [secretarias[0]];
-    secDoc = secretarias.slice(1);
-  } else if (dirEsc.length > 0 && dirDoc.length === 0) {
-    secEsc = secretarias;
-  } else if (dirDoc.length > 0 && dirEsc.length === 0) {
-    secDoc = secretarias;
-  } else {
-    secEsc = secretarias;
-  }
-
-  const bloqueDirEsc = (dirEsc.length > 0 || secEsc.length > 0)
-    ? renderBloque('Director de Escuela', [...dirEsc, ...secEsc]) : '';
-  const bloqueDirDoc = (dirDoc.length > 0 || secDoc.length > 0)
-    ? renderBloque('Director Docente', [...dirDoc, ...secDoc]) : '';
-  const bloqueResto  = resto.length > 0
-    ? renderBloque('Otros contactos', resto) : '';
-
-  // Si no pudo clasificar nada, muestra todos sin bloque
-  const sinClasificar = (bloqueDirEsc === '' && bloqueDirDoc === '' && bloqueResto === '')
-    ? contactos.map(c => renderPersonaSimple(c)).join('') : '';
+  const bloques = r.bloques || [];
+  const bloquesHtml = bloques.map(b => renderBloque(b)).join('');
 
   return `<div class="result-card">
     <div class="r-header">
@@ -1674,30 +1628,46 @@ function renderEscuela(r) {
     </div>
     <div class="r-titulo">${r.titulo}</div>
     ${sede ? `<div class="r-sede"><i class="fa-solid fa-location-dot" style="color:var(--um-azul);font-size:10px;"></i> ${sede}</div>` : ''}
-    ${bloqueDirEsc}
-    ${bloqueDirDoc}
-    ${bloqueResto}
-    ${sinClasificar ? `<div class="r-contactos" style="margin-top:8px;">${sinClasificar}</div>` : ''}
+    ${bloquesHtml || '<div style="font-size:12px;color:var(--texto-suave);padding:8px 0;">Sin información de contacto disponible.</div>'}
   </div>`;
 }
 
-function renderBloque(titulo, personas) {
-  if (!personas || personas.length === 0) return '';
-  const personasHtml = personas.map(p => renderPersonaBloque(p)).join('');
-  // Texto para copiar bloque completo
-  const textoCopia = personas.map(p => {
-    const partes = [p.nombre, p.cargo];
-    if (p.correo) partes.push(p.correo);
-    if (p.anexo)  partes.push('Anexo ' + p.anexo);
-    return partes.filter(Boolean).join(' | ');
-  }).join('\n');
-  const idBtn = 'btn-bloque-' + Math.random().toString(36).substr(2,6);
+function renderBloque(b) {
+  const dir = b.director || {};
+  const sec = b.secretaria || null;
+
+  // Titulo del bloque basado en el cargo del director
+  const cargo = (dir.cargo || '').toLowerCase();
+  let tituloBloque = dir.cargo || 'Contacto';
+
+  // Armar texto para copiar (director + secretaria si existe)
+  const lineas = [];
+  if (dir.nombre) {
+    const partes = [dir.nombre, dir.cargo];
+    if (dir.correo) partes.push(dir.correo);
+    if (dir.anexo)  partes.push('Anexo ' + dir.anexo);
+    lineas.push(partes.filter(Boolean).join(' | '));
+  }
+  if (sec && sec.nombre) {
+    const partes = [sec.nombre, 'Secretaria'];
+    if (sec.correo) partes.push(sec.correo);
+    if (sec.anexo)  partes.push('Anexo ' + sec.anexo);
+    lineas.push(partes.filter(Boolean).join(' | '));
+  }
+  const textoCopia = lineas.join('\n');
+
+  const dirHtml = dir.nombre ? renderPersonaBloque(dir) : '';
+  const secHtml = sec && sec.nombre ? renderPersonaBloque(sec) : '';
+
   return `<div class="r-bloque">
-    <div class="r-bloque-titulo">${titulo}</div>
-    <div class="r-bloque-personas">${personasHtml}</div>
-    <button class="btn-copiar-bloque" id="${idBtn}" onclick="copiarBloque(this, ${JSON.stringify(textoCopia)})">
-      <i class="fa-regular fa-copy"></i> Copiar ${titulo}
-    </button>
+    <div class="r-bloque-titulo">${tituloBloque}</div>
+    <div class="r-bloque-personas">
+      ${dirHtml}
+      ${secHtml}
+    </div>
+    ${textoCopia ? `<button class="btn-copiar-bloque" onclick="copiarBloque(this, ${JSON.stringify(textoCopia)})">
+      <i class="fa-regular fa-copy"></i> Copiar ${tituloBloque}
+    </button>` : ''}
   </div>`;
 }
 
@@ -1706,13 +1676,14 @@ function renderPersonaBloque(p) {
   const cargo  = (p.cargo  || '').trim();
   const correo = p.correo && p.correo.toLowerCase() !== 'no informado' ? p.correo.trim() : '';
   const anexo  = p.anexo  && p.anexo.toLowerCase()  !== 'no informado' ? p.anexo.trim()  : '';
+  const correoSeguro = correo.replace(/'/g, "\'");
   return `<div class="r-bloque-persona">
     ${nombre ? `<div class="r-bloque-nombre">${nombre}</div>` : ''}
     ${cargo  ? `<div class="r-bloque-cargo">${cargo}</div>`   : ''}
     ${correo ? `<div class="r-bloque-dato">
       <i class="fa-solid fa-envelope"></i>
       <a href="mailto:${correo}">${correo}</a>
-      <button class="btn-copiar-correo" onclick="copiarDato(event,'${correo}')">Copiar</button>
+      <button class="btn-copiar-correo" onclick="copiarDato(event,'${correoSeguro}')">Copiar</button>
     </div>` : ''}
     ${anexo  ? `<div class="r-bloque-dato"><i class="fa-solid fa-phone"></i> Anexo ${anexo}</div>` : ''}
   </div>`;
@@ -1721,10 +1692,11 @@ function renderPersonaBloque(p) {
 function renderPersonaSimple(c) {
   const correo = c.correo && c.correo.toLowerCase() !== 'no informado' ? c.correo.trim() : '';
   const anexo  = c.anexo  && c.anexo.toLowerCase()  !== 'no informado' ? c.anexo.trim()  : '';
+  const correoSeguro = correo.replace(/'/g, "\'");
   return `<div class="r-contacto">
     <div class="rc-nombre">${(c.nombre||'').trim()}</div>
     <div class="rc-cargo">${(c.cargo||'').trim()}</div>
-    ${correo ? `<div class="rc-dato"><i class="fa-solid fa-envelope"></i><a href="mailto:${correo}">${correo}</a><button class="btn-copiar-correo" onclick="copiarDato(event,'${correo}')">Copiar</button></div>` : ''}
+    ${correo ? `<div class="rc-dato"><i class="fa-solid fa-envelope"></i><a href="mailto:${correo}">${correo}</a><button class="btn-copiar-correo" onclick="copiarDato(event,'${correoSeguro}')">Copiar</button></div>` : ''}
     ${anexo  ? `<div class="rc-dato"><i class="fa-solid fa-phone"></i> Anexo ${anexo}</div>` : ''}
   </div>`;
 }
