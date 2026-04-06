@@ -372,6 +372,37 @@ body.dark-mode .camino-track { background: rgba(255,255,255,0.1); }
 }
 .results-loading { text-align: center; font-size: 13px; color: var(--texto-suave); padding: 12px 0; }
 
+/* Bloques internos tarjeta escuela */
+.r-bloque {
+  border: 1px solid var(--borde); border-radius: 8px;
+  overflow: hidden; margin-top: 10px;
+}
+.r-bloque-titulo {
+  font-size: 9.5px; font-weight: 800; letter-spacing: 0.6px;
+  text-transform: uppercase; color: var(--texto-suave);
+  background: var(--fondo); padding: 5px 10px;
+  border-bottom: 1px solid var(--borde);
+}
+.r-bloque-personas { padding: 8px 10px; display: flex; flex-direction: column; gap: 8px; }
+.r-bloque-persona { display: flex; flex-direction: column; gap: 3px; }
+.r-bloque-persona + .r-bloque-persona { border-top: 1px dashed var(--borde); padding-top: 8px; }
+.r-bloque-nombre { font-size: 12.5px; font-weight: 700; color: var(--texto); }
+.r-bloque-cargo  { font-size: 11px; color: var(--texto-suave); margin-bottom: 3px; }
+.r-bloque-dato   { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--texto-suave); margin-top: 2px; }
+.r-bloque-dato i { width: 12px; color: var(--um-azul); font-size: 11px; }
+.r-bloque-dato a { color: var(--um-azul); text-decoration: none; }
+.r-bloque-dato a:hover { text-decoration: underline; }
+.btn-copiar-bloque {
+  width: 100%; background: var(--fondo); border: none;
+  border-top: 1px solid var(--borde);
+  color: var(--um-azul); font-size: 11px; font-weight: 700;
+  padding: 6px 10px; cursor: pointer; text-align: center;
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  transition: background 0.15s;
+}
+.btn-copiar-bloque:hover { background: var(--um-azul); color: #fff; }
+.btn-copiar-bloque:hover i { color: #fff; }
+
 /* ============================================================
    BODY PRINCIPAL
    ============================================================ */
@@ -813,12 +844,12 @@ body.dark-mode .btn-limpiar { background: rgba(255,255,255,0.1); color: #ddd; }
       <i class="fa-solid fa-magnifying-glass"></i> Buscar
     </button>
   </div>
-  <div class="sede-filtros" id="sedeFiltros">
+  <div class="sede-filtros visible" id="sedeFiltros">
     <span style="color:rgba(255,255,255,0.7); font-size:11px; font-weight:600;">Sede:</span>
     <span class="sede-chip activo" onclick="seleccionarSede('todo', this)">Todo</span>
     <span class="sede-chip" onclick="seleccionarSede('santiago', this)">Santiago</span>
     <span class="sede-chip" onclick="seleccionarSede('temuco', this)">Temuco</span>
-    <button class="btn-limpiar-busqueda visible" id="btnLimpiarBusqueda" onclick="limpiarBusqueda()">
+    <button class="btn-limpiar-busqueda" id="btnLimpiarBusqueda" onclick="limpiarBusqueda()">
       <i class="fa-solid fa-xmark"></i> Limpiar
     </button>
   </div>
@@ -1472,7 +1503,7 @@ function onSearchInput() {
 function onFiltroChange() {
   const filtro = document.getElementById('searchFiltro').value;
   const sedeFiltros = document.getElementById('sedeFiltros');
-  if (filtro === 'escuelas') {
+  if (filtro === 'escuelas' || filtro === 'todo') {
     sedeFiltros.classList.add('visible');
   } else {
     sedeFiltros.classList.remove('visible');
@@ -1521,12 +1552,19 @@ async function buscarUnificado() {
         return;
       }
 
-      label.textContent = `${resultados.length} resultado${resultados.length !== 1 ? 's' : ''} encontrado${resultados.length !== 1 ? 's' : ''}`;
+      label.textContent = `${resultados.length} resultado${resultados.length !== 1 ? 's' : ''} encontrado${resultados.length !== 1 ? 's' : ''} para "${q}"`;
 
-      grid.innerHTML = resultados.slice(0, 12).map(r => {
+      // Separar escuelas del resto
+      const escuelas = resultados.filter(r => r.tipo === 'Escuela');
+      const otros    = resultados.filter(r => r.tipo !== 'Escuela');
+
+      // Renderizar escuelas con bloques internos
+      const escuelasHtml = escuelas.slice(0, 12).map(r => renderEscuela(r)).join('');
+
+      // Renderizar otros (académicos, administrativos) con tarjeta simple
+      const otrosHtml = otros.slice(0, 12).map(r => {
         const tagClass = r.tipo === 'Académico' ? 'academico' : r.tipo === 'Administrativo' ? 'administrativo' : '';
         const sede = [r.sede, r.campus].filter(s => s && s.toLowerCase() !== 'no informado').join(' · ');
-
         const contactosHtml = (r.contactos || []).map(c => {
           const correoHtml = c.correo
             ? `<div class="rc-dato">
@@ -1544,14 +1582,12 @@ async function buscarUnificado() {
             ${correoHtml}${anexoHtml}
           </div>`;
         }).join('');
-
         const restriccionHtml = r.restriccion && r.restriccion.toLowerCase() !== 'no informado'
           ? `<div class="restriccion-badge">
                <i class="fa-solid fa-triangle-exclamation"></i> Verificar antes de entregar
                <span class="restriccion-tooltip">${r.restriccion}</span>
              </div>`
           : '';
-
         return `<div class="result-card">
           <div class="r-header">
             <span class="r-tag ${tagClass}">${r.tipo}</span>
@@ -1563,10 +1599,148 @@ async function buscarUnificado() {
         </div>`;
       }).join('');
 
+      grid.innerHTML = escuelasHtml + otrosHtml;
+
     } catch(e) {
       grid.innerHTML = '<div class="results-loading">Error al buscar. Intenta nuevamente.</div>';
     }
   }, 350);
+}
+
+// Renderizar tarjeta de escuela con bloques internos
+function renderEscuela(r) {
+  const sede = [r.sede, r.campus].filter(s => s && s.toLowerCase() !== 'no informado').join(' · ');
+
+  const restriccionBadge = r.restriccion && r.restriccion.toLowerCase() !== 'no informado'
+    ? `<div class="restriccion-badge" style="margin-left:auto;">
+         <i class="fa-solid fa-triangle-exclamation"></i> Verificar antes de entregar
+         <span class="restriccion-tooltip">${r.restriccion}</span>
+       </div>`
+    : '';
+
+  // Separar contactos por rol
+  const ROLES_DIRECTOR_ESC = ['director de escuela','directora de escuela','director(a) de escuela','director carrera','directora carrera','director de carrera','directora de carrera'];
+  const ROLES_DIRECTOR_DOC = ['director docente','directora docente','director(a) docente','coordinador docente','coordinadora docente','coord doc multicarrera','coordinador','coordinadora','jefe de carrera','jefa de carrera'];
+  const ROLES_SECRETARIA   = ['secretaria','secretario','asistente'];
+
+  const contactos = r.contactos || [];
+
+  // Director de Escuela y su secretaria
+  const dirEsc = contactos.filter(c => ROLES_DIRECTOR_ESC.some(rol => (c.cargo||'').toLowerCase().includes(rol)));
+  // Director Docente y su secretaria (excluyendo los ya clasificados como dirEsc)
+  const dirDoc = contactos.filter(c => !ROLES_DIRECTOR_ESC.some(rol => (c.cargo||'').toLowerCase().includes(rol))
+    && ROLES_DIRECTOR_DOC.some(rol => (c.cargo||'').toLowerCase().includes(rol)));
+  // Secretarias sueltas (las que no calzaron con ningún director principal)
+  const secretarias = contactos.filter(c =>
+    !ROLES_DIRECTOR_ESC.some(rol => (c.cargo||'').toLowerCase().includes(rol)) &&
+    !ROLES_DIRECTOR_DOC.some(rol => (c.cargo||'').toLowerCase().includes(rol)) &&
+    ROLES_SECRETARIA.some(rol => (c.cargo||'').toLowerCase().includes(rol))
+  );
+  // Resto no clasificado
+  const resto = contactos.filter(c =>
+    !ROLES_DIRECTOR_ESC.some(rol => (c.cargo||'').toLowerCase().includes(rol)) &&
+    !ROLES_DIRECTOR_DOC.some(rol => (c.cargo||'').toLowerCase().includes(rol)) &&
+    !ROLES_SECRETARIA.some(rol => (c.cargo||'').toLowerCase().includes(rol))
+  );
+
+  // Asignar secretaria al bloque de director de escuela si hay solo una
+  let secEsc = [], secDoc = [];
+  if (dirEsc.length > 0 && dirDoc.length > 0 && secretarias.length >= 2) {
+    secEsc = [secretarias[0]];
+    secDoc = secretarias.slice(1);
+  } else if (dirEsc.length > 0 && dirDoc.length === 0) {
+    secEsc = secretarias;
+  } else if (dirDoc.length > 0 && dirEsc.length === 0) {
+    secDoc = secretarias;
+  } else {
+    secEsc = secretarias;
+  }
+
+  const bloqueDirEsc = (dirEsc.length > 0 || secEsc.length > 0)
+    ? renderBloque('Director de Escuela', [...dirEsc, ...secEsc]) : '';
+  const bloqueDirDoc = (dirDoc.length > 0 || secDoc.length > 0)
+    ? renderBloque('Director Docente', [...dirDoc, ...secDoc]) : '';
+  const bloqueResto  = resto.length > 0
+    ? renderBloque('Otros contactos', resto) : '';
+
+  // Si no pudo clasificar nada, muestra todos sin bloque
+  const sinClasificar = (bloqueDirEsc === '' && bloqueDirDoc === '' && bloqueResto === '')
+    ? contactos.map(c => renderPersonaSimple(c)).join('') : '';
+
+  return `<div class="result-card">
+    <div class="r-header">
+      <span class="r-tag">Escuela</span>
+      ${restriccionBadge}
+    </div>
+    <div class="r-titulo">${r.titulo}</div>
+    ${sede ? `<div class="r-sede"><i class="fa-solid fa-location-dot" style="color:var(--um-azul);font-size:10px;"></i> ${sede}</div>` : ''}
+    ${bloqueDirEsc}
+    ${bloqueDirDoc}
+    ${bloqueResto}
+    ${sinClasificar ? `<div class="r-contactos" style="margin-top:8px;">${sinClasificar}</div>` : ''}
+  </div>`;
+}
+
+function renderBloque(titulo, personas) {
+  if (!personas || personas.length === 0) return '';
+  const personasHtml = personas.map(p => renderPersonaBloque(p)).join('');
+  // Texto para copiar bloque completo
+  const textoCopia = personas.map(p => {
+    const partes = [p.nombre, p.cargo];
+    if (p.correo) partes.push(p.correo);
+    if (p.anexo)  partes.push('Anexo ' + p.anexo);
+    return partes.filter(Boolean).join(' | ');
+  }).join('\n');
+  const idBtn = 'btn-bloque-' + Math.random().toString(36).substr(2,6);
+  return `<div class="r-bloque">
+    <div class="r-bloque-titulo">${titulo}</div>
+    <div class="r-bloque-personas">${personasHtml}</div>
+    <button class="btn-copiar-bloque" id="${idBtn}" onclick="copiarBloque(this, ${JSON.stringify(textoCopia)})">
+      <i class="fa-regular fa-copy"></i> Copiar ${titulo}
+    </button>
+  </div>`;
+}
+
+function renderPersonaBloque(p) {
+  const nombre = (p.nombre || '').trim();
+  const cargo  = (p.cargo  || '').trim();
+  const correo = p.correo && p.correo.toLowerCase() !== 'no informado' ? p.correo.trim() : '';
+  const anexo  = p.anexo  && p.anexo.toLowerCase()  !== 'no informado' ? p.anexo.trim()  : '';
+  return `<div class="r-bloque-persona">
+    ${nombre ? `<div class="r-bloque-nombre">${nombre}</div>` : ''}
+    ${cargo  ? `<div class="r-bloque-cargo">${cargo}</div>`   : ''}
+    ${correo ? `<div class="r-bloque-dato">
+      <i class="fa-solid fa-envelope"></i>
+      <a href="mailto:${correo}">${correo}</a>
+      <button class="btn-copiar-correo" onclick="copiarDato(event,'${correo}')">Copiar</button>
+    </div>` : ''}
+    ${anexo  ? `<div class="r-bloque-dato"><i class="fa-solid fa-phone"></i> Anexo ${anexo}</div>` : ''}
+  </div>`;
+}
+
+function renderPersonaSimple(c) {
+  const correo = c.correo && c.correo.toLowerCase() !== 'no informado' ? c.correo.trim() : '';
+  const anexo  = c.anexo  && c.anexo.toLowerCase()  !== 'no informado' ? c.anexo.trim()  : '';
+  return `<div class="r-contacto">
+    <div class="rc-nombre">${(c.nombre||'').trim()}</div>
+    <div class="rc-cargo">${(c.cargo||'').trim()}</div>
+    ${correo ? `<div class="rc-dato"><i class="fa-solid fa-envelope"></i><a href="mailto:${correo}">${correo}</a><button class="btn-copiar-correo" onclick="copiarDato(event,'${correo}')">Copiar</button></div>` : ''}
+    ${anexo  ? `<div class="rc-dato"><i class="fa-solid fa-phone"></i> Anexo ${anexo}</div>` : ''}
+  </div>`;
+}
+
+function copiarBloque(btn, texto) {
+  navigator.clipboard.writeText(texto).then(() => {
+    const original = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!';
+    btn.style.background = 'var(--um-verde)';
+    btn.style.color = '#fff';
+    setTimeout(() => {
+      btn.innerHTML = original;
+      btn.style.background = '';
+      btn.style.color = '';
+    }, 2000);
+  });
 }
 
 function copiarDato(e, texto) {
