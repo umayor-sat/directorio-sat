@@ -1636,9 +1636,7 @@ function renderBloque(b) {
   const dir = b.director || {};
   const sec = b.secretaria || null;
 
-  // Titulo del bloque basado en el cargo del director
-  const cargo = (dir.cargo || '').toLowerCase();
-  let tituloBloque = dir.cargo || 'Contacto';
+  const tituloBloque = dir.cargo || 'Contacto';
 
   // Armar texto para copiar (director + secretaria si existe)
   const lineas = [];
@@ -1659,16 +1657,33 @@ function renderBloque(b) {
   const dirHtml = dir.nombre ? renderPersonaBloque(dir) : '';
   const secHtml = sec && sec.nombre ? renderPersonaBloque(sec) : '';
 
-  return `<div class="r-bloque">
+  const btnId = 'bloque-' + Math.random().toString(36).substr(2,8);
+
+  const html = `<div class="r-bloque">
     <div class="r-bloque-titulo">${tituloBloque}</div>
     <div class="r-bloque-personas">
       ${dirHtml}
       ${secHtml}
     </div>
-    ${textoCopia ? `<button class="btn-copiar-bloque" onclick="copiarBloque(this, ${JSON.stringify(textoCopia)})">
+    ${textoCopia ? `<button class="btn-copiar-bloque" id="${btnId}">
       <i class="fa-regular fa-copy"></i> Copiar ${tituloBloque}
     </button>` : ''}
   </div>`;
+
+  // Asignar el texto via dataset después de insertar en DOM
+  if (textoCopia) {
+    setTimeout(() => {
+      const btn = document.getElementById(btnId);
+      if (btn) {
+        btn.dataset.texto = textoCopia;
+        btn.addEventListener('click', function() {
+          copiarBloque(this, this.dataset.texto);
+        });
+      }
+    }, 0);
+  }
+
+  return html;
 }
 
 function renderPersonaBloque(p) {
