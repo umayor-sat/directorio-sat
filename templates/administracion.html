@@ -770,6 +770,17 @@
         }
     }
 
+    async function borrarStaff(id, nombre) {
+        if (confirm(`¿Estás seguro de eliminar a "${nombre}"? Esta acción no se puede deshacer.`)) {
+            const { error } = await _supabase.from('ejecutivos').delete().eq('id', id);
+            if (error) {
+                alert('❌ Error al eliminar: ' + error.message);
+            } else {
+                cargarEjecutivos();
+            }
+        }
+    }
+
     // ==========================================
     // LÓGICA: ALERTAS OPERATIVAS (CON RELOJ AUTOMÁTICO)
     // ==========================================
