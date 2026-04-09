@@ -709,6 +709,194 @@ def buscar_universal():
         return jsonify({"error": str(e)}), 500
 
 # ==========================================
+# RUTAS API SEGURAS (reemplazan funciones expuestas en home.html)
+# ==========================================
+
+@app.route('/api/registrar_caso', methods=['POST'])
+@login_required
+def api_registrar_caso():
+    """Registra un caso de derivación de forma segura (reemplaza mRegistrarCaso en home.html)"""
+    try:
+        data = request.json
+        supabase.table('registro_derivaciones').insert({
+            'ejecutivo': data.get('ejecutivo', 'No especificado'),
+            'area': data.get('area', ''),
+            'asunto': data.get('asunto', '-'),
+            'rut_solicitante': data.get('rut_solicitante', '-'),
+            'nombre_solicitante': data.get('nombre_solicitante', '-')
+        }).execute()
+        return jsonify({'success': True})
+    except Exception as e:
+        print(f"Error registrando caso: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/cargar_ejecutivos', methods=['GET'])
+@login_required
+def api_cargar_ejecutivos():
+    """Carga ejecutivos activos (reemplaza mCargarEjecutivos en home.html)"""
+    try:
+        response = supabase.table('ejecutivos')\
+            .select('nombre,rol')\
+            .eq('activo', True)\
+            .order('nombre')\
+            .execute()
+        
+        if not response.data:
+            return jsonify([])
+        
+        # Agrupar por rol
+        apoyos = [e for e in response.data if e.get('rol') == 'apoyo']
+        staffs = [e for e in response.data if e.get('rol') == 'staff']
+        supervisores = [e for e in response.data if e.get('rol') == 'supervisor']
+        
+        return jsonify({
+            'apoyos': apoyos,
+            'staffs': staffs,
+            'supervisores': supervisores
+        })
+    except Exception as e:
+        print(f"Error cargando ejecutivos: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/super_buscar', methods=['POST'])
+@login_required
+def api_super_buscar():
+    """
+    Súper buscador con cruce inteligente de datos de las 3 tablas.
+    Agrupa personas que aparecen en múltiples carreras/áreas.
+    """
+    try:
+        data = request.json
+        query = (data.get('query', '') or '').strip()
+        filtro = (data.get('filtro', 'todo') or 'todo').lower()
+        
+        # Validación mínima de 3 caracteres
+        if len(query) < 3:
+            return jsonify({
+                'success': False,
+                'message': 'Escribe al menos 3 letras para buscar'
+            })
+        
+        resultados = []
+        
+        # Normalizar búsqueda
+        q = query.lower()
+        
+        # ========================================
+        # BÚSQUEDA EN ESCUELAS
+        # ========================================
+        if filtro in ('todo', 'escuelas'):
+            res_escuelas = supabase.table("directorio_escuelas_umayor").select("*").or_(
+                f"nombre.ilike.%{q}%,"
+                f"escuela_busqueda.ilike.%{q}%,"
+                f"cargo.ilike.%{q}%"
+            ).execute()
+            
+            # Agrupar por persona (nombre + cargo)
+            personas_escuelas = {}
+            for row in (res_escuelas.data or []):
+                nombre = (row.get('nombre') or '').strip()
+                if not nombre or nombre.lower() == 'no informado':
+                    continue
+                
+                cargo = (row.get('cargo') or '').strip()
+                key = f"{nombre.lower()}||{cargo.lower()}"
+                
+                if key not in personas_escuelas:
+                    personas_escuelas[key] = {
+                        'nombre': nombre,
+                        'cargo': cargo,
+                        'campus': row.get('campus', ''),
+                        'facultad': row.get('facultad', ''),
+                        'sede': row.get('sede', ''),
+                        'carreras': []
+                    }
+                
+                personas_escuelas[key]['carreras'].append({
+                    'nombre': row.get('escuela_busqueda', ''),
+                    'email': row.get('correo_director', ''),
+                    'anexo': row.get('anexo_director', ''),
+                    'secretaria': row.get('secretaria', ''),
+                    'emailSecretaria': row.get('correo_secretaria', ''),
+                    'anexoSecretaria': row.get('anexo_secretaria', '')
+                })
+            
+            # Convertir a lista
+            for persona in personas_escuelas.values():
+                resultados.append({
+                    'tipo': 'Escuela',
+                    'persona': persona
+                })
+        
+        # ========================================
+        # BÚSQUEDA EN ACADÉMICOS
+        # ========================================
+        if filtro in ('todo', 'academicos'):
+            res_academicos = supabase.table("otros_contactos_academicos").select("*").or_(
+                f"nombre.ilike.%{q}%,"
+                f"departamento_busqueda.ilike.%{q}%,"
+                f"cargo.ilike.%{q}%"
+            ).execute()
+            
+            for row in (res_academicos.data or []):
+                nombre = (row.get('nombre') or '').strip()
+                if not nombre or nombre.lower() == 'no informado':
+                    continue
+                
+                resultados.append({
+                    'tipo': 'Académico',
+                    'persona': {
+                        'nombre': nombre,
+                        'cargo': row.get('cargo', ''),
+                        'departamento': row.get('departamento', ''),
+                        'email': row.get('correo_director', ''),
+                        'anexo': str(row.get('anexo director') or ''),
+                        'secretaria': row.get('secretaria_nombre', ''),
+                        'emailSecretaria': row.get('secretaria_correo', ''),
+                        'anexoSecretaria': str(row.get('secretaria_anexo') or ''),
+                        'sede': row.get('sede', '')
+                    }
+                })
+        
+        # ========================================
+        # BÚSQUEDA EN ADMINISTRATIVOS
+        # ========================================
+        if filtro in ('todo', 'administrativos'):
+            res_admin = supabase.table("contactos_administrativos").select("*").or_(
+                f"nombre.ilike.%{q}%,"
+                f"area_busqueda.ilike.%{q}%,"
+                f"cargo_rol.ilike.%{q}%"
+            ).execute()
+            
+            for row in (res_admin.data or []):
+                nombre = (row.get('nombre') or '').strip()
+                
+                resultados.append({
+                    'tipo': 'Administrativo',
+                    'persona': {
+                        'nombre': nombre if nombre.lower() not in ('no informado', '-') else '',
+                        'cargo': row.get('cargo_rol', ''),
+                        'area': row.get('area', ''),
+                        'email': row.get('correo', ''),
+                        'anexo': str(row.get('anexo') or ''),
+                        'asistente': row.get('asistente_secretaria', ''),
+                        'emailAsistente': row.get('correo_asistente', ''),
+                        'anexoAsistente': str(row.get('anexo_asistente') or ''),
+                        'campus': row.get('campus', '')
+                    }
+                })
+        
+        return jsonify({
+            'success': True,
+            'total': len(resultados),
+            'resultados': resultados
+        })
+        
+    except Exception as e:
+        print(f"Error en súper búsqueda: {e}")
+        return jsonify({'error': str(e)}), 500
+
+# ==========================================
 # RUTAS DE ADMINISTRACIÓN
 # ==========================================
 @app.route('/administracion')
