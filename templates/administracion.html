@@ -379,10 +379,12 @@
                      <div class="campo">
                         <label>Categoría</label>
                         <select id="linkCategoria">
+                            <option value="Links Frecuentes">Links Frecuentes</option>
+                            <option value="Turnos SAT">Turnos SAT</option>
+                            <option value="Beneficios Ministeriales">Beneficios Ministeriales</option>
+                            <option value="Mesa TI">Mesa TI</option>
+                            <option value="Otros Recursos">Otros Recursos</option>
                             <option value="Sistemas Internos">Sistemas Internos</option>
-                            <option value="Portales Externos">Portales Externos</option>
-                            <option value="Documentos y Guías">Documentos y Guías</option>
-                            <option value="General">General</option>
                         </select>
                     </div>
                     <div class="campo">
@@ -1143,16 +1145,28 @@
         };
 
         try {
+            let result;
             if (id) {
-                await _supabase.from('LINKS').update(paquete).eq('id', id);
+                result = await _supabase.from('LINKS').update(paquete).eq('id', id);
             } else {
-                paquete.activo = true; // Por defecto activos al crear
-                await _supabase.from('LINKS').insert([paquete]);
+                paquete.activo = true;
+                result = await _supabase.from('LINKS').insert([paquete]);
             }
+            
+            if (result.error) {
+                console.error("Error Supabase:", result.error);
+                alert("Error al guardar: " + result.error.message);
+                return;
+            }
+            
+            alert("✅ Enlace guardado correctamente");
             limpiarFormularioEnlace();
             cerrarModalLink();
             cargarEnlaces();
-        } catch (e) { alert("Error al guardar enlace en Supabase"); }
+        } catch (e) { 
+            console.error("Error completo:", e);
+            alert("Error al guardar enlace: " + e.message); 
+        }
     }
 
     async function toggleEnlace(id, estadoActual) {
