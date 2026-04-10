@@ -597,7 +597,7 @@
         const cuerpo = document.getElementById('tablaCasos');
         cuerpo.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px;">Cargando...</td></tr>`;
         
-        let query = _supabase.from('registro_derivaciones').select('*').order('Fecha', { ascending: false });
+        let query = _supabase.from('registro_derivaciones').select('*').order('created_at', { ascending: false });
         
         const ejec = document.getElementById('filtroEjecutivo').value;
         if (ejec) query = query.ilike('ejecutivo', `%${ejec}%`);
