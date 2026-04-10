@@ -2462,22 +2462,15 @@ function mActualizarAsuntoComercial() {
 // SUPABASE — REGISTRO DE CASO DESDE MODAL
 // ==========================================
 async function mRegistrarCaso(area, asunto, rutSolicitante, nombreEjecutivo, nombreSolicitante) {
-  const SURL = 'https://jxmrznqppddabuqtbufq.supabase.co';
-  const SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjU1MDgxNywiZXhwIjoyMDg4MTI2ODE3fQ.EopCzL9iTQ0ujKFWNi4aqVUhTDeYp4_0nt8wcdk67Mo';
   try {
-    await fetch(`${SURL}/rest/v1/registro_derivaciones`, {
+    await fetch('/api/registrar_caso', {
       method: 'POST',
-      headers: {
-        'apikey': SKEY,
-        'Authorization': `Bearer ${SKEY}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
-      },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        ejecutivo:          nombreEjecutivo   || 'No especificado',
-        area:               area,
-        asunto:             asunto            || '-',
-        rut_solicitante:    rutSolicitante    || '-',
+        ejecutivo: nombreEjecutivo || 'No especificado',
+        area: area,
+        asunto: asunto || '-',
+        rut_solicitante: rutSolicitante || '-',
         nombre_solicitante: nombreSolicitante || '-'
       })
     });
@@ -2486,17 +2479,15 @@ async function mRegistrarCaso(area, asunto, rutSolicitante, nombreEjecutivo, nom
 
 // Cargar ejecutivos en selects del modal
 async function mCargarEjecutivos() {
-  const SURL = 'https://jxmrznqppddabuqtbufq.supabase.co';
-  const SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjU1MDgxNywiZXhwIjoyMDg4MTI2ODE3fQ.EopCzL9iTQ0ujKFWNi4aqVUhTDeYp4_0nt8wcdk67Mo';
   try {
-    const res = await fetch(`${SURL}/rest/v1/ejecutivos?select=nombre,rol&activo=eq.true&order=nombre`, {
-      headers: { 'apikey': SKEY, 'Authorization': `Bearer ${SKEY}` }
-    });
+    const res = await fetch('/api/cargar_ejecutivos');
     const data = await res.json();
-    if (!data || !Array.isArray(data)) return;
-    const apoyos = data.filter(e => e.rol === 'apoyo');
-    const staffs = data.filter(e => e.rol === 'staff');
-    const supervisores = data.filter(e => e.rol === 'supervisor');
+    if (!data) return;
+    
+    const apoyos = data.apoyos || [];
+    const staffs = data.staffs || [];
+    const supervisores = data.supervisores || [];
+    
     const ids = ['m-turno-solicitante','m-turno-reemplazo','m-feriado-solicitante'];
     ids.forEach(id => {
       const sel = document.getElementById(id);
