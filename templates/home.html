@@ -742,6 +742,9 @@ body.dark-mode .btn-limpiar { background: rgba(255,255,255,0.1); color: #ddd; }
       <i class="fa-solid fa-spinner fa-spin"></i> Cargando menú...
     </span>
   </div>
+  <button onclick="abrirSuperBuscador()" style="background:var(--um-verde); color:#fff; border:none; padding:8px 16px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; margin-left:auto; margin-right:12px; transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+    <i class="fa-solid fa-magnifying-glass-plus"></i> SÚPER BUSCADOR
+  </button>
   <div class="top-actions">
     <span class="user-display">
       <span class="status-dot"></span>
@@ -2462,22 +2465,15 @@ function mActualizarAsuntoComercial() {
 // SUPABASE — REGISTRO DE CASO DESDE MODAL
 // ==========================================
 async function mRegistrarCaso(area, asunto, rutSolicitante, nombreEjecutivo, nombreSolicitante) {
-  const SURL = 'https://jxmrznqppddabuqtbufq.supabase.co';
-  const SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjU1MDgxNywiZXhwIjoyMDg4MTI2ODE3fQ.EopCzL9iTQ0ujKFWNi4aqVUhTDeYp4_0nt8wcdk67Mo';
   try {
-    await fetch(`${SURL}/rest/v1/registro_derivaciones`, {
+    await fetch('/api/registrar_caso', {
       method: 'POST',
-      headers: {
-        'apikey': SKEY,
-        'Authorization': `Bearer ${SKEY}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
-      },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        ejecutivo:          nombreEjecutivo   || 'No especificado',
-        area:               area,
-        asunto:             asunto            || '-',
-        rut_solicitante:    rutSolicitante    || '-',
+        ejecutivo: nombreEjecutivo || 'No especificado',
+        area: area,
+        asunto: asunto || '-',
+        rut_solicitante: rutSolicitante || '-',
         nombre_solicitante: nombreSolicitante || '-'
       })
     });
@@ -2486,17 +2482,15 @@ async function mRegistrarCaso(area, asunto, rutSolicitante, nombreEjecutivo, nom
 
 // Cargar ejecutivos en selects del modal
 async function mCargarEjecutivos() {
-  const SURL = 'https://jxmrznqppddabuqtbufq.supabase.co';
-  const SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4bXJ6bnFwcGRkYWJ1cXRidWZxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjU1MDgxNywiZXhwIjoyMDg4MTI2ODE3fQ.EopCzL9iTQ0ujKFWNi4aqVUhTDeYp4_0nt8wcdk67Mo';
   try {
-    const res = await fetch(`${SURL}/rest/v1/ejecutivos?select=nombre,rol&activo=eq.true&order=nombre`, {
-      headers: { 'apikey': SKEY, 'Authorization': `Bearer ${SKEY}` }
-    });
+    const res = await fetch('/api/cargar_ejecutivos');
     const data = await res.json();
-    if (!data || !Array.isArray(data)) return;
-    const apoyos = data.filter(e => e.rol === 'apoyo');
-    const staffs = data.filter(e => e.rol === 'staff');
-    const supervisores = data.filter(e => e.rol === 'supervisor');
+    if (!data) return;
+    
+    const apoyos = data.apoyos || [];
+    const staffs = data.staffs || [];
+    const supervisores = data.supervisores || [];
+    
     const ids = ['m-turno-solicitante','m-turno-reemplazo','m-feriado-solicitante'];
     ids.forEach(id => {
       const sel = document.getElementById(id);
@@ -2523,6 +2517,391 @@ document.addEventListener('DOMContentLoaded', function() {
   setInterval(cargarAlertas, 60000);
 });
 
+// ==========================================
+// SÚPER BUSCADOR - MODAL
+// ==========================================
+function abrirSuperBuscador() {
+  document.getElementById('modalSuperBuscador').style.display = 'flex';
+  document.getElementById('sbInput').focus();
+}
+
+function cerrarSuperBuscador() {
+  document.getElementById('modalSuperBuscador').style.display = 'none';
+  document.getElementById('sbInput').value = '';
+  document.getElementById('sbResultados').innerHTML = '';
+  document.getElementById('sbFiltro').selectedIndex = 0;
+}
+
+let sbTimeout;
+async function sbBuscar() {
+  clearTimeout(sbTimeout);
+  const query = document.getElementById('sbInput').value.trim();
+  const filtro = document.getElementById('sbFiltro').value;
+  const resultsDiv = document.getElementById('sbResultados');
+  
+  if (query.length < 3) {
+    resultsDiv.innerHTML = `
+      <div style="text-align:center; padding:60px 20px; color:var(--texto-suave);">
+        <i class="fas fa-search" style="font-size:48px; opacity:0.3; margin-bottom:15px;"></i>
+        <h3 style="margin:0 0 8px; color:var(--texto);">Escribe al menos 3 letras</h3>
+        <p style="margin:0; font-size:13px;">💡 Tip: Prueba "ORE" con filtro "Escuelas" para ver resultados específicos</p>
+      </div>`;
+    return;
+  }
+  
+  resultsDiv.innerHTML = '<div style="text-align:center; padding:40px;"><i class="fas fa-spinner fa-spin" style="font-size:32px; color:var(--um-azul);"></i></div>';
+  
+  try {
+    const res = await fetch('/api/super_buscar', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ query, filtro })
+    });
+    
+    const data = await res.json();
+    
+    if (!data.success) {
+      resultsDiv.innerHTML = `<div style="text-align:center; padding:40px; color:var(--texto-suave);">${data.message || 'Error en la búsqueda'}</div>`;
+      return;
+    }
+    
+    if (data.total === 0) {
+      resultsDiv.innerHTML = `
+        <div style="text-align:center; padding:60px 20px; color:var(--texto-suave);">
+          <i class="fas fa-search-minus" style="font-size:48px; opacity:0.3; margin-bottom:15px;"></i>
+          <h3 style="margin:0 0 8px; color:var(--texto);">No se encontraron resultados</h3>
+          <p style="margin:0; font-size:13px;">Intenta con otro término o cambia el filtro</p>
+        </div>`;
+      return;
+    }
+    
+    if (data.total > 20) {
+      resultsDiv.innerHTML = `
+        <div style="background:var(--um-amarillo); padding:12px 20px; margin-bottom:15px; border-radius:8px; color:#1a1a1a; font-size:13px; font-weight:600;">
+          ⚠️ ${data.total} resultados encontrados. Usa los filtros para refinar tu búsqueda.
+        </div>` + sbMostrarResultados(data.resultados.slice(0, 20));
+    } else {
+      resultsDiv.innerHTML = sbMostrarResultados(data.resultados);
+    }
+    
+  } catch(err) {
+    console.error('Error súper búsqueda:', err);
+    resultsDiv.innerHTML = '<div style="text-align:center; padding:40px; color:#e74c3c;">Error al buscar. Intenta nuevamente.</div>';
+  }
+}
+
+function sbMostrarResultados(resultados) {
+  return resultados.map((r, idx) => {
+    if (r.tipo === 'Escuela') {
+      const p = r.persona;
+      return `
+        <div class="sb-card">
+          <div class="sb-card-header">
+            <h3><i class="fas fa-user-tie"></i> ${p.nombre.toUpperCase()}</h3>
+            <p>${p.cargo} · ${p.campus}</p>
+            ${p.facultad && p.facultad !== 'no informado' ? `<p style="opacity:0.8; font-size:13px;">${p.facultad}</p>` : ''}
+          </div>
+          
+          <button class="sb-btn-copiar-todo" onclick="sbCopiarTodo(${idx}, ${JSON.stringify(p).replace(/"/g, '&quot;')})">
+            <i class="fas fa-copy"></i> COPIAR TODO PARA CRM 365
+          </button>
+          
+          <div class="sb-carreras">
+            <div class="sb-carreras-title">
+              <i class="fas fa-graduation-cap"></i>
+              ${p.carreras.length > 1 ? `Dirige ${p.carreras.length} carreras:` : 'Carrera:'}
+            </div>
+            ${p.carreras.map(c => `
+              <div class="sb-carrera-item">
+                <div class="sb-carrera-nombre">${c.nombre}</div>
+                <div class="sb-info-row"><i class="fas fa-envelope"></i> <span style="font-weight:600;">Email:</span> ${c.email || 'No informado'}</div>
+                <div class="sb-info-row"><i class="fas fa-phone"></i> <span style="font-weight:600;">Anexo:</span> ${c.anexo || 'No informado'}</div>
+                <div class="sb-info-row"><i class="fas fa-user"></i> <span style="font-weight:600;">Secretaria:</span> ${c.secretaria || 'No informado'}</div>
+                ${c.emailSecretaria ? `<div class="sb-info-row"><i class="fas fa-envelope"></i> <span style="font-weight:600;">Email Sec:</span> ${c.emailSecretaria}</div>` : ''}
+                <div class="sb-info-row"><i class="fas fa-phone"></i> <span style="font-weight:600;">Anexo Sec:</span> ${c.anexoSecretaria || 'No informado'}</div>
+              </div>
+            `).join('')}
+          </div>
+          
+          <div class="sb-botones-sec">
+            <div class="sb-botones-titulo">Copiar por separado:</div>
+            <div class="sb-botones-row">
+              <button class="sb-btn-sec" onclick="sbCopiarDirector(${JSON.stringify(p).replace(/"/g, '&quot;')})">
+                <i class="fas fa-user"></i> Solo Director
+              </button>
+              <button class="sb-btn-sec" onclick="sbCopiarSecretarias(${JSON.stringify(p).replace(/"/g, '&quot;')})">
+                <i class="fas fa-users"></i> Secretarias
+              </button>
+              <button class="sb-btn-sec" onclick="sbCopiarEmails(${JSON.stringify(p).replace(/"/g, '&quot;')})">
+                <i class="fas fa-at"></i> Emails
+              </button>
+            </div>
+          </div>
+        </div>`;
+    } else if (r.tipo === 'Académico') {
+      const p = r.persona;
+      return `
+        <div class="sb-card">
+          <div class="sb-card-header">
+            <h3><i class="fas fa-chalkboard-teacher"></i> ${p.nombre.toUpperCase()}</h3>
+            <p>${p.cargo} · ${p.departamento}</p>
+          </div>
+          <div class="sb-carreras">
+            <div class="sb-info-row"><i class="fas fa-envelope"></i> <span style="font-weight:600;">Email:</span> ${p.email || 'No informado'}</div>
+            <div class="sb-info-row"><i class="fas fa-phone"></i> <span style="font-weight:600;">Anexo:</span> ${p.anexo || 'No informado'}</div>
+            ${p.secretaria && p.secretaria !== 'sin secretaria' ? `
+              <div class="sb-info-row"><i class="fas fa-user"></i> <span style="font-weight:600;">Secretaria:</span> ${p.secretaria}</div>
+              ${p.emailSecretaria ? `<div class="sb-info-row"><i class="fas fa-envelope"></i> <span style="font-weight:600;">Email Sec:</span> ${p.emailSecretaria}</div>` : ''}
+              <div class="sb-info-row"><i class="fas fa-phone"></i> <span style="font-weight:600;">Anexo Sec:</span> ${p.anexoSecretaria || 'No informado'}</div>
+            ` : ''}
+          </div>
+        </div>`;
+    } else if (r.tipo === 'Administrativo') {
+      const p = r.persona;
+      return `
+        <div class="sb-card">
+          <div class="sb-card-header">
+            <h3><i class="fas fa-building"></i> ${p.nombre ? p.nombre.toUpperCase() : 'SIN NOMBRE'}</h3>
+            <p>${p.cargo} · ${p.area}</p>
+            ${p.campus ? `<p style="opacity:0.8; font-size:13px;">${p.campus}</p>` : ''}
+          </div>
+          <div class="sb-carreras">
+            ${p.nombre ? `<div class="sb-info-row"><i class="fas fa-envelope"></i> <span style="font-weight:600;">Email:</span> ${p.email || 'No informado'}</div>` : ''}
+            <div class="sb-info-row"><i class="fas fa-phone"></i> <span style="font-weight:600;">Anexo:</span> ${p.anexo || 'No informado'}</div>
+            ${p.asistente && p.asistente !== 'no informado' ? `
+              <div class="sb-info-row"><i class="fas fa-user"></i> <span style="font-weight:600;">Asistente:</span> ${p.asistente}</div>
+              ${p.emailAsistente ? `<div class="sb-info-row"><i class="fas fa-envelope"></i> <span style="font-weight:600;">Email Asist:</span> ${p.emailAsistente}</div>` : ''}
+              <div class="sb-info-row"><i class="fas fa-phone"></i> <span style="font-weight:600;">Anexo Asist:</span> ${p.anexoAsistente || 'No informado'}</div>
+            ` : ''}
+          </div>
+        </div>`;
+    }
+  }).join('');
+}
+
+function sbCopiarTodo(idx, persona) {
+  let texto = `${persona.nombre.toUpperCase()} - ${persona.cargo}\n`;
+  texto += `${persona.campus}\n`;
+  if (persona.facultad && persona.facultad !== 'no informado') {
+    texto += `${persona.facultad}\n`;
+  }
+  texto += `\nCarreras que dirige:\n\n`;
+  
+  persona.carreras.forEach((c, i) => {
+    texto += `${i + 1}️⃣ ${c.nombre.toUpperCase()}\n`;
+    texto += `   Director: ${persona.nombre}\n`;
+    texto += `   📧 ${c.email || 'No informado'}\n`;
+    texto += `   📞 Anexo: ${c.anexo || 'No informado'}\n`;
+    texto += `   Secretaria: ${c.secretaria || 'No informado'}\n`;
+    if (c.emailSecretaria) {
+      texto += `   📧 ${c.emailSecretaria}\n`;
+    }
+    texto += `   📞 Anexo Secretaria: ${c.anexoSecretaria || 'No informado'}\n\n`;
+  });
+  
+  sbCopiar(texto, `sb-btn-todo-${idx}`);
+}
+
+function sbCopiarDirector(persona) {
+  const anexos = persona.carreras.map(c => c.anexo).filter(a => a && a !== 'no informado').join(', ');
+  const email = persona.carreras[0].email;
+  
+  let texto = `${persona.nombre} - ${persona.cargo}\n`;
+  texto += `📧 ${email || 'No informado'}\n`;
+  texto += `📞 Anexo${persona.carreras.length > 1 ? 's' : ''}: ${anexos || 'No informado'}\n`;
+  texto += `${persona.campus}`;
+  
+  navigator.clipboard.writeText(texto);
+}
+
+function sbCopiarSecretarias(persona) {
+  let texto = `Secretaria${persona.carreras.length > 1 ? 's' : ''} de ${persona.nombre}:\n\n`;
+  
+  const secretariasUnicas = {};
+  persona.carreras.forEach(c => {
+    const key = c.secretaria;
+    if (key && key !== 'no informado' && key !== 'No Informado' && !secretariasUnicas[key]) {
+      secretariasUnicas[key] = {
+        nombre: c.secretaria,
+        email: c.emailSecretaria,
+        anexo: c.anexoSecretaria
+      };
+    }
+  });
+  
+  Object.values(secretariasUnicas).forEach(sec => {
+    texto += `${sec.nombre}\n`;
+    if (sec.email) {
+      texto += `📧 ${sec.email}\n`;
+    }
+    texto += `📞 Anexo: ${sec.anexo || 'No informado'}\n\n`;
+  });
+  
+  navigator.clipboard.writeText(texto);
+}
+
+function sbCopiarEmails(persona) {
+  const emails = new Set();
+  emails.add(persona.carreras[0].email);
+  persona.carreras.forEach(c => {
+    if (c.emailSecretaria) emails.add(c.emailSecretaria);
+  });
+  
+  const texto = Array.from(emails).filter(e => e && e !== 'no informado').join('\n');
+  navigator.clipboard.writeText(texto);
+}
+
+function sbCopiar(texto, btnId) {
+  navigator.clipboard.writeText(texto).then(() => {
+    const btn = document.querySelector('.sb-btn-copiar-todo');
+    if (btn) {
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-check"></i> ¡COPIADO!';
+      btn.style.background = 'var(--verde-exito)';
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.style.background = 'var(--um-amarillo)';
+      }, 2000);
+    }
+  });
+}
+
+function sbLimpiar() {
+  document.getElementById('sbInput').value = '';
+  document.getElementById('sbResultados').innerHTML = '';
+  document.getElementById('sbFiltro').selectedIndex = 0;
+  document.getElementById('sbInput').focus();
+}
+
 </script>
+
+<!-- ==========================================
+     MODAL SÚPER BUSCADOR
+     ========================================== -->
+<div id="modalSuperBuscador" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:99999; align-items:center; justify-content:center; backdrop-filter:blur(3px); animation:fadeIn 0.2s;">
+  <div style="background:var(--fondo); width:90%; max-width:950px; max-height:90vh; border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,0.4); display:flex; flex-direction:column; overflow:hidden;">
+    
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg, var(--um-azul) 0%, #003d7a 100%); padding:20px 25px; display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <h2 style="margin:0 0 5px; color:#fff; font-size:22px; display:flex; align-items:center; gap:10px;">
+          <i class="fas fa-magnifying-glass-plus"></i> Súper Buscador SAT
+        </h2>
+        <p style="margin:0; color:rgba(255,255,255,0.85); font-size:13px;">Búsqueda inteligente con cruce de información · Optimizado para CRM 365</p>
+      </div>
+      <button onclick="cerrarSuperBuscador()" style="background:rgba(255,255,255,0.15); border:none; color:#fff; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:18px; transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <!-- Buscador -->
+    <div style="padding:20px 25px; border-bottom:1px solid var(--borde);">
+      <div style="display:flex; gap:10px; margin-bottom:12px;">
+        <select id="sbFiltro" style="padding:12px; border:2px solid var(--borde); border-radius:8px; font-size:14px; font-weight:600; background:var(--card-bg); color:var(--texto); cursor:pointer; min-width:150px;">
+          <option value="todo">🔍 Todo</option>
+          <option value="escuelas">🏫 Escuelas</option>
+          <option value="academicos">👨‍🏫 Académicos</option>
+          <option value="administrativos">🏢 Administrativos</option>
+        </select>
+        <input type="text" id="sbInput" placeholder="Busca por nombre, carrera, cargo..." style="flex:1; padding:12px 15px; border:2px solid var(--borde); border-radius:8px; font-size:14px; background:var(--card-bg); color:var(--texto);" oninput="sbTimeout = setTimeout(sbBuscar, 400)" onkeydown="if(event.key==='Enter') sbBuscar()">
+        <button onclick="sbBuscar()" style="background:var(--um-verde); color:#fff; border:none; padding:12px 20px; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; white-space:nowrap; transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+          <i class="fas fa-search"></i> Buscar
+        </button>
+        <button onclick="sbLimpiar()" style="background:var(--btn-grafito); color:#fff; border:none; padding:12px 16px; border-radius:8px; font-size:14px; cursor:pointer; transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'" title="Limpiar búsqueda">
+          <i class="fas fa-eraser"></i>
+        </button>
+      </div>
+      <p style="margin:0; font-size:12px; color:var(--texto-suave);">
+        <i class="fas fa-lightbulb"></i> Escribe al menos 3 letras · Prueba: "Mónica Pizarro", "Derecho", "Registro Estudiantil"
+      </p>
+    </div>
+    
+    <!-- Resultados -->
+    <div id="sbResultados" style="flex:1; overflow-y:auto; padding:20px 25px; background:var(--fondo);">
+      <div style="text-align:center; padding:60px 20px; color:var(--texto-suave);">
+        <i class="fas fa-compass" style="font-size:64px; opacity:0.3; margin-bottom:20px;"></i>
+        <h3 style="margin:0 0 10px; color:var(--texto);">Escribe para comenzar la búsqueda</h3>
+        <p style="margin:0; font-size:14px;">El buscador encuentra personas, carreras, escuelas y cargos automáticamente</p>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<style>
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+.sb-card {
+  border:2px solid var(--borde); border-radius:12px; margin-bottom:20px; overflow:hidden;
+  animation:slideIn 0.3s ease; background:var(--card-bg);
+}
+@keyframes slideIn { from { opacity:0; transform:translateY(15px); } to { opacity:1; transform:translateY(0); } }
+
+.sb-card:hover { box-shadow:0 8px 25px rgba(0,0,0,0.12); }
+
+.sb-card-header {
+  background:linear-gradient(135deg, var(--um-azul) 0%, #004080 100%);
+  padding:20px 25px; color:#fff;
+}
+.sb-card-header h3 {
+  margin:0 0 8px; font-size:20px; font-weight:700; display:flex; align-items:center; gap:10px;
+}
+.sb-card-header p { margin:0; font-size:14px; opacity:0.9; font-weight:500; }
+
+.sb-btn-copiar-todo {
+  background:var(--um-amarillo); border:none; padding:14px 28px; margin:20px 25px; border-radius:8px;
+  font-size:15px; font-weight:700; color:var(--texto); cursor:pointer; width:calc(100% - 50px);
+  display:flex; align-items:center; justify-content:center; gap:10px; transition:all 0.2s;
+  text-transform:uppercase; letter-spacing:0.5px; box-shadow:0 2px 8px rgba(242,183,5,0.3);
+}
+.sb-btn-copiar-todo:hover {
+  background:#e0a800; transform:translateY(-2px); box-shadow:0 4px 12px rgba(242,183,5,0.4);
+}
+
+.sb-carreras { padding:0 25px 20px; }
+.sb-carreras-title {
+  font-size:16px; font-weight:700; color:var(--um-azul); margin:0 0 15px;
+  display:flex; align-items:center; gap:8px;
+}
+
+.sb-carrera-item {
+  background:var(--um-gris); border-left:4px solid var(--um-azul); padding:18px 20px;
+  margin-bottom:12px; border-radius:0 8px 8px 0;
+}
+.sb-carrera-nombre {
+  font-weight:700; font-size:15px; color:var(--um-azul); margin-bottom:10px; text-transform:capitalize;
+}
+
+.sb-info-row {
+  display:flex; align-items:center; gap:8px; margin:6px 0; font-size:14px; color:var(--texto);
+}
+.sb-info-row i { width:18px; color:var(--um-azul); }
+
+.sb-botones-sec {
+  padding:0 25px 25px; border-top:1px solid var(--borde); margin-top:10px; padding-top:20px;
+}
+.sb-botones-titulo {
+  font-size:12px; color:var(--texto-suave); margin:0 0 12px; font-weight:600;
+  text-transform:uppercase; letter-spacing:0.5px;
+}
+.sb-botones-row { display:flex; gap:10px; flex-wrap:wrap; }
+
+.sb-btn-sec {
+  background:#fff; border:2px solid var(--um-azul); color:var(--um-azul); padding:10px 18px;
+  border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; display:flex;
+  align-items:center; gap:8px; transition:all 0.2s;
+}
+.sb-btn-sec:hover {
+  background:var(--um-azul); color:#fff; transform:translateY(-1px);
+}
+
+@media (max-width:600px) {
+  .sb-btn-copiar-todo { margin:15px 20px; width:calc(100% - 40px); }
+  .sb-carreras { padding:0 20px 15px; }
+  .sb-botones-sec { padding:0 20px 20px; }
+  .sb-btn-sec { flex:1 1 auto; justify-content:center; }
+}
+</style>
+
 </body>
 </html>
