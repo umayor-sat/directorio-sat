@@ -826,9 +826,9 @@ body.dark-mode .btn-limpiar { background: rgba(255,255,255,0.1); color: #ddd; }
 </div>
 
 <!-- ============================================================
-     HERO BUSCADOR UNIFICADO
+     HERO BUSCADOR UNIFICADO (OCULTO - REEMPLAZADO POR BUSCADOR AVANZADO)
      ============================================================ -->
-<div class="search-hero">
+<div class="search-hero" style="display:none;">
   <div class="search-hero-title">
     <i class="fa-solid fa-magnifying-glass"></i>
     Buscador unificado &nbsp;·&nbsp; Escuelas &nbsp;·&nbsp; Académicos &nbsp;·&nbsp; Administrativos
@@ -858,8 +858,8 @@ body.dark-mode .btn-limpiar { background: rgba(255,255,255,0.1); color: #ddd; }
   </div>
 </div>
 
-<!-- Resultados inline -->
-<div class="search-results" id="searchResults">
+<!-- Resultados inline (OCULTO - REEMPLAZADO POR BUSCADOR AVANZADO) -->
+<div class="search-results" id="searchResults" style="display:none;">
   <div class="results-label" id="resultsLabel">Resultados</div>
   <div class="results-grid" id="resultsGrid"></div>
 </div>
@@ -2646,6 +2646,11 @@ function sbMostrarResultados(resultados) {
             <h3><i class="fas fa-chalkboard-teacher"></i> ${p.nombre.toUpperCase()}</h3>
             <p>${p.cargo} · ${p.departamento}</p>
           </div>
+          
+          <button class="sb-btn-copiar-todo" onclick="sbCopiarAcademico(${idx}, ${JSON.stringify(p).replace(/"/g, '&quot;')})">
+            <i class="fas fa-copy"></i> COPIAR TODO PARA CRM 365
+          </button>
+          
           <div class="sb-carreras">
             <div class="sb-info-row"><i class="fas fa-envelope"></i> <span style="font-weight:600;">Email:</span> ${p.email || 'No informado'}</div>
             <div class="sb-info-row"><i class="fas fa-phone"></i> <span style="font-weight:600;">Anexo:</span> ${p.anexo || 'No informado'}</div>
@@ -2665,6 +2670,11 @@ function sbMostrarResultados(resultados) {
             <p>${p.cargo} · ${p.area}</p>
             ${p.campus ? `<p style="opacity:0.8; font-size:13px;">${p.campus}</p>` : ''}
           </div>
+          
+          <button class="sb-btn-copiar-todo" onclick="sbCopiarAdministrativo(${idx}, ${JSON.stringify(p).replace(/"/g, '&quot;')})">
+            <i class="fas fa-copy"></i> COPIAR TODO PARA CRM 365
+          </button>
+          
           <div class="sb-carreras">
             ${p.nombre ? `<div class="sb-info-row"><i class="fas fa-envelope"></i> <span style="font-weight:600;">Email:</span> ${p.email || 'No informado'}</div>` : ''}
             <div class="sb-info-row"><i class="fas fa-phone"></i> <span style="font-weight:600;">Anexo:</span> ${p.anexo || 'No informado'}</div>
@@ -2766,6 +2776,47 @@ function sbCopiar(texto, btnId) {
   });
 }
 
+function sbCopiarAcademico(idx, persona) {
+  let texto = `${persona.nombre.toUpperCase()} - ${persona.cargo}\n`;
+  texto += `${persona.departamento}\n\n`;
+  texto += `📧 ${persona.email || 'No informado'}\n`;
+  texto += `📞 Anexo: ${persona.anexo || 'No informado'}\n`;
+  
+  if (persona.secretaria && persona.secretaria !== 'sin secretaria') {
+    texto += `\nSecretaria: ${persona.secretaria}\n`;
+    if (persona.emailSecretaria) {
+      texto += `📧 ${persona.emailSecretaria}\n`;
+    }
+    texto += `📞 Anexo: ${persona.anexoSecretaria || 'No informado'}\n`;
+  }
+  
+  sbCopiar(texto, `sb-btn-academico-${idx}`);
+}
+
+function sbCopiarAdministrativo(idx, persona) {
+  let texto = `${persona.nombre ? persona.nombre.toUpperCase() : 'SIN NOMBRE'} - ${persona.cargo}\n`;
+  texto += `${persona.area}\n`;
+  if (persona.campus) {
+    texto += `${persona.campus}\n`;
+  }
+  texto += `\n`;
+  
+  if (persona.nombre && persona.email) {
+    texto += `📧 ${persona.email}\n`;
+  }
+  texto += `📞 Anexo: ${persona.anexo || 'No informado'}\n`;
+  
+  if (persona.asistente && persona.asistente !== 'no informado') {
+    texto += `\nAsistente: ${persona.asistente}\n`;
+    if (persona.emailAsistente) {
+      texto += `📧 ${persona.emailAsistente}\n`;
+    }
+    texto += `📞 Anexo: ${persona.anexoAsistente || 'No informado'}\n`;
+  }
+  
+  sbCopiar(texto, `sb-btn-admin-${idx}`);
+}
+
 function sbLimpiar() {
   document.getElementById('sbInput').value = '';
   document.getElementById('sbResultados').innerHTML = '';
@@ -2812,7 +2863,7 @@ function sbLimpiar() {
         </button>
       </div>
       <p style="margin:0; font-size:12px; color:var(--texto-suave);">
-        <i class="fas fa-lightbulb"></i> Escribe al menos 3 letras · Prueba: "Mónica Pizarro", "Derecho", "Registro Estudiantil"
+        <i class="fas fa-lightbulb"></i> Escribe al menos 3 letras · Prueba: "Daniela Maturana", "Derecho", "Registro Estudiantil"
       </p>
     </div>
     
