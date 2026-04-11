@@ -1092,9 +1092,10 @@
       selAnio.value = anioActual;
     }
 
-    if (selMes && selMes.querySelector(`option[value="${mesActual}"]`)) {
-      selMes.value = mesActual;
-    }
+if (selAnio && selAnio.querySelector(`option[value="${anioActual}"]`)) {
+  selAnio.value = anioActual;
+}
+// Mes queda en "Todos" por defecto
 
     cargarUsuarios();
     cargarComunicados();
