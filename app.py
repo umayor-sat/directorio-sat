@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_file
 from functools import wraps
 from supabase import create_client
 import os
@@ -160,15 +160,193 @@ def api_bitacora():
     anio = request.args.get("anio", "").strip()
     mes  = request.args.get("mes",  "").strip()
     q    = request.args.get("q",    "").strip()
+    usuario = request.args.get("usuario", "").strip()
     try:
         query = supabase.table("Bitacora").select("*").order("fecha", desc=True)
         if anio and mes: query = query.gte("fecha", f"{anio}-{mes}-01").lte("fecha", f"{anio}-{mes}-31")
         elif anio: query = query.gte("fecha", f"{anio}-01-01").lte("fecha", f"{anio}-12-31")
         elif mes: query = query.filter("fecha", "like", f"%-{mes}-%")
         if q: query = query.ilike("evento", f"%{q}%")
+        if usuario: query = query.eq("publicado_por", usuario)
         result = query.execute()
         return jsonify(result.data or [])
     except Exception as e: return jsonify({"error": str(e)}), 500
+
+@app.route("/api/guardar-bitacora", methods=['POST'])
+@login_required
+def guardar_bitacora():
+    """Guardar nuevo registro con usuario automático desde sesión"""
+    from datetime import datetime
+    
+    nombre = session.get('nombre', 'Sin nombre')
+    data = request.get_json()
+    
+    if not data.get('fecha') or not data.get('evento'):
+        return jsonify({'error': 'Faltan campos obligatorios'}), 400
+    
+    try:
+        registro = {
+            'fecha': data.get('fecha'),
+            'evento': data.get('evento'),
+            'publicado_por': nombre,
+            'categoria': data.get('categoria', 'Comunicado Interno'),
+            'created_at': datetime.now().isoformat(),
+            'updated_at': datetime.now().isoformat()
+        }
+        
+        result = supabase.table("Bitacora").insert(registro).execute()
+        return jsonify({'success': True, 'data': result.data}), 200
+    except Exception as e:
+        print(f"Error guardar bitácora: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route("/api/editar-bitacora/<int:id>", methods=['PUT'])
+@login_required
+def editar_bitacora(id):
+    """Editar registro - solo el dueño puede editar"""
+    from datetime import datetime
+    
+    nombre = session.get('nombre')
+    data = request.get_json()
+    
+    try:
+        # Verificar que el registro existe y es del usuario
+        registro = supabase.table("Bitacora").select("*").eq("id", id).execute()
+        
+        if not registro.data:
+            return jsonify({'error': 'Registro no encontrado'}), 404
+        
+        if registro.data[0].get('publicado_por') != nombre:
+            return jsonify({'error': 'No autorizado - solo puedes editar tus propios registros'}), 403
+        
+        # Actualizar
+        update_data = {
+            'evento': data.get('evento'),
+            'fecha': data.get('fecha'),
+            'updated_at': datetime.now().isoformat()
+        }
+        
+        if data.get('categoria'):
+            update_data['categoria'] = data.get('categoria')
+        
+        result = supabase.table("Bitacora").update(update_data).eq('id', id).execute()
+        return jsonify({'success': True, 'data': result.data}), 200
+        
+    except Exception as e:
+        print(f"Error editar bitácora: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route("/api/eliminar-bitacora/<int:id>", methods=['DELETE'])
+@login_required
+def eliminar_bitacora(id):
+    """Eliminar registro - solo el dueño puede eliminar"""
+    nombre = session.get('nombre')
+    
+    try:
+        # Verificar que el registro existe y es del usuario
+        registro = supabase.table("Bitacora").select("*").eq("id", id).execute()
+        
+        if not registro.data:
+            return jsonify({'error': 'Registro no encontrado'}), 404
+        
+        if registro.data[0].get('publicado_por') != nombre:
+            return jsonify({'error': 'No autorizado - solo puedes eliminar tus propios registros'}), 403
+        
+        # Eliminar
+        supabase.table("Bitacora").delete().eq('id', id).execute()
+        return jsonify({'success': True}), 200
+        
+    except Exception as e:
+        print(f"Error eliminar bitácora: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route("/api/usuarios-bitacora")
+@login_required
+def usuarios_bitacora():
+    """Obtener lista de usuarios únicos que han publicado en bitácora"""
+    try:
+        result = supabase.table("Bitacora").select("publicado_por").execute()
+        
+        # Extraer usuarios únicos
+        usuarios = list(set([r.get('publicado_por') for r in result.data if r.get('publicado_por')]))
+        usuarios_ordenados = sorted(usuarios)
+        
+        return jsonify([{'nombre': u} for u in usuarios_ordenados]), 200
+        
+    except Exception as e:
+        print(f"Error usuarios bitácora: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route("/api/export-bitacora")
+@login_required
+def export_bitacora():
+    """Exportar registros filtrados a Excel - solo supervisores"""
+    if session.get('rol') != 'supervisor':
+        return jsonify({'error': 'No autorizado - solo supervisores'}), 403
+    
+    try:
+        import pandas as pd
+        from io import BytesIO
+        
+        # Obtener filtros
+        anio = request.args.get('anio', '')
+        mes = request.args.get('mes', '')
+        usuario = request.args.get('usuario', '')
+        q = request.args.get('q', '')
+        
+        # Construir query
+        query = supabase.table("Bitacora").select("*").order("fecha", desc=True)
+        
+        if anio and mes:
+            query = query.gte("fecha", f"{anio}-{mes}-01").lte("fecha", f"{anio}-{mes}-31")
+        elif anio:
+            query = query.gte("fecha", f"{anio}-01-01").lte("fecha", f"{anio}-12-31")
+        
+        if usuario:
+            query = query.eq("publicado_por", usuario)
+        
+        if q:
+            query = query.ilike("evento", f"%{q}%")
+        
+        result = query.execute()
+        
+        # Crear DataFrame
+        df = pd.DataFrame(result.data)
+        
+        # Reordenar columnas
+        columnas_orden = ['fecha', 'publicado_por', 'evento', 'categoria', 'created_at', 'updated_at']
+        columnas_disponibles = [c for c in columnas_orden if c in df.columns]
+        df = df[columnas_disponibles]
+        
+        # Renombrar columnas para Excel
+        df.columns = ['Fecha', 'Publicado Por', 'Evento', 'Categoría', 'Creado', 'Modificado'][:len(df.columns)]
+        
+        # Crear archivo Excel
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False, sheet_name='Bitácora SAT')
+        
+        output.seek(0)
+        
+        # Generar nombre de archivo
+        filename = f"bitacora_SAT"
+        if anio:
+            filename += f"_{anio}"
+        if mes:
+            filename += f"_{mes}"
+        filename += ".xlsx"
+        
+        return send_file(
+            output,
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            as_attachment=True,
+            download_name=filename
+        )
+        
+    except Exception as e:
+        print(f"Error export bitácora: {e}")
+        return jsonify({'error': str(e)}), 500
+
 
 @app.route("/temas-crm")
 @login_required
