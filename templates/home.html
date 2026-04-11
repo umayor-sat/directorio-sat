@@ -2516,14 +2516,14 @@ async function abrirModalBusqueda() {
   
   document.getElementById('modalBuscador').style.display = 'flex';
   document.getElementById('modalBuscadorQuery').textContent = q;
-  document.getElementById('modalBuscadorBody').innerHTML = '<tr><td colspan="7" style="text-align:center; padding:40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:32px; color:var(--um-azul);"></i></td></tr>';
+  document.getElementById('modalBuscadorBody').innerHTML = '<tr><td colspan="8" style="text-align:center; padding:40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:32px; color:var(--um-azul);"></i></td></tr>';
   
   try {
     const res = await fetch(`/api/buscar-universal?q=${encodeURIComponent(q)}&filtro=todo&sede=${encodeURIComponent(sedeSeleccionada)}`);
     const resultados = await res.json();
     
     if (!resultados || resultados.length === 0) {
-      document.getElementById('modalBuscadorBody').innerHTML = '<tr><td colspan="7" style="text-align:center; padding:40px; color:#888;">Sin resultados para esta búsqueda.</td></tr>';
+      document.getElementById('modalBuscadorBody').innerHTML = '<tr><td colspan="8" style="text-align:center; padding:40px; color:#888;">Sin resultados para esta búsqueda.</td></tr>';
       document.getElementById('modalBuscadorStats').innerHTML = '<div style="color:#888;">0 resultados</div>';
       return;
     }
@@ -2540,14 +2540,16 @@ async function abrirModalBusqueda() {
         <div class="stat-item"><i class="fa-solid fa-chalkboard-teacher" style="color:#1a5c38;"></i> Académicos: <strong>${academicos.length}</strong></div>
         <div class="stat-item"><i class="fa-solid fa-building" style="color:#555;"></i> Administrativos: <strong>${administrativos.length}</strong></div>
       </div>
-      <div class="stat-badge"><i class="fa-solid fa-clipboard"></i> Optimizado para CRM 365</div>
+      <div style="background:#fff3cd; border-left:4px solid #f39c12; padding:8px 16px; border-radius:6px; font-size:12px; color:#856404; font-weight:600;">
+        <i class="fa-solid fa-triangle-exclamation"></i> Antes de entregar contactos, si tienes dudas consulta con tu supervisor
+      </div>
     `;
     
     let html = '';
     
     // Renderizar escuelas
     if (escuelas.length > 0) {
-      html += '<tr class="grupo-header-modal"><td colspan="7"><i class="fa-solid fa-graduation-cap"></i> ESCUELAS (' + escuelas.length + ' resultados)</td></tr>';
+      html += '<tr class="grupo-header-modal"><td colspan="8"><i class="fa-solid fa-graduation-cap"></i> ESCUELAS (' + escuelas.length + ' resultados)</td></tr>';
       escuelas.forEach(r => {
         html += renderFilaModal(r, 'Escuela');
       });
@@ -2555,7 +2557,7 @@ async function abrirModalBusqueda() {
     
     // Renderizar académicos
     if (academicos.length > 0) {
-      html += '<tr class="grupo-header-modal"><td colspan="7"><i class="fa-solid fa-chalkboard-teacher"></i> ACADÉMICOS (' + academicos.length + ' resultados)</td></tr>';
+      html += '<tr class="grupo-header-modal"><td colspan="8"><i class="fa-solid fa-chalkboard-teacher"></i> ACADÉMICOS (' + academicos.length + ' resultados)</td></tr>';
       academicos.forEach(r => {
         html += renderFilaModal(r, 'Académico');
       });
@@ -2563,7 +2565,7 @@ async function abrirModalBusqueda() {
     
     // Renderizar administrativos
     if (administrativos.length > 0) {
-      html += '<tr class="grupo-header-modal"><td colspan="7"><i class="fa-solid fa-building"></i> ADMINISTRATIVOS (' + administrativos.length + ' resultados)</td></tr>';
+      html += '<tr class="grupo-header-modal"><td colspan="8"><i class="fa-solid fa-building"></i> ADMINISTRATIVOS (' + administrativos.length + ' resultados)</td></tr>';
       administrativos.forEach(r => {
         html += renderFilaModal(r, 'Administrativo');
       });
@@ -2573,7 +2575,7 @@ async function abrirModalBusqueda() {
     
   } catch(e) {
     console.error('Error búsqueda modal:', e);
-    document.getElementById('modalBuscadorBody').innerHTML = '<tr><td colspan="7" style="text-align:center; padding:40px; color:#e74c3c;">Error al buscar. Intenta nuevamente.</td></tr>';
+    document.getElementById('modalBuscadorBody').innerHTML = '<tr><td colspan="8" style="text-align:center; padding:40px; color:#e74c3c;">Error al buscar. Intenta nuevamente.</td></tr>';
   }
 }
 
@@ -2583,9 +2585,11 @@ function renderFilaModal(r, tipo) {
   // Extraer datos según tipo
   let nombre = r.titulo || '-';
   let cargo = '';
-  let escuelaArea = r.titulo || '-';  // Por defecto, el título
+  let escuelaArea = r.titulo || '-';
+  let campus = r.campus || '-';
+  let anexo = '-';
   let emailDirector = '-';
-  let secretaria = '-';
+  let nombreSecretaria = '';
   let emailSecretaria = '-';
   
   if (tipo === 'Escuela' && r.bloques && r.bloques.length > 0) {
@@ -2594,31 +2598,40 @@ function renderFilaModal(r, tipo) {
       nombre = bloque.director.nombre || r.titulo;
       cargo = bloque.director.cargo || 'Director(a) de Escuela';
       emailDirector = bloque.director.correo || '-';
+      anexo = bloque.director.anexo || '-';
     }
     if (bloque.secretaria) {
-      secretaria = bloque.secretaria.nombre || '-';
+      nombreSecretaria = bloque.secretaria.nombre || '';
       emailSecretaria = bloque.secretaria.correo || '-';
     }
-    // Escuela viene en r.titulo
     escuelaArea = r.titulo || '-';
+    campus = r.campus || '-';
   } else if (r.contactos && r.contactos.length > 0) {
     const contacto = r.contactos[0];
     nombre = contacto.nombre || r.titulo;
     cargo = contacto.cargo || '-';
     emailDirector = contacto.correo || '-';
+    anexo = contacto.anexo || '-';
     
     if (r.contactos.length > 1) {
-      secretaria = r.contactos[1].nombre || '-';
+      nombreSecretaria = r.contactos[1].nombre || '';
       emailSecretaria = r.contactos[1].correo || '-';
     }
     
-    // Para académicos y administrativos, el área/departamento viene en r.titulo
     escuelaArea = r.titulo || '-';
+    campus = r.campus || '-';
   }
   
+  // Limpiar valores "no informado"
+  if (campus && campus.toLowerCase() === 'no informado') campus = '-';
+  if (anexo && anexo.toLowerCase() === 'no informado') anexo = '-';
+  
   // Generar texto para copiar
-  const textoCopiar = generarTextoCopiar(nombre, cargo, emailDirector, secretaria, emailSecretaria);
+  const textoCopiar = generarTextoCopiar(nombre, cargo, emailDirector, nombreSecretaria, emailSecretaria);
   const textoSeguro = textoCopiar.replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, '\\n');
+  
+  // Tooltip para secretaria
+  const tooltipSecretaria = nombreSecretaria ? `title="Secretaria: ${nombreSecretaria}"` : '';
   
   return `<tr>
     <td><span class="tipo-badge-modal ${tipoBadge}">${tipo}</span></td>
@@ -2626,10 +2639,11 @@ function renderFilaModal(r, tipo) {
       <div class="nombre-destacado-modal">${nombre}</div>
       <div class="cargo-suave-modal">${cargo}</div>
     </td>
-    <td style="font-size:13px; color:#555;">${escuelaArea}</td>
+    <td style="font-size:12px; color:#555;">${escuelaArea}</td>
+    <td style="font-size:12px; color:#666;">${campus}</td>
+    <td style="text-align:center; font-weight:700; color:var(--um-azul);">${anexo}</td>
     <td><a href="mailto:${emailDirector}" class="email-link-modal">${emailDirector}</a></td>
-    <td>${secretaria}</td>
-    <td><a href="mailto:${emailSecretaria}" class="email-link-modal">${emailSecretaria}</a></td>
+    <td ${tooltipSecretaria}><a href="mailto:${emailSecretaria}" class="email-link-modal" style="cursor:help;">${emailSecretaria}</a></td>
     <td style="text-align:center;">
       <button class="btn-copiar-modal" onclick="copiarTextoModal('${textoSeguro}', this)">
         <i class="fa-solid fa-copy"></i> COPIAR
@@ -2716,17 +2730,18 @@ function limpiarBusquedaModal() {
       <table style="width:100%; border-collapse:collapse; font-size:13px;">
         <thead style="position:sticky; top:0; z-index:10; background:var(--um-azul); color:#fff;">
           <tr>
-            <th style="padding:14px 16px; text-align:left; font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:3px solid #003d7a; width:80px;">Tipo</th>
-            <th style="padding:14px 16px; text-align:left; font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:3px solid #003d7a; width:220px;">Nombre / Cargo</th>
-            <th style="padding:14px 16px; text-align:left; font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:3px solid #003d7a; width:250px;">Escuela / Área</th>
-            <th style="padding:14px 16px; text-align:left; font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:3px solid #003d7a; width:200px;">Email Director</th>
-            <th style="padding:14px 16px; text-align:left; font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:3px solid #003d7a; width:160px;">Secretaria</th>
-            <th style="padding:14px 16px; text-align:left; font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:3px solid #003d7a; width:200px;">Email Secretaria</th>
-            <th style="padding:14px 16px; text-align:center; font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:3px solid #003d7a; width:120px;">Acción</th>
+            <th style="padding:14px 12px; text-align:left; font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:3px solid #003d7a; width:70px;">Tipo</th>
+            <th style="padding:14px 12px; text-align:left; font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:3px solid #003d7a; width:180px;">Nombre / Cargo</th>
+            <th style="padding:14px 12px; text-align:left; font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:3px solid #003d7a; width:200px;">Escuela / Área</th>
+            <th style="padding:14px 12px; text-align:left; font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:3px solid #003d7a; width:130px;">Campus</th>
+            <th style="padding:14px 12px; text-align:center; font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:3px solid #003d7a; width:70px;">Anexo</th>
+            <th style="padding:14px 12px; text-align:left; font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:3px solid #003d7a; width:190px;">Correo Director</th>
+            <th style="padding:14px 12px; text-align:left; font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:3px solid #003d7a; width:190px;">Correo Secretaria</th>
+            <th style="padding:14px 12px; text-align:center; font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:3px solid #003d7a; width:100px;">Acción</th>
           </tr>
         </thead>
         <tbody id="modalBuscadorBody">
-          <tr><td colspan="7" style="text-align:center; padding:40px;">Cargando...</td></tr>
+          <tr><td colspan="8" style="text-align:center; padding:40px;">Cargando...</td></tr>
         </tbody>
       </table>
     </div>
